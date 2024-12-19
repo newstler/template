@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 410ad1c8a18ebf7f544d77d2cb82de2a0e87d23a
+  revision: cfc6c5656f10452f354cd5bd28dd4ae020834a40
   branch: main
   specs:
     actioncable (8.1.0.alpha)
@@ -154,7 +154,7 @@ GEM
       activesupport (>= 6.0.0)
       railties (>= 6.0.0)
     io-console (0.8.0)
-    irb (1.14.1)
+    irb (1.14.3)
       rdoc (>= 4.0.0)
       reline (>= 0.4.2)
     jbuilder (2.13.0)
@@ -173,7 +173,7 @@ GEM
       thor (~> 1.3)
       zeitwerk (>= 2.6.18, < 3.0)
     language_server-protocol (3.17.0.3)
-    logger (1.6.2)
+    logger (1.6.4)
     loofah (2.23.1)
       crass (~> 1.0.2)
       nokogiri (>= 1.12.0)
@@ -188,7 +188,7 @@ GEM
     mini_portile2 (2.8.8)
     minitest (5.25.4)
     msgpack (1.7.5)
-    net-imap (0.5.1)
+    net-imap (0.5.2)
       date
       net-protocol
     net-pop (0.1.2)
@@ -200,9 +200,10 @@ GEM
     net-sftp (4.0.0)
       net-ssh (>= 5.0.0, < 8.0.0)
     net-smtp (0.5.0)
+      net-protocol
     net-ssh (7.3.0)
     nio4r (2.7.4)
-    nokogiri (1.16.8)
+    nokogiri (1.17.2)
       mini_portile2 (~> 2.8.2)
       racc (~> 1.4)
     orm_adapter (0.5.0)
@@ -216,7 +217,7 @@ GEM
       activesupport (>= 7.0.0)
       rack
       railties (>= 7.0.0)
-    psych (5.2.1)
+    psych (5.2.2)
       date
       stringio
     public_suffix (6.0.1)
@@ -235,15 +236,15 @@ GEM
       activesupport (>= 5.0.0)
       minitest
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.6.1)
+    rails-html-sanitizer (1.6.2)
       loofah (~> 2.21)
       nokogiri (>= 1.15.7, != 1.16.7, != 1.16.6, != 1.16.5, != 1.16.4, != 1.16.3, != 1.16.2, != 1.16.1, != 1.16.0.rc1, != 1.16.0)
     rainbow (3.1.1)
     rake (13.2.1)
-    rdoc (6.8.1)
+    rdoc (6.10.0)
       psych (>= 4.0.0)
     regexp_parser (2.9.3)
-    reline (0.5.12)
+    reline (0.6.0)
       io-console (~> 0.5)
     responders (3.1.1)
       actionpack (>= 5.2)
@@ -279,7 +280,7 @@ GEM
       rubocop-rails
     ruby-progressbar (1.13.0)
     rubyzip (2.3.2)
-    securerandom (0.4.0)
+    securerandom (0.4.1)
     selenium-webdriver (4.27.0)
       base64 (~> 0.2)
       logger (~> 1.4)
@@ -303,6 +304,7 @@ GEM
       railties (>= 7.1)
       thor (~> 1.3.1)
     sqlite-ulid (0.2.1-arm64-darwin)
+    sqlite-ulid (0.2.1-x86_64-linux)
     sqlite3 (2.4.0)
       mini_portile2 (~> 2.8.0)
     sshkit (1.23.2)
@@ -318,9 +320,11 @@ GEM
       railties (>= 7.0.0)
       tailwindcss-ruby
     tailwindcss-ruby (3.4.16-arm64-darwin)
+    tailwindcss-ruby (3.4.16-x86_64-linux)
     thor (1.3.2)
     thruster (0.1.9-arm64-darwin)
-    timeout (0.4.2)
+    thruster (0.1.9-x86_64-linux)
+    timeout (0.4.3)
     turbo-rails (2.0.11)
       actionpack (>= 6.0.0)
       railties (>= 6.0.0)
@@ -348,6 +352,7 @@ GEM
 
 PLATFORMS
   arm64-darwin-24
+  x86_64-linux
 
 DEPENDENCIES
   bootsnap
