@@ -3,6 +3,6 @@
 # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
 # Create first admin
-admin_email = ENV["FIRST_ADMIN_EMAIL"] || "admin@example.com"
+admin_email = "admin@example.com"
 admin = Admin.find_or_create_by!(email: admin_email)
 puts "✓ Admin created: #{admin.email}"

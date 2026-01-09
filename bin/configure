@@ -3,6 +3,8 @@
 
 require "fileutils"
 require "io/console"
+require "yaml"
+require "securerandom"
 
 APP_ROOT = File.expand_path("..", __dir__)
 
@@ -114,20 +116,31 @@ FileUtils.chdir APP_ROOT do
 
   admin_email = prompt("Admin email address", "admin@example.com")
 
-  # Store in .env for development
-  env_content = "FIRST_ADMIN_EMAIL=#{admin_email}\n"
-  File.write(".env", env_content)
-  puts "  ✓ Created .env with admin email"
+  puts "\n── Configuring Litestream (optional)... ──\n"
+  puts "Litestream provides SQLite replication to S3-compatible storage."
+  puts "Press Enter to skip if you don't need it yet.\n"
 
-  # Update seeds file
+  replica_bucket = prompt("S3 bucket name (e.g., my-app-backups)")
+  replica_key_id = prompt("S3 Access Key ID") unless replica_bucket.empty?
+  replica_access_key = prompt("S3 Secret Access Key") unless replica_bucket.empty?
+
+  # Store config temporarily
+  config_data = {
+    "admin_email" => admin_email,
+    "replica_bucket" => replica_bucket,
+    "replica_key_id" => replica_key_id,
+    "replica_access_key" => replica_access_key
+  }
+  File.write(".configure_temp.yml", YAML.dump(config_data))
+
+  # Update seeds file with admin email
   seeds_content = <<~RUBY
     # This file should ensure the existence of records required to run the application in every environment (production,
     # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
     # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
 
     # Create first admin
-    admin_email = ENV["FIRST_ADMIN_EMAIL"] || "admin@example.com"
-    admin = Admin.find_or_create_by!(email: admin_email)
+    admin = Admin.find_or_create_by!(email: "#{admin_email}")
     puts "✓ Admin created: \#{admin.email}"
   RUBY
 
@@ -150,14 +163,50 @@ FileUtils.chdir APP_ROOT do
   # Run bin/setup
   system!("bin/setup")
 
+  puts "\n── Writing credentials... ──\n"
+
+  # Load config data
+  config_data = YAML.load_file(".configure_temp.yml")
+
+  # Build credentials YAML content (only if Litestream is configured)
+  if !config_data["replica_bucket"].to_s.empty?
+    credentials_yaml = {
+      "secret_key_base" => SecureRandom.hex(64),
+      "litestream" => {
+        "replica_bucket" => config_data["replica_bucket"],
+        "replica_key_id" => config_data["replica_key_id"],
+        "replica_access_key" => config_data["replica_access_key"]
+      }
+    }
+
+    # Write to development credentials using Rails runner
+    credentials_content = YAML.dump(credentials_yaml)
+    File.write(".credentials_temp.yml", credentials_content)
+
+    system!('bin/rails runner "
+      content = File.read(\".credentials_temp.yml\")
+      Rails.application.credentials.config.write(content)
+      puts \"  ✓ Development credentials updated\"
+    "')
+
+    # Clean up temp files
+    File.delete(".credentials_temp.yml") if File.exist?(".credentials_temp.yml")
+  else
+    puts "  ⊝ No credentials to write (Litestream not configured)"
+  end
+
+  # Clean up temp files
+  File.delete(".configure_temp.yml") if File.exist?(".configure_temp.yml")
+
   puts "\n" + "═" * 60
   puts "  ✓ All Done!"
   puts "═" * 60
   puts
   puts "Next steps:"
-  puts "  1. Visit: /admins/session/new"
-  puts "  2. Request magic link for: #{admin_email}"
-  puts "  3. Check your email and click the magic link"
-  puts "  4. Access Avo admin panel at: /avo"
+  puts "  1. Run: bin/dev"
+  puts "  2. Visit: /admins/session/new"
+  puts "  3. Request magic link for: #{admin_email}"
+  puts "  4. Check your email and click the magic link"
+  puts "  5. Access Avo admin panel at: /avo"
   puts
 end
