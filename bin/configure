@@ -1,0 +1,163 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "io/console"
+
+APP_ROOT = File.expand_path("..", __dir__)
+
+def system!(*args)
+  system(*args, exception: true)
+end
+
+def prompt(question, default = nil)
+  print question
+  print " [#{default}]" if default
+  print ": "
+  answer = $stdin.gets.chomp
+  answer.empty? && default ? default : answer
+end
+
+def project_name_from_directory
+  File.basename(APP_ROOT)
+end
+
+def to_class_name(string)
+  string.split(/[-_]/).map(&:capitalize).join
+end
+
+def replace_in_file(file_path, old_content, new_content)
+  return unless File.exist?(file_path)
+
+  content = File.read(file_path)
+  if content.include?(old_content)
+    File.write(file_path, content.gsub(old_content, new_content))
+    puts "  ✓ Updated #{file_path}"
+  end
+end
+
+FileUtils.chdir APP_ROOT do
+  puts "═" * 60
+  puts "  Rails Project Configuration"
+  puts "═" * 60
+  puts
+
+  # Check if already configured
+  if File.exist?(".configured")
+    puts "⚠️  This project appears to be already configured."
+    print "Do you want to reconfigure? (y/N): "
+    answer = $stdin.gets.chomp
+    unless answer.downcase == "y"
+      puts "Exiting..."
+      exit 0
+    end
+    puts
+  end
+
+  # Get project name
+  directory_name = project_name_from_directory
+  suggested_name = to_class_name(directory_name)
+
+  puts "Current directory: #{directory_name}"
+  project_name = prompt("Project name (CamelCase)", suggested_name)
+  project_name = to_class_name(project_name) # Ensure proper format
+
+  puts "\n── Renaming project from Template to #{project_name}... ──\n"
+
+  # Update config/application.rb
+  replace_in_file(
+    "config/application.rb",
+    "module Template",
+    "module #{project_name}"
+  )
+
+  # Update Rakefile
+  replace_in_file(
+    "Rakefile",
+    "Template::Application",
+    "#{project_name}::Application"
+  )
+
+  # Update config/environments/*.rb
+  %w[development test production].each do |env|
+    replace_in_file(
+      "config/environments/#{env}.rb",
+      "Template::Application",
+      "#{project_name}::Application"
+    )
+  end
+
+  # Update config.ru
+  replace_in_file(
+    "config.ru",
+    "Template::Application",
+    "#{project_name}::Application"
+  )
+
+  # Update bin/rails
+  replace_in_file(
+    "bin/rails",
+    'APP_PATH = File.expand_path("../config/application", __dir__)',
+    "APP_PATH = File.expand_path(\"../config/application\", __dir__)"
+  )
+
+  # Update package.json if exists
+  if File.exist?("package.json")
+    replace_in_file(
+      "package.json",
+      '"name": "template"',
+      "\"name\": \"#{directory_name}\""
+    )
+  end
+
+  puts "\n── Configuring first admin... ──\n"
+
+  admin_email = prompt("Admin email address", "admin@example.com")
+
+  # Store in .env for development
+  env_content = "FIRST_ADMIN_EMAIL=#{admin_email}\n"
+  File.write(".env", env_content)
+  puts "  ✓ Created .env with admin email"
+
+  # Update seeds file
+  seeds_content = <<~RUBY
+    # This file should ensure the existence of records required to run the application in every environment (production,
+    # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
+    # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+
+    # Create first admin
+    admin_email = ENV["FIRST_ADMIN_EMAIL"] || "admin@example.com"
+    admin = Admin.find_or_create_by!(email: admin_email)
+    puts "✓ Admin created: \#{admin.email}"
+  RUBY
+
+  File.write("db/seeds.rb", seeds_content)
+  puts "  ✓ Updated db/seeds.rb"
+
+  # Mark as configured
+  File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nAdmin: #{admin_email}\n")
+
+  puts "\n" + "═" * 60
+  puts "  ✓ Configuration Complete!"
+  puts "═" * 60
+  puts
+  puts "Project: #{project_name}"
+  puts "Admin: #{admin_email}"
+  puts
+  puts "Running bin/setup to install dependencies and setup database..."
+  puts
+
+  # Run bin/setup
+  system!("bin/setup")
+
+  puts "\n" + "═" * 60
+  puts "  ✓ All Done!"
+  puts "═" * 60
+  puts
+  puts "Next steps:"
+  puts "  1. Visit: /admins/session/new"
+  puts "  2. Request magic link for: #{admin_email}"
+  puts "  3. Check your email and click the magic link"
+  puts "  4. Access Avo admin panel at: /avo"
+  puts
+end

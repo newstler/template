@@ -1,9 +1,20 @@
 Rails.application.routes.draw do
-  devise_for :users
-  devise_for :admins
-  authenticate :admin do
-    mount Avo:: Engine, at: Avo.configuration.root_path
+  # User dashboard
+  get "home", to: "home#index", as: :home
+
+  # User authentication (magic link - creates user on first use)
+  resource :session, only: [ :new, :create, :destroy ]
+  get "auth/:token", to: "sessions#verify", as: :verify_magic_link
+
+  # Admin authentication (magic link)
+  namespace :admins do
+    resource :session, only: [ :new, :create, :destroy ]
+    get "auth/:token", to: "sessions#verify", as: :verify_magic_link
+    resources :admins, only: [ :index, :new, :create, :destroy ]
   end
+
+  # Avo admin panel (requires admin authentication)
+  mount Avo::Engine, at: Avo.configuration.root_path
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
@@ -16,5 +27,5 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "sessions#new"
 end

@@ -1,6 +1,7 @@
 class Admin < ApplicationRecord
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
-  devise :database_authenticatable, # :registerable,
-         :recoverable, :rememberable, :validatable
+  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
+
+  def generate_magic_link_token
+    signed_id(purpose: :magic_link, expires_in: 15.minutes)
+  end
 end

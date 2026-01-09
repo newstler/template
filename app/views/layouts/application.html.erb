@@ -23,8 +23,39 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <main class="container mx-auto mt-28 px-5 flex">
+  <body class="bg-gray-50">
+    <% if current_user || current_admin %>
+      <nav class="bg-white border-b border-gray-200">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+          <div class="text-xl font-semibold">
+            <%= content_for(:title) || "Template" %>
+          </div>
+          <div class="flex items-center gap-4">
+            <% if current_admin %>
+              <span class="text-sm text-gray-600"><%= current_admin.email %></span>
+              <%= link_to "Avo Admin", "/avo", class: "text-sm text-red-600 hover:text-red-800" %>
+              <%= link_to "Manage Admins", admins_admins_path, class: "text-sm text-red-600 hover:text-red-800" %>
+              <%= button_to "Sign Out", admins_session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-800" %>
+            <% elsif current_user %>
+              <span class="text-sm text-gray-600"><%= current_user.name %></span>
+              <%= button_to "Sign Out", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-800" %>
+            <% end %>
+          </div>
+        </div>
+      </nav>
+    <% end %>
+
+    <% if flash.any? %>
+      <div class="container mx-auto px-4 mt-4">
+        <% flash.each do |type, message| %>
+          <div class="<%= type == 'notice' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800' %> border px-4 py-3 rounded mb-4">
+            <%= message %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <main class="container mx-auto mt-8 px-4">
       <%= yield %>
     </main>
   </body>

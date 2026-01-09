@@ -22,9 +22,10 @@ Avo.configure do |config|
   end
 
   ## == Authentication ==
-  # config.current_user_method = :current_user
-  # config.authenticate_with do
-  # end
+  config.current_user_method = :current_admin
+  config.authenticate_with do
+    redirect_to new_admins_session_path, alert: "Please log in as admin" unless current_admin
+  end
 
   ## == Authorization ==
   # config.is_admin_method = :is_admin
