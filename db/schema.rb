@@ -10,29 +10,116 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2024_12_07_205829) do
-  create_table "admins", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
+ActiveRecord::Schema[8.2].define(version: 2026_01_09_230202) do
+  create_table "active_storage_attachments", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.string "blob_id", null: false
     t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "record_id", null: false
+    t.string "record_type", null: false
+    t.index ["blob_id"], name: "index_active_storage_attachments_on_blob_id"
+    t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
+  end
+
+  create_table "active_storage_blobs", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.bigint "byte_size", null: false
+    t.string "checksum"
+    t.string "content_type"
+    t.datetime "created_at", null: false
+    t.string "filename", null: false
+    t.string "key", null: false
+    t.text "metadata"
+    t.string "service_name", null: false
+    t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
+  end
+
+  create_table "active_storage_variant_records", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.string "blob_id", null: false
+    t.string "variation_digest", null: false
+    t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "admins", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "email"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_admins_on_reset_password_token", unique: true
+  end
+
+  create_table "chats", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "model_id"
+    t.datetime "updated_at", null: false
+    t.string "user_id", null: false
+    t.index ["model_id"], name: "index_chats_on_model_id"
+    t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "messages", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.integer "cache_creation_tokens"
+    t.integer "cached_tokens"
+    t.string "chat_id", null: false
+    t.text "content"
+    t.json "content_raw"
+    t.datetime "created_at", null: false
+    t.integer "input_tokens"
+    t.string "model_id"
+    t.integer "output_tokens"
+    t.string "role", null: false
+    t.string "tool_call_id"
+    t.datetime "updated_at", null: false
+    t.index ["chat_id"], name: "index_messages_on_chat_id"
+    t.index ["model_id"], name: "index_messages_on_model_id"
+    t.index ["role"], name: "index_messages_on_role"
+    t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
+  end
+
+  create_table "models", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.json "capabilities", default: []
+    t.integer "context_window"
+    t.datetime "created_at", null: false
+    t.string "family"
+    t.date "knowledge_cutoff"
+    t.integer "max_output_tokens"
+    t.json "metadata", default: {}
+    t.json "modalities", default: {}
+    t.datetime "model_created_at"
+    t.string "model_id", null: false
+    t.string "name", null: false
+    t.json "pricing", default: {}
+    t.string "provider", null: false
+    t.datetime "updated_at", null: false
+    t.index ["family"], name: "index_models_on_family"
+    t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
+    t.index ["provider"], name: "index_models_on_provider"
+  end
+
+  create_table "tool_calls", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.json "arguments", default: {}
+    t.datetime "created_at", null: false
+    t.string "message_id", null: false
+    t.string "name", null: false
+    t.string "tool_call_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["message_id"], name: "index_tool_calls_on_message_id"
+    t.index ["name"], name: "index_tool_calls_on_name"
+    t.index ["tool_call_id"], name: "index_tool_calls_on_tool_call_id", unique: true
   end
 
   create_table "users", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
-    t.string "email", default: "", null: false
-    t.string "encrypted_password", default: "", null: false
-    t.string "reset_password_token"
-    t.datetime "reset_password_sent_at"
-    t.datetime "remember_created_at"
-    t.string "name"
     t.datetime "created_at", null: false
+    t.string "email"
+    t.string "name"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
-    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
+
+  add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "chats", "models"
+  add_foreign_key "chats", "users"
+  add_foreign_key "messages", "chats"
+  add_foreign_key "messages", "models"
+  add_foreign_key "messages", "tool_calls"
+  add_foreign_key "tool_calls", "messages"
 end

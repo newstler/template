@@ -24,22 +24,15 @@
   </head>
 
   <body class="bg-gray-50">
-    <% if current_user || current_admin %>
+    <% if current_user %>
       <nav class="bg-white border-b border-gray-200">
         <div class="container mx-auto px-4 py-4 flex justify-between items-center">
           <div class="text-xl font-semibold">
-            <%= content_for(:title) || "Template" %>
+            <%= link_to content_for(:title) || "Template", home_path, class: "text-gray-900 no-underline" %>
           </div>
           <div class="flex items-center gap-4">
-            <% if current_admin %>
-              <span class="text-sm text-gray-600"><%= current_admin.email %></span>
-              <%= link_to "Avo Admin", "/avo", class: "text-sm text-red-600 hover:text-red-800" %>
-              <%= link_to "Manage Admins", admins_admins_path, class: "text-sm text-red-600 hover:text-red-800" %>
-              <%= button_to "Sign Out", admins_session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-800" %>
-            <% elsif current_user %>
-              <span class="text-sm text-gray-600"><%= current_user.name %></span>
-              <%= button_to "Sign Out", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-800" %>
-            <% end %>
+            <span class="text-sm text-gray-600"><%= current_user.name %></span>
+            <%= button_to "Sign Out", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-800" %>
           </div>
         </div>
       </nav>

@@ -22,10 +22,23 @@ Avo.configure do |config|
   end
 
   ## == Authentication ==
-  config.current_user_method = :current_admin
-  config.authenticate_with do
-    redirect_to new_admins_session_path, alert: "Please log in as admin" unless current_admin
+  config.current_user_method do
+    # Access current_admin from the main application controller's session
+    Admin.find_by(id: session[:admin_id]) if session[:admin_id]
   end
+
+  config.authenticate_with do
+    # Check if admin is authenticated
+    admin = Admin.find_by(id: session[:admin_id]) if session[:admin_id]
+
+    unless admin
+      # Redirect to admin login page
+      redirect_to main_app.new_admins_session_path
+    end
+  end
+
+  ## == Sign out ==
+  config.sign_out_path_name = :admins_session_path
 
   ## == Authorization ==
   # config.is_admin_method = :is_admin

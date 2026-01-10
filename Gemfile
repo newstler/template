@@ -66,3 +66,7 @@ group :test do
 end
 
 gem "avo", ">= 3.2"
+
+gem "ruby_llm", "~> 1.9"
+
+gem "fast-mcp", "~> 1.6"

@@ -1,0 +1,23 @@
+<p style="color: green"><%= notice %></p>
+
+<%= turbo_stream_from "chat_#{@chat.id}" %>
+
+<% content_for :title, "Chat" %>
+
+<h1>Chat <%= @chat.id %></h1>
+
+<p>Using <strong><%= @chat.model.name %></strong></p>
+
+<div id="messages">
+  <% @chat.messages.where.not(id: nil).each do |message| %>
+    <%= render message %>
+  <% end %>
+</div>
+
+<div style="margin-top: 30px;">
+  <%= render "messages/form", chat: @chat, message: @message %>
+</div>
+
+<div style="margin-top: 20px;">
+  <%= link_to "Back to chats", chats_path %>
+</div>

@@ -15,6 +15,7 @@ When starting a new project from this template:
 3. The script will:
    - Rename project from "Template" to your project name
    - Ask for admin email (written directly to db/seeds.rb)
+   - Optionally configure OpenAI and Anthropic (Claude) API keys
    - Optionally configure Litestream for SQLite replication
    - Run `bin/setup` to install dependencies and setup database
 
@@ -26,6 +27,7 @@ When starting a new project from this template:
 - **Background Jobs**: Solid Queue
 - **Caching**: Solid Cache
 - **Replication**: Litestream (SQLite → S3-compatible storage)
+- **AI**: RubyLLM (OpenAI & Anthropic support)
 - **Frontend**: Hotwire (Turbo + Stimulus), Tailwind CSS 4
 - **Asset Pipeline**: Propshaft
 - **Deployment**: Kamal 2
@@ -169,22 +171,24 @@ config/
 
 ## Authentication System
 
-This template uses **magic link authentication** (passwordless):
+This template uses **magic link authentication** (passwordless) with complete separation of user and admin interfaces:
 
-### User Authentication
+### User Authentication (Public Interface)
 - Users create accounts automatically on first magic link request
 - Path: `/session/new`
 - Model: `User` (email, name)
 - Controller: `SessionsController`
 - Mailer: `UserMailer.magic_link`
+- After login: redirects to `/home`
 
-### Admin Authentication
-- Admins must be created by other admins (or via seeds)
-- Path: `/admins/session/new`
+### Admin Authentication (Avo Interface)
+- **All admin management happens through Avo at `/avo`**
+- Path: `/admins/session/new` (admin login form)
 - Model: `Admin` (email only)
 - Controller: `Admins::SessionsController`
 - Mailer: `AdminMailer.magic_link`
-- Admin panel: `/avo` (requires admin authentication)
+- After magic link click: redirects to `/avo`
+- Admins must exist in database (created via seeds or Avo)
 
 ### Magic Link Implementation
 ```ruby
@@ -199,8 +203,78 @@ session[:user_id] = user.id
 ```
 
 ### Helper Methods (ApplicationController)
-- `current_user` / `current_admin`
-- `authenticate_user!` / `authenticate_admin!`
+- `current_user` - for public user interface
+- `current_admin` - for Avo admin interface
+- `authenticate_user!` - for user-facing controllers
+- `authenticate_admin!` - for admin-specific controllers (not Avo)
+
+### Interface Separation
+**IMPORTANT:** Keep interfaces completely separate:
+- User interface: `/session/new`, `/home`, `/chats`, etc.
+- Admin interface: `/admins/session/new` (login), `/avo` (admin panel)
+- **No links between user and admin interfaces**
+- Admin login is separate from user login (different URLs, different styling)
+- All admin CRUD operations happen through Avo resources
+
+## Avo Admin Panel
+
+All administrative tasks are managed through **Avo** at `/avo`. Admin authentication uses `Admins::SessionsController`, but all CRUD operations (managing admins, users, chats, etc.) happen through Avo resources.
+
+### Available Resources
+- **Admins** - Manage admin users, send magic links
+- **Users** - View/edit users, see their chats
+- **Chats** - View all AI chat sessions
+- **Messages** - Inspect individual messages, tokens, tool calls
+- **Models** - View available AI models, refresh from RubyLLM
+- **Tool Calls** - Debug function/tool calls
+
+### Admin Actions
+- **Send Magic Link** (Admins) - Send login link to admin(s)
+- **Refresh Models** (Models) - Update AI model registry from RubyLLM
+
+### Avo Configuration
+```ruby
+# config/initializers/avo.rb
+config.current_user_method do
+  Admin.find_by(id: session[:admin_id]) if session[:admin_id]
+end
+
+config.authenticate_with do
+  admin = Admin.find_by(id: session[:admin_id]) if session[:admin_id]
+  redirect_to main_app.new_admins_session_path unless admin  # Redirect to admin login
+end
+```
+
+### Creating Avo Resources
+Follow this pattern for new resources:
+
+```ruby
+class Avo::Resources::ModelName < Avo::BaseResource
+  self.title = :name
+  self.includes = [:associations]
+
+  self.search = {
+    query: -> { query.where("column LIKE ?", "%#{params[:q]}%") }
+  }
+
+  def fields
+    field :id, as: :id, readonly: true
+    field :name, as: :text, required: true
+    field :association, as: :belongs_to
+    field :created_at, as: :date_time, readonly: true
+  end
+
+  def filters
+    filter Avo::Filters::CustomFilter
+  end
+
+  def actions
+    action Avo::Actions::CustomAction
+  end
+end
+```
+
+**Location:** `app/avo/resources/`, `app/avo/actions/`, `app/avo/filters/`
 
 ## Important Development Practices
 
@@ -216,6 +290,9 @@ session[:user_id] = user.id
 - Create empty directories "for later"
 - Add gems before trying vanilla Rails
 - Create boolean columns for state (use records or enums)
+- Create separate admin controllers/views (use Avo instead)
+- Mix user and admin interfaces (keep completely separate)
+- Link to admin interface from user interface
 
 ### Code Style
 - RuboCop with auto-fix via lefthook
@@ -226,17 +303,32 @@ session[:user_id] = user.id
 
 ## Credentials
 
-This project uses Rails encrypted credentials exclusively. No environment variables are used.
+This project uses **environment-specific** Rails encrypted credentials. No environment variables are used.
 
+### Configuration
+Credentials are automatically configured when running `bin/configure`:
+- Development: `config/credentials/development.yml.enc`
+- Development key: `config/credentials/development.key` (gitignored)
+- Production: `config/credentials/production.yml.enc`
+- Production key: `config/credentials/production.key` (gitignored)
+
+### Editing Credentials
 ```bash
-# Edit credentials
+# Edit development credentials
 rails credentials:edit --environment development
+
+# Edit production credentials
 rails credentials:edit --environment production
 ```
 
+### Structure
 ```yaml
-# Example structure
-secret_key_base: <auto-generated>
+# AI APIs (configured via bin/configure)
+open_ai:
+  api_key: sk-...
+
+anthropic:
+  api_key: sk-ant-...
 
 # Litestream (optional, configured via bin/configure)
 litestream:
@@ -248,12 +340,6 @@ litestream:
 stripe:
   secret_key: sk_test_...
   webhook_secret: whsec_...
-
-openai:
-  api_key: sk-...
-
-anthropic:
-  api_key: sk-ant-...
 ```
 
 ## Litestream - SQLite Replication
@@ -347,28 +433,66 @@ class Current < ActiveSupport::CurrentAttributes
 end
 ```
 
-### AI Integration Patterns (if applicable)
+### RubyLLM - AI Chat Integration
 
-**Graceful Degradation:**
+This template includes **RubyLLM** for AI chat functionality with OpenAI and Anthropic (Claude) APIs.
+
+**Data Model:**
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  User                                                           │
+│  └── has_many :chats                                            │
+│                                                                 │
+│  Chat                                                           │
+│  ├── belongs_to :user                                           │
+│  ├── belongs_to :model (AI model)                              │
+│  └── has_many :messages                                         │
+│                                                                 │
+│  Message                                                        │
+│  ├── belongs_to :chat                                           │
+│  ├── role (system/user/assistant)                              │
+│  ├── content (text)                                             │
+│  ├── content_raw (JSON with full API response)                 │
+│  └── token counts (input/output/cached)                        │
+│                                                                 │
+│  Model (AI model registry)                                     │
+│  ├── model_id (e.g., "gpt-4", "claude-3-5-sonnet")            │
+│  ├── provider (openai/anthropic)                               │
+│  └── capabilities, pricing, metadata                           │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+**Controllers & Routes:**
+- `/chats` - ChatsController (index, new, create, show)
+- `/chats/:chat_id/messages` - MessagesController (create)
+- `/models` - ModelsController (index, show, refresh)
+
+All RubyLLM controllers require user authentication (`before_action :authenticate_user!`).
+
+**Background Processing:**
+Chat responses are processed asynchronously via `ChatResponseJob` using Solid Queue.
+
+**Configuration:**
 ```ruby
-module AiResilient
-  extend ActiveSupport::Concern
-
-  def process_with_resilience
-    yield
-  rescue SomeAIError => e
-    handle_gracefully(e)
-  end
+# config/initializers/ruby_llm.rb
+RubyLLM.configure do |config|
+  config.openai_api_key = Rails.application.credentials.dig(:open_ai, :api_key)
+  config.anthropic_api_key = Rails.application.credentials.dig(:anthropic, :api_key)
+  config.default_model = "gpt-4.1-nano"
+  config.use_new_acts_as = true  # Use association-based API
 end
 ```
 
-**Separating Instructions from Data:**
+**Usage in Models:**
 ```ruby
-def messages_for_ai
-  [
-    { role: :system, content: system_prompt },      # Pure instructions
-    *messages.map { |m| { role: m.role, content: m.content } }
-  ]
+class Chat < ApplicationRecord
+  belongs_to :user
+  acts_as_chat messages_foreign_key: :chat_id  # RubyLLM integration
 end
-# User content is ALWAYS in user/assistant messages, never injected into system
 ```
+
+**Best Practices:**
+1. **User scoping** - Always scope chats to `current_user`
+2. **Async processing** - Use background jobs for AI responses
+3. **Token tracking** - Monitor token usage via Message model
+4. **Model management** - Use `/models/refresh` to update available models

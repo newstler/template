@@ -116,6 +116,13 @@ FileUtils.chdir APP_ROOT do
 
   admin_email = prompt("Admin email address", "admin@example.com")
 
+  puts "\n── Configuring AI API Keys (optional)... ──\n"
+  puts "RubyLLM supports OpenAI and Anthropic (Claude) APIs."
+  puts "Press Enter to skip if you want to configure them later.\n"
+
+  openai_api_key = prompt("OpenAI API Key")
+  anthropic_api_key = prompt("Anthropic (Claude) API Key")
+
   puts "\n── Configuring Litestream (optional)... ──\n"
   puts "Litestream provides SQLite replication to S3-compatible storage."
   puts "Press Enter to skip if you don't need it yet.\n"
@@ -127,6 +134,8 @@ FileUtils.chdir APP_ROOT do
   # Store config temporarily
   config_data = {
     "admin_email" => admin_email,
+    "openai_api_key" => openai_api_key,
+    "anthropic_api_key" => anthropic_api_key,
     "replica_bucket" => replica_bucket,
     "replica_key_id" => replica_key_id,
     "replica_access_key" => replica_access_key
@@ -147,6 +156,71 @@ FileUtils.chdir APP_ROOT do
   File.write("db/seeds.rb", seeds_content)
   puts "  ✓ Updated db/seeds.rb"
 
+  puts "\n── Writing credentials... ──\n"
+
+  # Load config data
+  config_data = YAML.load_file(".configure_temp.yml")
+
+  # Build credentials YAML content
+  has_ai_keys = !config_data["openai_api_key"].to_s.empty? || !config_data["anthropic_api_key"].to_s.empty?
+  has_litestream = !config_data["replica_bucket"].to_s.empty?
+
+  if has_ai_keys || has_litestream
+    # Build credentials hash
+    credentials_hash = {}
+
+    # Add AI credentials if provided
+    if has_ai_keys
+      credentials_hash["open_ai"] = { "api_key" => config_data["openai_api_key"] } unless config_data["openai_api_key"].to_s.empty?
+      credentials_hash["anthropic"] = { "api_key" => config_data["anthropic_api_key"] } unless config_data["anthropic_api_key"].to_s.empty?
+    end
+
+    # Add Litestream credentials if provided
+    if has_litestream
+      credentials_hash["litestream"] = {
+        "replica_bucket" => config_data["replica_bucket"],
+        "replica_key_id" => config_data["replica_key_id"],
+        "replica_access_key" => config_data["replica_access_key"]
+      }
+    end
+
+    # Write directly to development credentials
+    require "active_support/encrypted_configuration"
+
+    # Create credentials directory if it doesn't exist
+    FileUtils.mkdir_p("config/credentials")
+
+    # Initialize development credentials
+    key_path = "config/credentials/development.key"
+    credentials_path = "config/credentials/development.yml.enc"
+
+    # Generate key if it doesn't exist
+    unless File.exist?(key_path)
+      key = ActiveSupport::EncryptedConfiguration.generate_key
+      File.write(key_path, key)
+      puts "  ✓ Generated development key: #{key_path}"
+    end
+
+    # Write the credentials
+    config = ActiveSupport::EncryptedConfiguration.new(
+      config_path: credentials_path,
+      key_path: key_path,
+      env_key: "RAILS_MASTER_KEY",
+      raise_if_missing_key: false
+    )
+
+    config.write(YAML.dump(credentials_hash))
+
+    puts "  ✓ Development credentials updated"
+    puts "  ✓ Saved to: #{credentials_path}"
+    puts "  ✓ Key saved to: #{key_path}"
+  else
+    puts "  ⊝ No credentials to write (no API keys or Litestream configured)"
+  end
+
+  # Clean up temp files
+  File.delete(".configure_temp.yml") if File.exist?(".configure_temp.yml")
+
   # Mark as configured
   File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nAdmin: #{admin_email}\n")
 
@@ -160,43 +234,8 @@ FileUtils.chdir APP_ROOT do
   puts "Running bin/setup to install dependencies and setup database..."
   puts
 
-  # Run bin/setup
+  # Run bin/setup (after credentials are written)
   system!("bin/setup")
-
-  puts "\n── Writing credentials... ──\n"
-
-  # Load config data
-  config_data = YAML.load_file(".configure_temp.yml")
-
-  # Build credentials YAML content (only if Litestream is configured)
-  if !config_data["replica_bucket"].to_s.empty?
-    credentials_yaml = {
-      "secret_key_base" => SecureRandom.hex(64),
-      "litestream" => {
-        "replica_bucket" => config_data["replica_bucket"],
-        "replica_key_id" => config_data["replica_key_id"],
-        "replica_access_key" => config_data["replica_access_key"]
-      }
-    }
-
-    # Write to development credentials using Rails runner
-    credentials_content = YAML.dump(credentials_yaml)
-    File.write(".credentials_temp.yml", credentials_content)
-
-    system!('bin/rails runner "
-      content = File.read(\".credentials_temp.yml\")
-      Rails.application.credentials.config.write(content)
-      puts \"  ✓ Development credentials updated\"
-    "')
-
-    # Clean up temp files
-    File.delete(".credentials_temp.yml") if File.exist?(".credentials_temp.yml")
-  else
-    puts "  ⊝ No credentials to write (Litestream not configured)"
-  end
-
-  # Clean up temp files
-  File.delete(".configure_temp.yml") if File.exist?(".configure_temp.yml")
 
   puts "\n" + "═" * 60
   puts "  ✓ All Done!"

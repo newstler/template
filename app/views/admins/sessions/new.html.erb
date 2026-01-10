@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center -mt-28">
+<div class="min-h-screen flex items-center justify-center bg-gray-50">
   <div class="max-w-md w-full">
     <div class="text-center mb-8">
       <div class="inline-flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mb-4">
@@ -21,7 +21,7 @@
             placeholder: "admin@example.com",
             class: "w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent" %>
           <p class="mt-2 text-sm text-gray-500">
-            Only existing admins can sign in. Contact another admin if you need access.
+            Only existing admins can sign in. You'll receive a magic link via email.
           </p>
         </div>
 
@@ -30,22 +30,16 @@
             class: "w-full bg-red-600 text-white py-2 px-4 rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 font-medium transition-colors" %>
         </div>
       <% end %>
-
-      <div class="mt-6 text-center">
-        <p class="text-sm text-gray-600">
-          Regular user? <%= link_to "Sign in here", new_session_path, class: "text-red-600 hover:text-red-800 font-medium" %>
-        </p>
-      </div>
     </div>
 
     <div class="mt-6 bg-amber-50 border border-amber-200 rounded-lg p-4">
       <div class="flex">
-        <svg class="w-5 h-5 text-amber-600 mt-0.5 mr-3" fill="currentColor" viewBox="0 0 20 20">
+        <svg class="w-5 h-5 text-amber-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
           <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
         </svg>
         <div class="text-sm text-amber-800">
-          <strong class="font-medium">Admin Area</strong>
-          <p class="mt-1">This is a restricted area. All login attempts are logged.</p>
+          <strong class="font-medium">Restricted Area</strong>
+          <p class="mt-1">This is the admin login. If you need admin access, contact an existing administrator.</p>
         </div>
       </div>
     </div>

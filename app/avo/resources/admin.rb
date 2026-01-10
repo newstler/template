@@ -1,15 +1,20 @@
 class Avo::Resources::Admin < Avo::BaseResource
-  # self.includes = []
-  # self.attachments = []
-  # self.search = {
-  #   query: -> { query.ransack(id_eq: q, m: "or").result(distinct: false) }
-  # }
+  self.title = :email
+  self.includes = []
+
+  self.search = {
+    query: -> { query.where("email LIKE ?", "%#{params[:q]}%") }
+  }
 
   def fields
-    field :email, as: :gravatar
-    field :email, as: :text
-    field :created_at, as: :date, readonly: true
-    field :updated_at, as: :date, readonly: true
-    field :id, as: :text, readonly: true
+    field :id, as: :id, readonly: true
+    field :email, as: :gravatar, link_to_record: true
+    field :email, as: :text, required: true, help: "Admin email address"
+    field :created_at, as: :date_time, readonly: true
+    field :updated_at, as: :date_time, readonly: true
+  end
+
+  def actions
+    action Avo::Actions::SendAdminMagicLink
   end
 end

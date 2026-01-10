@@ -1,5 +1,6 @@
 class Admins::SessionsController < ApplicationController
-  skip_before_action :authenticate_user!, only: [ :new, :create, :verify ]
+  # Admin login and magic link verification
+  # All admin management happens through Avo at /avo
 
   def new
     # Show admin login form
@@ -29,6 +30,6 @@ class Admins::SessionsController < ApplicationController
 
   def destroy
     session[:admin_id] = nil
-    redirect_to new_admins_session_path, notice: "Signed out successfully"
+    redirect_to root_path, notice: "Signed out successfully"
   end
 end

@@ -12,11 +12,17 @@
 
 Rails.application.configure do
   # Configure Litestream through Rails encrypted credentials
-  litestream_credentials = Rails.application.credentials.litestream
+  begin
+    litestream_credentials = Rails.application.credentials.litestream
 
-  config.litestream.replica_bucket = litestream_credentials&.replica_bucket
-  config.litestream.replica_key_id = litestream_credentials&.replica_key_id
-  config.litestream.replica_access_key = litestream_credentials&.replica_access_key
+    config.litestream.replica_bucket = litestream_credentials&.replica_bucket
+    config.litestream.replica_key_id = litestream_credentials&.replica_key_id
+    config.litestream.replica_access_key = litestream_credentials&.replica_access_key
+  rescue ActiveSupport::MessageEncryptor::InvalidMessage
+    # Credentials not yet configured - skip Litestream configuration
+    # This is expected during initial setup (bin/configure)
+    Rails.logger.debug "Litestream credentials not configured yet" if Rails.logger
+  end
 
   # Replica-specific bucket location. This will be your bucket's URL without the `https://` prefix.
   # For example, if you used DigitalOcean Spaces, your bucket URL could look like:
