@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  draw :madmin
   resources :chats do
     resources :messages, only: [:create]
   end
@@ -14,15 +15,15 @@ Rails.application.routes.draw do
   resource :session, only: [ :new, :create, :destroy ]
   get "auth/:token", to: "sessions#verify", as: :verify_magic_link
 
-  # Admin authentication (admin management happens in Avo)
+  # Admin authentication (admin management happens in Madmin)
   namespace :admins do
     resource :session, only: [ :new, :create, :destroy ]
     get "auth/:token", to: "sessions#verify", as: :verify_magic_link
   end
 
-  # Avo admin panel (requires admin authentication)
-  # Access at /avo - all admin management happens here
-  mount Avo::Engine, at: Avo.configuration.root_path
+  # Madmin admin panel (requires admin authentication)
+  # Access at /madmin - all admin management happens here
+  # Routes defined in config/routes/madmin.rb
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 

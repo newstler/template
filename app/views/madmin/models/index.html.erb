@@ -1,0 +1,105 @@
+<%= content_for :title, resource.friendly_name.pluralize %>
+
+<header class="header">
+  <h1><%= resource.friendly_name.pluralize %></h1>
+
+  <div class="actions">
+    <%= button_to "Refresh Models from RubyLLM",
+        refresh_all_madmin_models_path,
+        method: :post,
+        class: "btn btn-primary",
+        data: { turbo_confirm: "Refresh all models from RubyLLM?" } %>
+
+    <form class="search">
+      <%= hidden_field_tag :page, params[:page], value: 1 %>
+      <%= search_field_tag :q, params[:q], placeholder: "Search" %>
+    </form>
+
+    <%= link_to clear_search_params, class: "btn btn-secondary" do %>
+      <svg xmlns="http://www.w3.org/2000/svg" height="1rem" width="1rem" viewBox="0 0 20 20" fill="currentColor">
+        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
+      </svg>
+      <% end if params[:q].present? %>
+
+    <%= link_to resource.new_path, class: "btn btn-secondary" do %>
+      New <%= tag.span resource.friendly_name, class: "hidden md:inline-block" %>
+    <% end %>
+  </div>
+</header>
+
+<div class="filters mb-4 p-4 bg-gray-50 rounded">
+  <%= form_with url: madmin_models_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :provider, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.select :provider,
+          options_for_select([["All", ""], ["OpenAI", "openai"], ["Anthropic", "anthropic"]], params[:provider]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <%= f.submit "Filter", class: "btn btn-primary" %>
+    <%= link_to "Clear", madmin_models_path, class: "btn" %>
+  <% end %>
+</div>
+
+<nav class="scopes">
+  <% if resource.scopes.any? %>
+    <%= link_to "All", resource.index_path, class: class_names("btn btn-secondary", {"active" => params[:scope].blank?}) %>
+  <% end %>
+
+  <% resource.scopes.each do |scope| %>
+    <%= link_to scope.to_s.humanize, resource.index_path(scope: scope, q: params[:q], sort: params[:sort], direction: params[:direction]), class: class_names("btn btn-secondary", {"active" => params[:scope] == scope.to_s}) %>
+  <% end %>
+</nav>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <% resource.attributes.values.each do |attribute| %>
+          <% next if attribute.field.nil? %>
+          <% next unless attribute.field.visible?(action_name) %>
+
+          <th><%= sortable attribute.name, attribute.name.to_s.titleize %></th>
+        <% end %>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <% first_field = true %>
+          <% resource.attributes.values.each do |attribute| %>
+            <% next if attribute.field.nil? %>
+            <% next unless attribute.field.visible?(action_name) %>
+            <td>
+              <% if first_field %>
+                <%= link_to resource.show_path(record) do %>
+                  <%= render partial: attribute.field.to_partial_path("index"), locals: { field: attribute.field, record: record, resource: resource } %>
+                <% end %>
+                <% first_field = false %>
+              <% else %>
+                <%= render partial: attribute.field.to_partial_path("index"), locals: { field: attribute.field, record: record, resource: resource } %>
+              <% end %>
+            </td>
+          <% end %>
+
+          <td>
+            <%= link_to "Edit", resource.edit_path(record) %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

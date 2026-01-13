@@ -23,7 +23,7 @@ class Admins::SessionsController < ApplicationController
     admin = Admin.find_signed!(params[:token], purpose: :magic_link)
     session[:admin_id] = admin.id
 
-    redirect_to "/avo", notice: "Welcome back, admin!"
+    redirect_to "/madmin", notice: "Welcome back, admin!"
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     redirect_to new_admins_session_path, alert: "Invalid or expired magic link"
   end

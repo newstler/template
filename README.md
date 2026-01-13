@@ -12,7 +12,7 @@ A modern Rails 8 template following 37signals' vanilla Rails philosophy with bui
 - **Asset Pipeline**: Propshaft
 - **Deployment**: Kamal 2
 - **Authentication**: Magic Links (passwordless)
-- **Admin Panel**: Avo 3.x
+- **Admin Panel**: Madmin
 - **Primary Keys**: ULIDs (sortable, distributed-friendly)
 
 ## Features
@@ -89,11 +89,10 @@ Admins must be created by other admins:
 
 ### Admin Access
 
-- Admin panel: `/avo`
-- Admin management: `/admins/admins`
+- Admin panel: `/madmin`
 - Admin login: `/admins/session/new`
 
-Only authenticated admins can access Avo.
+Only authenticated admins can access Madmin.
 
 ## Development
 

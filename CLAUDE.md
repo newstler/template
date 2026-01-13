@@ -154,13 +154,18 @@ app/
 ├── clients/              # External service wrappers (create when needed)
 ├── controllers/
 │   ├── concerns/
+│   ├── madmin/           # Madmin resource controllers
 │   └── webhooks/         # Third-party webhooks
 ├── jobs/
 ├── mailers/
+├── madmin/
+│   ├── fields/           # Custom Madmin fields (Json, Gravatar)
+│   └── resources/        # Madmin resource definitions
 ├── models/
 │   └── concerns/
 └── views/
-    └── layouts/
+    ├── layouts/
+    └── madmin/           # Customized Madmin views (generated as needed)
 
 config/
 ├── deploy.yml            # Kamal configuration
@@ -181,14 +186,14 @@ This template uses **magic link authentication** (passwordless) with complete se
 - Mailer: `UserMailer.magic_link`
 - After login: redirects to `/home`
 
-### Admin Authentication (Avo Interface)
-- **All admin management happens through Avo at `/avo`**
+### Admin Authentication (Madmin Interface)
+- **All admin management happens through Madmin at `/madmin`**
 - Path: `/admins/session/new` (admin login form)
 - Model: `Admin` (email only)
 - Controller: `Admins::SessionsController`
 - Mailer: `AdminMailer.magic_link`
-- After magic link click: redirects to `/avo`
-- Admins must exist in database (created via seeds or Avo)
+- After magic link click: redirects to `/madmin`
+- Admins must exist in database (created via seeds or Madmin)
 
 ### Magic Link Implementation
 ```ruby
@@ -204,77 +209,78 @@ session[:user_id] = user.id
 
 ### Helper Methods (ApplicationController)
 - `current_user` - for public user interface
-- `current_admin` - for Avo admin interface
+- `current_admin` - for Madmin admin interface
 - `authenticate_user!` - for user-facing controllers
-- `authenticate_admin!` - for admin-specific controllers (not Avo)
+- `authenticate_admin!` - for admin-specific controllers (not Madmin)
 
 ### Interface Separation
 **IMPORTANT:** Keep interfaces completely separate:
 - User interface: `/session/new`, `/home`, `/chats`, etc.
-- Admin interface: `/admins/session/new` (login), `/avo` (admin panel)
+- Admin interface: `/admins/session/new` (login), `/madmin` (admin panel)
 - **No links between user and admin interfaces**
 - Admin login is separate from user login (different URLs, different styling)
-- All admin CRUD operations happen through Avo resources
+- All admin CRUD operations happen through Madmin resources
 
-## Avo Admin Panel
+## Madmin Admin Panel
 
-All administrative tasks are managed through **Avo** at `/avo`. Admin authentication uses `Admins::SessionsController`, but all CRUD operations (managing admins, users, chats, etc.) happen through Avo resources.
+All administrative tasks are managed through **Madmin** at `/madmin`. Admin authentication uses `Admins::SessionsController`, and all CRUD operations are performed through Madmin's generated controllers and views.
 
 ### Available Resources
 - **Admins** - Manage admin users, send magic links
-- **Users** - View/edit users, see their chats
-- **Chats** - View all AI chat sessions
-- **Messages** - Inspect individual messages, tokens, tool calls
-- **Models** - View available AI models, refresh from RubyLLM
-- **Tool Calls** - Debug function/tool calls
+- **Users** - View/edit users, filter by created date, see their chats
+- **Chats** - View all AI chat sessions, filter by created date
+- **Messages** - Inspect individual messages, tokens, tool calls; filter by role and created date
+- **Models** - View available AI models, refresh from RubyLLM, filter by provider
+- **Tool Calls** - Debug function/tool calls, filter by created date
 
 ### Admin Actions
-- **Send Magic Link** (Admins) - Send login link to admin(s)
-- **Refresh Models** (Models) - Update AI model registry from RubyLLM
+- **Send Magic Link** (Admin detail page) - Send login link to specific admin
+- **Refresh Models** (Models index) - Update AI model registry from RubyLLM
 
-### Avo Configuration
-```ruby
-# config/initializers/avo.rb
-config.current_user_method do
-  Admin.find_by(id: session[:admin_id]) if session[:admin_id]
-end
-
-config.authenticate_with do
-  admin = Admin.find_by(id: session[:admin_id]) if session[:admin_id]
-  redirect_to main_app.new_admins_session_path unless admin  # Redirect to admin login
-end
-```
-
-### Creating Avo Resources
-Follow this pattern for new resources:
+### Madmin Configuration
 
 ```ruby
-class Avo::Resources::ModelName < Avo::BaseResource
-  self.title = :name
-  self.includes = [:associations]
+# app/controllers/madmin/application_controller.rb
+class Madmin::ApplicationController < Madmin::BaseController
+  before_action :authenticate_admin!
 
-  self.search = {
-    query: -> { query.where("column LIKE ?", "%#{params[:q]}%") }
-  }
+  private
 
-  def fields
-    field :id, as: :id, readonly: true
-    field :name, as: :text, required: true
-    field :association, as: :belongs_to
-    field :created_at, as: :date_time, readonly: true
+  def authenticate_admin!
+    admin = Admin.find_by(id: session[:admin_id]) if session[:admin_id]
+    redirect_to main_app.new_admins_session_path unless admin
   end
 
-  def filters
-    filter Avo::Filters::CustomFilter
-  end
+  helper_method :current_admin
 
-  def actions
-    action Avo::Actions::CustomAction
+  def current_admin
+    @current_admin ||= Admin.find_by(id: session[:admin_id]) if session[:admin_id]
   end
 end
 ```
 
-**Location:** `app/avo/resources/`, `app/avo/actions/`, `app/avo/filters/`
+### Creating Madmin Resources
+
+```ruby
+class ModelResource < Madmin::Resource
+  attribute :id, form: false
+  attribute :name
+  attribute :email
+  attribute :association  # belongs_to or has_many
+  attribute :json_field, field: JsonField
+  attribute :email_with_gravatar, field: GravatarField, form: false
+  attribute :created_at, form: false
+
+  def self.searchable_attributes
+    [:name, :email]
+  end
+end
+```
+
+**Controllers:** `app/controllers/madmin/[models]_controller.rb`
+**Resources:** `app/madmin/resources/[model]_resource.rb`
+**Custom Fields:** `app/madmin/fields/[field]_field.rb`
+**Views:** `app/views/madmin/[models]/` (generated as needed)
 
 ## Important Development Practices
 
@@ -290,7 +296,7 @@ end
 - Create empty directories "for later"
 - Add gems before trying vanilla Rails
 - Create boolean columns for state (use records or enums)
-- Create separate admin controllers/views (use Avo instead)
+- Create separate admin controllers/views outside Madmin (use Madmin resources/controllers)
 - Mix user and admin interfaces (keep completely separate)
 - Link to admin interface from user interface
 
