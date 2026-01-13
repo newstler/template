@@ -1,4 +1,7 @@
 class ActiveStorage::VariantRecordResource < Madmin::Resource
+  # Menu configuration - nest under "Active Storage"
+  menu parent: "Active Storage", position: 3
+
   # Attributes
   attribute :id, form: false
   attribute :variation, index: false, show: false

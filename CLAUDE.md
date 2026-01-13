@@ -299,6 +299,7 @@ end
 - Create separate admin controllers/views outside Madmin (use Madmin resources/controllers)
 - Mix user and admin interfaces (keep completely separate)
 - Link to admin interface from user interface
+- Write inline SVG in ERB files (use inline_svg gem with .svg files)
 
 ### Code Style
 - RuboCop with auto-fix via lefthook
@@ -306,6 +307,33 @@ end
 - Thin controllers, rich models
 - Concerns for shared behavior
 - CRUD resources for everything
+
+### Icons and SVG
+**STRICT RULE:** Never write inline SVG code directly in ERB files.
+
+Always use the `inline_svg` gem with separate `.svg` files:
+
+```ruby
+# Good ✓
+<%= inline_svg "icons/users.svg", class: "w-6 h-6 text-blue-600" %>
+
+# Bad ✗
+<svg class="w-6 h-6">
+  <path d="..." />
+</svg>
+```
+
+**Icon organization:**
+- Store icons in `app/assets/images/icons/` (Rails asset pipeline convention)
+- Use semantic names: `users.svg`, `chat.svg`, `settings.svg`
+- Keep SVG files clean and minimal (viewBox, paths only)
+- Icons inherit color via `currentColor` and `stroke="currentColor"`
+
+**Benefits:**
+- Easy to update icons across the app
+- Icons can be reused everywhere
+- Cleaner ERB templates
+- Better maintainability
 
 ## Credentials
 

@@ -1,16 +1,67 @@
-<p style="color: green"><%= notice %></p>
-
 <% content_for :title, "Chats" %>
 
-<h1>Chats</h1>
+<div class="max-w-4xl mx-auto py-8">
+  <div class="flex items-center justify-between mb-8">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900">Your Chats</h1>
+      <p class="text-gray-500 mt-1">Continue a conversation or start a new one</p>
+    </div>
+    <%= link_to new_chat_path, class: "inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium" do %>
+      <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
+      New Chat
+    <% end %>
+  </div>
 
-<div id="chats">
-  <% @chats.each do |chat| %>
-    <%= render chat %>
-    <p>
-      <%= link_to "Show this chat", chat %>
-    </p>
+  <% if notice.present? %>
+    <div class="bg-green-50 border border-green-200 text-green-800 px-4 py-3 rounded-lg mb-6">
+      <%= notice %>
+    </div>
   <% end %>
-</div>
 
-<%= link_to "New chat", new_chat_path %>
+  <div id="chats" class="space-y-3">
+    <% if @chats.any? %>
+      <% @chats.each do |chat| %>
+        <%= link_to chat, class: "block rounded-xl p-4 hover:bg-gray-100 transition-all group" do %>
+          <div class="flex items-start justify-between">
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-3 mb-1">
+                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                  <%= inline_svg "icons/chat.svg", class: "w-4 h-4 text-white" %>
+                </div>
+                <div>
+                  <h3 class="font-medium text-gray-900 group-hover:text-blue-600 transition-colors">
+                    <%= chat.model&.name || 'Default Model' %>
+                  </h3>
+                </div>
+              </div>
+              <% if chat.messages.any? %>
+                <p class="text-gray-500 text-sm truncate pl-11">
+                  <% first_user_message = chat.messages.find { |m| m.role == 'user' } %>
+                  <%= first_user_message&.content&.truncate(100) || "No messages yet" %>
+                </p>
+              <% end %>
+            </div>
+            <div class="flex items-center gap-3 ml-4 flex-shrink-0">
+              <span class="text-xs text-gray-400">
+                <%= time_ago_in_words(chat.created_at) %> ago
+              </span>
+              <%= inline_svg "icons/chevron-left.svg", class: "w-4 h-4 text-gray-400 group-hover:text-blue-600 transition-colors rotate-180" %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
+    <% else %>
+      <div class="text-center py-16">
+        <div class="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+          <%= inline_svg "icons/chat.svg", class: "w-8 h-8 text-gray-400" %>
+        </div>
+        <h3 class="text-lg font-medium text-gray-900 mb-2">No chats yet</h3>
+        <p class="text-gray-500 mb-6">Start a conversation with an AI assistant</p>
+        <%= link_to new_chat_path, class: "inline-flex items-center gap-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors font-medium" do %>
+          <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
+          Start Your First Chat
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

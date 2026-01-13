@@ -1,7 +1,7 @@
-<div style="display: flex; flex-direction: column; gap: 3px; align-items: flex-start; font-family: monospace;">
+<div class="mt-3 space-y-2">
   <% message.tool_calls.each do |tool_call| %>
-    <div style="background: #eee; padding: 5px; border-radius: 4px;">
-      <%= tool_call.name %>(<%= tool_call.arguments.map { |k, v| "#{k}: #{v.inspect}" }.join(", ") %>)
+    <div class="bg-gray-100 rounded-lg px-3 py-2 font-mono text-sm text-gray-700">
+      <span class="text-purple-600 font-medium"><%= tool_call.name %></span>(<%= tool_call.arguments.map { |k, v| "#{k}: #{v.inspect}" }.join(", ") %>)
     </div>
   <% end %>
 </div>

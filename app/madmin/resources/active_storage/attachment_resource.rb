@@ -1,4 +1,7 @@
 class ActiveStorage::AttachmentResource < Madmin::Resource
+  # Menu configuration - nest under "Active Storage"
+  menu parent: "Active Storage", position: 1
+
   # Attributes
   attribute :id, form: false
   attribute :name

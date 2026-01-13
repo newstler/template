@@ -1,6 +1,6 @@
 class Admins::SessionsController < ApplicationController
   # Admin login and magic link verification
-  # All admin management happens through Avo at /avo
+  # All admin management happens through Madmin at /madmin
 
   def new
     # Show admin login form

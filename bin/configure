@@ -246,6 +246,6 @@ FileUtils.chdir APP_ROOT do
   puts "  2. Visit: /admins/session/new"
   puts "  3. Request magic link for: #{admin_email}"
   puts "  4. Check your email and click the magic link"
-  puts "  5. Access Avo admin panel at: /avo"
+  puts "  5. Access Madmin admin panel at: /madmin"
   puts
 end

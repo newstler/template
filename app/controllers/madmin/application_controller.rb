@@ -1,6 +1,7 @@
 module Madmin
   class ApplicationController < Madmin::BaseController
     before_action :authenticate_admin!
+    helper Madmin::ApplicationHelper
 
     private
 

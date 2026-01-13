@@ -1,0 +1,76 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= resource.display_name(@record) %>
+  </h1>
+
+  <div class="actions">
+    <% resource.member_actions.each do |action| %>
+      <%= instance_exec(@record, &action) %>
+    <% end %>
+    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
+    <%= button_to "Delete", resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+  </div>
+</header>
+
+<div class="bg-white rounded-lg shadow mb-6 p-4">
+  <div class="grid grid-cols-2 gap-4 text-sm">
+    <div>
+      <span class="text-gray-500">User:</span>
+      <span class="font-medium"><%= @record.user&.name || @record.user&.email %></span>
+    </div>
+    <div>
+      <span class="text-gray-500">Model:</span>
+      <span class="font-medium"><%= @record.model&.name || 'Default' %></span>
+    </div>
+    <div>
+      <span class="text-gray-500">Created:</span>
+      <span class="font-medium"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+    </div>
+    <div>
+      <span class="text-gray-500">Messages:</span>
+      <span class="font-medium"><%= @record.messages.count %></span>
+    </div>
+  </div>
+</div>
+
+<div class="bg-white rounded-lg shadow">
+  <div class="p-4 border-b border-gray-200">
+    <h2 class="text-lg font-semibold text-gray-900">Conversation</h2>
+  </div>
+  <div class="p-6 max-h-[600px] overflow-y-auto">
+    <div class="max-w-3xl mx-auto">
+      <% @record.messages.each do |message| %>
+        <div class="mb-6">
+          <% if message.role == 'user' %>
+            <div class="flex justify-end">
+              <div class="max-w-[85%]">
+                <div class="bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3">
+                  <div class="whitespace-pre-wrap"><%= message.content %></div>
+                </div>
+                <div class="text-xs text-gray-400 text-right mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+              </div>
+            </div>
+          <% elsif message.role == 'system' %>
+            <div class="flex justify-center">
+              <div>
+                <div class="bg-gray-100 text-gray-600 rounded-lg px-4 py-2 text-sm italic">
+                  <span class="font-medium">System:</span> <%= message.content.truncate(200) %>
+                </div>
+                <div class="text-xs text-gray-400 text-center mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+              </div>
+            </div>
+          <% else %>
+            <div>
+              <div class="prose max-w-none text-gray-700"><%= markdown(message.content) %></div>
+              <div class="text-xs text-gray-400 mt-2"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

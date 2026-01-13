@@ -1,0 +1,300 @@
+<div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div class="mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 mb-2">Dashboard</h1>
+      <p class="text-gray-600">Overview of your application data and activity</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-blue-100 rounded-lg">
+            <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-blue-600" %>
+          </div>
+          <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">+<%= @metrics[:recent_users] %></span>
+        </div>
+        <p class="text-3xl font-bold text-gray-900"><%= number_with_delimiter(@metrics[:total_users]) %></p>
+        <p class="text-sm text-gray-500 mt-1">Total Users</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-purple-100 rounded-lg">
+            <%= inline_svg "icons/chat.svg", class: "w-6 h-6 text-purple-600" %>
+          </div>
+          <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">+<%= @metrics[:recent_chats] %></span>
+        </div>
+        <p class="text-3xl font-bold text-gray-900"><%= number_with_delimiter(@metrics[:total_chats]) %></p>
+        <p class="text-sm text-gray-500 mt-1">Total Chats</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-green-100 rounded-lg">
+            <%= inline_svg "icons/messages.svg", class: "w-6 h-6 text-green-600" %>
+          </div>
+          <span class="text-xs font-medium text-green-600 bg-green-50 px-2 py-1 rounded-full">+<%= @metrics[:recent_messages] %></span>
+        </div>
+        <p class="text-3xl font-bold text-gray-900"><%= number_with_delimiter(@metrics[:total_messages]) %></p>
+        <p class="text-sm text-gray-500 mt-1">Total Messages</p>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 hover:shadow-md transition-shadow">
+        <div class="flex items-center justify-between mb-4">
+          <div class="p-3 bg-amber-100 rounded-lg">
+            <%= inline_svg "icons/lightning.svg", class: "w-6 h-6 text-amber-600" %>
+          </div>
+        </div>
+        <p class="text-3xl font-bold text-gray-900"><%= number_with_delimiter(@metrics[:total_tokens]) %></p>
+        <p class="text-sm text-gray-500 mt-1">AI Tokens Used</p>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <div class="lg:col-span-2 bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-semibold text-gray-900">Activity Overview</h2>
+          <span class="text-sm text-gray-500">Last 7 days</span>
+        </div>
+        <div class="h-64">
+          <canvas id="activityChart"></canvas>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-6">
+          <h2 class="text-lg font-semibold text-gray-900">Messages by Role</h2>
+        </div>
+        <div class="h-64 flex items-center justify-center">
+          <canvas id="roleChart"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-indigo-100 rounded-lg">
+            <%= inline_svg "icons/shield.svg", class: "w-5 h-5 text-indigo-600" %>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-gray-900"><%= @metrics[:total_admins] %></p>
+            <p class="text-xs text-gray-500">Admins</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-pink-100 rounded-lg">
+            <%= inline_svg "icons/computer.svg", class: "w-5 h-5 text-pink-600" %>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-gray-900"><%= number_with_delimiter(@metrics[:total_models]) %></p>
+            <p class="text-xs text-gray-500">AI Models</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-4 hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-teal-100 rounded-lg">
+            <%= inline_svg "icons/cog.svg", class: "w-5 h-5 text-teal-600" %>
+          </div>
+          <div>
+            <p class="text-2xl font-bold text-gray-900"><%= number_with_delimiter(@metrics[:total_tool_calls]) %></p>
+            <p class="text-xs text-gray-500">Tool Calls</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl shadow-sm p-4 text-white hover:shadow-md transition-shadow">
+        <div class="flex items-center gap-3">
+          <div class="p-2 bg-white/20 rounded-lg">
+            <%= inline_svg "icons/chart.svg", class: "w-5 h-5 text-white" %>
+          </div>
+          <div>
+            <p class="text-2xl font-bold"><%= @metrics[:recent_users] + @metrics[:recent_chats] + @metrics[:recent_messages] %></p>
+            <p class="text-xs opacity-90">Weekly Activity</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Recent Chats</h2>
+          <%= link_to "View all", "/madmin/chats", class: "text-sm text-blue-600 hover:text-blue-800 font-medium" %>
+        </div>
+        <div class="space-y-3">
+          <% if @recent_chats.any? %>
+            <% @recent_chats.each do |chat| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                    <%= chat.user.name.first.upcase %>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900"><%= chat.user.name %></p>
+                    <p class="text-sm text-gray-500"><%= chat.user.email %></p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-gray-500"><%= time_ago_in_words(chat.created_at) %> ago</p>
+                  <%= link_to "View", "/madmin/chats/#{chat.id}", class: "text-sm text-blue-600 hover:text-blue-800 font-medium" %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center py-8 text-gray-500">
+              <p>No chats yet</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-lg font-semibold text-gray-900">Recent Users</h2>
+          <%= link_to "View all", "/madmin/users", class: "text-sm text-blue-600 hover:text-blue-800 font-medium" %>
+        </div>
+        <div class="space-y-3">
+          <% if @recent_users.any? %>
+            <% @recent_users.each do |user| %>
+              <div class="flex items-center justify-between p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition-colors">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
+                    <%= user.name.first.upcase %>
+                  </div>
+                  <div>
+                    <p class="font-medium text-gray-900"><%= user.name %></p>
+                    <p class="text-sm text-gray-500"><%= user.email %></p>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <p class="text-sm text-gray-500"><%= time_ago_in_words(user.created_at) %> ago</p>
+                  <%= link_to "View", "/madmin/users/#{user.id}", class: "text-sm text-blue-600 hover:text-blue-800 font-medium" %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <div class="text-center py-8 text-gray-500">
+              <p>No users yet</p>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const activityCtx = document.getElementById('activityChart').getContext('2d');
+  new Chart(activityCtx, {
+    type: 'line',
+    data: {
+      labels: <%= raw @activity_chart_data[:labels].to_json %>,
+      datasets: [
+        {
+          label: 'Users',
+          data: <%= raw @activity_chart_data[:users].to_json %>,
+          borderColor: 'rgb(59, 130, 246)',
+          backgroundColor: 'rgba(59, 130, 246, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Chats',
+          data: <%= raw @activity_chart_data[:chats].to_json %>,
+          borderColor: 'rgb(147, 51, 234)',
+          backgroundColor: 'rgba(147, 51, 234, 0.1)',
+          tension: 0.4,
+          fill: true
+        },
+        {
+          label: 'Messages',
+          data: <%= raw @activity_chart_data[:messages].to_json %>,
+          borderColor: 'rgb(34, 197, 94)',
+          backgroundColor: 'rgba(34, 197, 94, 0.1)',
+          tension: 0.4,
+          fill: true
+        }
+      ]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            usePointStyle: true,
+            padding: 20
+          }
+        }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          },
+          grid: {
+            color: 'rgba(0, 0, 0, 0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
+        }
+      },
+      interaction: {
+        intersect: false,
+        mode: 'index'
+      }
+    }
+  });
+
+  <% if @message_role_data[:labels].any? %>
+  const roleCtx = document.getElementById('roleChart').getContext('2d');
+  new Chart(roleCtx, {
+    type: 'doughnut',
+    data: {
+      labels: <%= raw @message_role_data[:labels].to_json %>,
+      datasets: [{
+        data: <%= raw @message_role_data[:values].to_json %>,
+        backgroundColor: [
+          'rgb(59, 130, 246)',
+          'rgb(34, 197, 94)',
+          'rgb(147, 51, 234)',
+          'rgb(249, 115, 22)',
+          'rgb(236, 72, 153)'
+        ],
+        borderWidth: 0,
+        hoverOffset: 4
+      }]
+    },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      plugins: {
+        legend: {
+          position: 'bottom',
+          labels: {
+            usePointStyle: true,
+            padding: 15
+          }
+        }
+      },
+      cutout: '60%'
+    }
+  });
+  <% else %>
+  document.getElementById('roleChart').parentElement.innerHTML = '<p class="text-gray-500 text-center">No messages yet</p>';
+  <% end %>
+});
+</script>

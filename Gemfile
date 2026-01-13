@@ -69,4 +69,11 @@ gem "madmin", "~> 2.1"
 
 gem "ruby_llm", "~> 1.9"
 
+gem "inline_svg"
+
+gem "redcarpet"
+gem "rouge"
+
 gem "fast-mcp", "~> 1.6"
+
+gem "tidewave", "~> 0.4.1", group: :development

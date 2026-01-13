@@ -24,22 +24,24 @@
   </head>
 
   <body class="bg-gray-50">
-    <% if current_user %>
-      <nav class="bg-white border-b border-gray-200">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-          <div class="text-xl font-semibold">
-            <%= link_to content_for(:title) || "Template", home_path, class: "text-gray-900 no-underline" %>
+    <% unless content_for?(:hide_nav) %>
+      <% if current_user %>
+        <nav class="bg-white border-b border-gray-200">
+          <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="text-xl font-semibold">
+              <%= link_to content_for(:title) || "Template", home_path, class: "text-gray-900 no-underline" %>
+            </div>
+            <div class="flex items-center gap-4">
+              <span class="text-sm text-gray-600"><%= current_user.name %></span>
+              <%= button_to "Sign Out", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-800" %>
+            </div>
           </div>
-          <div class="flex items-center gap-4">
-            <span class="text-sm text-gray-600"><%= current_user.name %></span>
-            <%= button_to "Sign Out", session_path, method: :delete, class: "text-sm text-gray-600 hover:text-gray-800" %>
-          </div>
-        </div>
-      </nav>
+        </nav>
+      <% end %>
     <% end %>
 
     <% if flash.any? %>
-      <div class="container mx-auto px-4 mt-4">
+      <div class="<%= content_for?(:full_width) ? 'max-w-4xl mx-auto' : 'container mx-auto' %> px-4 mt-4">
         <% flash.each do |type, message| %>
           <div class="<%= type == 'notice' ? 'bg-green-50 border-green-200 text-green-800' : 'bg-red-50 border-red-200 text-red-800' %> border px-4 py-3 rounded mb-4">
             <%= message %>
@@ -48,7 +50,7 @@
       </div>
     <% end %>
 
-    <main class="container mx-auto mt-8 px-4">
+    <main class="<%= content_for?(:full_width) ? '' : 'container mx-auto mt-8 px-4' %>">
       <%= yield %>
     </main>
   </body>

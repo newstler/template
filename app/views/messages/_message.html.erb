@@ -1,13 +1,16 @@
-<div id="message_<%= message.id %>" class="message"
-     style="margin-bottom: 20px; padding: 10px; border-left: 3px solid <%= message.role == 'user' ? '#007bff' : '#28a745' %>">
-  <div style="font-weight: bold; margin-bottom: 5px;">
-    <%= message.role&.capitalize %>
-  </div>
-  <div id="message_<%= message.id %>_content" style="white-space: pre-wrap;"><%= message.content %></div>
-  <% if message.tool_call? %>
-    <%= render "messages/tool_calls", message: message %>
+<div id="message_<%= message.id %>" class="mb-6">
+  <% if message.role == 'user' %>
+    <div class="flex justify-end">
+      <div class="max-w-[85%] bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3">
+        <div class="whitespace-pre-wrap"><%= message.content %></div>
+      </div>
+    </div>
+  <% else %>
+    <div>
+      <div id="message_<%= message.id %>_content" class="prose max-w-none text-gray-700"><%= markdown(message.content) %></div>
+      <% if message.tool_call? %>
+        <%= render "messages/tool_calls", message: message %>
+      <% end %>
+    </div>
   <% end %>
-  <div style="font-size: 0.85em; color: #666; margin-top: 5px;">
-    <%= message.created_at&.strftime("%I:%M %p") %>
-  </div>
 </div>

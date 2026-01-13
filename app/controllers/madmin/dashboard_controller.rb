@@ -1,8 +1,6 @@
-module Admins
-  class DashboardController < ApplicationController
-    before_action :authenticate_admin!
-
-    def index
+module Madmin
+  class DashboardController < Madmin::ApplicationController
+    def show
       @metrics = {
         total_users: User.count,
         total_admins: Admin.count,
@@ -18,6 +16,9 @@ module Admins
 
       @recent_chats = Chat.includes(:user).order(created_at: :desc).limit(5)
       @recent_users = User.order(created_at: :desc).limit(5)
+
+      @activity_chart_data = build_activity_chart_data
+      @message_role_data = build_message_role_data
     end
 
     private
@@ -26,9 +27,23 @@ module Admins
       Message.sum("COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0) + COALESCE(cached_tokens, 0) + COALESCE(cache_creation_tokens, 0)")
     end
 
-    def authenticate_admin!
-      admin = Admin.find_by(id: session[:admin_id]) if session[:admin_id]
-      redirect_to new_admins_session_path unless admin
+    def build_activity_chart_data
+      dates = (6.days.ago.to_date..Date.current).to_a
+
+      {
+        labels: dates.map { |d| d.strftime("%b %d") },
+        users: dates.map { |d| User.where(created_at: d.all_day).count },
+        chats: dates.map { |d| Chat.where(created_at: d.all_day).count },
+        messages: dates.map { |d| Message.where(created_at: d.all_day).count }
+      }
+    end
+
+    def build_message_role_data
+      roles = Message.group(:role).count
+      {
+        labels: roles.keys.map(&:titleize),
+        values: roles.values
+      }
     end
   end
 end

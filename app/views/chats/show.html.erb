@@ -1,23 +1,26 @@
-<p style="color: green"><%= notice %></p>
-
 <%= turbo_stream_from "chat_#{@chat.id}" %>
 
 <% content_for :title, "Chat" %>
+<% content_for :full_width, true %>
 
-<h1>Chat <%= @chat.id %></h1>
+<div class="flex flex-col h-[calc(100vh-73px)]">
+  <div class="flex items-center px-4 py-2 border-b border-gray-200 bg-white">
+    <%= link_to chats_path, class: "p-2 hover:bg-gray-100 rounded-lg transition-colors" do %>
+      <%= inline_svg "icons/chevron-left.svg", class: "w-5 h-5 text-gray-600" %>
+    <% end %>
+  </div>
 
-<p>Using <strong><%= @chat.model.name %></strong></p>
+  <div class="flex-1 overflow-y-auto" data-controller="scroll-bottom">
+    <div id="messages" class="max-w-4xl mx-auto py-6 px-4">
+      <% @chat.messages.where.not(id: nil).each do |message| %>
+        <%= render message %>
+      <% end %>
+    </div>
+  </div>
 
-<div id="messages">
-  <% @chat.messages.where.not(id: nil).each do |message| %>
-    <%= render message %>
-  <% end %>
-</div>
-
-<div style="margin-top: 30px;">
-  <%= render "messages/form", chat: @chat, message: @message %>
-</div>
-
-<div style="margin-top: 20px;">
-  <%= link_to "Back to chats", chats_path %>
+  <div class="sticky bottom-0 bg-gray-50 pt-4 pb-6">
+    <div class="max-w-4xl mx-auto px-4">
+      <%= render "messages/form", chat: @chat, message: @message %>
+    </div>
+  </div>
 </div>
