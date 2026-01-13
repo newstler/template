@@ -14,9 +14,9 @@
   is_active = current_page?(path) || (!is_root && request.path.start_with?(path_str) && path_str.length > 1)
   nested = local_assigns[:nested] || false
 
-  base_classes = "flex items-center gap-3 px-3 py-2 text-sm rounded-lg transition-colors"
-  active_classes = "bg-dark-800 text-white"
-  inactive_classes = "text-dark-400 hover:text-dark-100 hover:bg-dark-800"
+  base_classes = "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200"
+  active_classes = "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
+  inactive_classes = "text-dark-400 hover:text-dark-100 hover:bg-white/5"
   nested_classes = nested ? "pl-10" : ""
 %>
 

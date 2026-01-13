@@ -4,8 +4,8 @@
     <p class="text-dark-400">Overview of your application data and activity</p>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6 hover:border-dark-600 transition-colors">
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-blue-500/20 rounded-lg">
           <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-blue-400" %>
@@ -16,7 +16,7 @@
       <p class="text-sm text-dark-400 mt-1">Total Users</p>
     </div>
 
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6 hover:border-dark-600 transition-colors">
+    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-purple-500/20 rounded-lg">
           <%= inline_svg "icons/chat.svg", class: "w-6 h-6 text-purple-400" %>
@@ -27,7 +27,7 @@
       <p class="text-sm text-dark-400 mt-1">Total Chats</p>
     </div>
 
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6 hover:border-dark-600 transition-colors">
+    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-green-500/20 rounded-lg">
           <%= inline_svg "icons/messages.svg", class: "w-6 h-6 text-green-400" %>
@@ -38,7 +38,7 @@
       <p class="text-sm text-dark-400 mt-1">Total Messages</p>
     </div>
 
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6 hover:border-dark-600 transition-colors">
+    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-amber-500/20 rounded-lg">
           <%= inline_svg "icons/lightning.svg", class: "w-6 h-6 text-amber-400" %>
@@ -47,10 +47,20 @@
       <p class="text-3xl font-bold text-dark-50"><%= number_with_delimiter(@metrics[:total_tokens]) %></p>
       <p class="text-sm text-dark-400 mt-1">AI Tokens Used</p>
     </div>
+
+    <div class="bg-gradient-to-br from-emerald-600/80 to-green-700/80 rounded-xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <div class="p-3 bg-white/20 rounded-lg">
+          <%= inline_svg "icons/dollar.svg", class: "w-6 h-6 text-white" %>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-white">$<%= number_with_precision(@metrics[:total_cost], precision: 4) %></p>
+      <p class="text-sm text-white/80 mt-1">Total Cost</p>
+    </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <div class="lg:col-span-2 bg-dark-900 rounded-xl border border-dark-700 p-6">
+    <div class="lg:col-span-2 bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-lg font-semibold text-dark-50">Activity Overview</h2>
         <span class="text-sm text-dark-400">Last 7 days</span>
@@ -60,7 +70,7 @@
       </div>
     </div>
 
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6">
+    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-lg font-semibold text-dark-50">Messages by Role</h2>
       </div>
@@ -71,7 +81,7 @@
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-4 hover:border-dark-600 transition-colors">
+    <div class="bg-dark-900/50 rounded-xl p-4 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-indigo-500/20 rounded-lg">
           <%= inline_svg "icons/shield.svg", class: "w-5 h-5 text-indigo-400" %>
@@ -83,7 +93,7 @@
       </div>
     </div>
 
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-4 hover:border-dark-600 transition-colors">
+    <div class="bg-dark-900/50 rounded-xl p-4 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-pink-500/20 rounded-lg">
           <%= inline_svg "icons/computer.svg", class: "w-5 h-5 text-pink-400" %>
@@ -95,7 +105,7 @@
       </div>
     </div>
 
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-4 hover:border-dark-600 transition-colors">
+    <div class="bg-dark-900/50 rounded-xl p-4 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-teal-500/20 rounded-lg">
           <%= inline_svg "icons/cog.svg", class: "w-5 h-5 text-teal-400" %>
@@ -107,9 +117,9 @@
       </div>
     </div>
 
-    <div class="bg-gradient-to-br from-blue-600 to-indigo-600 rounded-xl p-4 text-white hover:shadow-lg hover:shadow-blue-500/20 transition-all">
+    <div class="bg-gradient-to-br from-dark-700 to-dark-800 rounded-xl p-4 text-white shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-white/20 rounded-lg">
+        <div class="p-2 bg-white/10 rounded-lg">
           <%= inline_svg "icons/chart.svg", class: "w-5 h-5 text-white" %>
         </div>
         <div>
@@ -121,15 +131,15 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6">
+    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-semibold text-dark-50">Recent Chats</h2>
-        <%= link_to "View all", "/madmin/chats", class: "text-sm text-blue-400 hover:text-blue-300 font-medium" %>
+        <%= link_to "View all", "/madmin/chats", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
       </div>
       <div class="space-y-3">
         <% if @recent_chats.any? %>
           <% @recent_chats.each do |chat| %>
-            <div class="flex items-center justify-between p-3 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+            <div class="flex items-center justify-between p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
                   <%= chat.user.name.first.upcase %>
@@ -153,15 +163,15 @@
       </div>
     </div>
 
-    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6">
+    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-semibold text-dark-50">Recent Users</h2>
-        <%= link_to "View all", "/madmin/users", class: "text-sm text-blue-400 hover:text-blue-300 font-medium" %>
+        <%= link_to "View all", "/madmin/users", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
       </div>
       <div class="space-y-3">
         <% if @recent_users.any? %>
           <% @recent_users.each do |user| %>
-            <div class="flex items-center justify-between p-3 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+            <div class="flex items-center justify-between p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors">
               <div class="flex items-center gap-3">
                 <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
                   <%= user.name.first.upcase %>
@@ -205,7 +215,8 @@ document.addEventListener('DOMContentLoaded', function() {
           borderColor: 'rgb(59, 130, 246)',
           backgroundColor: 'rgba(59, 130, 246, 0.1)',
           tension: 0.4,
-          fill: true
+          fill: true,
+          yAxisID: 'y'
         },
         {
           label: 'Chats',
@@ -213,7 +224,8 @@ document.addEventListener('DOMContentLoaded', function() {
           borderColor: 'rgb(147, 51, 234)',
           backgroundColor: 'rgba(147, 51, 234, 0.1)',
           tension: 0.4,
-          fill: true
+          fill: true,
+          yAxisID: 'y'
         },
         {
           label: 'Messages',
@@ -221,7 +233,17 @@ document.addEventListener('DOMContentLoaded', function() {
           borderColor: 'rgb(34, 197, 94)',
           backgroundColor: 'rgba(34, 197, 94, 0.1)',
           tension: 0.4,
-          fill: true
+          fill: true,
+          yAxisID: 'y'
+        },
+        {
+          label: 'Cost ($)',
+          data: <%= raw @activity_chart_data[:cost].to_json %>,
+          borderColor: 'rgb(16, 185, 129)',
+          backgroundColor: 'rgba(16, 185, 129, 0.1)',
+          tension: 0.4,
+          fill: true,
+          yAxisID: 'y1'
         }
       ]
     },
@@ -239,12 +261,29 @@ document.addEventListener('DOMContentLoaded', function() {
       },
       scales: {
         y: {
+          type: 'linear',
+          display: true,
+          position: 'left',
           beginAtZero: true,
           ticks: {
             stepSize: 1
           },
           grid: {
             color: 'rgba(51, 65, 85, 0.5)'
+          }
+        },
+        y1: {
+          type: 'linear',
+          display: true,
+          position: 'right',
+          beginAtZero: true,
+          grid: {
+            drawOnChartArea: false
+          },
+          ticks: {
+            callback: function(value) {
+              return '$' + value.toFixed(4);
+            }
           }
         },
         x: {

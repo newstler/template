@@ -1,6 +1,6 @@
 <%= form_with(model: message, url: [@chat, message], id: "new_message", data: { controller: "chat-input", chat_input_target: "form" }) do |form| %>
   <% if message.errors.any? %>
-    <div class="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg mb-4">
+    <div class="bg-red-500/10 text-red-300 px-4 py-3 rounded-lg mb-4">
       <ul class="list-disc list-inside text-sm">
         <% message.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -9,7 +9,7 @@
     </div>
   <% end %>
 
-  <div class="bg-dark-800 rounded-2xl border border-dark-600 shadow-lg">
+  <div class="bg-dark-800/80 rounded-2xl shadow-lg shadow-black/30 focus-within:shadow-[0_0_20px_rgba(255,255,255,0.08)] transition-shadow">
     <div class="p-3">
       <%= form.text_area :content,
           rows: 1,
@@ -21,15 +21,15 @@
             action: "keydown->chat-input#submit input->chat-input#resize"
           } %>
     </div>
-    <div class="flex items-center justify-between px-3 py-2 border-t border-dark-700">
+    <div class="flex items-center justify-between px-3 py-2">
       <div class="flex items-center gap-2 text-dark-500">
-        <button type="button" class="p-1.5 hover:bg-dark-700 rounded-lg transition-colors">
+        <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors">
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
         </button>
       </div>
       <div class="flex items-center gap-3">
-        <span class="text-sm text-dark-400"><%= @chat.model&.name || 'Default' %></span>
-        <%= form.button type: "submit", class: "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg p-2 transition-all cursor-pointer shadow-lg shadow-blue-500/25" do %>
+        <span class="text-sm text-dark-500"><%= @chat.model&.name || 'Default' %></span>
+        <%= form.button type: "submit", class: "bg-dark-600 hover:bg-dark-500 text-white rounded-lg p-2 transition-colors cursor-pointer" do %>
           <%= inline_svg "icons/arrow-up.svg", class: "w-4 h-4" %>
         <% end %>
       </div>

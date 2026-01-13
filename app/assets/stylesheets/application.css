@@ -18,6 +18,20 @@
   --dark-850: #172033;
   --dark-900: #0f172a;
   --dark-950: #0a1120;
+
+  /* Sidebar (darker than main content) */
+  --sidebar-bg: #080a10;
+  --sidebar-hover: rgba(255,255,255,0.05);
+  --sidebar-active: rgba(59,130,246,0.15);
+
+  /* Glow effects */
+  --glow-blue: rgba(59,130,246,0.4);
+  --glow-purple: rgba(147,51,234,0.4);
+
+  /* Card styling */
+  --card-bg: rgba(30,41,59,0.4);
+  --card-shadow: 0 4px 24px rgba(0,0,0,0.4);
+  --card-border: rgba(255,255,255,0.05);
 }
 
 /* ================================
@@ -80,12 +94,12 @@
 }
 
 .prose a {
-  color: #60a5fa;
+  color: #94a3b8;
   text-decoration: underline;
 }
 
 .prose a:hover {
-  color: #93c5fd;
+  color: #e2e8f0;
 }
 
 .prose table {
@@ -121,8 +135,7 @@
 
 .prose pre {
   background-color: var(--dark-900);
-  border: 1px solid var(--dark-700);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   padding: 1rem;
   overflow-x: auto;
   margin: 1rem 0;
@@ -139,8 +152,7 @@
    ================================ */
 .highlight {
   background-color: var(--dark-900);
-  border: 1px solid var(--dark-700);
-  border-radius: 0.5rem;
+  border-radius: 0.75rem;
   padding: 1rem;
   overflow-x: auto;
   margin: 0.75rem 0;
@@ -332,11 +344,11 @@
 }
 
 .dark a {
-  color: #60a5fa;
+  color: #94a3b8;
 }
 
 .dark a:hover {
-  color: #93c5fd;
+  color: #e2e8f0;
 }
 
 /* Madmin Header */
@@ -497,12 +509,12 @@
 }
 
 .dark table td a {
-  color: #60a5fa;
+  color: #94a3b8;
   text-decoration: none;
 }
 
 .dark table td a:hover {
-  color: #93c5fd;
+  color: #e2e8f0;
   text-decoration: underline;
 }
 

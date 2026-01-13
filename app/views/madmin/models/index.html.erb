@@ -27,10 +27,10 @@
   </div>
 </header>
 
-<div class="filters mb-4 p-4 bg-gray-50 rounded">
+<div class="filters mb-4 p-4 bg-dark-900/50 rounded-xl shadow-lg shadow-black/20">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :provider, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.label :provider, class: "block text-sm font-medium text-dark-300" %>
       <%= f.select :provider,
           options_for_select([["All", ""], ["OpenAI", "openai"], ["Anthropic", "anthropic"]], params[:provider]),
           {},

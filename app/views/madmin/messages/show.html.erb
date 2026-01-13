@@ -16,25 +16,25 @@
   </div>
 </header>
 
-<div class="bg-white rounded-lg shadow mb-6 p-4">
+<div class="bg-dark-900/50 rounded-xl p-5 mb-6">
   <div class="grid grid-cols-2 gap-4 text-sm">
     <div>
-      <span class="text-gray-500">Chat:</span>
-      <span class="font-medium"><%= link_to @record.chat_id, madmin_chat_path(@record.chat), class: "text-blue-600 hover:underline" %></span>
+      <span class="text-dark-500">Chat:</span>
+      <span class="font-medium"><%= link_to @record.chat_id, "/madmin/chats/#{@record.chat_id}", class: "text-dark-300 hover:text-dark-100" %></span>
     </div>
     <div>
-      <span class="text-gray-500">Role:</span>
-      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @record.role == 'user' ? 'bg-blue-100 text-blue-800' : @record.role == 'assistant' ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' %>">
+      <span class="text-dark-500">Role:</span>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @record.role == 'user' ? 'bg-blue-500/20 text-blue-300' : @record.role == 'assistant' ? 'bg-green-500/20 text-green-300' : 'bg-dark-700 text-dark-300' %>">
         <%= @record.role %>
       </span>
     </div>
     <div>
-      <span class="text-gray-500">Created:</span>
-      <span class="font-medium"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+      <span class="text-dark-500">Created:</span>
+      <span class="font-medium text-dark-200"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
     </div>
     <div>
-      <span class="text-gray-500">Tokens:</span>
-      <span class="font-medium">
+      <span class="text-dark-500">Tokens:</span>
+      <span class="font-medium text-dark-200">
         <% if @record.input_tokens.present? || @record.output_tokens.present? %>
           In: <%= @record.input_tokens || 0 %> / Out: <%= @record.output_tokens || 0 %>
         <% else %>
@@ -45,38 +45,38 @@
   </div>
 </div>
 
-<div class="bg-white rounded-lg shadow">
-  <div class="p-4 border-b border-gray-200">
-    <h2 class="text-lg font-semibold text-gray-900">Message Content</h2>
+<div class="bg-dark-900/50 rounded-xl overflow-hidden">
+  <div class="px-5 py-4">
+    <h2 class="text-lg font-semibold text-dark-100">Message Content</h2>
   </div>
-  <div class="p-6">
+  <div class="p-5 pt-0">
     <% if @record.role == 'user' %>
       <div class="flex justify-end">
-        <div class="max-w-[85%] bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3">
+        <div class="max-w-[85%] bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-blue-500/20">
           <div class="whitespace-pre-wrap"><%= @record.content %></div>
         </div>
       </div>
     <% elsif @record.role == 'system' %>
-      <div class="bg-gray-100 text-gray-600 rounded-lg px-4 py-3">
-        <span class="font-medium">System Prompt:</span>
+      <div class="bg-dark-800/50 text-dark-300 rounded-lg px-4 py-3">
+        <span class="font-medium text-dark-200">System Prompt:</span>
         <div class="mt-2 whitespace-pre-wrap"><%= @record.content %></div>
       </div>
     <% else %>
-      <div class="prose max-w-none text-gray-700"><%= markdown(@record.content) %></div>
+      <div class="prose max-w-none"><%= markdown(@record.content) %></div>
     <% end %>
   </div>
 </div>
 
 <% if @record.tool_calls.any? %>
-  <div class="bg-white rounded-lg shadow mt-6">
-    <div class="p-4 border-b border-gray-200">
-      <h2 class="text-lg font-semibold text-gray-900">Tool Calls</h2>
+  <div class="bg-dark-900/50 rounded-xl mt-6 overflow-hidden">
+    <div class="px-5 py-4">
+      <h2 class="text-lg font-semibold text-dark-100">Tool Calls</h2>
     </div>
-    <div class="p-4">
+    <div class="p-5 pt-0">
       <% @record.tool_calls.each do |tool_call| %>
-        <div class="bg-gray-50 rounded-lg p-4 mb-4 last:mb-0">
-          <div class="font-medium text-gray-900 mb-2"><%= tool_call.name %></div>
-          <pre class="text-sm bg-gray-900 text-gray-100 rounded p-3 overflow-x-auto"><%= JSON.pretty_generate(tool_call.arguments) rescue tool_call.arguments %></pre>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-4 last:mb-0">
+          <div class="font-medium text-dark-100 mb-2"><%= tool_call.name %></div>
+          <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-3 overflow-x-auto"><%= JSON.pretty_generate(tool_call.arguments) rescue tool_call.arguments %></pre>
         </div>
       <% end %>
     </div>

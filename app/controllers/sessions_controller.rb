@@ -25,7 +25,7 @@ class SessionsController < ApplicationController
     user = User.find_signed!(params[:token], purpose: :magic_link)
     session[:user_id] = user.id
 
-    redirect_to home_path, notice: "Welcome back, #{user.name}!"
+    redirect_to root_path, notice: "Welcome back, #{user.name}!"
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     redirect_to new_session_path, alert: "Invalid or expired magic link"
   end

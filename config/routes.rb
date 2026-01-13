@@ -8,8 +8,8 @@ Rails.application.routes.draw do
       post :refresh
     end
   end
-  # User dashboard
-  get "home", to: "home#index", as: :home
+  # Redirect /home to root for clean URLs
+  get "home", to: redirect("/", status: 301)
 
   # User authentication (magic link - creates user on first use)
   resource :session, only: [ :new, :create, :destroy ]

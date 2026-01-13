@@ -21,10 +21,10 @@
   </div>
 </header>
 
-<div class="filters mb-4 p-4 bg-gray-50 rounded">
+<div class="filters mb-4 p-4 bg-dark-900/50 rounded-xl shadow-lg shadow-black/20">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :role, class: "block text-sm font-medium text-gray-700" %>
+      <%= f.label :role, class: "block text-sm font-medium text-dark-300" %>
       <%= f.select :role,
           options_for_select([["All", ""], ["System", "system"], ["User", "user"], ["Assistant", "assistant"]], params[:role]),
           {},
@@ -32,12 +32,12 @@
     </div>
 
     <div>
-      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300" %>
       <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
     </div>
 
     <div>
-      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-gray-700" %>
+      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300" %>
       <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
     </div>
 

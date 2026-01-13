@@ -4,13 +4,6 @@
 <% content_for :full_width, true %>
 
 <div class="flex flex-col h-[calc(100vh-64px)] lg:h-screen">
-  <div class="flex items-center px-4 py-3 border-b border-dark-700 bg-dark-900">
-    <%= link_to chats_path, class: "p-2 hover:bg-dark-800 rounded-lg transition-colors" do %>
-      <%= inline_svg "icons/chevron-left.svg", class: "w-5 h-5 text-dark-400" %>
-    <% end %>
-    <span class="ml-2 text-dark-200 font-medium"><%= @chat.model&.name || 'Chat' %></span>
-  </div>
-
   <div class="flex-1 overflow-y-auto bg-dark-950" data-controller="scroll-bottom">
     <div id="messages" class="max-w-4xl mx-auto py-6 px-4">
       <% @chat.messages.where.not(id: nil).each do |message| %>
@@ -19,7 +12,7 @@
     </div>
   </div>
 
-  <div class="sticky bottom-0 bg-dark-900 border-t border-dark-700 pt-4 pb-6">
+  <div class="sticky bottom-0 bg-gradient-to-t from-dark-950 via-dark-950 to-transparent pt-8 pb-6">
     <div class="max-w-4xl mx-auto px-4">
       <%= render "messages/form", chat: @chat, message: @message %>
     </div>
