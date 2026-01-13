@@ -2,24 +2,20 @@
 
 <div class="max-w-2xl mx-auto py-12">
   <div class="text-center mb-8">
-    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4">
-      <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path>
-      </svg>
+    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/25">
+      <%= inline_svg "icons/chat.svg", class: "w-8 h-8 text-white" %>
     </div>
-    <h1 class="text-2xl font-bold text-gray-900 mb-2">Start a New Chat</h1>
-    <p class="text-gray-500">Choose a model and begin your conversation</p>
+    <h1 class="text-2xl font-bold text-dark-50 mb-2">Start a New Chat</h1>
+    <p class="text-dark-400">Choose a model and begin your conversation</p>
   </div>
 
-  <div class="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+  <div class="bg-dark-900 rounded-xl border border-dark-700 p-6">
     <%= render "form", chat: @chat %>
   </div>
 
   <div class="text-center mt-6">
-    <%= link_to chats_path, class: "inline-flex items-center gap-2 text-gray-500 hover:text-gray-700 transition-colors" do %>
-      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path>
-      </svg>
+    <%= link_to chats_path, class: "inline-flex items-center gap-2 text-dark-400 hover:text-dark-200 transition-colors" do %>
+      <%= inline_svg "icons/chevron-left.svg", class: "w-4 h-4" %>
       Back to chats
     <% end %>
   </div>

@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="<%= I18n.locale %>">
+<html lang="<%= I18n.locale %>" class="dark">
   <head>
     <meta charset="utf-8">
     <meta name="ROBOTS" content="NOODP">
-    <meta name="viewport" content="initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#0f172a">
     <title>
       <% if content_for? :title %>
         <%= yield(:title) %> -
@@ -12,31 +13,42 @@
     </title>
     <%= csrf_meta_tags %>
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= render "javascript" %>
+    <%= javascript_importmap_tags %>
   </head>
-  <body class="<%= controller_name %> <%= action_name %> bg-gray-50" data-controller="mobile-nav">
-    <header>
+
+  <body class="<%= controller_name %> <%= action_name %> bg-dark-950 text-dark-100 min-h-screen" data-controller="sidebar">
+    <%# Sidebar Navigation %>
+    <%= render "madmin/application/sidebar" %>
+
+    <%# Mobile header %>
+    <header class="lg:hidden fixed top-0 left-0 right-0 z-20 h-16 bg-dark-900 border-b border-dark-700 flex items-center px-4">
+      <button type="button"
+              data-action="click->sidebar#toggle"
+              class="p-2 -ml-2 text-dark-400 hover:text-dark-100 hover:bg-dark-800 rounded-lg transition-colors">
+        <%= inline_svg "icons/menu.svg", class: "w-6 h-6" %>
+      </button>
+      <span class="ml-3 font-semibold text-white"><%= Madmin.site_name %> Admin</span>
+    </header>
+
+    <%# Main content area %>
+    <div class="lg:pl-64">
+      <%# Spacer for mobile header %>
+      <div class="h-16 lg:hidden"></div>
+
+      <%# Flash messages %>
       <%= render "flash" %>
-    </header>
-    <header id="navbar">
-      <div class="nav-group">
-        <button id="hamburger-menu" type="button" data-action="click->mobile-nav#toggle" aria-label="Open menu" aria-expanded="false" aria-controls="sidebar">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="size-5"> <path fill-rule="evenodd" d="M2 4.75A.75.75 0 0 1 2.75 4h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 4.75ZM2 10a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75A.75.75 0 0 1 2 10Zm0 5.25a.75.75 0 0 1 .75-.75h14.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z" clip-rule="evenodd" /> </svg>
-        </button>
-        <%= link_to Madmin.site_name, try(:root_url) || "/madmin", data: {turbo: false}  %>
-      </div>
-    </header>
 
-    <main>
-      <aside id="sidebar" data-mobile-nav-target="menu">
-        <%= render "navigation" %>
-      </aside>
-
-      <div>
+      <%# Page content %>
+      <main class="p-4 lg:p-8">
         <%= yield %>
-      </div>
-    </main>
+      </main>
+    </div>
 
-    <div data-mobile-nav-target="overlay" data-action="click->mobile-nav#close" class="mobile-nav-overlay"></div>
+    <%# Mobile overlay %>
+    <div data-sidebar-target="overlay"
+         data-action="click->sidebar#close"
+         class="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm hidden lg:hidden"></div>
   </body>
 </html>

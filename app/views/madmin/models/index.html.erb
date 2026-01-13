@@ -5,7 +5,7 @@
 
   <div class="actions">
     <%= button_to "Refresh Models from RubyLLM",
-        refresh_all_madmin_models_path,
+        "/madmin/models/refresh_all",
         method: :post,
         class: "btn btn-primary",
         data: { turbo_confirm: "Refresh all models from RubyLLM?" } %>
@@ -28,7 +28,7 @@
 </header>
 
 <div class="filters mb-4 p-4 bg-gray-50 rounded">
-  <%= form_with url: madmin_models_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
     <div>
       <%= f.label :provider, class: "block text-sm font-medium text-gray-700" %>
       <%= f.select :provider,
@@ -38,7 +38,7 @@
     </div>
 
     <%= f.submit "Filter", class: "btn btn-primary" %>
-    <%= link_to "Clear", madmin_models_path, class: "btn" %>
+    <%= link_to "Clear", resource.index_path, class: "btn" %>
   <% end %>
 </div>
 

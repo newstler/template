@@ -1,6 +1,6 @@
 <%= form_with(model: chat, url: chats_path, class: "space-y-6") do |form| %>
   <% if chat.errors.any? %>
-    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg">
+    <div class="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg">
       <h3 class="font-medium"><%= pluralize(chat.errors.count, "error") %> prohibited this chat from being saved:</h3>
       <ul class="list-disc list-inside mt-2 text-sm">
         <% chat.errors.each do |error| %>
@@ -11,24 +11,24 @@
   <% end %>
 
   <div>
-    <%= form.label :model, "AI Model", class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.label :model, "AI Model", class: "block text-sm font-medium text-dark-200 mb-2" %>
     <%= form.select :model,
         options_for_select(Model.pluck(:name, :model_id).unshift(["Default (#{RubyLLM.config.default_model})", nil]), @selected_model),
         {},
-        class: "w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-all" %>
-    <p class="text-xs text-gray-500 mt-1">Select the AI model for this conversation</p>
+        class: "w-full rounded-lg border border-dark-600 bg-dark-800 text-dark-100 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all" %>
+    <p class="text-xs text-dark-500 mt-1">Select the AI model for this conversation</p>
   </div>
 
   <div>
-    <%= form.label :prompt, "Your Message", class: "block text-sm font-medium text-gray-700 mb-2" %>
+    <%= form.label :prompt, "Your Message", class: "block text-sm font-medium text-dark-200 mb-2" %>
     <%= form.text_area :prompt,
         rows: 3,
-        class: "w-full rounded-lg border border-gray-300 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500 focus:ring-opacity-20 focus:outline-none transition-all resize-none placeholder-gray-400",
+        class: "w-full rounded-lg border border-dark-600 bg-dark-800 text-dark-100 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all resize-none placeholder-dark-500",
         placeholder: "What would you like to discuss?",
         autofocus: true %>
   </div>
 
   <div>
-    <%= form.submit "Start Chat", class: "w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition-colors cursor-pointer" %>
+    <%= form.submit "Start Chat", class: "w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-all cursor-pointer shadow-lg shadow-blue-500/25" %>
   </div>
 <% end %>

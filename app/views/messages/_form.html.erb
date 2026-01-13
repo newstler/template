@@ -1,6 +1,6 @@
 <%= form_with(model: message, url: [@chat, message], id: "new_message", data: { controller: "chat-input", chat_input_target: "form" }) do |form| %>
   <% if message.errors.any? %>
-    <div class="bg-red-50 border border-red-200 text-red-800 px-4 py-3 rounded-lg mb-4">
+    <div class="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg mb-4">
       <ul class="list-disc list-inside text-sm">
         <% message.errors.each do |error| %>
           <li><%= error.full_message %></li>
@@ -9,11 +9,11 @@
     </div>
   <% end %>
 
-  <div class="bg-white rounded-2xl border border-gray-200 shadow-sm">
+  <div class="bg-dark-800 rounded-2xl border border-dark-600 shadow-lg">
     <div class="p-3">
       <%= form.text_area :content,
           rows: 1,
-          class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none placeholder-gray-400 text-gray-900",
+          class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none placeholder-dark-500 text-dark-100",
           placeholder: "Reply...",
           autofocus: true,
           data: {
@@ -21,15 +21,15 @@
             action: "keydown->chat-input#submit input->chat-input#resize"
           } %>
     </div>
-    <div class="flex items-center justify-between px-3 py-2 border-t border-gray-100">
-      <div class="flex items-center gap-2 text-gray-400">
-        <button type="button" class="p-1.5 hover:bg-gray-100 rounded-lg transition-colors">
+    <div class="flex items-center justify-between px-3 py-2 border-t border-dark-700">
+      <div class="flex items-center gap-2 text-dark-500">
+        <button type="button" class="p-1.5 hover:bg-dark-700 rounded-lg transition-colors">
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
         </button>
       </div>
       <div class="flex items-center gap-3">
-        <span class="text-sm text-gray-500"><%= @chat.model&.name || 'Default' %></span>
-        <%= form.button type: "submit", class: "bg-orange-600 hover:bg-orange-700 text-white rounded-lg p-2 transition-colors cursor-pointer" do %>
+        <span class="text-sm text-dark-400"><%= @chat.model&.name || 'Default' %></span>
+        <%= form.button type: "submit", class: "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white rounded-lg p-2 transition-all cursor-pointer shadow-lg shadow-blue-500/25" do %>
           <%= inline_svg "icons/arrow-up.svg", class: "w-4 h-4" %>
         <% end %>
       </div>

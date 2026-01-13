@@ -1,56 +1,52 @@
-<div class="max-w-4xl mx-auto">
+<% content_for :title, "Home" %>
+
+<div class="max-w-4xl">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-gray-900">Welcome, <%= @user.name %>!</h1>
-    <p class="text-gray-600 mt-1">You're successfully signed in</p>
+    <h1 class="text-3xl font-bold text-dark-50">Welcome, <%= @user.name %>!</h1>
+    <p class="text-dark-400 mt-1">You're successfully signed in</p>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6">
       <div class="flex items-center mb-4">
-        <div class="w-10 h-10 bg-indigo-100 rounded-full flex items-center justify-center">
-          <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-          </svg>
+        <div class="w-10 h-10 bg-indigo-500/20 rounded-full flex items-center justify-center">
+          <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-indigo-400" %>
         </div>
-        <h2 class="text-xl font-semibold text-gray-900 ml-3">Your Profile</h2>
+        <h2 class="text-xl font-semibold text-dark-50 ml-3">Your Profile</h2>
       </div>
       <dl class="space-y-3">
         <div>
-          <dt class="text-sm font-medium text-gray-500">Email</dt>
-          <dd class="text-sm text-gray-900"><%= @user.email %></dd>
+          <dt class="text-sm font-medium text-dark-400">Email</dt>
+          <dd class="text-sm text-dark-100"><%= @user.email %></dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-gray-500">Name</dt>
-          <dd class="text-sm text-gray-900"><%= @user.name %></dd>
+          <dt class="text-sm font-medium text-dark-400">Name</dt>
+          <dd class="text-sm text-dark-100"><%= @user.name %></dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-gray-500">Member Since</dt>
-          <dd class="text-sm text-gray-900"><%= @user.created_at.strftime("%B %d, %Y") %></dd>
+          <dt class="text-sm font-medium text-dark-400">Member Since</dt>
+          <dd class="text-sm text-dark-100"><%= @user.created_at.strftime("%B %d, %Y") %></dd>
         </div>
       </dl>
     </div>
 
-    <div class="bg-white rounded-lg border border-gray-200 shadow-sm p-6">
+    <div class="bg-dark-900 rounded-xl border border-dark-700 p-6">
       <div class="flex items-center mb-4">
-        <div class="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-          <svg class="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-          </svg>
+        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+          <%= inline_svg "icons/shield.svg", class: "w-6 h-6 text-green-400" %>
         </div>
-        <h2 class="text-xl font-semibold text-gray-900 ml-3">Authentication</h2>
+        <h2 class="text-xl font-semibold text-dark-50 ml-3">Authentication</h2>
       </div>
       <div class="space-y-3">
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-dark-300">
           You're signed in using magic link authentication. No passwords needed!
         </p>
-        <div class="bg-green-50 border border-green-200 rounded-lg p-3">
+        <div class="bg-green-500/10 border border-green-500/30 rounded-lg p-3">
           <div class="flex items-start">
-            <svg class="w-4 h-4 text-green-600 mt-0.5 mr-2 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-              <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd" />
-            </svg>
-            <div class="text-xs text-green-800">
+            <%= inline_svg "icons/shield.svg", class: "w-4 h-4 text-green-400 mt-0.5 mr-2 flex-shrink-0" %>
+            <div class="text-xs text-green-300">
               <strong class="font-medium">Secure & Passwordless</strong>
-              <p class="mt-1">Every time you sign in, you'll receive a fresh magic link via email.</p>
+              <p class="mt-1 text-green-400/80">Every time you sign in, you'll receive a fresh magic link via email.</p>
             </div>
           </div>
         </div>
@@ -58,21 +54,19 @@
     </div>
   </div>
 
-  <div class="mt-8 bg-blue-50 border border-blue-200 rounded-lg p-6">
+  <div class="mt-8 bg-blue-500/10 border border-blue-500/30 rounded-xl p-6">
     <div class="flex">
-      <svg class="w-6 h-6 text-blue-600 mt-0.5 mr-3 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-        <path fill-rule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clip-rule="evenodd" />
-      </svg>
+      <%= inline_svg "icons/lightning.svg", class: "w-6 h-6 text-blue-400 mt-0.5 mr-3 flex-shrink-0" %>
       <div class="flex-1">
-        <h3 class="text-sm font-medium text-blue-900 mb-2">Getting Started</h3>
-        <p class="text-sm text-blue-800 mb-3">
+        <h3 class="text-sm font-medium text-blue-300 mb-2">Getting Started</h3>
+        <p class="text-sm text-blue-400/80 mb-3">
           This is a template application. You can customize this dashboard or add your own features.
         </p>
-        <ul class="text-sm text-blue-800 space-y-1 list-disc list-inside">
-          <li>Check out the code in <code class="bg-blue-100 px-1 rounded">app/controllers/home_controller.rb</code></li>
-          <li>Modify this view in <code class="bg-blue-100 px-1 rounded">app/views/home/index.html.erb</code></li>
+        <ul class="text-sm text-blue-400/80 space-y-1 list-disc list-inside">
+          <li>Check out the code in <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/controllers/home_controller.rb</code></li>
+          <li>Modify this view in <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/views/home/index.html.erb</code></li>
           <li>Add your own models, controllers, and views</li>
-          <li>See <code class="bg-blue-100 px-1 rounded">CLAUDE.md</code> for architecture guidelines</li>
+          <li>See <code class="bg-blue-500/20 px-1 rounded text-blue-300">CLAUDE.md</code> for architecture guidelines</li>
         </ul>
       </div>
     </div>

@@ -1,0 +1,25 @@
+<% if flash.any? %>
+  <div class="px-4 lg:px-8 pt-4">
+    <% flash.each do |type, message| %>
+      <%
+        base_classes = "border px-4 py-3 rounded-lg mb-4 flex items-center gap-3"
+        type_classes = case type.to_s
+        when "notice", "success"
+          "bg-green-900/50 border-green-700 text-green-300"
+        when "alert", "error"
+          "bg-red-900/50 border-red-700 text-red-300"
+        else
+          "bg-blue-900/50 border-blue-700 text-blue-300"
+        end
+      %>
+      <div class="<%= base_classes %> <%= type_classes %>">
+        <% if type.to_s.in?(["notice", "success"]) %>
+          <%= inline_svg "icons/check-circle.svg", class: "w-5 h-5 flex-shrink-0" rescue nil %>
+        <% elsif type.to_s.in?(["alert", "error"]) %>
+          <%= inline_svg "icons/x-circle.svg", class: "w-5 h-5 flex-shrink-0" rescue nil %>
+        <% end %>
+        <span><%= message %></span>
+      </div>
+    <% end %>
+  </div>
+<% end %>

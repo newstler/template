@@ -22,7 +22,7 @@
 </header>
 
 <div class="filters mb-4 p-4 bg-gray-50 rounded">
-  <%= form_with url: "/madmin/messages", method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
     <div>
       <%= f.label :role, class: "block text-sm font-medium text-gray-700" %>
       <%= f.select :role,
@@ -42,7 +42,7 @@
     </div>
 
     <%= f.submit "Filter", class: "btn btn-primary" %>
-    <%= link_to "Clear", "/madmin/messages", class: "btn" %>
+    <%= link_to "Clear", resource.index_path, class: "btn" %>
   <% end %>
 </div>
 

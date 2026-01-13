@@ -1,13 +1,13 @@
 <div id="message_<%= message.id %>" class="mb-6">
   <% if message.role == 'user' %>
     <div class="flex justify-end">
-      <div class="max-w-[85%] bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3">
+      <div class="max-w-[85%] bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-blue-500/20">
         <div class="whitespace-pre-wrap"><%= message.content %></div>
       </div>
     </div>
   <% else %>
     <div>
-      <div id="message_<%= message.id %>_content" class="prose max-w-none text-gray-700"><%= markdown(message.content) %></div>
+      <div id="message_<%= message.id %>_content" class="prose max-w-none"><%= markdown(message.content) %></div>
       <% if message.tool_call? %>
         <%= render "messages/tool_calls", message: message %>
       <% end %>
