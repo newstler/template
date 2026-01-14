@@ -16,30 +16,34 @@
   </div>
 </header>
 
-<div class="bg-white rounded-lg shadow mb-6 p-4">
-  <div class="grid grid-cols-2 gap-4 text-sm">
+<div class="bg-dark-800 rounded-lg shadow mb-6 p-4 border border-dark-700">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
     <div>
-      <span class="text-gray-500">User:</span>
-      <span class="font-medium"><%= @record.user&.name || @record.user&.email %></span>
+      <span class="text-dark-400">User:</span>
+      <span class="font-medium text-dark-100"><%= @record.user&.name || @record.user&.email %></span>
     </div>
     <div>
-      <span class="text-gray-500">Model:</span>
-      <span class="font-medium"><%= @record.model&.name || 'Default' %></span>
+      <span class="text-dark-400">Model:</span>
+      <span class="font-medium text-dark-100"><%= @record.model&.name || 'Default' %></span>
     </div>
     <div>
-      <span class="text-gray-500">Created:</span>
-      <span class="font-medium"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+      <span class="text-dark-400">Created:</span>
+      <span class="font-medium text-dark-100"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
     </div>
     <div>
-      <span class="text-gray-500">Messages:</span>
-      <span class="font-medium"><%= @record.messages.count %></span>
+      <span class="text-dark-400">Messages:</span>
+      <span class="font-medium text-dark-100"><%= @record.messages.count %></span>
+    </div>
+    <div>
+      <span class="text-dark-400">Total Cost:</span>
+      <span class="font-medium text-emerald-400"><%= @record.formatted_total_cost || 'N/A' %></span>
     </div>
   </div>
 </div>
 
-<div class="bg-white rounded-lg shadow">
-  <div class="p-4 border-b border-gray-200">
-    <h2 class="text-lg font-semibold text-gray-900">Conversation</h2>
+<div class="bg-dark-800 rounded-lg shadow border border-dark-700">
+  <div class="p-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Conversation</h2>
   </div>
   <div class="p-6 max-h-[600px] overflow-y-auto">
     <div class="max-w-3xl mx-auto">
@@ -51,22 +55,27 @@
                 <div class="bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3">
                   <div class="whitespace-pre-wrap"><%= message.content %></div>
                 </div>
-                <div class="text-xs text-gray-400 text-right mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+                <div class="text-xs text-dark-400 text-right mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
               </div>
             </div>
           <% elsif message.role == 'system' %>
             <div class="flex justify-center">
               <div>
-                <div class="bg-gray-100 text-gray-600 rounded-lg px-4 py-2 text-sm italic">
+                <div class="bg-dark-700 text-dark-300 rounded-lg px-4 py-2 text-sm italic">
                   <span class="font-medium">System:</span> <%= message.content.truncate(200) %>
                 </div>
-                <div class="text-xs text-gray-400 text-center mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+                <div class="text-xs text-dark-400 text-center mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
               </div>
             </div>
           <% else %>
             <div>
-              <div class="prose max-w-none text-gray-700"><%= markdown(message.content) %></div>
-              <div class="text-xs text-gray-400 mt-2"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+              <div class="prose max-w-none"><%= markdown(message.content) %></div>
+              <div class="text-xs text-dark-400 mt-2">
+                <%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %>
+                <% if message.formatted_cost %>
+                  <span class="ml-2 text-emerald-400"><%= message.formatted_cost %></span>
+                <% end %>
+              </div>
             </div>
           <% end %>
         </div>

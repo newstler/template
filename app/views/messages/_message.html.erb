@@ -1,8 +1,11 @@
 <div id="message_<%= message.id %>" class="mb-6">
   <% if message.role == 'user' %>
     <div class="flex justify-end">
-      <div class="max-w-[85%] bg-dark-700 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-black/20">
-        <div class="whitespace-pre-wrap"><%= message.content %></div>
+      <div class="max-w-[85%]">
+        <div class="bg-dark-700 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-black/20">
+          <div class="whitespace-pre-wrap"><%= message.content %></div>
+        </div>
+        <div class="text-xs text-dark-500 text-right mt-1"><%= time_ago_in_words(message.created_at) %> ago</div>
       </div>
     </div>
   <% else %>
@@ -11,6 +14,7 @@
       <% if message.tool_call? %>
         <%= render "messages/tool_calls", message: message %>
       <% end %>
+      <div class="text-xs text-dark-500 mt-2"><%= time_ago_in_words(message.created_at) %> ago</div>
     </div>
   <% end %>
 </div>

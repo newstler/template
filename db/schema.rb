@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_01_09_230202) do
+ActiveRecord::Schema[8.2].define(version: 2026_01_14_144530) do
   create_table "active_storage_attachments", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -61,6 +61,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_09_230202) do
     t.string "chat_id", null: false
     t.text "content"
     t.json "content_raw"
+    t.decimal "cost", precision: 10, scale: 6, default: "0.0"
     t.datetime "created_at", null: false
     t.integer "input_tokens"
     t.string "model_id"

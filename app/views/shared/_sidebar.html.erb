@@ -19,13 +19,16 @@
     <%# Main Navigation %>
     <div class="space-y-1">
       <%= render "shared/sidebar_link", path: root_path, icon: "home", label: "Home" %>
-      <%= render "shared/sidebar_link", path: chats_path, icon: "chat", label: "Chats" %>
     </div>
 
-    <%# AI Section (collapsible) %>
+    <%# Chats Section (collapsible) %>
     <div class="mt-6">
-      <%= render "shared/sidebar_group", id: "ai", icon: "cube", label: "AI Models" do %>
-        <%= render "shared/sidebar_link", path: models_path, icon: "cube", label: "All Models", nested: true %>
+      <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: "Chats" do %>
+        <%= render "shared/sidebar_link", path: new_chat_path, icon: "plus", label: "New Chat", nested: true %>
+        <% current_user&.chats&.order(updated_at: :desc)&.limit(10)&.each do |chat| %>
+          <% first_user_message = chat.messages.find_by(role: "user")&.content&.truncate(30) || "Untitled" %>
+          <%= render "shared/sidebar_link", path: chat_path(chat), icon: "chat", label: first_user_message, nested: true %>
+        <% end %>
       <% end %>
     </div>
   </nav>

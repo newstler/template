@@ -2,12 +2,29 @@
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
-/*
+/* Custom dark theme colors */
+@theme {
+  /* Dark theme palette - neutral greys (reduced blue saturation) */
+  --color-dark-50: #f8f9fa;
+  --color-dark-100: #f1f3f5;
+  --color-dark-200: #e9ecef;
+  --color-dark-300: #dee2e6;
+  --color-dark-400: #adb5bd;
+  --color-dark-500: #6c757d;
+  --color-dark-600: #495057;
+  --color-dark-700: #343a40;
+  --color-dark-800: #212529;
+  --color-dark-850: #1a1d21;
+  --color-dark-900: #141618;
+  --color-dark-950: #0d0e10;
 
-@layer components {
-  .btn-primary {
-    @apply py-2 px-4 bg-blue-200;
-  }
+  /* Accent colors */
+  --color-accent-50: #eff6ff;
+  --color-accent-100: #dbeafe;
+  --color-accent-200: #bfdbfe;
+  --color-accent-300: #93c5fd;
+  --color-accent-400: #60a5fa;
+  --color-accent-500: #3b82f6;
+  --color-accent-600: #2563eb;
+  --color-accent-700: #1d4ed8;
 }
-
-*/

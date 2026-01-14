@@ -9,6 +9,7 @@ class MessageResource < Madmin::Resource
   attribute :output_tokens, form: false
   attribute :cached_tokens, form: false
   attribute :cache_creation_tokens, form: false
+  attribute :cost, form: false
   attribute :content_raw, field: JsonField, form: false
   attribute :tool_calls
   attribute :created_at, form: false
