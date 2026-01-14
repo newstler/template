@@ -339,7 +339,11 @@
   color: var(--dark-50);
 }
 
-.dark p, .dark span, .dark div, .dark label {
+/* Only set default text color on elements without explicit Tailwind text-* classes */
+.dark p:not([class*="text-"]),
+.dark span:not([class*="text-"]),
+.dark div:not([class*="text-"]),
+.dark label:not([class*="text-"]) {
   color: var(--dark-200);
 }
 
@@ -708,6 +712,44 @@
   background-color: rgba(239, 68, 68, 0.15);
   border: 1px solid rgba(239, 68, 68, 0.3);
   color: #f87171;
+}
+
+/* Madmin pre/code elements */
+.dark pre,
+.dark code {
+  background-color: var(--dark-900);
+  color: var(--dark-200);
+}
+
+.dark pre {
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  overflow-x: auto;
+}
+
+.dark table pre,
+.dark table code {
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* Chat textarea - fully transparent */
+#message_content,
+.chat-input textarea {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
+#message_content:focus,
+.chat-input textarea:focus {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  outline: none !important;
 }
 
 /* ================================

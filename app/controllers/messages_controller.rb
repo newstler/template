@@ -3,9 +3,12 @@ class MessagesController < ApplicationController
   before_action :set_chat
 
   def create
-    return unless content.present?
+    return unless content.present? || attachments.present?
 
-    ChatResponseJob.perform_later(@chat.id, content)
+    # Store attachments in a temporary location for the background job
+    attachment_paths = store_attachments_temporarily
+
+    ChatResponseJob.perform_later(@chat.id, content, attachment_paths)
 
     respond_to do |format|
       format.turbo_stream
@@ -20,6 +23,23 @@ class MessagesController < ApplicationController
   end
 
   def content
-    params[:message][:content]
+    params.dig(:message, :content) || ""
+  end
+
+  def attachments
+    params.dig(:message, :attachments)
+  end
+
+  def store_attachments_temporarily
+    return [] unless attachments.present?
+
+    attachments.reject(&:blank?).map do |attachment|
+      # Create a temporary file that persists until the job processes it
+      temp_dir = Rails.root.join("tmp", "uploads", SecureRandom.uuid)
+      FileUtils.mkdir_p(temp_dir)
+      temp_path = temp_dir.join(attachment.original_filename)
+      File.binwrite(temp_path, attachment.read)
+      temp_path.to_s
+    end
   end
 end

@@ -5,6 +5,7 @@
     icon: Icon name (without .svg extension)
     label: Link text
     nested: Boolean, if true applies nested styling (optional)
+    truncate: Boolean, if true truncates with CSS ellipsis (optional)
 %>
 <%
   path_str = path.to_s.split('?').first
@@ -13,14 +14,16 @@
   # Active if current page or if path matches start of request path (for non-root paths)
   is_active = current_page?(path) || (!is_root && request.path.start_with?(path_str) && path_str.length > 1)
   nested = local_assigns[:nested] || false
+  should_truncate = local_assigns[:truncate] || false
 
   base_classes = "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200"
   active_classes = "bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.1)]"
   inactive_classes = "text-dark-400 hover:text-dark-100 hover:bg-white/5"
   nested_classes = nested ? "pl-10" : ""
+  truncate_classes = should_truncate ? "truncate" : ""
 %>
 
 <%= link_to path, class: "#{base_classes} #{is_active ? active_classes : inactive_classes} #{nested_classes}" do %>
   <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
-  <span><%= label %></span>
+  <span class="<%= truncate_classes %>"><%= label %></span>
 <% end %>

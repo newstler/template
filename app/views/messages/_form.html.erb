@@ -13,9 +13,10 @@
     <div class="p-3">
       <%= form.text_area :content,
           rows: 1,
-          class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none placeholder-dark-500 text-dark-100",
+          class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none focus:border-0 focus:shadow-none placeholder-dark-400 text-dark-100",
           placeholder: "Reply...",
           autofocus: true,
+          style: "box-shadow: none !important;",
           data: {
             chat_input_target: "textarea",
             action: "keydown->chat-input#submit input->chat-input#resize"
@@ -23,9 +24,10 @@
     </div>
     <div class="flex items-center justify-between px-3 py-2">
       <div class="flex items-center gap-2 text-dark-500">
-        <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors">
+        <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
         </button>
+        <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/*,.pdf,.txt,.md,.json,.csv" %>
       </div>
       <div class="flex items-center gap-3">
         <span class="text-sm text-dark-500"><%= @chat.model&.name || 'Default' %></span>
