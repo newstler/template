@@ -3,18 +3,29 @@
 <% content_for :title, "Chat" %>
 <% content_for :full_width, true %>
 
-<div class="flex flex-col h-[calc(100vh-64px)] lg:h-screen">
-  <div class="flex-1 overflow-y-auto" data-controller="scroll-bottom">
-    <div id="messages" class="max-w-4xl mx-auto py-6 px-4">
+<div class="relative h-[calc(100vh-64px)] lg:h-screen">
+  <%# Messages container - full height with scroll %>
+  <div class="absolute inset-0 overflow-y-auto" data-controller="scroll-bottom">
+    <%# Top gradient fade %>
+    <div class="sticky top-0 h-12 bg-gradient-to-b from-dark-900 to-transparent pointer-events-none z-10"></div>
+
+    <div id="messages" class="max-w-4xl mx-auto px-4 pb-40">
       <% @chat.messages.where.not(id: nil).each do |message| %>
         <%= render message %>
       <% end %>
     </div>
   </div>
 
-  <div class="sticky bottom-0 bg-gradient-to-t from-dark-950 via-dark-950 to-transparent pt-8 pb-6">
-    <div class="max-w-4xl mx-auto px-4">
-      <%= render "messages/form", chat: @chat, message: @message %>
+  <%# Input area - floating at bottom %>
+  <div class="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+    <%# Bottom gradient fade %>
+    <div class="h-24 bg-gradient-to-t from-dark-900 to-transparent"></div>
+
+    <%# Input container %>
+    <div class="bg-dark-900 pb-6 pointer-events-auto">
+      <div class="max-w-4xl mx-auto px-4">
+        <%= render "messages/form", chat: @chat, message: @message %>
+      </div>
     </div>
   </div>
 </div>

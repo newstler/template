@@ -62,6 +62,11 @@
   color: var(--dark-50);
 }
 
+.prose strong, .prose b {
+  font-weight: 600;
+  color: var(--dark-100);
+}
+
 .prose h1:first-child, .prose h2:first-child, .prose h3:first-child {
   margin-top: 0;
 }
@@ -164,18 +169,19 @@
   background: transparent;
 }
 
-.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs { color: #6a9955; } /* Comment */
-.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: #569cd6; } /* Keyword */
-.highlight .s, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1, .highlight .ss { color: #ce9178; } /* String */
-.highlight .na, .highlight .nb, .highlight .nc, .highlight .no, .highlight .nd, .highlight .ni, .highlight .ne, .highlight .nf, .highlight .nl, .highlight .nn, .highlight .nt, .highlight .nv { color: #9cdcfe; } /* Name */
-.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .mx { color: #b5cea8; } /* Number */
-.highlight .o, .highlight .ow { color: #d4d4d4; } /* Operator */
-.highlight .p { color: #d4d4d4; } /* Punctuation */
-.highlight .gi { color: #4ec9b0; } /* Generic.Inserted */
-.highlight .gd { color: #f44747; } /* Generic.Deleted */
-.highlight .gh { color: #569cd6; font-weight: bold; } /* Generic.Heading */
-.highlight .gu { color: #569cd6; } /* Generic.Subheading */
-.highlight .err { color: #f44747; } /* Error */
+/* Syntax highlighting colors - use !important to override dark theme defaults */
+.highlight .c, .highlight .ch, .highlight .cd, .highlight .cm, .highlight .cpf, .highlight .c1, .highlight .cs { color: #6a9955 !important; } /* Comment */
+.highlight .k, .highlight .kc, .highlight .kd, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kt { color: #569cd6 !important; } /* Keyword */
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .dl, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1, .highlight .ss { color: #ce9178 !important; } /* String */
+.highlight .na, .highlight .nb, .highlight .nc, .highlight .no, .highlight .nd, .highlight .ni, .highlight .ne, .highlight .nf, .highlight .nl, .highlight .nn, .highlight .nt, .highlight .nv { color: #9cdcfe !important; } /* Name */
+.highlight .m, .highlight .mb, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .mo, .highlight .mx { color: #b5cea8 !important; } /* Number */
+.highlight .o, .highlight .ow { color: #d4d4d4 !important; } /* Operator */
+.highlight .p { color: #d4d4d4 !important; } /* Punctuation */
+.highlight .gi { color: #4ec9b0 !important; } /* Generic.Inserted */
+.highlight .gd { color: #f44747 !important; } /* Generic.Deleted */
+.highlight .gh { color: #569cd6 !important; font-weight: bold; } /* Generic.Heading */
+.highlight .gu { color: #569cd6 !important; } /* Generic.Subheading */
+.highlight .err { color: #f44747 !important; } /* Error */
 
 /* ================================
    Dark Theme Form Styles
