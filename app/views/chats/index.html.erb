@@ -15,7 +15,7 @@
   <div id="chats" class="space-y-3">
     <% if @chats.any? %>
       <% @chats.each do |chat| %>
-        <%= link_to chat, class: "block bg-dark-900 border border-dark-700 rounded-xl p-4 hover:bg-dark-800 hover:border-dark-600 transition-all group" do %>
+        <%= link_to chat, class: "block card-bg p-4 hover:bg-dark-800 transition-all group" do %>
           <div class="flex items-start justify-between">
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-3 mb-1">
@@ -45,7 +45,7 @@
         <% end %>
       <% end %>
     <% else %>
-      <div class="text-center py-16 bg-dark-900 border border-dark-700 rounded-xl">
+      <div class="text-center py-16 card-bg">
         <div class="w-16 h-16 bg-dark-800 rounded-full flex items-center justify-center mx-auto mb-4">
           <%= inline_svg "icons/chat.svg", class: "w-8 h-8 text-dark-500" %>
         </div>

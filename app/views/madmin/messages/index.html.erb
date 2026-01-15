@@ -10,9 +10,7 @@
     </form>
 
     <%= link_to clear_search_params, class: "btn btn-secondary" do %>
-      <svg xmlns="http://www.w3.org/2000/svg" height="1rem" width="1rem" viewBox="0 0 20 20" fill="currentColor">
-        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd" />
-      </svg>
+      <%= inline_svg "icons/x-circle.svg", class: "w-4 h-4" %>
       <% end if params[:q].present? %>
 
     <%= link_to resource.new_path, class: "btn btn-secondary" do %>
@@ -21,7 +19,7 @@
   </div>
 </header>
 
-<div class="filters mb-4 p-4 bg-dark-900/50 rounded-xl shadow-lg shadow-black/20">
+<div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
     <div>
       <%= f.label :role, class: "block text-sm font-medium text-dark-300" %>

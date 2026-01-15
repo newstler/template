@@ -5,7 +5,7 @@
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
+    <div class="card-bg p-6 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-blue-500/20 rounded-lg">
           <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-blue-400" %>
@@ -16,7 +16,7 @@
       <p class="text-sm text-dark-400 mt-1">Total Users</p>
     </div>
 
-    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
+    <div class="card-bg p-6 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-purple-500/20 rounded-lg">
           <%= inline_svg "icons/chat.svg", class: "w-6 h-6 text-purple-400" %>
@@ -27,7 +27,7 @@
       <p class="text-sm text-dark-400 mt-1">Total Chats</p>
     </div>
 
-    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
+    <div class="card-bg p-6 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-green-500/20 rounded-lg">
           <%= inline_svg "icons/messages.svg", class: "w-6 h-6 text-green-400" %>
@@ -38,7 +38,7 @@
       <p class="text-sm text-dark-400 mt-1">Total Messages</p>
     </div>
 
-    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
+    <div class="card-bg p-6 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-amber-500/20 rounded-lg">
           <%= inline_svg "icons/lightning.svg", class: "w-6 h-6 text-amber-400" %>
@@ -60,7 +60,7 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-    <div class="lg:col-span-2 bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
+    <div class="lg:col-span-2 card-bg p-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-lg font-semibold text-dark-50">Activity Overview</h2>
         <span class="text-sm text-dark-400">Last 7 days</span>
@@ -70,7 +70,7 @@
       </div>
     </div>
 
-    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
+    <div class="card-bg p-6">
       <div class="flex items-center justify-between mb-6">
         <h2 class="text-lg font-semibold text-dark-50">Messages by Role</h2>
       </div>
@@ -81,7 +81,7 @@
   </div>
 
   <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    <div class="bg-dark-900/50 rounded-xl p-4 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
+    <div class="card-bg p-4 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-indigo-500/20 rounded-lg">
           <%= inline_svg "icons/shield.svg", class: "w-5 h-5 text-indigo-400" %>
@@ -93,7 +93,7 @@
       </div>
     </div>
 
-    <div class="bg-dark-900/50 rounded-xl p-4 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
+    <div class="card-bg p-4 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-pink-500/20 rounded-lg">
           <%= inline_svg "icons/computer.svg", class: "w-5 h-5 text-pink-400" %>
@@ -105,7 +105,7 @@
       </div>
     </div>
 
-    <div class="bg-dark-900/50 rounded-xl p-4 shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
+    <div class="card-bg p-4 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center gap-3">
         <div class="p-2 bg-teal-500/20 rounded-lg">
           <%= inline_svg "icons/cog.svg", class: "w-5 h-5 text-teal-400" %>
@@ -131,7 +131,7 @@
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
+    <div class="card-bg p-6">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-semibold text-dark-50">Recent Chats</h2>
         <%= link_to "View all", "/madmin/chats", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
@@ -163,7 +163,7 @@
       </div>
     </div>
 
-    <div class="bg-dark-900/50 rounded-xl p-6 shadow-lg shadow-black/20">
+    <div class="card-bg p-6">
       <div class="flex items-center justify-between mb-4">
         <h2 class="text-lg font-semibold text-dark-50">Recent Users</h2>
         <%= link_to "View all", "/madmin/users", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>

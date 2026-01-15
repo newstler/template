@@ -120,17 +120,17 @@
 }
 
 .prose th {
-  background-color: var(--dark-800);
+  background-color: var(--dark-700);
   font-weight: 600;
   color: var(--dark-100);
 }
 
 .prose td {
-  background-color: var(--dark-900);
+  background-color: var(--dark-800);
 }
 
 .prose code {
-  background-color: var(--dark-800);
+  background-color: var(--dark-700);
   color: #f472b6;
   padding: 0.125rem 0.375rem;
   border-radius: 0.25rem;
@@ -139,7 +139,7 @@
 }
 
 .prose pre {
-  background-color: var(--dark-900);
+  background-color: var(--dark-800);
   border-radius: 0.75rem;
   padding: 1rem;
   overflow-x: auto;
@@ -156,7 +156,7 @@
    Rouge syntax highlighting
    ================================ */
 .highlight {
-  background-color: var(--dark-900);
+  background-color: var(--dark-700);
   border-radius: 0.75rem;
   padding: 1rem;
   overflow-x: auto;
@@ -196,8 +196,8 @@
 .dark input[type="datetime-local"],
 .dark textarea,
 .dark select {
-  background-color: var(--dark-800);
-  border-color: var(--dark-600);
+  background-color: var(--dark-700);
+  border-color: var(--dark-500);
   color: var(--dark-100);
 }
 
@@ -224,14 +224,14 @@
    Dark Theme Card Styles
    ================================ */
 .dark-card {
-  background-color: var(--dark-900);
-  border: 1px solid var(--dark-700);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-600);
   border-radius: 0.75rem;
 }
 
 .dark-card-header {
   padding: 1rem 1.5rem;
-  border-bottom: 1px solid var(--dark-700);
+  border-bottom: 1px solid var(--dark-600);
 }
 
 .dark-card-body {
@@ -247,7 +247,7 @@
 }
 
 .dark-table th {
-  background-color: var(--dark-850);
+  background-color: var(--dark-700);
   color: var(--dark-300);
   font-weight: 500;
   font-size: 0.75rem;
@@ -255,17 +255,17 @@
   letter-spacing: 0.05em;
   padding: 0.75rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--dark-700);
+  border-bottom: 1px solid var(--dark-600);
 }
 
 .dark-table td {
   padding: 0.75rem 1rem;
-  border-bottom: 1px solid var(--dark-800);
+  border-bottom: 1px solid var(--dark-700);
   color: var(--dark-200);
 }
 
 .dark-table tbody tr:hover {
-  background-color: var(--dark-850);
+  background-color: var(--dark-700);
 }
 
 /* ================================
@@ -277,16 +277,16 @@
 }
 
 ::-webkit-scrollbar-track {
-  background: var(--dark-900);
+  background: var(--dark-800);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--dark-600);
+  background: var(--dark-500);
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--dark-500);
+  background: var(--dark-400);
 }
 
 /* ================================
@@ -315,14 +315,14 @@
 }
 
 .btn-dark-secondary {
-  background-color: var(--dark-800);
+  background-color: var(--dark-700);
   color: var(--dark-200);
-  border: 1px solid var(--dark-600);
+  border: 1px solid var(--dark-500);
 }
 
 .btn-dark-secondary:hover {
-  background-color: var(--dark-700);
-  border-color: var(--dark-500);
+  background-color: var(--dark-600);
+  border-color: var(--dark-400);
 }
 
 .btn-dark-danger {
@@ -391,15 +391,15 @@
   font-weight: 500;
   border-radius: 0.5rem;
   transition: all 0.15s ease;
-  border: 1px solid var(--dark-600);
-  background-color: var(--dark-800);
+  border: 1px solid var(--dark-500);
+  background-color: var(--dark-700);
   color: var(--dark-200);
   text-decoration: none;
 }
 
 .dark .btn:hover {
-  background-color: var(--dark-700);
-  border-color: var(--dark-500);
+  background-color: var(--dark-600);
+  border-color: var(--dark-400);
   color: var(--dark-100);
 }
 
@@ -418,15 +418,15 @@
 
 .dark .btn-secondary,
 .dark .btn.btn-secondary {
-  background-color: var(--dark-800);
-  border: 1px solid var(--dark-600);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-500);
   color: var(--dark-200);
 }
 
 .dark .btn-secondary:hover,
 .dark .btn.btn-secondary:hover {
-  background-color: var(--dark-700);
-  border-color: var(--dark-500);
+  background-color: var(--dark-600);
+  border-color: var(--dark-400);
 }
 
 .dark .btn-danger,
@@ -449,8 +449,8 @@
 
 /* Madmin Filters */
 .dark .filters {
-  background-color: var(--dark-900);
-  border: 1px solid var(--dark-700);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-600);
   border-radius: 0.75rem;
   padding: 1rem;
   margin-bottom: 1rem;
@@ -470,16 +470,16 @@
 }
 
 .dark .scopes .btn.active {
-  background-color: var(--dark-700);
-  border-color: var(--dark-500);
+  background-color: var(--dark-600);
+  border-color: var(--dark-400);
   color: var(--dark-50);
 }
 
 /* Madmin Tables */
 .dark .table-scroll {
   overflow-x: auto;
-  background-color: var(--dark-900);
-  border: 1px solid var(--dark-700);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-600);
   border-radius: 0.75rem;
 }
 
@@ -489,7 +489,7 @@
 }
 
 .dark table th {
-  background-color: var(--dark-850);
+  background-color: var(--dark-700);
   color: var(--dark-300);
   font-weight: 500;
   font-size: 0.75rem;
@@ -497,7 +497,7 @@
   letter-spacing: 0.05em;
   padding: 0.875rem 1rem;
   text-align: left;
-  border-bottom: 1px solid var(--dark-700);
+  border-bottom: 1px solid var(--dark-600);
 }
 
 .dark table th a {
@@ -514,7 +514,7 @@
 
 .dark table td {
   padding: 0.875rem 1rem;
-  border-bottom: 1px solid var(--dark-800);
+  border-bottom: 1px solid var(--dark-600);
   color: var(--dark-200);
 }
 
@@ -529,7 +529,7 @@
 }
 
 .dark table tbody tr:hover {
-  background-color: var(--dark-850);
+  background-color: var(--dark-600);
 }
 
 .dark table tbody tr:last-child td {
@@ -567,13 +567,13 @@
 }
 
 .dark .pagination a:hover {
-  background-color: var(--dark-800);
+  background-color: var(--dark-700);
   color: var(--dark-100);
 }
 
 .dark .pagination a[disabled],
 .dark .pagination span.current {
-  background-color: var(--dark-800);
+  background-color: var(--dark-700);
   color: var(--dark-50);
   pointer-events: none;
 }
@@ -591,8 +591,8 @@
 }
 
 .dark .search input[type="search"] {
-  background-color: var(--dark-800);
-  border: 1px solid var(--dark-600);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-500);
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   color: var(--dark-100);
@@ -614,8 +614,8 @@
 .dark .form-select,
 .dark input.form-input,
 .dark select.form-select {
-  background-color: var(--dark-800);
-  border: 1px solid var(--dark-600);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-500);
   border-radius: 0.5rem;
   padding: 0.5rem 0.75rem;
   color: var(--dark-100);
@@ -631,8 +631,8 @@
 
 /* Madmin Show Page */
 .dark .show-page {
-  background-color: var(--dark-900);
-  border: 1px solid var(--dark-700);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-600);
   border-radius: 0.75rem;
   overflow: hidden;
 }
@@ -644,18 +644,18 @@
 }
 
 .dark dt {
-  background-color: var(--dark-850);
+  background-color: var(--dark-700);
   color: var(--dark-400);
   font-size: 0.875rem;
   font-weight: 500;
   padding: 0.875rem 1rem;
-  border-bottom: 1px solid var(--dark-700);
+  border-bottom: 1px solid var(--dark-600);
 }
 
 .dark dd {
   color: var(--dark-200);
   padding: 0.875rem 1rem;
-  border-bottom: 1px solid var(--dark-700);
+  border-bottom: 1px solid var(--dark-600);
   word-break: break-word;
 }
 
@@ -683,8 +683,8 @@
 .dark .field-wrapper textarea,
 .dark .field-wrapper select {
   width: 100%;
-  background-color: var(--dark-800);
-  border: 1px solid var(--dark-600);
+  background-color: var(--dark-700);
+  border: 1px solid var(--dark-500);
   border-radius: 0.5rem;
   padding: 0.625rem 0.875rem;
   color: var(--dark-100);
@@ -723,7 +723,7 @@
 /* Madmin pre/code elements */
 .dark pre,
 .dark code {
-  background-color: var(--dark-900);
+  background-color: var(--dark-700);
   color: var(--dark-200);
 }
 

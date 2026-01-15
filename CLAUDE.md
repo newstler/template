@@ -308,6 +308,49 @@ end
 - Concerns for shared behavior
 - CRUD resources for everything
 
+### Dark Mode & Styling
+
+This template uses a **dark theme** with centralized CSS utility classes for consistent styling.
+
+**DRY Background Utilities:**
+```css
+/* In app/assets/stylesheets/application.css */
+
+.body-bg {
+  @apply bg-dark-950 text-dark-100 min-h-screen;
+}
+
+.card-bg {
+  @apply bg-dark-900/50 rounded-xl shadow-lg shadow-black/20;
+}
+```
+
+**Usage:**
+```erb
+<%# Layouts - use body-bg on <body> %>
+<body class="body-bg">
+
+<%# Cards and containers - use card-bg %>
+<div class="card-bg p-6">
+  <!-- card content -->
+</div>
+```
+
+**Color Palette** (defined in Tailwind config):
+- `dark-50` to `dark-950`: Gray scale from light to dark
+- `dark-950`: Darkest background (body)
+- `dark-900/50`: Semi-transparent card backgrounds
+- `dark-700`: Borders and dividers
+
+**Key Files:**
+- `app/assets/stylesheets/application.css` - CSS variables and utility classes
+- `config/tailwind.config.js` - Tailwind color palette
+
+**Benefits:**
+- Change background colors site-wide by editing ONE line in CSS
+- Consistent styling across all views
+- Easier theme adjustments
+
 ### Icons and SVG
 **STRICT RULE:** Never write inline SVG code directly in ERB files.
 
