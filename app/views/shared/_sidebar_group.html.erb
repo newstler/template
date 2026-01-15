@@ -4,24 +4,59 @@
     id: Unique group identifier for collapse state
     icon: Icon name (without .svg extension)
     label: Group header text
+    path: Link path for the group header (optional)
   Block: Content (nested links) to show when expanded
 %>
+<%
+  group_path = local_assigns[:path]
+  # Check if this group is active (exact match only, not child pages)
+  is_active = group_path && current_page?(group_path)
 
-<div class="space-y-1">
-  <%# Group header (clickable to toggle) %>
-  <button type="button"
-          data-action="click->sidebar#toggleGroup"
-          data-group-id="<%= id %>"
-          class="w-full flex items-center justify-between gap-3 px-3 py-2 text-sm text-dark-400 hover:text-dark-100 hover:bg-dark-800 rounded-lg transition-colors">
-    <div class="flex items-center gap-3">
-      <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
-      <span><%= label %></span>
-    </div>
-    <%= inline_svg "icons/chevron-right.svg", class: "w-4 h-4 transition-transform duration-200 rotate-90", data: { chevron: true } %>
-  </button>
+  # Use same base classes as sidebar_link for consistency
+  base_classes = "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 hover:bg-white/5"
+  active_classes = "text-white"
+  inactive_classes = "text-dark-400 hover:text-dark-100"
+%>
+
+<div class="space-y-1" data-sidebar-target="navGroup">
+  <%# Group header - link with chevron inside %>
+  <div class="flex items-center sidebar-group-header">
+    <% if group_path %>
+      <%= link_to group_path, class: "#{base_classes} #{is_active ? active_classes : inactive_classes} flex-1 justify-between", title: label do %>
+        <span class="flex items-center gap-3 min-w-0">
+          <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
+          <span data-sidebar-target="label" class="transition-[opacity,width] duration-300 opacity-100 whitespace-nowrap"><%= label %></span>
+        </span>
+        <button type="button"
+                data-action="click->sidebar#toggleGroup"
+                data-group-id="<%= id %>"
+                data-sidebar-target="label"
+                class="p-1 hover:bg-white/10 rounded transition-colors flex-shrink-0 sidebar-chevron"
+                title="Toggle <%= label %>"
+                onclick="event.preventDefault(); event.stopPropagation();">
+          <%= inline_svg "icons/chevron-right.svg", class: "w-4 h-4 transition-transform duration-200 rotate-90", data: { chevron: true } %>
+        </button>
+      <% end %>
+    <% else %>
+      <div class="<%= base_classes %> <%= inactive_classes %> flex-1 justify-between">
+        <span class="flex items-center gap-3 min-w-0">
+          <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
+          <span data-sidebar-target="label" class="transition-[opacity,width] duration-300 opacity-100 whitespace-nowrap"><%= label %></span>
+        </span>
+        <button type="button"
+                data-action="click->sidebar#toggleGroup"
+                data-group-id="<%= id %>"
+                data-sidebar-target="label"
+                class="p-1 hover:bg-white/10 rounded transition-colors flex-shrink-0 sidebar-chevron"
+                title="Toggle <%= label %>">
+          <%= inline_svg "icons/chevron-right.svg", class: "w-4 h-4 transition-transform duration-200 rotate-90", data: { chevron: true } %>
+        </button>
+      </div>
+    <% end %>
+  </div>
 
   <%# Collapsible content %>
-  <div id="nav-group-<%= id %>" class="space-y-1">
+  <div id="nav-group-<%= id %>" class="space-y-1" data-sidebar-target="label">
     <%= yield %>
   </div>
 </div>

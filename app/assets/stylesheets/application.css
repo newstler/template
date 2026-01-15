@@ -346,18 +346,27 @@
 }
 
 /* Only set default text color on elements without explicit Tailwind text-* classes */
+/* Exclude elements inside nav links and buttons - they should inherit from parent */
 .dark p:not([class*="text-"]),
-.dark span:not([class*="text-"]),
+.dark span:not([class*="text-"]):not(a span):not(a span span):not(button span),
 .dark div:not([class*="text-"]),
 .dark label:not([class*="text-"]) {
   color: var(--dark-200);
 }
 
-.dark a {
+/* Link and button children should inherit color from parent */
+a[class*="text-"] span,
+a[class*="text-"] svg,
+button[class*="text-"] span,
+button[class*="text-"] svg {
+  color: inherit;
+}
+
+.dark a:not([class*="text-"]) {
   color: #94a3b8;
 }
 
-.dark a:hover {
+.dark a:not([class*="text-"]):hover {
   color: #e2e8f0;
 }
 
@@ -759,151 +768,68 @@
 }
 
 /* ================================
-   Modern Sidebar Styles
+   Collapsible Sidebar
    ================================ */
-.sidebar {
-  --sidebar-bg: #0c0f1a;
-  --sidebar-border: rgba(255, 255, 255, 0.08);
-  --sidebar-text: #94a3b8;
-  --sidebar-text-muted: #64748b;
-  --sidebar-text-bright: #f1f5f9;
-  --sidebar-hover: rgba(255, 255, 255, 0.05);
-  --sidebar-active: rgba(59, 130, 246, 0.15);
-  --sidebar-active-border: #3b82f6;
+
+/* Main content transition for sidebar collapse */
+@media (min-width: 1024px) {
+  [data-sidebar-target="mainContent"] {
+    padding-left: 16rem;
+    transition: padding-left 0.3s ease-in-out;
+  }
+
+  [data-sidebar-target="mainContent"].sidebar-collapsed {
+    padding-left: 4rem;
+  }
 }
 
-.sidebar-nav-link {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.625rem 0.875rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--sidebar-text);
-  border-radius: 0.5rem;
-  transition: all 0.15s ease;
-  text-decoration: none;
-  border-left: 2px solid transparent;
-  margin-left: -2px;
+/* Hide nested links when sidebar is collapsed */
+aside.sidebar-collapsed .sidebar-nested-link {
+  display: none;
 }
 
-.sidebar-nav-link:hover {
-  background-color: var(--sidebar-hover);
-  color: var(--sidebar-text-bright);
-}
-
-.sidebar-nav-link.active {
-  background-color: var(--sidebar-active);
-  color: var(--sidebar-text-bright);
-  border-left-color: var(--sidebar-active-border);
-}
-
-.sidebar-nav-link.nested {
-  padding-left: 2.5rem;
-  font-size: 0.8125rem;
-}
-
-.sidebar-nav-link svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  flex-shrink: 0;
-  opacity: 0.7;
-}
-
-.sidebar-nav-link:hover svg,
-.sidebar-nav-link.active svg {
-  opacity: 1;
-}
-
-.sidebar-group-button {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  width: 100%;
-  padding: 0.625rem 0.875rem;
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--sidebar-text);
-  background: transparent;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.sidebar-group-button:hover {
-  background-color: var(--sidebar-hover);
-  color: var(--sidebar-text-bright);
-}
-
-.sidebar-group-button svg {
-  width: 1.25rem;
-  height: 1.25rem;
-  opacity: 0.7;
-}
-
-.sidebar-group-button .chevron {
-  width: 1rem;
-  height: 1rem;
-  transition: transform 0.2s ease;
-}
-
-.sidebar-group-button .chevron.expanded {
-  transform: rotate(90deg);
-}
-
-.sidebar-section-label {
-  font-size: 0.6875rem;
-  font-weight: 600;
-  color: var(--sidebar-text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  padding: 0.75rem 0.875rem 0.5rem;
-}
-
-.sidebar-divider {
-  height: 1px;
-  background-color: var(--sidebar-border);
-  margin: 0.75rem 0;
-}
-
-.sidebar-user {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  padding: 0.75rem;
-}
-
-.sidebar-user-avatar {
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.5rem;
-  display: flex;
-  align-items: center;
+/* Center icons when sidebar is collapsed */
+aside.sidebar-collapsed nav a,
+aside.sidebar-collapsed nav > div > div > a,
+aside.sidebar-collapsed .p-3 a,
+aside.sidebar-collapsed .p-3 button,
+aside.sidebar-collapsed .p-3 form button {
   justify-content: center;
-  font-size: 0.75rem;
-  font-weight: 600;
-  color: white;
+  padding-left: 0;
+  padding-right: 0;
+  gap: 0;
 }
 
-.sidebar-user-info {
-  flex: 1;
-  min-width: 0;
+/* Center group headers when collapsed */
+aside.sidebar-collapsed .sidebar-group-header > a,
+aside.sidebar-collapsed .sidebar-group-header > div {
+  justify-content: center;
+  padding-left: 0;
+  padding-right: 0;
+  gap: 0;
 }
 
-.sidebar-user-name {
-  font-size: 0.875rem;
-  font-weight: 500;
-  color: var(--sidebar-text-bright);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* Hide chevron toggle button when collapsed */
+aside.sidebar-collapsed .sidebar-chevron {
+  display: none;
 }
 
-.sidebar-user-email {
-  font-size: 0.75rem;
-  color: var(--sidebar-text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+/* Hide the inner span wrapper gap when collapsed */
+aside.sidebar-collapsed .sidebar-group-header > a > span,
+aside.sidebar-collapsed .sidebar-group-header > div > span {
+  gap: 0;
+}
+
+/* Hide user info section when collapsed */
+aside.sidebar-collapsed .p-3 > .flex.items-center.gap-3.mb-3 {
+  display: none;
+}
+
+/* Header section when collapsed - hide logo link, center the collapse button */
+aside.sidebar-collapsed .sidebar-header {
+  justify-content: center;
+}
+
+aside.sidebar-collapsed .sidebar-header > a {
+  display: none;
 }
