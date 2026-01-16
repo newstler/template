@@ -24,14 +24,14 @@
     </div>
     <div class="hidden flex flex-wrap gap-2 px-3 pb-2" data-chat-input-target="previewArea"></div>
     <div class="flex items-center justify-between px-3 py-2">
-      <div class="flex items-center gap-2" style="color: #9ca3af;">
+      <div class="flex items-center gap-2 text-dark-400">
         <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
         </button>
         <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/*,.pdf,.txt,.md,.json,.csv" %>
       </div>
       <div class="flex items-center gap-3">
-        <span class="text-sm" style="color: #9ca3af;"><%= @chat.model&.name || 'Default' %></span>
+        <span class="text-sm text-dark-400"><%= @chat.model&.name || 'Default' %></span>
         <%= form.button type: "submit", class: "bg-dark-600 hover:bg-dark-500 text-white rounded-lg p-2 transition-colors cursor-pointer" do %>
           <%= inline_svg "icons/arrow-up.svg", class: "w-4 h-4" %>
         <% end %>

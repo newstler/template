@@ -24,19 +24,23 @@
     </div>
     <div class="hidden flex flex-wrap gap-2 px-3 pb-2" data-chat-input-target="previewArea"></div>
     <div class="flex items-center justify-between px-3 py-2">
-      <div class="flex items-center gap-2" style="color: #9ca3af;">
+      <div class="flex items-center gap-2 text-dark-400">
         <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
         </button>
         <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/*,.pdf,.txt,.md,.json,.csv" %>
       </div>
       <div class="flex items-center gap-3">
-        <%= form.select :model,
-            options_for_select([["Default", ""]] + Model.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
-            {},
-            class: "text-sm bg-transparent border-0 ring-0 outline-none focus:ring-0 focus:outline-none focus:border-0 cursor-pointer pr-5",
-            style: "appearance: none; color: #9ca3af; box-shadow: none !important; outline: none !important; border: none !important; background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\"); background-position: right 0 center; background-repeat: no-repeat; background-size: 1em 1em;",
-            data: { controller: "auto-width-select", action: "change->auto-width-select#resize" } %>
+        <div class="relative flex items-center">
+          <%= form.select :model,
+              options_for_select([["Default", ""]] + Model.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
+              {},
+              class: "text-sm text-dark-400 select-transparent ring-0 outline-none focus:ring-0 focus:outline-none cursor-pointer pr-5 appearance-none",
+              data: { controller: "auto-width-select", action: "change->auto-width-select#resize" } %>
+          <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-dark-400">
+            <%= inline_svg "icons/chevron-down.svg", class: "w-4 h-4" %>
+          </div>
+        </div>
         <%= form.button type: "submit", class: "bg-dark-600 hover:bg-dark-500 text-white rounded-lg p-2 transition-colors cursor-pointer" do %>
           <%= inline_svg "icons/arrow-up.svg", class: "w-4 h-4" %>
         <% end %>

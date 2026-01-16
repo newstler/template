@@ -14,6 +14,22 @@
   @apply bg-dark-700/50 rounded-xl shadow-lg shadow-black/10;
 }
 
+/* Transparent select override - resets browser/global dark theme styles */
+.select-transparent {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: none !important;
+}
+
+/* Override for dark theme select color - use with text-dark-* classes */
+.dark .select-transparent.text-dark-400 {
+  color: var(--color-dark-400) !important;
+}
+
 /* Custom dark theme colors */
 @theme {
   /* Dark theme palette - neutral greys (reduced blue saturation) */
