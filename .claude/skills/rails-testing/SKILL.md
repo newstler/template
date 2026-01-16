@@ -1,16 +1,74 @@
 ---
 name: rails-testing
-description: Testing patterns for Rails applications using Minitest and fixtures. Use when writing tests, setting up test data, or debugging test failures.
-trigger: test, minitest, fixture, assert, testing, spec, coverage
+description: TDD and testing patterns for Rails applications using Minitest and fixtures. Use when writing tests, setting up test data, or debugging test failures.
+trigger: test, minitest, fixture, assert, testing, spec, coverage, tdd
 ---
 
 # Rails Testing Guide
+
+## Test-Driven Development
+
+**Write tests BEFORE implementation.**
+
+### TDD Cycle
+
+```
+1. RED    → Write a failing test
+2. GREEN  → Write minimal code to pass
+3. REFACTOR → Clean up, tests stay green
+```
+
+### TDD Workflow
+
+```ruby
+# Step 1: Write the test FIRST
+test "user can close a card" do
+  card = cards(:open)
+  assert_not card.closed?
+  
+  card.close
+  
+  assert card.closed?
+  assert_equal users(:one), card.closure.closed_by
+end
+
+# Step 2: Run it - see it fail
+# $ rails test test/models/card_test.rb:10
+
+# Step 3: Implement minimal code to pass
+# Step 4: Run it - see it pass
+# Step 5: Refactor if needed
+```
+
+### What to Test First
+
+| When adding... | Write first... |
+|----------------|----------------|
+| Model method | Unit test for the method |
+| Controller action | Integration test for endpoint |
+| User feature | System test with Capybara |
+| Bug fix | Test that reproduces the bug |
+
+### Test Naming
+
+Describe behavior, not implementation:
+
+```ruby
+# ✅ Good
+test "closing a card creates a closure record"
+test "user cannot close cards they don't own"
+
+# ❌ Bad
+test "close method calls create_closure!"
+test "Closeable concern is included"
+```
 
 ## Philosophy
 
 > "Write tests for behavior, not implementation. Use fixtures, not factories."
 
 **Core Principles:**
+- **TDD: Tests first, then implementation**
 - Minitest over RSpec
 - Fixtures over FactoryBot
 - Test public interface
