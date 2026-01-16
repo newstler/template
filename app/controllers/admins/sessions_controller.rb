@@ -2,6 +2,8 @@ class Admins::SessionsController < ApplicationController
   # Admin login and magic link verification
   # All admin management happens through Madmin at /madmin
 
+  layout "admin_auth", only: [ :new, :create ]
+
   def new
     # Show admin login form
   end
