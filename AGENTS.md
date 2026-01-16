@@ -19,6 +19,14 @@ Delete these HTML comments and write what your app does.
 - **Icons**: inline_svg gem
 - **Primary Keys**: ULIDs (database-generated)
 
+## Colors
+
+**STRICT RULE:** Use OKLCH for all custom colors.
+
+- Custom theme colors (dark-*, accent-*) use `oklch()` format
+- No hex, rgb, hsl in CSS variables or inline values
+- Standard Tailwind utilities (red-500, green-400) are acceptable
+
 ## Quick Reference
 
 ```bash

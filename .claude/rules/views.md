@@ -118,6 +118,27 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
 </div>
 ```
 
+## Colors (STRICT)
+
+**RULE:** Use OKLCH for custom colors. Standard Tailwind utilities are allowed.
+
+```erb
+<%# ❌ BAD: Inline hex colors %>
+<div class="bg-[#1a1d24]">
+
+<%# ❌ BAD: RGB in styles %>
+<div style="color: rgb(59, 130, 246);">
+
+<%# ✅ GOOD: Theme colors (defined as OKLCH) %>
+<div class="bg-dark-800">
+
+<%# ✅ GOOD: Arbitrary OKLCH %>
+<div class="bg-[oklch(15%_0.02_260)]">
+
+<%# ✅ GOOD: Standard Tailwind utilities %>
+<div class="text-red-500 bg-green-100">
+```
+
 ## Helpers
 
 ```ruby
