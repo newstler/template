@@ -2,6 +2,9 @@
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
+/* Dark mode variant (class-based) */
+@custom-variant dark (&:where(.dark, .dark *));
+
 /* ================================
    Background Utilities (DRY - single source of truth)
    ================================ */
@@ -30,8 +33,11 @@
   color: var(--color-dark-400) !important;
 }
 
-/* Custom dark theme colors - OKLCH format */
+/* Theme configuration - OKLCH colors + fonts */
 @theme {
+  /* Font family */
+  --font-sans: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
   /* Dark theme palette - neutral greys (OKLCH) */
   --color-dark-50: oklch(98% 0.005 250);
   --color-dark-100: oklch(96% 0.005 250);
