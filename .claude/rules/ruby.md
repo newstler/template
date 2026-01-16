@@ -40,9 +40,11 @@ scope :preloaded, -> { includes(:author, :comments) }
 ## Avoid
 
 - Service objects (use model methods or concerns)
+- Query objects (use scopes on models)
 - Callbacks for business logic (explicit method calls preferred)
 - `before_action` chains that are hard to follow
 - N+1 queries (use `preloaded` scopes)
+- Empty directories created "for later"
 
 ## Testing
 

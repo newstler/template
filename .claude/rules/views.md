@@ -18,17 +18,17 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
 <%# Good: Clean, readable templates %>
 <article class="card">
   <h2><%= @card.title %></h2>
-  <%= render @card.description %>
+<%= render @card.description %>
 </article>
 
 <%# Bad: Logic in templates %>
 <% if @card.author == Current.user && @card.published? && !@card.archived? %>
-  ...
+...
 <% end %>
 
 <%# Good: Extract to model method %>
 <% if @card.editable_by?(Current.user) %>
-  ...
+...
 <% end %>
 ```
 
@@ -37,7 +37,7 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
 ```erb
 <%# Wrap content that updates independently %>
 <%= turbo_frame_tag dom_id(@card) do %>
-  <%= render @card %>
+<%= render @card %>
 <% end %>
 
 <%# Lazy loading %>
@@ -76,18 +76,18 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
 ```erb
 <%# Use form_with (not form_for) %>
 <%= form_with model: @card do |f| %>
-  <%= f.label :title %>
-  <%= f.text_field :title, class: "input" %>
+<%= f.label :title %>
+<%= f.text_field :title, class: "input" %>
 
-  <%= f.label :description %>
-  <%= f.text_area :description, class: "input" %>
+<%= f.label :description %>
+<%= f.text_area :description, class: "input" %>
 
-  <%= f.submit class: "btn btn-primary" %>
+<%= f.submit class: "btn btn-primary" %>
 <% end %>
 
 <%# Turbo form with custom response %>
 <%= form_with model: @card, data: { turbo_stream: true } do |f| %>
-  ...
+...
 <% end %>
 ```
 
@@ -100,7 +100,7 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
     Options
   </button>
   <div data-dropdown-target="menu" class="hidden">
-    <%= render "card_menu", card: @card %>
+<%= render "card_menu", card: @card %>
   </div>
 </div>
 ```
@@ -110,7 +110,7 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
 ```erb
 <%# Use utility classes %>
 <div class="flex items-center gap-4 p-4 bg-white rounded-lg shadow">
-  <%= image_tag @user.avatar, class: "w-12 h-12 rounded-full" %>
+<%= image_tag @user.avatar, class: "w-12 h-12 rounded-full" %>
   <div class="flex-1">
     <h3 class="font-semibold text-gray-900"><%= @user.name %></h3>
     <p class="text-sm text-gray-500"><%= @user.email %></p>
@@ -152,4 +152,29 @@ end
 
 <%# ✅ GOOD: class_names helper %>
 <div class="<%= class_names('card', 'card--closed': @card.closed?) %>">
+
+<%# ❌ BAD: Inline SVG code %>
+<svg class="w-6 h-6">
+  <path d="..." />
+</svg>
+
+<%# ✅ GOOD: inline_svg gem %>
+<%= inline_svg "icons/users.svg", class: "w-6 h-6 text-blue-600" %>
 ```
+
+## Icons with inline_svg
+
+**STRICT RULE:** Never write inline SVG code directly in ERB files.
+
+Always use the `inline_svg` gem:
+
+```erb
+<%= inline_svg "icons/users.svg", class: "w-6 h-6 text-blue-600" %>
+<%= inline_svg "icons/chat.svg", class: "w-5 h-5 text-gray-400" %>
+```
+
+**Icon organization:**
+- Store icons in `app/assets/images/icons/`
+- Use semantic names: `users.svg`, `chat.svg`, `settings.svg`
+- Keep SVG files clean (viewBox, paths only)
+- Icons inherit color via `currentColor`
