@@ -171,7 +171,7 @@ FileUtils.chdir APP_ROOT do
 
     # Add AI credentials if provided
     if has_ai_keys
-      credentials_hash["open_ai"] = { "api_key" => config_data["openai_api_key"] } unless config_data["openai_api_key"].to_s.empty?
+      credentials_hash["openai"] = { "api_key" => config_data["openai_api_key"] } unless config_data["openai_api_key"].to_s.empty?
       credentials_hash["anthropic"] = { "api_key" => config_data["anthropic_api_key"] } unless config_data["anthropic_api_key"].to_s.empty?
     end
 
