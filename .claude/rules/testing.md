@@ -1,9 +1,33 @@
 ---
-description: Testing patterns for Minitest
+description: Testing patterns for Minitest with TDD
 globs: ["test/**/*.rb"]
 ---
 
 # Testing Standards
+
+## Test-Driven Development
+
+**Write tests BEFORE implementation.**
+
+### TDD Cycle
+1. **Red**: Write a failing test for desired behavior
+2. **Green**: Write minimal code to make it pass
+3. **Refactor**: Clean up while keeping tests green
+
+```bash
+# TDD workflow
+rails test test/models/card_test.rb:25  # Run single test
+# See it fail → implement → see it pass → refactor
+```
+
+### What to Test First
+
+| Adding... | Write first... |
+|-----------|---------------|
+| Model method | Unit test |
+| Endpoint | Integration test |
+| User flow | System test |
+| Bug fix | Test reproducing bug |
 
 ## Framework
 
