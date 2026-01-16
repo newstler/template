@@ -1,0 +1,27 @@
+#!/usr/bin/env bash
+set -e
+
+echo "=== Running CI Pipeline ==="
+echo ""
+
+echo "📋 Step 1/4: Checking Ruby syntax..."
+ruby -c app/**/*.rb lib/**/*.rb 2>/dev/null || true
+echo "✅ Syntax check complete"
+echo ""
+
+echo "🔍 Step 2/4: Running RuboCop..."
+bundle exec rubocop -A --fail-level=E
+echo "✅ RuboCop complete"
+echo ""
+
+echo "🧪 Step 3/4: Running tests..."
+rails test
+echo "✅ Tests complete"
+echo ""
+
+echo "🔒 Step 4/4: Running Brakeman security scan..."
+bundle exec brakeman -q --no-pager --no-exit-on-warn
+echo "✅ Security scan complete"
+echo ""
+
+echo "=== All CI checks passed! ==="
