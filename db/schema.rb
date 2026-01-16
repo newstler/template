@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_01_14_144530) do
+ActiveRecord::Schema[8.2].define(version: 2026_01_16_182900) do
   create_table "active_storage_attachments", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -67,6 +67,9 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_14_144530) do
     t.string "model_id"
     t.integer "output_tokens"
     t.string "role", null: false
+    t.text "thinking_signature"
+    t.text "thinking_text"
+    t.integer "thinking_tokens"
     t.string "tool_call_id"
     t.datetime "updated_at", null: false
     t.index ["chat_id"], name: "index_messages_on_chat_id"
@@ -100,6 +103,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_14_144530) do
     t.datetime "created_at", null: false
     t.string "message_id", null: false
     t.string "name", null: false
+    t.string "thought_signature"
     t.string "tool_call_id", null: false
     t.datetime "updated_at", null: false
     t.index ["message_id"], name: "index_tool_calls_on_message_id"
