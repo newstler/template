@@ -1,7 +1,7 @@
 class MessageResource < Madmin::Resource
   # Attributes
   attribute :id, form: false, index: false
-  attribute :role, :select, collection: ["system", "user", "assistant"]
+  attribute :role, :select, collection: [ "system", "user", "assistant" ]
   attribute :content, :text
   attribute :chat
   attribute :model
@@ -18,7 +18,7 @@ class MessageResource < Madmin::Resource
   # Associations
 
   def self.searchable_attributes
-    [:content]
+    [ :content ]
   end
 
   def self.display_name(record)

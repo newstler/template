@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
   draw :madmin
   resources :chats do
-    resources :messages, only: [:create]
+    resources :messages, only: [ :create ]
   end
+  resources :models, only: [ :index, :show ]
+  resource :models_refresh, only: [ :create ], controller: "models/refreshes"
   # Redirect /home to root for clean URLs
   get "home", to: redirect("/", status: 301)
 

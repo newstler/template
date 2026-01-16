@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  id: 01JQXYZ1234567890CHTONE01
+  user_id: 01JQXYZ1234567890ABCDEFGH
+  model_id: 01JQXYZ1234567890MDLGPT04
+
+two:
+  id: 01JQXYZ1234567890CHTTWO02
+  user_id: 01JQXYZ1234567890ABCDEFGJ
+  model_id: 01JQXYZ1234567890MDLCLAUD

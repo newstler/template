@@ -2,10 +2,12 @@ require "test_helper"
 
 class UserMailerTest < ActionMailer::TestCase
   test "magic_link" do
-    mail = UserMailer.magic_link
-    assert_equal "Magic link", mail.subject
-    assert_equal [ "to@example.org" ], mail.to
-    assert_equal [ "from@example.com" ], mail.from
-    assert_match "Hi", mail.body.encoded
+    user = users(:one)
+    mail = UserMailer.magic_link(user)
+
+    assert_equal "Your magic link to sign in", mail.subject
+    assert_equal [ user.email ], mail.to
+    assert_match "sign in", mail.body.encoded.downcase
+    assert_match user.name.downcase, mail.body.encoded.downcase
   end
 end

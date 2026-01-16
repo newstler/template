@@ -10,7 +10,7 @@
   <% end %>
 
   <div class="bg-dark-700 rounded-2xl shadow-lg shadow-black/20 focus-within:shadow-[0_0_20px_rgba(255,255,255,0.08)] transition-shadow">
-    <div class="p-3">
+    <div class="p-3" data-chat-input-target="inputContainer">
       <%= form.text_area :content,
           rows: 1,
           class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none focus:border-0 focus:shadow-none placeholder-dark-400 text-dark-100",
@@ -22,6 +22,7 @@
             action: "keydown->chat-input#submit input->chat-input#resize"
           } %>
     </div>
+    <div class="hidden flex flex-wrap gap-2 px-3 pb-2" data-chat-input-target="previewArea"></div>
     <div class="flex items-center justify-between px-3 py-2">
       <div class="flex items-center gap-2 text-dark-500">
         <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">

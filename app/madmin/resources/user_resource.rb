@@ -11,7 +11,7 @@ class UserResource < Madmin::Resource
   attribute :chats
 
   def self.searchable_attributes
-    [:email, :name]
+    [ :email, :name ]
   end
 
   def self.display_name(record)

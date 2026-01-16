@@ -2,10 +2,12 @@ require "test_helper"
 
 class AdminMailerTest < ActionMailer::TestCase
   test "magic_link" do
-    mail = AdminMailer.magic_link
-    assert_equal "Magic link", mail.subject
-    assert_equal [ "to@example.org" ], mail.to
-    assert_equal [ "from@example.com" ], mail.from
-    assert_match "Hi", mail.body.encoded
+    admin = admins(:one)
+    mail = AdminMailer.magic_link(admin)
+
+    assert_equal "Your admin magic link to sign in", mail.subject
+    assert_equal [ admin.email ], mail.to
+    assert_match "sign in", mail.body.encoded.downcase
+    assert_match "admin", mail.body.encoded.downcase
   end
 end

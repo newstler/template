@@ -11,7 +11,7 @@ class ToolCallResource < Madmin::Resource
   # Associations
 
   def self.searchable_attributes
-    [:name, :tool_call_id]
+    [ :name, :tool_call_id ]
   end
 
   def self.display_name(record)

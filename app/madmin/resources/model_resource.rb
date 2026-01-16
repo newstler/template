@@ -3,7 +3,7 @@ class ModelResource < Madmin::Resource
   attribute :id, form: false, index: false
   attribute :name
   attribute :model_id
-  attribute :provider, :select, collection: ["openai", "anthropic"]
+  attribute :provider, :select, collection: [ "openai", "anthropic" ]
   attribute :family
   attribute :context_window
   attribute :max_output_tokens
@@ -19,7 +19,7 @@ class ModelResource < Madmin::Resource
   # Associations
 
   def self.searchable_attributes
-    [:name, :model_id, :provider]
+    [ :name, :model_id, :provider ]
   end
 
   def self.display_name(record)

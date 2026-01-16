@@ -1,0 +1,9 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+search_call:
+  id: 01JQXYZ1234567890TOOLCAL1
+  message_id: 01JQXYZ1234567890MSGAST01
+  tool_call_id: call_abc123
+  name: search
+  arguments:
+    query: "weather in Paris"

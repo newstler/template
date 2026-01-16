@@ -18,7 +18,7 @@ class AdminResource < Madmin::Resource
   end
 
   def self.searchable_attributes
-    [:email]
+    [ :email ]
   end
 
   def self.display_name(record)

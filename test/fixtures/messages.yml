@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+user_message:
+  id: 01JQXYZ1234567890MSGUSR01
+  chat_id: 01JQXYZ1234567890CHTONE01
+  role: user
+  content: "Hello, how are you?"
+  input_tokens: 10
+  output_tokens: 0
+
+assistant_message:
+  id: 01JQXYZ1234567890MSGAST01
+  chat_id: 01JQXYZ1234567890CHTONE01
+  model_id: 01JQXYZ1234567890MDLGPT04
+  role: assistant
+  content: "I'm doing well, thank you for asking!"
+  input_tokens: 10
+  output_tokens: 15
+  cost: 0.0012
