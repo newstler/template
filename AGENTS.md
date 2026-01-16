@@ -1,115 +1,79 @@
-# Template - Rails 8 AI-Native Application
+# [Project Name]
+
+<!-- 
+TEMPLATE NOTE: Replace this entire section with your actual project description.
+Delete these HTML comments and write what your app does.
+-->
+
+[Describe what your application does here. This template provides Rails 8 with magic link auth, AI chat via RubyLLM, SQLite + Solid Stack, and Hotwire frontend.]
 
 ## Tech Stack
 
-- **Ruby**: 4.0.x
-- **Rails**: 8.x
+- **Ruby**: 4.0.x / **Rails**: 8.x
 - **Database**: SQLite with Solid Stack (Cache, Queue, Cable)
-- **Replication**: Litestream (SQLite → S3-compatible storage)
-- **AI**: RubyLLM (OpenAI & Anthropic support)
+- **Replication**: Litestream (automatic in production)
+- **AI**: RubyLLM (OpenAI & Anthropic)
 - **Frontend**: Hotwire (Turbo + Stimulus), Tailwind CSS 4
-- **Asset Pipeline**: Propshaft
 - **Deployment**: Kamal 2
-- **Admin Panel**: Madmin
+- **Admin**: Madmin at `/madmin`
 - **Icons**: inline_svg gem
-- **Primary Keys**: ULIDs (database-level default)
+- **Primary Keys**: ULIDs (database-generated)
 
 ## Quick Reference
 
 ```bash
-# Development
-bin/dev                    # Start server (Puma + Tailwind watcher)
-bin/setup                  # Install deps, setup DB
-bin/ci                     # Run full CI locally
-
-# Database
-rails db:migrate           # Run migrations
-rails db:seed              # Seed data
-rails db                   # SQLite console
-
-# Testing
-rails test                 # All tests
-rails test test/models/    # Model tests only
-rails test test/models/user_test.rb:42  # Specific line
-
-# Code quality
-bundle exec rubocop -A     # Lint + autofix
-bundle exec brakeman       # Security scan
-
-# Deployment
-kamal deploy               # Deploy to production
-kamal app logs             # View production logs
+bin/dev                    # Start dev server (REQUIRED)
+rails console              # Console
+rails test                 # Run tests
+bundle exec rubocop -A     # Fix style
+bin/ci                     # All quality checks
 ```
 
-## Architecture Principles
+## Quality Gates (REQUIRED)
 
-This template follows **37signals vanilla Rails philosophy** combined with **Vladimir Dementyev's Layered Design**:
+Before ANY commit:
 
-### Core Philosophy
+```bash
+bin/ci
+# or: bundle exec rubocop -A && rails test && bundle exec brakeman -q
+```
 
-> "The best code is the code you don't write. The second best is the code that's obviously correct."
+All must pass. No exceptions.
 
-1. **Rich domain models over service objects** - Put business logic in models
-2. **CRUD controllers over custom actions** - Everything is a resource
-3. **Concerns for horizontal code sharing** - Named as adjectives (Closeable, Publishable)
-4. **Records as state instead of boolean columns** - `card.closure` instead of `card.closed`
+## Architecture: 37signals Vanilla Rails
+
+> "The best code is the code you don't write."
+
+### Core Principles
+
+1. **Fat models, thin controllers** - Business logic lives in models
+2. **CRUD controllers only** - Everything is a resource
+3. **Concerns for shared behavior** - Named as adjectives (Closeable, Publishable)
+4. **State as records, not booleans** - `card.closure` not `card.closed`
 5. **Database-backed everything** - SQLite + Solid Stack (no Redis)
-6. **Build solutions before reaching for gems**
-7. **Grow into abstractions** - Let them emerge from code, don't create empty directories
-8. **Ship to learn** - Prototype quality is valid
+6. **Build it yourself** - Before reaching for gems
 
-### Abstraction Decision Tree
+### What We Avoid
 
-```
-Need new abstraction?
-├── Is it shared model behavior? → Concern (app/models/concerns/)
-├── Is it shared controller behavior? → Concern (app/controllers/concerns/)
-├── Is it a complex query? → Scope or concern on the model
-└── None of the above? → Keep in model/controller until pattern emerges
-```
-
-**Principle:** Don't create directories in anticipation. Let abstractions emerge from code.
-
-### What We Deliberately Avoid
-
-- ❌ devise (custom ~150-line auth)
-- ❌ pundit/cancancan (simple role checks in models)
-- ❌ sidekiq (Solid Queue uses database)
-- ❌ redis (database for everything)
-- ❌ view_component (partials work fine)
-- ❌ GraphQL (REST with Turbo sufficient)
-- ❌ React/Vue/npm/yarn (Hotwire + Stimulus only)
+- ❌ Service objects, query objects, form objects
+- ❌ devise, pundit, sidekiq, redis
+- ❌ view_component, GraphQL
+- ❌ React/Vue/npm/yarn
 
 ### REST Mapping
 
-Instead of custom controller actions, create new resources:
+Custom actions become resources:
 
 ```ruby
-# ❌ BAD: Custom actions
-POST /cards/:id/close
-DELETE /cards/:id/close
-
-# ✅ GOOD: Resource-based
-POST /cards/:id/closure      # Cards::ClosuresController#create
-DELETE /cards/:id/closure    # Cards::ClosuresController#destroy
+# ❌ POST /cards/:id/close
+# ✅ POST /cards/:id/closure → Cards::ClosuresController#create
 ```
 
-## Code Conventions
+## Code Patterns
 
-### Naming
-
-| Type | Convention | Example |
-|------|------------|---------|
-| Verbs | Action methods | `card.close`, `card.gild`, `board.publish` |
-| Predicates | Boolean queries | `card.closed?`, `card.golden?` |
-| Concerns | Adjectives | `Closeable`, `Publishable`, `Watchable` |
-| Controllers | Nouns matching resources | `Cards::ClosuresController` |
-| Scopes | Descriptive | `chronologically`, `preloaded`, `sorted_by` |
-
-### Controllers
+### Controllers (thin)
 
 ```ruby
-# Thin controllers - delegate to models
 class Cards::ClosuresController < ApplicationController
   def create
     @card = Current.user.cards.find(params[:card_id])
@@ -119,24 +83,19 @@ class Cards::ClosuresController < ApplicationController
 end
 ```
 
-### Models
+### Models (fat, with concerns)
 
 ```ruby
-# Fat models with concerns
 class Card < ApplicationRecord
   include Closeable
-  include Watchable
 
   belongs_to :board
-  has_one :closure, dependent: :destroy
-
   scope :open, -> { where.missing(:closure) }
   scope :chronologically, -> { order(created_at: :asc) }
-  scope :preloaded, -> { includes(:closure, :board) }
 end
 ```
 
-### Concerns
+### Concerns (adjectives)
 
 ```ruby
 # app/models/concerns/closeable.rb
@@ -153,188 +112,94 @@ module Closeable
     create_closure!(closed_by: by)
   end
 
-  def closed?
-    closure.present?
-  end
+  def closed? = closure.present?
 end
 ```
 
-### Views & Frontend
+### Views
 
-- **Turbo Frames** for partial page updates
-- **Turbo Streams** for real-time updates
-- **Stimulus** for JavaScript sprinkles
-- **No JavaScript frameworks** - vanilla Stimulus only
-- **inline_svg gem** for all icons (never inline SVG in ERB)
+- Turbo Frames for partial updates
+- Turbo Streams for real-time
+- Stimulus for JS sprinkles
+- `inline_svg` for icons (never inline SVG)
 
 ```erb
-<%# Turbo Frame for inline editing %>
 <%= turbo_frame_tag dom_id(@card) do %>
   <%= render @card %>
 <% end %>
 
-<%# Stimulus controller %>
-<div data-controller="dropdown">
-  <button data-action="click->dropdown#toggle">Menu</button>
-  <div data-dropdown-target="menu" class="hidden">...</div>
-</div>
-
-<%# Icons - ALWAYS use inline_svg, never inline SVG code %>
-<%= inline_svg "icons/users.svg", class: "w-6 h-6 text-blue-600" %>
-```
-
-### Stimulus Controllers
-
-```javascript
-// app/javascript/controllers/dropdown_controller.js
-import { Controller } from "@hotwired/stimulus"
-
-export default class extends Controller {
-  static targets = ["menu"]
-
-  toggle() {
-    this.menuTarget.classList.toggle("hidden")
-  }
-}
+<%= inline_svg "icons/check.svg", class: "w-5 h-5" %>
 ```
 
 ## Database
 
-### SQLite + Solid Stack
-
-- **Main DB**: `storage/development.sqlite3`
-- **Cache**: `storage/development_cache.sqlite3` (Solid Cache)
-- **Queue**: `storage/development_queue.sqlite3` (Solid Queue)
-- **Cable**: `storage/development_cable.sqlite3` (Solid Cable)
-
-### Migrations
+### Migrations with ULIDs
 
 ```ruby
-class CreateCards < ActiveRecord::Migration[8.0]
-  def change
-    create_table :cards, id: false, force: true do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
-      t.references :board, null: false, foreign_key: true, type: :string
-      t.string :title, null: false
-      t.text :description
-
-      t.timestamps
-    end
-
-    add_index :cards, [:board_id, :created_at]
-  end
+create_table :cards, id: false, force: true do |t|
+  t.primary_key :id, :string, default: -> { "ULID()" }
+  t.references :board, null: false, foreign_key: true, type: :string
+  t.string :title, null: false
+  t.timestamps
 end
 ```
 
-### ULID Primary Keys
+### Fixtures
 
-All models use ULID primary keys generated at the database level:
-
-```ruby
-class ApplicationRecord < ActiveRecord::Base
-  primary_abstract_class
-  self.implicit_order_column = "created_at"
-  # No callback needed - SQLite generates ULIDs via ULID() function
-end
+```yaml
+# test/fixtures/cards.yml
+one:
+  id: <%= ULID.generate %>
+  board: main
+  title: "Test Card"
 ```
 
 ## Authentication
 
-### Magic Link Flow (Passwordless)
+Magic links (passwordless):
 
-**User Authentication:**
-1. User enters email at `/session/new`
-2. System generates signed token, sends email
-3. User clicks link, token verified, session created
-4. First-time users: account created automatically
-5. After login: redirects to `/home`
-
-**Admin Authentication:**
-- Path: `/admins/session/new` (separate from user login)
-- Admins must exist in database (created via seeds or Madmin)
-- After login: redirects to `/madmin`
-- **No links between user and admin interfaces**
+- **Users**: `/session/new` → auto-create on first login → `/home`
+- **Admins**: `/admins/session/new` → must exist in DB → `/madmin`
+- Separate interfaces, no links between them
 
 ```ruby
-# app/models/user.rb
-class User < ApplicationRecord
-  def generate_magic_link_token
-    signed_id(purpose: :magic_link, expires_in: 15.minutes)
-  end
-end
+# Generate token
+user.signed_id(purpose: :magic_link, expires_in: 15.minutes)
 
-# In controllers
-user = User.find_signed!(params[:token], purpose: :magic_link)
-session[:user_id] = user.id
+# Verify token
+User.find_signed!(params[:token], purpose: :magic_link)
 ```
 
-### Helper Methods (ApplicationController)
+Helpers: `current_user`, `current_admin`, `authenticate_user!`, `authenticate_admin!`
 
-- `current_user` - for public user interface
-- `current_admin` - for Madmin admin interface
-- `authenticate_user!` - for user-facing controllers
-- `authenticate_admin!` - for admin-specific controllers
+## RubyLLM AI Chat
 
-## Madmin Admin Panel
+Working chat interface at `/chats` with OpenAI and Anthropic.
 
-All administrative tasks are managed through **Madmin** at `/madmin`.
-
-### Configuration
-
-```ruby
-# app/controllers/madmin/application_controller.rb
-class Madmin::ApplicationController < Madmin::BaseController
-  before_action :authenticate_admin!
-
-  private
-
-  def authenticate_admin!
-    redirect_to main_app.new_admins_session_path unless current_admin
-  end
-
-  def current_admin
-    @current_admin ||= Admin.find_by(id: session[:admin_id]) if session[:admin_id]
-  end
-  helper_method :current_admin
-end
+```
+User → has_many :chats
+Chat → belongs_to :user, belongs_to :model, acts_as_chat
+Message → belongs_to :chat (role, content, tokens)
+Model → model_id, provider, capabilities
 ```
 
-### Creating Resources
-
-```bash
-rails generate madmin:resource ModelName
-```
-
-Customize in `app/madmin/resources/model_name_resource.rb`.
+Responses via `ChatResponseJob` (Solid Queue).
 
 ## Testing
 
-### Minitest + Fixtures
+Minitest + fixtures only (no RSpec, no FactoryBot):
 
 ```ruby
-# test/models/card_test.rb
 class CardTest < ActiveSupport::TestCase
+  setup do
+    Current.user = users(:one)
+  end
+
   test "can be closed" do
     card = cards(:one)
     assert_not card.closed?
-
     card.close
     assert card.closed?
-  end
-end
-```
-
-### System Tests
-
-```ruby
-# test/system/cards_test.rb
-class CardsTest < ApplicationSystemTestCase
-  test "creating a card" do
-    visit board_path(boards(:one))
-    click_on "New Card"
-    fill_in "Title", with: "Test Card"
-    click_on "Create"
-    assert_text "Test Card"
   end
 end
 ```
@@ -343,175 +208,120 @@ end
 
 ```
 app/
-├── channels/
 ├── controllers/
-│   ├── application_controller.rb
 │   ├── concerns/
 │   ├── sessions_controller.rb
-│   ├── admins/           # Admin authentication
-│   │   └── sessions_controller.rb
-│   └── madmin/           # Madmin resource controllers
-├── jobs/
-├── mailers/
-├── madmin/
-│   ├── fields/           # Custom Madmin fields
-│   └── resources/        # Madmin resource definitions
+│   ├── chats_controller.rb
+│   ├── admins/sessions_controller.rb
+│   └── madmin/
 ├── models/
-│   ├── application_record.rb
 │   ├── concerns/
-│   └── current.rb        # Current attributes
-└── views/
-    ├── layouts/
-    ├── madmin/           # Customized Madmin views
-    └── shared/
+│   ├── current.rb
+│   └── [domain models]
+├── views/
+└── jobs/
 
-app/javascript/
-└── controllers/          # Stimulus controllers only
-
-app/assets/
-├── images/
-│   └── icons/            # SVG icons for inline_svg
-└── stylesheets/
-    └── application.css   # Tailwind
+app/javascript/controllers/   # Stimulus only
+app/assets/images/icons/      # SVG for inline_svg
 ```
 
 ## Credentials
 
-All secrets in Rails encrypted credentials (no environment variables):
-
 ```bash
 rails credentials:edit --environment development
-rails credentials:edit --environment production
 ```
 
-Structure:
 ```yaml
 secret_key_base: ...
-
-# AI APIs (configured via bin/configure)
 open_ai:
   api_key: sk-...
-
 anthropic:
   api_key: sk-ant-...
-
-# Litestream SQLite replication (optional)
-litestream:
-  replica_bucket: my-app-backups
-  replica_key_id: AKIAIOSFODNN7EXAMPLE
-  replica_access_key: wJalrXUtnFEMI/K7MDENG/bPxRfiCYEXAMPLEKEY
-
-# Other services
-stripe:
-  secret_key: sk_test_...
-  webhook_secret: whsec_...
+litestream:  # optional
+  replica_bucket: ...
 ```
 
-### Litestream - SQLite Replication
+## Test-Driven Development
 
-Replicates all Solid Stack databases to S3-compatible storage:
-- `storage/production.sqlite3` (main database)
-- `storage/production_cache.sqlite3` (Solid Cache)
-- `storage/production_queue.sqlite3` (Solid Queue)
-- `storage/production_cable.sqlite3` (Solid Cable)
+**Write tests first, then implementation.**
 
-```bash
-rails litestream:replicate  # Start replication
-rails litestream:restore    # Restore from backup
-```
+### TDD Cycle
 
-## Quality Gates
+1. **Red**: Write a failing test for the desired behavior
+2. **Green**: Write minimal code to make it pass
+3. **Refactor**: Clean up while keeping tests green
 
-Before committing, ensure:
-
-```bash
-bundle exec rubocop -A      # ✅ No lint errors
-rails test                   # ✅ All tests pass
-bundle exec brakeman -q      # ✅ No security issues
-```
-
-## AI Collaboration Notes
-
-When working with AI assistants:
-
-1. **Read AGENTS.md files** in directories you're modifying
-2. **Update AGENTS.md** with patterns you discover
-3. **Follow existing conventions** - don't introduce new patterns without discussion
-4. **Keep controllers thin** - business logic goes in models
-5. **Use concerns** for shared behavior across models
-6. **Prefer database constraints** over model validations where possible
-7. **Write tests** for new functionality
-8. **Run quality gates** before marking work complete
-
-## Deployment
-
-Kamal 2 deployment:
-
-```bash
-kamal setup    # First-time setup
-kamal deploy   # Deploy
-kamal app logs # View logs
-```
-
-```yaml
-# config/deploy.yml
-service: myapp
-image: myorg/myapp
-
-servers:
-  web:
-    - 1.2.3.4
-
-env:
-  clear:
-    RAILS_ENV: production
-    SOLID_QUEUE_IN_PUMA: true
-  secret:
-    - RAILS_MASTER_KEY
-```
-
----
-
-## Optional: RubyLLM AI Chat Integration
-
-If your project includes AI chat functionality:
-
-### Data Model
-
-```
-User
-└── has_many :chats
-
-Chat
-├── belongs_to :user
-├── belongs_to :model (AI model)
-├── acts_as_chat (RubyLLM)
-└── has_many :messages
-
-Message
-├── belongs_to :chat
-├── role (system/user/assistant)
-├── content, content_raw
-└── token counts
-```
-
-### Configuration
+### Workflow
 
 ```ruby
-# config/initializers/ruby_llm.rb
-RubyLLM.configure do |config|
-  config.openai_api_key = Rails.application.credentials.dig(:open_ai, :api_key)
-  config.anthropic_api_key = Rails.application.credentials.dig(:anthropic, :api_key)
+# 1. Start with a test
+test "user can close a card" do
+  card = cards(:open)
+  assert_not card.closed?
+  
+  card.close
+  
+  assert card.closed?
+  assert_equal Current.user, card.closure.closed_by
 end
+
+# 2. Run it - it fails (Red)
+# 3. Implement the feature
+# 4. Run it - it passes (Green)
+# 5. Refactor if needed
 ```
 
-### Usage
+### What to Test First
+
+| Feature Type | Test First |
+|--------------|------------|
+| Model method | Unit test for the method |
+| New endpoint | Integration test for request/response |
+| User flow | System test with Capybara |
+| Bug fix | Test that reproduces the bug |
+
+### Test Naming
+
+Tests describe behavior, not implementation:
 
 ```ruby
-class Chat < ApplicationRecord
-  belongs_to :user
-  acts_as_chat  # RubyLLM integration
-end
+# ✅ Good - describes behavior
+test "closing a card creates a closure record"
+test "user cannot close cards they don't own"
+
+# ❌ Bad - describes implementation  
+test "close method calls create_closure!"
+test "Closeable concern is included"
 ```
 
-Chat responses processed via `ChatResponseJob` using Solid Queue.
+## Codebase Patterns
+
+Quick reference for working in this codebase:
+
+### Authentication
+- Magic links via `signed_id` / `find_signed!`
+- `Current.user` for request context
+- Separate user/admin auth flows
+
+### Models
+- ULID primary keys (database-generated)
+- Concerns for shared behavior (adjectives)
+- State as records, not booleans
+- Scopes over class methods
+
+### Controllers
+- CRUD only, nested resources for actions
+- Thin - delegate to models
+- `before_action :authenticate_user!`
+
+### Testing
+- **TDD: Write tests first**
+- Minitest + fixtures (no RSpec/FactoryBot)
+- Fixtures use `id: <%= ULID.generate %>`
+- `Current.user = users(:one)` in setup
+
+### Frontend
+- Turbo Frames/Streams for updates
+- Stimulus for JS sprinkles
+- `inline_svg` for icons
+- No npm/yarn packages
