@@ -1,8 +1,7 @@
-<%= form_with(model: chat, url: chats_path, class: "space-y-6") do |form| %>
+<%= form_with(model: chat, url: chats_path, data: { controller: "chat-input", chat_input_target: "form" }) do |form| %>
   <% if chat.errors.any? %>
-    <div class="bg-red-500/10 border border-red-500/30 text-red-300 px-4 py-3 rounded-lg">
-      <h3 class="font-medium"><%= pluralize(chat.errors.count, "error") %> prohibited this chat from being saved:</h3>
-      <ul class="list-disc list-inside mt-2 text-sm">
+    <div class="bg-red-500/10 text-red-300 px-4 py-3 rounded-lg mb-4">
+      <ul class="list-disc list-inside text-sm">
         <% chat.errors.each do |error| %>
           <li><%= error.full_message %></li>
         <% end %>
@@ -10,25 +9,38 @@
     </div>
   <% end %>
 
-  <div>
-    <%= form.label :model, "AI Model", class: "block text-sm font-medium text-dark-200 mb-2" %>
-    <%= form.select :model,
-        options_for_select(Model.pluck(:name, :model_id).unshift(["Default (#{RubyLLM.config.default_model})", nil]), @selected_model),
-        {},
-        class: "w-full rounded-lg border border-dark-600 bg-dark-800 text-dark-100 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all" %>
-    <p class="text-xs text-dark-500 mt-1">Select the AI model for this conversation</p>
-  </div>
-
-  <div>
-    <%= form.label :prompt, "Your Message", class: "block text-sm font-medium text-dark-200 mb-2" %>
-    <%= form.text_area :prompt,
-        rows: 3,
-        class: "w-full rounded-lg border border-dark-600 bg-dark-800 text-dark-100 px-4 py-3 focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 focus:outline-none transition-all resize-none placeholder-dark-500",
-        placeholder: "What would you like to discuss?",
-        autofocus: true %>
-  </div>
-
-  <div>
-    <%= form.submit "Start Chat", class: "w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white font-medium py-3 px-4 rounded-lg transition-all cursor-pointer shadow-lg shadow-blue-500/25" %>
+  <div class="bg-dark-700 rounded-2xl shadow-lg shadow-black/20 focus-within:shadow-[0_0_20px_rgba(255,255,255,0.08)] transition-shadow">
+    <div class="p-3" data-chat-input-target="inputContainer">
+      <%= form.text_area :prompt,
+          rows: 1,
+          class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none focus:border-0 focus:shadow-none placeholder-dark-400 text-dark-100",
+          placeholder: "What would you like to discuss?",
+          autofocus: true,
+          style: "box-shadow: none !important;",
+          data: {
+            chat_input_target: "textarea",
+            action: "keydown->chat-input#submit input->chat-input#resize"
+          } %>
+    </div>
+    <div class="hidden flex flex-wrap gap-2 px-3 pb-2" data-chat-input-target="previewArea"></div>
+    <div class="flex items-center justify-between px-3 py-2">
+      <div class="flex items-center gap-2 text-dark-500">
+        <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">
+          <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
+        </button>
+        <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/*,.pdf,.txt,.md,.json,.csv" %>
+      </div>
+      <div class="flex items-center gap-3">
+        <%= form.select :model,
+            options_for_select([["Default", ""]] + Model.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
+            {},
+            class: "text-sm bg-transparent border-0 ring-0 outline-none focus:ring-0 focus:outline-none focus:border-0 cursor-pointer pr-5",
+            style: "appearance: none; color: #6b7280; box-shadow: none !important; outline: none !important; border: none !important; background-image: url(\"data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e\"); background-position: right 0 center; background-repeat: no-repeat; background-size: 1em 1em;",
+            data: { controller: "auto-width-select", action: "change->auto-width-select#resize" } %>
+        <%= form.button type: "submit", class: "bg-dark-600 hover:bg-dark-500 text-white rounded-lg p-2 transition-colors cursor-pointer" do %>
+          <%= inline_svg "icons/arrow-up.svg", class: "w-4 h-4" %>
+        <% end %>
+      </div>
+    </div>
   </div>
 <% end %>

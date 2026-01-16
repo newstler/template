@@ -9,9 +9,7 @@
     <p class="text-dark-400">Choose a model and begin your conversation</p>
   </div>
 
-  <div class="card-bg p-6">
-    <%= render "form", chat: @chat %>
-  </div>
+  <%= render "form", chat: @chat %>
 
   <div class="text-center mt-6">
     <%= link_to chats_path, class: "inline-flex items-center gap-2 text-dark-400 hover:text-dark-200 transition-colors" do %>

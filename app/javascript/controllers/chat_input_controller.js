@@ -6,6 +6,7 @@ export default class extends Controller {
   connect() {
     this.resize()
     this.selectedFiles = []
+    this.textareaTarget.focus()
   }
 
   resize() {
@@ -37,7 +38,9 @@ export default class extends Controller {
   }
 
   triggerFileInput() {
-    this.fileInputTarget.click()
+    if (this.hasFileInputTarget) {
+      this.fileInputTarget.click()
+    }
   }
 
   handleFileSelect(event) {
@@ -49,9 +52,10 @@ export default class extends Controller {
   }
 
   showAttachmentPreview() {
-    // Show the preview area
+    if (!this.hasPreviewAreaTarget) return
+
     this.previewAreaTarget.classList.remove("hidden")
-    this.previewAreaTarget.innerHTML = ""
+    this.previewAreaTarget.replaceChildren()
 
     this.selectedFiles.forEach((file, index) => {
       const preview = document.createElement("div")
@@ -82,14 +86,15 @@ export default class extends Controller {
     const index = parseInt(event.target.dataset.index)
     this.selectedFiles.splice(index, 1)
 
-    // Update the file input
-    const dt = new DataTransfer()
-    this.selectedFiles.forEach(file => dt.items.add(file))
-    this.fileInputTarget.files = dt.files
+    if (this.hasFileInputTarget) {
+      const dt = new DataTransfer()
+      this.selectedFiles.forEach(file => dt.items.add(file))
+      this.fileInputTarget.files = dt.files
+    }
 
-    if (this.selectedFiles.length === 0) {
+    if (this.selectedFiles.length === 0 && this.hasPreviewAreaTarget) {
       this.previewAreaTarget.classList.add("hidden")
-      this.previewAreaTarget.innerHTML = ""
+      this.previewAreaTarget.replaceChildren()
     } else {
       this.showAttachmentPreview()
     }

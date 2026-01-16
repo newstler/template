@@ -23,6 +23,8 @@
   </head>
 
   <body class="body-bg" data-controller="sidebar">
+    <%= render "shared/flash" %>
+
     <% if current_user %>
       <%# Sidebar Navigation %>
       <%= render "shared/sidebar" %>
@@ -42,17 +44,6 @@
         <%# Spacer for mobile header %>
         <div class="h-16 lg:hidden"></div>
 
-        <%# Flash messages %>
-        <% if flash.any? %>
-          <div class="px-4 lg:px-8 pt-4">
-            <% flash.each do |type, message| %>
-              <div class="<%= type == 'notice' ? 'bg-green-900/50 border-green-700 text-green-300' : 'bg-red-900/50 border-red-700 text-red-300' %> border px-4 py-3 rounded-lg mb-4">
-                <%= message %>
-              </div>
-            <% end %>
-          </div>
-        <% end %>
-
         <%# Page content %>
         <main class="<%= content_for?(:full_width) ? '' : 'p-4 lg:p-8' %>">
           <%= yield %>
@@ -60,16 +51,6 @@
       </div>
     <% else %>
       <%# Unauthenticated layout (login pages, etc.) %>
-      <% if flash.any? %>
-        <div class="max-w-md mx-auto px-4 pt-4">
-          <% flash.each do |type, message| %>
-            <div class="<%= type == 'notice' ? 'bg-green-900/50 border-green-700 text-green-300' : 'bg-red-900/50 border-red-700 text-red-300' %> border px-4 py-3 rounded-lg mb-4">
-              <%= message %>
-            </div>
-          <% end %>
-        </div>
-      <% end %>
-
       <main class="min-h-screen flex items-center justify-center p-4">
         <%= yield %>
       </main>

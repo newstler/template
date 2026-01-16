@@ -1,0 +1,16 @@
+<% if flash.any? %>
+  <div class="fixed top-4 right-4 z-50 flex flex-col gap-2 max-w-sm">
+    <% flash.each do |type, message| %>
+      <div data-controller="flash"
+           data-flash-auto-dismiss-value="5000"
+           class="<%= type == 'notice' ? 'bg-green-900/90 border-green-700 text-green-300' : 'bg-red-900/90 border-red-700 text-red-300' %> border px-4 py-3 rounded-lg shadow-lg backdrop-blur-sm flex items-center gap-3 transition-all duration-300">
+        <span class="flex-1"><%= message %></span>
+        <button type="button"
+                data-action="click->flash#dismiss"
+                class="<%= type == 'notice' ? 'text-green-400 hover:text-green-200' : 'text-red-400 hover:text-red-200' %> transition-colors">
+          <%= inline_svg "icons/x.svg", class: "w-4 h-4" %>
+        </button>
+      </div>
+    <% end %>
+  </div>
+<% end %>
