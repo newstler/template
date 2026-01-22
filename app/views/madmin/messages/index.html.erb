@@ -2,94 +2,75 @@
 
 <header class="header">
   <h1><%= resource.friendly_name.pluralize %></h1>
-
-  <div class="actions">
-    <form class="search">
-      <%= hidden_field_tag :page, params[:page], value: 1 %>
-      <%= search_field_tag :q, params[:q], placeholder: "Search" %>
-    </form>
-
-    <%= link_to clear_search_params, class: "btn btn-secondary" do %>
-      <%= inline_svg "icons/x-circle.svg", class: "w-4 h-4" %>
-      <% end if params[:q].present? %>
-
-    <%= link_to resource.new_path, class: "btn btn-secondary" do %>
-      New <%= tag.span resource.friendly_name, class: "hidden md:inline-block" %>
-    <% end %>
-  </div>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
-  <%= form_with url: resource.index_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :role, class: "block text-sm font-medium text-dark-300" %>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search messages...", class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :role, class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <% roles = Message.distinct.order(:role).pluck(:role) %>
       <%= f.select :role,
-          options_for_select([["All", ""], ["System", "system"], ["User", "user"], ["Assistant", "assistant"]], params[:role]),
+          options_for_select([["All roles", ""]] + roles.map { |r| [r.titleize, r] }, params[:role]),
           {},
           class: "form-select" %>
     </div>
 
     <div>
-      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300" %>
+      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
       <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
     </div>
 
     <div>
-      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300" %>
+      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
       <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
     </div>
 
-    <%= f.submit "Filter", class: "btn btn-primary" %>
-    <%= link_to "Clear", resource.index_path, class: "btn" %>
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? || params[:role].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
   <% end %>
 </div>
-
-<nav class="scopes">
-  <% if resource.scopes.any? %>
-    <%= link_to "All", resource.index_path, class: class_names("btn btn-secondary", {"active" => params[:scope].blank?}) %>
-  <% end %>
-
-  <% resource.scopes.each do |scope| %>
-    <%= link_to scope.to_s.humanize, resource.index_path(scope: scope, q: params[:q], sort: params[:sort], direction: params[:direction]), class: class_names("btn btn-secondary", {"active" => params[:scope] == scope.to_s}) %>
-  <% end %>
-</nav>
 
 <div class="table-scroll">
   <table>
     <thead>
       <tr>
-        <% resource.attributes.values.each do |attribute| %>
-          <% next if attribute.field.nil? %>
-          <% next unless attribute.field.visible?(action_name) %>
-
-          <th><%= sortable attribute.name, attribute.name.to_s.titleize %></th>
-        <% end %>
-        <th></th>
+        <th><%= sortable :content, "Message" %></th>
+        <th><%= sortable :chat_id, "Chat" %></th>
+        <th><%= sortable :role, "Role" %></th>
+        <th><%= sortable :cost, "Cost" %></th>
+        <th><%= sortable :created_at, "Created" %></th>
       </tr>
     </thead>
 
     <tbody>
       <% @records.each do |record| %>
         <tr>
-          <% first_field = true %>
-          <% resource.attributes.values.each do |attribute| %>
-            <% next if attribute.field.nil? %>
-            <% next unless attribute.field.visible?(action_name) %>
-            <td>
-              <% if first_field %>
-                <%= link_to resource.show_path(record) do %>
-                  <%= render partial: attribute.field.to_partial_path("index"), locals: { field: attribute.field, record: record, resource: resource } %>
-                <% end %>
-                <% first_field = false %>
-              <% else %>
-                <%= render partial: attribute.field.to_partial_path("index"), locals: { field: attribute.field, record: record, resource: resource } %>
-              <% end %>
-            </td>
-          <% end %>
-
-          <td>
-            <%= link_to "Edit", resource.edit_path(record) %>
+          <td class="max-w-xs">
+            <%= link_to resource.show_path(record), class: "block truncate" do %>
+              <%= record.content&.truncate(80) || "[No content]" %>
+            <% end %>
           </td>
+          <td class="max-w-[200px]">
+            <%= link_to "/madmin/chats/#{record.chat_id}", class: "block truncate hover:underline" do %>
+              <%= record.chat&.messages&.order(:created_at)&.first&.content&.truncate(40) || "Chat ##{record.chat_id.to_s[0..7]}" %>
+            <% end %>
+          </td>
+          <td>
+            <span class="px-2 py-1 text-xs font-medium rounded <%= record.role == 'user' ? 'bg-blue-500/20 text-blue-300' : record.role == 'assistant' ? 'bg-emerald-500/20 text-emerald-300' : 'bg-dark-600 text-dark-300' %>">
+              <%= record.role %>
+            </span>
+          </td>
+          <td class="<%= (record.cost || 0) >= 0.01 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_cost || "-" %></td>
+          <td><%= record.created_at.strftime("%-d %B %Y") %></td>
         </tr>
       <% end %>
     </tbody>

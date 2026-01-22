@@ -8,22 +8,12 @@
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
       <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search tool calls...", class: "form-input" %>
-    </div>
-
-    <div>
-      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
-    </div>
-
-    <div>
-      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search by filename...", class: "form-input" %>
     </div>
 
     <div class="flex gap-2">
       <%= f.submit "Filter", class: "btn btn-primary" %>
-      <% if params[:q].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
+      <% if params[:q].present? %>
         <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
@@ -34,9 +24,9 @@
   <table>
     <thead>
       <tr>
-        <th><%= sortable :name, "Name" %></th>
-        <th><%= sortable :tool_call_id, "Tool Call ID" %></th>
-        <th><%= sortable :message_id, "Message" %></th>
+        <th><%= sortable :filename, "Filename" %></th>
+        <th><%= sortable :content_type, "Content Type" %></th>
+        <th><%= sortable :byte_size, "Size" %></th>
         <th><%= sortable :created_at, "Created" %></th>
       </tr>
     </thead>
@@ -46,15 +36,11 @@
         <tr>
           <td>
             <%= link_to resource.show_path(record), class: "font-medium hover:underline" do %>
-              <%= record.name %>
+              <%= record.filename %>
             <% end %>
           </td>
-          <td class="font-mono text-sm text-dark-400"><%= record.tool_call_id.to_s.truncate(20) %></td>
-          <td class="max-w-xs">
-            <%= link_to "/madmin/messages/#{record.message_id}", class: "block truncate hover:underline" do %>
-              <%= record.message&.content&.truncate(50) || "Message ##{record.message_id.to_s[0..7]}" %>
-            <% end %>
-          </td>
+          <td class="text-dark-400"><%= record.content_type %></td>
+          <td><%= number_to_human_size(record.byte_size) %></td>
           <td><%= record.created_at.strftime("%-d %B %Y") %></td>
         </tr>
       <% end %>

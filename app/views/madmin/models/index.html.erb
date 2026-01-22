@@ -10,15 +10,6 @@
         class: "btn btn-primary",
         data: { turbo_confirm: "Refresh all models from RubyLLM?" } %>
 
-    <form class="search">
-      <%= hidden_field_tag :page, params[:page], value: 1 %>
-      <%= search_field_tag :q, params[:q], placeholder: "Search" %>
-    </form>
-
-    <%= link_to clear_search_params, class: "btn btn-secondary" do %>
-      <%= inline_svg "icons/x-circle.svg", class: "w-4 h-4" %>
-      <% end if params[:q].present? %>
-
     <%= link_to resource.new_path, class: "btn btn-secondary" do %>
       New <%= tag.span resource.friendly_name, class: "hidden md:inline-block" %>
     <% end %>
@@ -26,66 +17,58 @@
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
-  <%= form_with url: resource.index_path, method: :get, class: "flex gap-2 items-end flex-wrap" do |f| %>
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :provider, class: "block text-sm font-medium text-dark-300" %>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search models...", class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :provider, class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <% providers = Model.distinct.order(:provider).pluck(:provider) %>
       <%= f.select :provider,
-          options_for_select([["All", ""], ["OpenAI", "openai"], ["Anthropic", "anthropic"]], params[:provider]),
+          options_for_select([["All providers", ""]] + providers.map { |p| [p.titleize, p] }, params[:provider]),
           {},
           class: "form-select" %>
     </div>
 
-    <%= f.submit "Filter", class: "btn btn-primary" %>
-    <%= link_to "Clear", resource.index_path, class: "btn" %>
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? || params[:provider].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
   <% end %>
 </div>
-
-<nav class="scopes">
-  <% if resource.scopes.any? %>
-    <%= link_to "All", resource.index_path, class: class_names("btn btn-secondary", {"active" => params[:scope].blank?}) %>
-  <% end %>
-
-  <% resource.scopes.each do |scope| %>
-    <%= link_to scope.to_s.humanize, resource.index_path(scope: scope, q: params[:q], sort: params[:sort], direction: params[:direction]), class: class_names("btn btn-secondary", {"active" => params[:scope] == scope.to_s}) %>
-  <% end %>
-</nav>
 
 <div class="table-scroll">
   <table>
     <thead>
       <tr>
-        <% resource.attributes.values.each do |attribute| %>
-          <% next if attribute.field.nil? %>
-          <% next unless attribute.field.visible?(action_name) %>
-
-          <th><%= sortable attribute.name, attribute.name.to_s.titleize %></th>
-        <% end %>
-        <th></th>
+        <th><%= sortable :provider, "Provider" %></th>
+        <th><%= sortable :family, "Family" %></th>
+        <th><%= sortable :name, "Name" %></th>
+        <th><%= sortable :chats_count, "Chats" %></th>
+        <th><%= sortable :total_cost, "Total Cost" %></th>
       </tr>
     </thead>
 
     <tbody>
       <% @records.each do |record| %>
         <tr>
-          <% first_field = true %>
-          <% resource.attributes.values.each do |attribute| %>
-            <% next if attribute.field.nil? %>
-            <% next unless attribute.field.visible?(action_name) %>
-            <td>
-              <% if first_field %>
-                <%= link_to resource.show_path(record) do %>
-                  <%= render partial: attribute.field.to_partial_path("index"), locals: { field: attribute.field, record: record, resource: resource } %>
-                <% end %>
-                <% first_field = false %>
-              <% else %>
-                <%= render partial: attribute.field.to_partial_path("index"), locals: { field: attribute.field, record: record, resource: resource } %>
-              <% end %>
-            </td>
-          <% end %>
-
           <td>
-            <%= link_to "Edit", resource.edit_path(record) %>
+            <span class="px-2 py-1 text-xs font-medium rounded bg-dark-600 text-dark-200">
+              <%= record.provider %>
+            </span>
           </td>
+          <td><%= record.family %></td>
+          <td>
+            <%= link_to resource.show_path(record), class: "font-medium hover:underline" do %>
+              <%= record.name %>
+            <% end %>
+          </td>
+          <td><%= record.chats_count %></td>
+          <td class="<%= (record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_total_cost || "-" %></td>
         </tr>
       <% end %>
     </tbody>

@@ -395,7 +395,7 @@ button[class*="text-"] svg {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.5rem 1rem;
+  padding: 0.5625rem 1rem;
   font-size: 0.875rem;
   font-weight: 500;
   border-radius: 0.5rem;
@@ -404,6 +404,7 @@ button[class*="text-"] svg {
   background-color: var(--dark-700);
   color: var(--dark-200);
   text-decoration: none;
+  line-height: 1.5;
 }
 
 .dark .btn:hover {
@@ -629,10 +630,145 @@ button[class*="text-"] svg {
   padding: 0.5rem 0.75rem;
   color: var(--dark-100);
   font-size: 0.875rem;
+  line-height: 1.5;
 }
 
 .dark .form-input:focus,
 .dark .form-select:focus {
+  outline: none;
+  border-color: oklch(62% 0.21 260);
+  box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+}
+
+/* Madmin Form Fields - styled form groups */
+.dark .form-field {
+  margin-bottom: 0;
+}
+
+.dark .form-field input[type="text"],
+.dark .form-field input[type="email"],
+.dark .form-field input[type="password"],
+.dark .form-field input[type="number"],
+.dark .form-field input[type="url"],
+.dark .form-field input[type="date"],
+.dark .form-field input[type="datetime-local"],
+.dark .form-field input[type="time"],
+.dark .form-field textarea,
+.dark .form-field select {
+  width: 100%;
+  background-color: var(--dark-800);
+  border: 1px solid var(--dark-600);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  color: var(--dark-100);
+  font-size: 0.9375rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dark .form-field input[type="text"]:hover,
+.dark .form-field input[type="email"]:hover,
+.dark .form-field input[type="password"]:hover,
+.dark .form-field input[type="number"]:hover,
+.dark .form-field input[type="url"]:hover,
+.dark .form-field input[type="date"]:hover,
+.dark .form-field input[type="datetime-local"]:hover,
+.dark .form-field input[type="time"]:hover,
+.dark .form-field textarea:hover,
+.dark .form-field select:hover {
+  border-color: var(--dark-500);
+}
+
+.dark .form-field input:focus,
+.dark .form-field textarea:focus,
+.dark .form-field select:focus {
+  outline: none;
+  border-color: oklch(62% 0.21 260);
+  box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+}
+
+.dark .form-field input::placeholder,
+.dark .form-field textarea::placeholder {
+  color: var(--dark-500);
+}
+
+.dark .form-field textarea {
+  min-height: 100px;
+  resize: vertical;
+}
+
+.dark .form-field select {
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23737d8c' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+}
+
+.dark .form-field select[multiple] {
+  background-image: none;
+  padding-right: 0.875rem;
+  min-height: 120px;
+}
+
+.dark .form-field select option {
+  padding: 0.5rem;
+  background-color: var(--dark-700);
+}
+
+.dark .form-field input[type="checkbox"],
+.dark .form-field input[type="radio"] {
+  width: auto;
+  background-color: var(--dark-700);
+  border-color: var(--dark-500);
+}
+
+.dark .form-field input[type="checkbox"]:checked,
+.dark .form-field input[type="radio"]:checked {
+  background-color: oklch(62% 0.21 260);
+  border-color: oklch(62% 0.21 260);
+}
+
+/* Madmin Form Group (legacy support) */
+.dark .form-group {
+  margin-bottom: 1.5rem;
+}
+
+.dark .form-group label {
+  display: block;
+  color: var(--dark-300);
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
+}
+
+.dark .form-group .required {
+  color: oklch(70% 0.19 25);
+  margin-left: 0.25rem;
+}
+
+.dark .form-group .form-description {
+  color: var(--dark-500);
+  font-size: 0.8125rem;
+  margin-top: 0.5rem;
+}
+
+.dark .form-group input,
+.dark .form-group textarea,
+.dark .form-group select {
+  width: 100%;
+  background-color: var(--dark-800);
+  border: 1px solid var(--dark-600);
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.875rem;
+  color: var(--dark-100);
+  font-size: 0.9375rem;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+
+.dark .form-group input:focus,
+.dark .form-group textarea:focus,
+.dark .form-group select:focus {
   outline: none;
   border-color: oklch(62% 0.21 260);
   box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);

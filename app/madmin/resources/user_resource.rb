@@ -1,4 +1,9 @@
 class UserResource < Madmin::Resource
+  # Users can be viewed and edited, but not deleted or created
+  def self.actions
+    [:index, :show, :edit, :update]
+  end
+
   # Attributes
   attribute :id, form: false, index: false
   attribute :email, field: GravatarField, index: true, show: true, form: false

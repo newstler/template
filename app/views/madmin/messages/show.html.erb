@@ -7,13 +7,13 @@
     <%= resource.display_name(@record) %>
   </h1>
 
-  <div class="actions">
-    <% resource.member_actions.each do |action| %>
-      <%= instance_exec(@record, &action) %>
-    <% end %>
-    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
-    <%= button_to "Delete", resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
-  </div>
+  <% if resource.member_actions.any? %>
+    <div class="actions">
+      <% resource.member_actions.each do |action| %>
+        <%= instance_exec(@record, &action) %>
+      <% end %>
+    </div>
+  <% end %>
 </header>
 
 <div class="card-bg p-5 mb-6">

@@ -11,7 +11,7 @@ class AdminResource < Madmin::Resource
   # Member action for sending magic link
   member_action do |record|
     button_to "Send Magic Link",
-      send_magic_link_madmin_admin_path(record),
+      "/madmin/admins/#{record.id}/send_magic_link",
       method: :post,
       data: { turbo_confirm: "Send magic link to #{record.email}?" },
       class: "btn btn-primary"

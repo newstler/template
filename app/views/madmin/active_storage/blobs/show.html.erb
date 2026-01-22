@@ -1,0 +1,107 @@
+<%= content_for :title, @record.filename %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= @record.filename %>
+  </h1>
+
+  <div class="actions">
+    <%= button_to "Delete", resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+  </div>
+</header>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-6">
+    <% if @record.image? %>
+      <div class="w-20 h-20 rounded-xl overflow-hidden bg-dark-800 flex items-center justify-center">
+        <%= image_tag main_app.rails_blob_path(@record, disposition: :inline), class: "w-full h-full object-cover" %>
+      </div>
+    <% else %>
+      <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-dark-600 to-dark-700 flex items-center justify-center">
+        <%= inline_svg "icons/document.svg", class: "w-8 h-8 text-dark-400" rescue content_tag(:span, @record.filename.extension.upcase, class: "text-sm font-bold text-dark-400") %>
+      </div>
+    <% end %>
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.filename %></h2>
+      <p class="text-dark-400 mt-1"><%= @record.content_type %></p>
+      <p class="text-dark-500 text-sm mt-2">Uploaded <%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">File Size</div>
+    <div class="text-2xl font-bold text-dark-100"><%= number_to_human_size(@record.byte_size) %></div>
+    <div class="text-dark-500 text-xs mt-1"><%= number_with_delimiter(@record.byte_size) %> bytes</div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Content Type</div>
+    <div class="text-xl font-bold text-dark-100 truncate"><%= @record.content_type %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Service</div>
+    <div class="text-xl font-bold text-dark-100"><%= @record.service_name %></div>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">Filename</th>
+          <td><%= @record.filename %></td>
+        </tr>
+        <tr>
+          <th class="label">Key</th>
+          <td class="font-mono text-sm"><%= @record.key %></td>
+        </tr>
+        <tr>
+          <th class="label">Content Type</th>
+          <td><%= @record.content_type %></td>
+        </tr>
+        <tr>
+          <th class="label">Size</th>
+          <td><%= number_to_human_size(@record.byte_size) %> (<%= number_with_delimiter(@record.byte_size) %> bytes)</td>
+        </tr>
+        <tr>
+          <th class="label">Checksum</th>
+          <td class="font-mono text-sm"><%= @record.checksum || "-" %></td>
+        </tr>
+        <tr>
+          <th class="label">Service</th>
+          <td><%= @record.service_name %></td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <% if @record.metadata.present? %>
+        <tr>
+          <th class="label">Metadata</th>
+          <td><pre class="text-sm"><%= @record.metadata %></pre></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if @record.image? %>
+<div class="card-bg mt-6 overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Preview</h2>
+  </div>
+  <div class="p-5">
+    <div class="bg-dark-800 rounded-lg p-4">
+      <%= image_tag main_app.rails_blob_path(@record, disposition: :inline), class: "max-w-full h-auto rounded" %>
+    </div>
+  </div>
+</div>
+<% end %>

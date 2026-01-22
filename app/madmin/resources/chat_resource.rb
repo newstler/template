@@ -1,4 +1,9 @@
 class ChatResource < Madmin::Resource
+  # Read-only resource
+  def self.actions
+    [:index, :show]
+  end
+
   # Attributes
   attribute :id, form: false, index: false
   attribute :created_at, form: false

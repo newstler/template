@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_01_16_182900) do
+ActiveRecord::Schema[8.2].define(version: 2026_01_16_210656) do
   create_table "active_storage_attachments", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -48,7 +48,9 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_16_182900) do
 
   create_table "chats", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.integer "messages_count", default: 0, null: false
     t.string "model_id"
+    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.string "user_id", null: false
     t.index ["model_id"], name: "index_chats_on_model_id"
@@ -80,6 +82,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_16_182900) do
 
   create_table "models", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
     t.json "capabilities", default: []
+    t.integer "chats_count", default: 0, null: false
     t.integer "context_window"
     t.datetime "created_at", null: false
     t.string "family"
@@ -92,6 +95,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_16_182900) do
     t.string "name", null: false
     t.json "pricing", default: {}
     t.string "provider", null: false
+    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.index ["family"], name: "index_models_on_family"
     t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
@@ -115,6 +119,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_16_182900) do
     t.datetime "created_at", null: false
     t.string "email"
     t.string "name"
+    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end

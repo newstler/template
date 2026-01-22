@@ -2,28 +2,24 @@
 
 <header class="header">
   <h1><%= resource.friendly_name.pluralize %></h1>
+
+  <div class="actions">
+    <%= link_to resource.new_path, class: "btn btn-secondary" do %>
+      New <%= tag.span resource.friendly_name, class: "hidden md:inline-block" %>
+    <% end %>
+  </div>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
       <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search users...", class: "form-input" %>
-    </div>
-
-    <div>
-      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
-    </div>
-
-    <div>
-      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search admins...", class: "form-input" %>
     </div>
 
     <div class="flex gap-2">
       <%= f.submit "Filter", class: "btn btn-primary" %>
-      <% if params[:q].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
+      <% if params[:q].present? %>
         <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
@@ -35,8 +31,6 @@
     <thead>
       <tr>
         <th><%= sortable :email, "Email" %></th>
-        <th><%= sortable :name, "Name" %></th>
-        <th><%= sortable :total_cost, "Total Cost" %></th>
         <th><%= sortable :created_at, "Created" %></th>
       </tr>
     </thead>
@@ -50,8 +44,6 @@
               <span><%= record.email %></span>
             <% end %>
           </td>
-          <td><%= record.name %></td>
-          <td class="<%= record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_total_cost || "-" %></td>
           <td><%= record.created_at.strftime("%-d %B %Y") %></td>
         </tr>
       <% end %>
