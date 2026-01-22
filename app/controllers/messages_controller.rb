@@ -2,6 +2,10 @@ class MessagesController < ApplicationController
   before_action :authenticate_user!
   before_action :set_chat
 
+  # AI calls are expensive - strict limits
+  rate_limit to: 20, within: 1.minute, name: "messages/short", only: :create
+  rate_limit to: 100, within: 1.hour, name: "messages/long", only: :create
+
   def create
     return unless content.present? || attachments.present?
 

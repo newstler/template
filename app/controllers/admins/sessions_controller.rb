@@ -2,6 +2,14 @@ class Admins::SessionsController < ApplicationController
   # Admin login and magic link verification
   # All admin management happens through Madmin at /madmin
 
+  # Stricter limits for admin authentication
+  rate_limit to: 3, within: 1.minute, name: "admin_sessions/short", only: :create,
+    with: -> { redirect_to new_admins_session_path, alert: "Too many attempts. Please wait." }
+  rate_limit to: 10, within: 1.hour, name: "admin_sessions/long", only: :create,
+    with: -> { redirect_to new_admins_session_path, alert: "Too many attempts. Try again later." }
+  rate_limit to: 5, within: 5.minutes, name: "admin_sessions/verify", only: :verify,
+    with: -> { redirect_to new_admins_session_path, alert: "Too many verification attempts." }
+
   layout "admin_auth", only: [ :new, :create ]
 
   def new

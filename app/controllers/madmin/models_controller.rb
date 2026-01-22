@@ -1,7 +1,7 @@
 module Madmin
   class ModelsController < Madmin::ResourceController
     def scoped_resources
-      resources = super
+      resources = super.enabled
       resources = resources.where(provider: params[:provider]) if params[:provider].present?
       resources
     end

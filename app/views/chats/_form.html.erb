@@ -28,13 +28,13 @@
         <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
         </button>
-        <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/*,.pdf,.txt,.md,.json,.csv" %>
+        <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/png,image/jpeg,image/gif,image/webp,.pdf" %>
       </div>
       <div class="flex items-center gap-3">
         <div class="relative flex items-center">
           <% default_model = Model.find_by(model_id: RubyLLM.config.default_model) %>
           <%= form.select :model,
-              options_for_select([["Default (#{default_model&.name || 'Not set'})", ""]] + Model.enabled.map { |m| [m.name, m.model_id] }, @selected_model),
+              options_for_select([["Default (#{default_model&.name || 'Not set'})", ""]] + Model.enabled.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
               {},
               class: "text-sm text-dark-400 select-transparent ring-0 outline-none focus:ring-0 focus:outline-none cursor-pointer pr-5 appearance-none",
               data: { controller: "auto-width-select", action: "change->auto-width-select#resize" } %>

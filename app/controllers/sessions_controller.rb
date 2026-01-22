@@ -1,4 +1,16 @@
 class SessionsController < ApplicationController
+  # Short-term: prevent rapid-fire attempts
+  rate_limit to: 5, within: 1.minute, name: "sessions/short", only: :create,
+    with: -> { redirect_to new_session_path, alert: "Too many attempts. Please wait." }
+
+  # Long-term: prevent sustained attacks
+  rate_limit to: 20, within: 1.hour, name: "sessions/long", only: :create,
+    with: -> { redirect_to new_session_path, alert: "Too many attempts. Try again later." }
+
+  # Token verification also rate-limited
+  rate_limit to: 10, within: 5.minutes, name: "sessions/verify", only: :verify,
+    with: -> { redirect_to new_session_path, alert: "Too many verification attempts." }
+
   def new
     # Show login form
   end

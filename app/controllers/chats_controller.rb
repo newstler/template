@@ -2,6 +2,9 @@ class ChatsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_chat, only: [ :show ]
 
+  # Prevent chat spam
+  rate_limit to: 10, within: 1.minute, name: "chats/create", only: :create
+
   def index
     @chats = current_user.chats.order(created_at: :desc)
   end

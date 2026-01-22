@@ -35,8 +35,21 @@
       <% @records.each do |record| %>
         <tr>
           <td>
-            <%= link_to resource.show_path(record), class: "font-medium hover:underline" do %>
-              <%= record.filename %>
+            <%= link_to resource.show_path(record), class: "flex items-center gap-3 font-medium hover:underline" do %>
+              <% if record.image? && record.variable? %>
+                <div class="w-10 h-10 rounded overflow-hidden bg-dark-800 flex-shrink-0">
+                  <%= image_tag main_app.url_for(record.variant(resize_to_limit: [80, 80])), class: "w-full h-full object-cover" %>
+                </div>
+              <% elsif record.image? %>
+                <div class="w-10 h-10 rounded overflow-hidden bg-dark-800 flex-shrink-0">
+                  <%= image_tag main_app.url_for(record), class: "w-full h-full object-cover" %>
+                </div>
+              <% else %>
+                <div class="w-10 h-10 rounded bg-dark-700 flex items-center justify-center flex-shrink-0">
+                  <span class="text-xs text-dark-400"><%= record.filename.extension.upcase.truncate(4, omission: "") %></span>
+                </div>
+              <% end %>
+              <span class="truncate"><%= record.filename %></span>
             <% end %>
           </td>
           <td class="text-dark-400"><%= record.content_type %></td>

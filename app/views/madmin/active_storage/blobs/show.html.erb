@@ -93,15 +93,25 @@
   </div>
 </div>
 
-<% if @record.image? %>
 <div class="card-bg mt-6 overflow-hidden">
-  <div class="px-5 py-4 border-b border-dark-700">
+  <div class="px-5 py-4 border-b border-dark-700 flex items-center justify-between">
     <h2 class="text-lg font-semibold text-dark-100">Preview</h2>
+    <a href="<%= main_app.rails_blob_path(@record, disposition: :attachment) %>" download class="btn btn-secondary flex items-center gap-2">
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
+      Download
+    </a>
   </div>
   <div class="p-5">
-    <div class="bg-dark-800 rounded-lg p-4">
-      <%= image_tag main_app.rails_blob_path(@record, disposition: :inline), class: "max-w-full h-auto rounded" %>
-    </div>
+    <% if @record.image? %>
+      <button type="button" class="bg-dark-800 rounded-lg p-4 cursor-pointer w-full" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.rails_blob_path(@record, disposition: :inline) %>" data-lightbox-filename-value="<%= @record.filename %>" data-lightbox-type-value="image">
+        <%= image_tag main_app.rails_blob_path(@record, disposition: :inline), class: "max-w-full h-auto rounded mx-auto" %>
+      </button>
+    <% else %>
+      <button type="button" class="bg-dark-800 rounded-lg p-8 cursor-pointer w-full flex flex-col items-center gap-4" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.rails_blob_path(@record, disposition: :inline) %>" data-lightbox-filename-value="<%= @record.filename %>" data-lightbox-type-value="document">
+        <span class="text-6xl"><%= @record.content_type == "application/pdf" ? "📕" : "📄" %></span>
+        <span class="text-dark-300 text-lg"><%= @record.filename %></span>
+        <span class="text-dark-500 text-sm">Click to preview</span>
+      </button>
+    <% end %>
   </div>
 </div>
-<% end %>

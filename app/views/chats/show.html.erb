@@ -9,7 +9,7 @@
     <%# Top gradient fade %>
     <div class="sticky top-0 h-12 bg-gradient-to-b from-dark-800 to-transparent pointer-events-none z-10"></div>
 
-    <div id="messages" class="max-w-4xl mx-auto px-4 pb-52">
+    <div id="messages" class="max-w-4xl mx-auto px-4 pb-72">
       <% @chat.messages.where.not(id: nil).each do |message| %>
         <%= render message %>
       <% end %>

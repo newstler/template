@@ -1,5 +1,5 @@
 class Chat < ApplicationRecord
-  belongs_to :user, counter_cache: true
+  belongs_to :user
   belongs_to :model, optional: true, counter_cache: :chats_count
   acts_as_chat messages_foreign_key: :chat_id
 

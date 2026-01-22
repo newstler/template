@@ -1,4 +1,6 @@
 class ApplicationController < ActionController::Base
+  rate_limit to: 100, within: 1.minute, name: "global"
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   before_action :set_current_user
