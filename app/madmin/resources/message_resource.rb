@@ -1,7 +1,7 @@
 class MessageResource < Madmin::Resource
   # Read-only resource
   def self.actions
-    [:index, :show]
+    [ :index, :show ]
   end
 
   # Attributes

@@ -1,7 +1,12 @@
 class Chat < ApplicationRecord
+  include Costable
+
   belongs_to :user
   belongs_to :model, optional: true, counter_cache: :chats_count
   acts_as_chat messages_foreign_key: :chat_id
+
+  scope :chronologically, -> { order(created_at: :asc) }
+  scope :recent, -> { order(created_at: :desc) }
 
   # Update model counter cache when chat is created/destroyed
   after_create :increment_model_chats_count
@@ -10,18 +15,6 @@ class Chat < ApplicationRecord
   # Recalculate total cost from messages
   def recalculate_total_cost!
     update_column(:total_cost, messages.sum(:cost))
-  end
-
-  # Format total cost for display
-  def formatted_total_cost
-    cost = read_attribute(:total_cost) || 0
-    return nil if cost.zero?
-
-    if cost < 0.0001
-      "<$0.0001"
-    else
-      "$#{'%.4f' % cost}"
-    end
   end
 
   private

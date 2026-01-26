@@ -1,11 +1,14 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded ULIDs to maintain referential integrity across fixtures.
+# When fixtures have circular foreign keys, dynamic IDs break cross-references.
 
 one:
-  id: 01JQXYZ1234567890ABCDEFGH
+  id: 01JTEST000000000USERONE01
   email: user1@example.com
   name: User One
 
 two:
-  id: 01JQXYZ1234567890ABCDEFGJ
+  id: 01JTEST000000000USERTWO02
   email: user2@example.com
   name: User Two

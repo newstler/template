@@ -19,14 +19,13 @@ class ChatTest < ActiveSupport::TestCase
   end
 
   test "formats total cost for display" do
-    # Create a chat with known costs
     chat = chats(:one)
-    # Force a specific cost for testing
-    message = messages(:assistant_message)
-    message.update!(cost: 0.0012)
+    # Set a specific cost on the chat to test formatting
+    chat.update_column(:total_cost, 0.0012)
 
     formatted = chat.formatted_total_cost
-    assert_match(/\$\d+\.\d+/, formatted) if formatted.present?
+    assert_not_nil formatted
+    assert_match(/\$\d+\.\d+/, formatted)
   end
 
   test "formatted total cost returns nil when zero" do

@@ -7,7 +7,7 @@ module Madmin
         total_chats: Chat.count,
         total_messages: Message.count,
         total_tokens: calculate_total_tokens,
-        total_cost: calculate_total_cost,
+        total_cost: Message.sum(:cost),
         total_tool_calls: ToolCall.count,
         recent_chats: Chat.where("created_at >= ?", 7.days.ago).count,
         recent_messages: Message.where("created_at >= ?", 7.days.ago).count,
@@ -28,50 +28,26 @@ module Madmin
       Message.sum("COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0) + COALESCE(cached_tokens, 0) + COALESCE(cache_creation_tokens, 0)")
     end
 
-    def calculate_total_cost
-      Message.includes(:model).where.not(model_id: nil).sum do |msg|
-        next 0 unless msg.model&.pricing.present?
-
-        pricing = msg.model.pricing.dig("text_tokens", "standard") || {}
-        input_rate = pricing["input_per_million"] || 0
-        output_rate = pricing["output_per_million"] || 0
-        cached_rate = pricing["cached_input_per_million"] || 0
-
-        input_cost = (msg.input_tokens || 0) * input_rate / 1_000_000.0
-        output_cost = (msg.output_tokens || 0) * output_rate / 1_000_000.0
-        cached_cost = (msg.cached_tokens || 0) * cached_rate / 1_000_000.0
-
-        input_cost + output_cost + cached_cost
-      end
-    end
-
     def build_activity_chart_data
       dates = (6.days.ago.to_date..Date.current).to_a
 
+      # Batch load daily counts to avoid N+1
+      user_counts = User.where(created_at: dates.first.all_day.first..dates.last.end_of_day)
+                        .group("date(created_at)").count
+      chat_counts = Chat.where(created_at: dates.first.all_day.first..dates.last.end_of_day)
+                        .group("date(created_at)").count
+      message_counts = Message.where(created_at: dates.first.all_day.first..dates.last.end_of_day)
+                              .group("date(created_at)").count
+      cost_sums = Message.where(created_at: dates.first.all_day.first..dates.last.end_of_day)
+                         .group("date(created_at)").sum(:cost)
+
       {
         labels: dates.map { |d| d.strftime("%b %d") },
-        users: dates.map { |d| User.where(created_at: d.all_day).count },
-        chats: dates.map { |d| Chat.where(created_at: d.all_day).count },
-        messages: dates.map { |d| Message.where(created_at: d.all_day).count },
-        cost: dates.map { |d| calculate_daily_cost(d) }
+        users: dates.map { |d| user_counts[d.to_s] || 0 },
+        chats: dates.map { |d| chat_counts[d.to_s] || 0 },
+        messages: dates.map { |d| message_counts[d.to_s] || 0 },
+        cost: dates.map { |d| (cost_sums[d.to_s] || 0).round(4) }
       }
-    end
-
-    def calculate_daily_cost(date)
-      Message.includes(:model).where(created_at: date.all_day).where.not(model_id: nil).sum do |msg|
-        next 0 unless msg.model&.pricing.present?
-
-        pricing = msg.model.pricing.dig("text_tokens", "standard") || {}
-        input_rate = pricing["input_per_million"] || 0
-        output_rate = pricing["output_per_million"] || 0
-        cached_rate = pricing["cached_input_per_million"] || 0
-
-        input_cost = (msg.input_tokens || 0) * input_rate / 1_000_000.0
-        output_cost = (msg.output_tokens || 0) * output_rate / 1_000_000.0
-        cached_cost = (msg.cached_tokens || 0) * cached_rate / 1_000_000.0
-
-        input_cost + output_cost + cached_cost
-      end.round(4)
     end
 
     def build_message_role_data

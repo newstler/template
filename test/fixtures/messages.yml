@@ -1,17 +1,20 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded ULIDs and explicit _id columns for referential integrity.
+# Note: messages has circular FK with tool_calls - do NOT set tool_call_id here.
 
 user_message:
-  id: 01JQXYZ1234567890MSGUSR01
-  chat_id: 01JQXYZ1234567890CHTONE01
+  id: 01JTEST000000000MSGUSR001
+  chat_id: 01JTEST000000000CHATONE01
   role: user
   content: "Hello, how are you?"
   input_tokens: 10
   output_tokens: 0
 
 assistant_message:
-  id: 01JQXYZ1234567890MSGAST01
-  chat_id: 01JQXYZ1234567890CHTONE01
-  model_id: 01JQXYZ1234567890MDLGPT04
+  id: 01JTEST000000000MSGASST01
+  chat_id: 01JTEST000000000CHATONE01
+  model_id: 01JTEST000000000MDLGPT004
   role: assistant
   content: "I'm doing well, thank you for asking!"
   input_tokens: 10

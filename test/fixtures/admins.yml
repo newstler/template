@@ -1,9 +1,11 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded ULIDs to maintain referential integrity across fixtures.
 
 one:
-  id: 01JQXYZ1234567890ABCADMN1
+  id: 01JTEST000000000ADMONE001
   email: admin1@example.com
 
 two:
-  id: 01JQXYZ1234567890ABCADMN2
+  id: 01JTEST000000000ADMTWO002
   email: admin2@example.com

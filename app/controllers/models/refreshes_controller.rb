@@ -1,5 +1,5 @@
 class Models::RefreshesController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_admin!
 
   def create
     Model.refresh!

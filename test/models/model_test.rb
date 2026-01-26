@@ -30,8 +30,17 @@ class ModelTest < ActiveSupport::TestCase
 
   test "enabled scope filters by configured providers" do
     configured = Model.configured_providers
-    Model.enabled.each do |model|
-      assert_includes configured, model.provider
+    enabled_models = Model.enabled
+
+    # Either no configured providers means no enabled models,
+    # or all enabled models have configured providers
+    if configured.empty?
+      assert_empty enabled_models
+    else
+      assert enabled_models.any?, "Expected some enabled models when providers are configured"
+      enabled_models.each do |model|
+        assert_includes configured, model.provider
+      end
     end
   end
 end

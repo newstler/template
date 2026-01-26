@@ -1,7 +1,7 @@
 class UserResource < Madmin::Resource
   # Users can be viewed and edited, but not deleted or created
   def self.actions
-    [:index, :show, :edit, :update]
+    [ :index, :show, :edit, :update ]
   end
 
   # Attributes

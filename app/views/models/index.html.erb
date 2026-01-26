@@ -4,9 +4,11 @@
 
 <h1>Models</h1>
 
-<p>
-  <%= button_to "Refresh Models", models_refresh_path, method: :post %>
-</p>
+<% if current_admin %>
+  <p>
+    <%= button_to "Refresh Models", models_refresh_path, method: :post %>
+  </p>
+<% end %>
 
 <div id="models">
   <table>
