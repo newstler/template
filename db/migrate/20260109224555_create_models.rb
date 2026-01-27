@@ -1,7 +1,6 @@
 class CreateModels < ActiveRecord::Migration[8.2]
   def change
-    create_table :models, force: true, id: false do |t|
-      t.primary_key :id, :string, default: -> { "uuid7()" }
+    create_table :models, force: true, id: { type: :string, default: -> { "uuid7()" } } do |t|
       t.string :model_id, null: false
       t.string :name, null: false
       t.string :provider, null: false

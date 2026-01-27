@@ -304,8 +304,7 @@ end
 ### Migrations with UUIDv7
 
 ```ruby
-create_table :cards, id: false, force: true do |t|
-  t.primary_key :id, :string, default: -> { "uuid7()" }
+create_table :cards, force: true, id: { type: :string, default: -> { "uuid7()" } } do |t|
   t.references :board, null: false, foreign_key: true, type: :string
   t.string :title, null: false
   t.timestamps

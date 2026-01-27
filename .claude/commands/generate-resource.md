@@ -30,9 +30,7 @@ Edit the migration to use UUIDv7 primary keys with database-level default:
 ```ruby
 class Create{{ResourceName}}s < ActiveRecord::Migration[8.0]
   def change
-    create_table :{{resource_name}}s, id: false, force: true do |t|
-      t.primary_key :id, :string, default: -> { "uuid7()" }
-
+    create_table :{{resource_name}}s, force: true, id: { type: :string, default: -> { "uuid7()" } } do |t|
       # Add columns here
       t.string :title, null: false
       t.text :description

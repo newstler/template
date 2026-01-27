@@ -54,7 +54,7 @@ git diff --cached  # If already staged
 
 ### Database
 
-- [ ] Uses UUIDv7 primary keys (`id: false` + `t.primary_key :id, :string, default: -> { "uuid7()" }`)
+- [ ] Uses UUIDv7 primary keys (`id: { type: :string, default: -> { "uuid7()" } }`)
 - [ ] Foreign keys with proper type: :string
 - [ ] Indexes on foreign keys and common queries
 - [ ] Null constraints where appropriate

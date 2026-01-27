@@ -1,6 +1,6 @@
 module Madmin
   class ModelsController < Madmin::ResourceController
-    skip_before_action :set_record, only: [:refresh_all]
+    skip_before_action :set_record, only: [ :refresh_all ]
 
     def scoped_resources
       resources = super.enabled
