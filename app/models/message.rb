@@ -11,34 +11,6 @@ class Message < ApplicationRecord
   after_destroy :decrement_counters
   after_update :update_cost_caches, if: :saved_change_to_cost?
 
-  private
-
-  def increment_counters
-    return unless chat
-
-    Chat.increment_counter(:messages_count, chat.id)
-    update_cost_caches
-  end
-
-  def decrement_counters
-    return unless chat
-
-    Chat.decrement_counter(:messages_count, chat.id)
-    chat.recalculate_total_cost!
-    chat.user&.recalculate_total_cost!
-    chat.model&.recalculate_total_cost!
-  end
-
-  def update_cost_caches
-    return unless chat
-
-    chat.recalculate_total_cost!
-    chat.user&.recalculate_total_cost!
-    chat.model&.recalculate_total_cost!
-  end
-
-  public
-
   def broadcast_append_chunk(content)
     broadcast_append_to "chat_#{chat_id}",
       target: "message_#{id}_content",
@@ -78,6 +50,30 @@ class Message < ApplicationRecord
   end
 
   private
+
+  def increment_counters
+    return unless chat
+
+    Chat.increment_counter(:messages_count, chat.id)
+    update_cost_caches
+  end
+
+  def decrement_counters
+    return unless chat
+
+    Chat.decrement_counter(:messages_count, chat.id)
+    chat.recalculate_total_cost!
+    chat.user&.recalculate_total_cost!
+    chat.model&.recalculate_total_cost!
+  end
+
+  def update_cost_caches
+    return unless chat
+
+    chat.recalculate_total_cost!
+    chat.user&.recalculate_total_cost!
+    chat.model&.recalculate_total_cost!
+  end
 
   def model_pricing
     model&.pricing || chat&.model&.pricing
