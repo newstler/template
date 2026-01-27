@@ -1,0 +1,21 @@
+# frozen_string_literal: true
+
+require "test_helper"
+require "tools/mcp_test_helper"
+
+module <%= plural_class_name %>
+  class Create<%= model_class %>ToolTest < McpToolTestCase
+    setup do
+      @user = users(:one)
+    end
+
+    test "requires authentication" do
+      error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
+        call_tool(<%= plural_class_name %>::Create<%= model_class %>Tool)
+      end
+      assert_match(/Authentication required/, error.message)
+    end
+
+    # TODO: Add test for successful creation with valid attributes
+  end
+end

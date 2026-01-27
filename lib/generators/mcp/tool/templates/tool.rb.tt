@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+<% if namespace_module.present? %>
+module <%= namespace_module %>
+<% end %>
+  class <%= tool_class_name %> < ApplicationTool
+    description "<%= humanized_name %>"
+<% if admin_only? %>
+
+    admin_only!
+<% end %>
+
+    annotations(
+      title: "<%= humanized_name %>",
+      read_only_hint: true,
+      open_world_hint: false
+    )
+
+    arguments do
+      # Add your arguments here
+      # required(:id).filled(:string).description("The ID")
+      # optional(:limit).filled(:integer).description("Maximum results")
+    end
+
+    def call
+<% if admin_only? %>
+      require_admin!
+<% else %>
+      require_authentication!
+<% end %>
+
+      # TODO: Implement <%= file_name %>
+      success_response({ message: "Not implemented" })
+    end
+  end
+<% if namespace_module.present? %>
+end
+<% end %>

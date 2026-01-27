@@ -1,0 +1,28 @@
+# frozen_string_literal: true
+
+require "test_helper"
+require "tools/mcp_test_helper"
+
+module <%= plural_class_name %>
+  class List<%= plural_class_name %>ToolTest < McpToolTestCase
+    setup do
+      @user = users(:one)
+    end
+
+    test "requires authentication" do
+      error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
+        call_tool(<%= plural_class_name %>::List<%= plural_class_name %>Tool)
+      end
+      assert_match(/Authentication required/, error.message)
+    end
+
+    test "returns <%= plural_name %> when authenticated" do
+      mock_mcp_request(user: @user)
+
+      result = call_tool(<%= plural_class_name %>::List<%= plural_class_name %>Tool)
+
+      assert result[:success]
+      assert_kind_of Array, result[:data]
+    end
+  end
+end

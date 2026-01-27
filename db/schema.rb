@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_01_16_210656) do
+ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
   create_table "active_storage_attachments", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -116,11 +116,13 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_16_210656) do
   end
 
   create_table "users", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+    t.string "api_key"
     t.datetime "created_at", null: false
     t.string "email"
     t.string "name"
     t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
+    t.index ["api_key"], name: "index_users_on_api_key", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
   end
 

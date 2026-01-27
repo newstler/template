@@ -18,6 +18,166 @@ Delete these HTML comments and write what your app does.
 - **Admin**: Madmin at `/madmin`
 - **Icons**: inline_svg gem
 - **Primary Keys**: ULIDs (database-generated)
+- **MCP**: fast-mcp gem for Model Context Protocol at `/mcp`
+
+## MCP: Agent-Native Architecture
+
+This app is **agent-native** - every action available in the UI is also available via MCP tools.
+
+### Transport
+
+Uses **Streamable HTTP** transport (recommended by MCP spec):
+- Tool calls: POST to `/mcp/messages`
+- Server notifications: SSE at `/mcp/sse` (optional)
+
+### Authentication
+
+API key authentication via `x-api-key` header (lowercase):
+
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -H "x-api-key: your_api_key" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"show_current_user","arguments":{}},"id":1}' \
+  http://localhost:3000/mcp/messages
+```
+
+Users get an `api_key` on creation. Regenerate with `user.regenerate_api_key!`
+
+### Testing with MCP Inspector
+
+```bash
+# 1. Start server
+bin/dev
+
+# 2. Open MCP Inspector
+npx @anthropic-ai/mcp-inspector
+
+# 3. Configure:
+#    - Transport: Streamable HTTP
+#    - URL: http://localhost:3000/mcp/messages
+#    - Headers: { "x-api-key": "<user-api-key>" }
+
+# 4. Connect and test tools
+```
+
+### Available Tools
+
+| Tool | Description | Auth Required |
+|------|-------------|---------------|
+| `list_chats` | List user's chats | User |
+| `show_chat` | Get chat with messages | User |
+| `create_chat` | Create new chat | User |
+| `update_chat` | Change chat's model | User |
+| `delete_chat` | Delete a chat | User |
+| `list_messages` | List chat messages | User |
+| `create_message` | Send message, get response | User |
+| `list_models` | List available AI models | None |
+| `show_model` | Get model details | None |
+| `refresh_models` | Sync models from providers | Admin |
+| `show_current_user` | Get current user info | User |
+| `update_current_user` | Update profile | User |
+
+### Available Resources
+
+| Resource | URI | Description |
+|----------|-----|-------------|
+| Current User | `app:///user/current` | Authenticated user info |
+| Available Models | `app:///models` | Enabled AI models |
+| User Chats | `app:///chats` | User's chat list |
+| Chat | `app:///chats/{id}` | Single chat with messages |
+| Chat Messages | `app:///chats/{chat_id}/messages` | Messages only |
+
+### File Structure
+
+```
+app/
+├── tools/
+│   ├── application_tool.rb      # Base class with auth helpers
+│   ├── chats/                   # Chat CRUD tools
+│   ├── messages/                # Message tools
+│   ├── models/                  # Model tools
+│   └── users/                   # User tools
+└── resources/
+    ├── application_resource.rb  # Base class
+    └── mcp/                     # MCP resources (namespaced)
+```
+
+### Agent-Native Development Rule
+
+**Every new feature MUST have MCP parity.**
+
+When adding new functionality:
+1. Create model/controller as usual
+2. Create matching MCP tool(s) in `app/tools/`
+3. Create matching MCP resource(s) in `app/resources/mcp/`
+4. Write tests in `test/tools/` and `test/resources/`
+
+The app should always be fully accessible via MCP tools.
+
+### Tool Patterns
+
+```ruby
+# app/tools/cards/list_cards_tool.rb
+module Cards
+  class ListCardsTool < ApplicationTool
+    description "List user's cards"
+
+    arguments do
+      optional(:limit).filled(:integer).description("Max cards to return")
+    end
+
+    def call(limit: 20)
+      require_authentication!
+
+      cards = current_user.cards.limit(limit)
+      success_response(cards.map { |c| serialize_card(c) })
+    end
+
+    private
+
+    def serialize_card(card)
+      { id: card.id, title: card.title }
+    end
+  end
+end
+```
+
+### Resource Patterns
+
+**Note:** Resources can't authenticate in fast-mcp (no headers access). Use resources for public data or direct users to tools for authenticated access.
+
+```ruby
+# app/resources/mcp/cards_resource.rb (public data)
+module Mcp
+  class PublicCardsResource < ApplicationResource
+    uri "app:///cards/public"
+    resource_name "Public Cards"
+    description "List of public cards"
+    mime_type "application/json"
+
+    def content
+      to_json(Card.public_visible.map { |c| serialize_card(c) })
+    end
+  end
+end
+
+# app/resources/mcp/user_cards_resource.rb (directs to tool)
+module Mcp
+  class UserCardsResource < ApplicationResource
+    uri "app:///cards"
+    resource_name "User Cards"
+    description "User's cards. Use list_cards tool for authenticated access."
+    mime_type "application/json"
+
+    def content
+      to_json({
+        message: "Use the 'list_cards' tool for authenticated card access",
+        tool: "list_cards"
+      })
+    end
+  end
+end
+```
 
 ## Colors
 

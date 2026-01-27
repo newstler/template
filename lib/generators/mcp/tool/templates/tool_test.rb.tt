@@ -1,0 +1,37 @@
+# frozen_string_literal: true
+
+require "test_helper"
+require "tools/mcp_test_helper"
+<% if namespace_module.present? %>
+module <%= namespace_module %>
+<% end %>
+  class <%= tool_class_name %>Test < McpToolTestCase
+    setup do
+      @user = users(:one)
+<% if admin_only? %>
+      @admin = admins(:one)
+<% end %>
+    end
+<% if admin_only? %>
+
+    test "requires admin authentication" do
+      error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
+        call_tool(<%= full_tool_class_name %>)
+      end
+      assert_match(/Admin authentication required/, error.message)
+    end
+<% else %>
+
+    test "requires authentication" do
+      error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
+        call_tool(<%= full_tool_class_name %>)
+      end
+      assert_match(/Authentication required/, error.message)
+    end
+<% end %>
+
+    # TODO: Add more tests for <%= file_name %>
+  end
+<% if namespace_module.present? %>
+end
+<% end %>

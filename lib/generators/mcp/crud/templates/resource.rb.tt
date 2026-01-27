@@ -1,0 +1,31 @@
+# frozen_string_literal: true
+
+module Mcp
+  class <%= plural_class_name %>Resource < ApplicationResource
+    uri "app:///<%= plural_name %>"
+    resource_name "User <%= humanized_plural %>"
+    description "List of user's <%= plural_name %>"
+    mime_type "application/json"
+
+    def content
+      return to_json({ error: "Not authenticated" }) unless authenticated?
+
+      <%= plural_name %> = current_user.<%= plural_name %>
+
+      to_json({
+        <%= plural_name %>_count: <%= plural_name %>.count,
+        <%= plural_name %>: <%= plural_name %>.map { |item| serialize_<%= singular_name %>(item) }
+      })
+    end
+
+    private
+
+    def serialize_<%= singular_name %>(item)
+      {
+        id: item.id,
+        created_at: format_timestamp(item.created_at),
+        updated_at: format_timestamp(item.updated_at)
+      }
+    end
+  end
+end

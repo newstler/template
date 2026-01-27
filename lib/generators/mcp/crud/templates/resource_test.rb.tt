@@ -1,0 +1,26 @@
+# frozen_string_literal: true
+
+require "test_helper"
+require "tools/mcp_test_helper"
+
+class <%= plural_class_name %>ResourceTest < McpResourceTestCase
+  setup do
+    @user = users(:one)
+  end
+
+  test "returns error when not authenticated" do
+    result = parse_resource(call_resource(Mcp::<%= plural_class_name %>Resource))
+
+    assert result[:error].present?
+    assert_match(/Not authenticated/, result[:error])
+  end
+
+  test "returns <%= plural_name %> when authenticated" do
+    mock_mcp_request(user: @user)
+
+    result = parse_resource(call_resource(Mcp::<%= plural_class_name %>Resource))
+
+    assert result[:<%= plural_name %>_count].present?
+    assert_kind_of Array, result[:<%= plural_name %>]
+  end
+end

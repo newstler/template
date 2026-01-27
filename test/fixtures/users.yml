@@ -7,8 +7,10 @@ one:
   id: 01JTEST000000000USERONE01
   email: user1@example.com
   name: User One
+  api_key: test_api_key_user_one_12345678901234567890123456789012
 
 two:
   id: 01JTEST000000000USERTWO02
   email: user2@example.com
   name: User Two
+  api_key: test_api_key_user_two_12345678901234567890123456789012

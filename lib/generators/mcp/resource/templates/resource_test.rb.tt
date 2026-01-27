@@ -1,0 +1,19 @@
+# frozen_string_literal: true
+
+require "test_helper"
+require "tools/mcp_test_helper"
+
+class <%= resource_class_name %>Test < McpResourceTestCase
+  setup do
+    @user = users(:one)
+  end
+
+  test "returns error when not authenticated" do
+    result = parse_resource(call_resource(Mcp::<%= resource_class_name %>))
+
+    assert result[:error].present?
+    assert_match(/Not authenticated/, result[:error])
+  end
+
+  # TODO: Add test for authenticated access
+end
