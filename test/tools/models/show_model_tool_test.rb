@@ -9,7 +9,7 @@ module Models
       @model = models(:gpt4)
     end
 
-    test "returns model by ULID" do
+    test "returns model by ID" do
       result = call_tool(Models::ShowModelTool, model_id: @model.id)
 
       assert result[:success]

@@ -93,12 +93,12 @@ test "Closeable concern is included"
 ```yaml
 # test/fixtures/users.yml
 admin:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   email: admin@example.com
   name: Admin User
 
 regular:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   email: user@example.com
   name: Regular User
 ```
@@ -108,19 +108,19 @@ regular:
 ```yaml
 # test/fixtures/boards.yml
 main:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   name: Main Board
   owner: admin  # References users(:admin)
 
 # test/fixtures/cards.yml
 open_card:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   board: main  # References boards(:main)
   author: admin
   title: Open Card
 
 closed_card:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   board: main
   author: admin
   title: Closed Card
@@ -133,7 +133,7 @@ closed_card:
 # test/fixtures/cards.yml
 <% 10.times do |i| %>
 card_<%= i %>:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   board: main
   author: admin
   title: Card <%= i %>
@@ -146,7 +146,7 @@ card_<%= i %>:
 ```yaml
 # test/fixtures/closures.yml
 card_closure:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   closeable: closed_card (Card)  # Type in parentheses
   closed_by: admin
 ```

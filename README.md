@@ -13,7 +13,7 @@ A modern Rails 8 template following 37signals' vanilla Rails philosophy with bui
 - **Deployment**: Kamal 2
 - **Authentication**: Magic Links (passwordless)
 - **Admin Panel**: Madmin
-- **Primary Keys**: ULIDs (sortable, distributed-friendly)
+- **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
 
@@ -23,7 +23,7 @@ A modern Rails 8 template following 37signals' vanilla Rails philosophy with bui
 - **Litestream SQLite Replication** to S3-compatible storage (optional)
   - Continuous backup of all databases (main, cache, queue, cable)
   - Configured via `bin/configure` or Rails credentials
-- **ULID Primary Keys** for better distributed system support
+- **UUIDv7 Primary Keys** for better distributed system support
 - **Solid Stack** for production-ready background jobs, caching, and cable
 - **Vanilla Rails** approach - no unnecessary abstractions
 

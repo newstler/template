@@ -17,7 +17,7 @@ Delete these HTML comments and write what your app does.
 - **Deployment**: Kamal 2
 - **Admin**: Madmin at `/madmin`
 - **Icons**: inline_svg gem
-- **Primary Keys**: ULIDs (database-generated)
+- **Primary Keys**: UUIDv7 (database-generated)
 - **MCP**: fast-mcp gem for Model Context Protocol at `/mcp`
 
 ## MCP: Agent-Native Architecture
@@ -301,11 +301,11 @@ end
 
 ## Database
 
-### Migrations with ULIDs
+### Migrations with UUIDv7
 
 ```ruby
 create_table :cards, id: false, force: true do |t|
-  t.primary_key :id, :string, default: -> { "ULID()" }
+  t.primary_key :id, :string, default: -> { "uuid7()" }
   t.references :board, null: false, foreign_key: true, type: :string
   t.string :title, null: false
   t.timestamps
@@ -316,8 +316,9 @@ end
 
 ```yaml
 # test/fixtures/cards.yml
+# Use hardcoded UUIDv7 strings for referential integrity
 one:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   board: main
   title: "Test Card"
 ```
@@ -472,7 +473,7 @@ Quick reference for working in this codebase:
 - Separate user/admin auth flows
 
 ### Models
-- ULID primary keys (database-generated)
+- UUIDv7 primary keys (database-generated)
 - Concerns for shared behavior (adjectives)
 - State as records, not booleans
 - Scopes over class methods
@@ -485,7 +486,7 @@ Quick reference for working in this codebase:
 ### Testing
 - **TDD: Write tests first**
 - Minitest + fixtures (no RSpec/FactoryBot)
-- Fixtures use `id: <%= ULID.generate %>`
+- Fixtures use hardcoded UUIDv7 strings for IDs
 - `Current.user = users(:one)` in setup
 
 ### Frontend

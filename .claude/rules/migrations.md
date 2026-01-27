@@ -5,15 +5,15 @@ globs: ["db/migrate/**/*.rb"]
 
 # Migration Standards
 
-## ULID Primary Keys
+## UUIDv7 Primary Keys
 
-All tables use ULID string primary keys with database-level default:
+All tables use UUIDv7 string primary keys with database-level default:
 
 ```ruby
 class CreateCards < ActiveRecord::Migration[8.0]
   def change
     create_table :cards, id: false, force: true do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
       t.string :title, null: false
       t.timestamps
     end
@@ -24,7 +24,7 @@ end
 **Key points:**
 - `id: false` - Disable Rails' default integer ID
 - `force: true` - Drop table if exists (optional, useful in dev)
-- `t.primary_key :id, :string, default: -> { "ULID()" }` - SQLite generates ULID
+- `t.primary_key :id, :string, default: -> { "uuid7()" }` - SQLite generates UUIDv7
 - No model callback needed - database handles ID generation
 
 ## Foreign Keys
@@ -33,7 +33,7 @@ Reference other tables with string type and foreign key constraints:
 
 ```ruby
 create_table :comments, id: false, force: true do |t|
-  t.primary_key :id, :string, default: -> { "ULID()" }
+  t.primary_key :id, :string, default: -> { "uuid7()" }
   t.references :card, null: false, foreign_key: true, type: :string
   t.references :author, null: false, foreign_key: { to_table: :users }, type: :string
   t.text :body, null: false
@@ -61,7 +61,7 @@ validates :email, presence: true, uniqueness: true
 ```ruby
 # ✅ GOOD: State as separate table
 create_table :closures, id: false, force: true do |t|
-  t.primary_key :id, :string, default: -> { "ULID()" }
+  t.primary_key :id, :string, default: -> { "uuid7()" }
   t.references :closeable, polymorphic: true, null: false, type: :string
   t.references :closed_by, null: false, foreign_key: { to_table: :users }, type: :string
   t.timestamps
@@ -77,7 +77,7 @@ Always include timestamps:
 
 ```ruby
 create_table :cards, id: false, force: true do |t|
-  t.primary_key :id, :string, default: -> { "ULID()" }
+  t.primary_key :id, :string, default: -> { "uuid7()" }
   # columns...
   t.timestamps  # adds created_at and updated_at
 end
@@ -154,7 +154,7 @@ class ChangeCardTitleToText < ActiveRecord::Migration[8.0]
   def up
     rename_table :cards, :cards_old
     create_table :cards, id: false, force: true do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
       t.text :title  # Changed from string
       t.timestamps
     end

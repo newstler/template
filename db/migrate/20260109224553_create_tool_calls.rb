@@ -1,7 +1,7 @@
 class CreateToolCalls < ActiveRecord::Migration[8.2]
   def change
     create_table :tool_calls, force: true, id: false do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
       t.string :tool_call_id, null: false
       t.string :name, null: false
 

@@ -65,7 +65,7 @@ scope :preloaded, -> { includes(:author) }
 ```yaml
 # test/fixtures/cards.yml
 one:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   board: main  # References boards(:main)
   author: admin
   title: Test Card

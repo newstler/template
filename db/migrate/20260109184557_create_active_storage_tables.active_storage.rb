@@ -2,7 +2,7 @@
 class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
   def change
     create_table :active_storage_blobs, force: true, id: false do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
       t.string   :key,          null: false
       t.string   :filename,     null: false
       t.string   :content_type
@@ -21,7 +21,7 @@ class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
     end
 
     create_table :active_storage_attachments, force: true, id: false do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
       t.string     :name,     null: false
       t.references :record,   null: false, polymorphic: true, index: false, type: :string
       t.references :blob,     null: false, type: :string
@@ -37,7 +37,7 @@ class CreateActiveStorageTables < ActiveRecord::Migration[7.0]
     end
 
     create_table :active_storage_variant_records, force: true, id: false do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
       t.belongs_to :blob, null: false, index: false, type: :string
       t.string :variation_digest, null: false
 

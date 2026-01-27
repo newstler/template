@@ -34,10 +34,10 @@ e.g use `rails generate model` instead of creating a model from scratch
    - Configure healthcheck silencing in production logs
 
 2. **Database Best Practices**
-   - Use ULID as as the primary key:
+   - Use UUIDv7 as the primary key:
    ```
        create_table :table, force: true, id: false do |t|
-         t.primary_key :id, :string, default: -> { "ULID()" }
+         t.primary_key :id, :string, default: -> { "uuid7()" }
          ...
        end
    ```

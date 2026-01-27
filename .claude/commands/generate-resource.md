@@ -25,19 +25,19 @@ Before generating, consider:
 rails generate migration Create{{ResourceName}}s
 ```
 
-Edit the migration to use ULID primary keys with database-level default:
+Edit the migration to use UUIDv7 primary keys with database-level default:
 
 ```ruby
 class Create{{ResourceName}}s < ActiveRecord::Migration[8.0]
   def change
     create_table :{{resource_name}}s, id: false, force: true do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
 
       # Add columns here
       t.string :title, null: false
       t.text :description
 
-      # Foreign keys with ULID (string type)
+      # Foreign keys with UUIDv7 (string type)
       t.references :board, null: false, foreign_key: true, type: :string
       t.references :author, null: false, foreign_key: { to_table: :users }, type: :string
 
@@ -151,13 +151,13 @@ Create basic views in `app/views/{{resource_name}}s/`:
 ```yaml
 # test/fixtures/{{resource_name}}s.yml
 one:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   board: main
   author: admin
   title: First {{ResourceName}}
 
 two:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000002
   board: main
   author: admin
   title: Second {{ResourceName}}

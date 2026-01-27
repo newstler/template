@@ -11,7 +11,7 @@
 # It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
-  create_table "active_storage_attachments", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
     t.string "name", null: false
@@ -21,7 +21,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
     t.index ["record_type", "record_id", "name", "blob_id"], name: "index_active_storage_attachments_uniqueness", unique: true
   end
 
-  create_table "active_storage_blobs", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "active_storage_blobs", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.bigint "byte_size", null: false
     t.string "checksum"
     t.string "content_type"
@@ -33,20 +33,20 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
     t.index ["key"], name: "index_active_storage_blobs_on_key", unique: true
   end
 
-  create_table "active_storage_variant_records", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "active_storage_variant_records", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "admins", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "admins", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
   end
 
-  create_table "chats", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "chats", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "messages_count", default: 0, null: false
     t.string "model_id"
@@ -57,7 +57,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
 
-  create_table "messages", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "messages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.integer "cache_creation_tokens"
     t.integer "cached_tokens"
     t.string "chat_id", null: false
@@ -80,7 +80,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
     t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
   end
 
-  create_table "models", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "models", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.json "capabilities", default: []
     t.integer "chats_count", default: 0, null: false
     t.integer "context_window"
@@ -102,7 +102,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
     t.index ["provider"], name: "index_models_on_provider"
   end
 
-  create_table "tool_calls", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "tool_calls", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.json "arguments", default: {}
     t.datetime "created_at", null: false
     t.string "message_id", null: false
@@ -115,7 +115,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_26_215238) do
     t.index ["tool_call_id"], name: "index_tool_calls_on_tool_call_id", unique: true
   end
 
-  create_table "users", id: :string, default: -> { "ULID()" }, force: :cascade do |t|
+  create_table "users", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "api_key"
     t.datetime "created_at", null: false
     t.string "email"

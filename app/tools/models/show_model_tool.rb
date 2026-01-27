@@ -11,7 +11,7 @@ module Models
     )
 
     arguments do
-      required(:model_id).filled(:string).description("The model ID (ULID) or model_id string (e.g., 'gpt-4')")
+      required(:model_id).filled(:string).description("The model ID (UUIDv7) or model_id string (e.g., 'gpt-4')")
     end
 
     def call(model_id:)

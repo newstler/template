@@ -95,14 +95,15 @@ end
 
 ```yaml
 # test/fixtures/cards.yml
+# Use hardcoded UUIDv7 strings for referential integrity
 one:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000001
   board: main
   title: First Card
   created_at: <%= 1.day.ago %>
 
 closed:
-  id: <%= ULID.generate %>
+  id: 01961a2a-c0de-7000-8000-000000000002
   board: main
   title: Closed Card
   closure: card_one_closure

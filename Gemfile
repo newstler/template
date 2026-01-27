@@ -6,8 +6,7 @@ gem "rails", github: "rails/rails", branch: "main"
 gem "propshaft"
 # Use sqlite3 as the database for Active Record
 gem "sqlite3", ">= 2.1"
-gem "sqlite-ulid"
-gem "ulid" # For generating ULIDs in Ruby (fixtures, tests)
+gem "sqlean", "~> 0.2" # SQLite extensions including uuid7()
 # Use the Puma web server [https://github.com/puma/puma]
 gem "puma", ">= 5.0"
 # Use JavaScript with ESM import maps [https://github.com/rails/importmap-rails]

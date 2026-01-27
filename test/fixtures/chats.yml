@@ -1,13 +1,13 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 #
-# Use hardcoded ULIDs and explicit _id columns for referential integrity.
+# Use hardcoded UUIDv7s and explicit _id columns for referential integrity.
 
 one:
-  id: 01JTEST000000000CHATONE01
-  user_id: 01JTEST000000000USERONE01
-  model_id: 01JTEST000000000MDLGPT004
+  id: 01961a2a-c0de-7000-8000-000000000301
+  user_id: 01961a2a-c0de-7000-8000-000000000001
+  model_id: 01961a2a-c0de-7000-8000-000000000201
 
 two:
-  id: 01JTEST000000000CHATTWO02
-  user_id: 01JTEST000000000USERTWO02
-  model_id: 01JTEST000000000MDLCLAUD1
+  id: 01961a2a-c0de-7000-8000-000000000302
+  user_id: 01961a2a-c0de-7000-8000-000000000002
+  model_id: 01961a2a-c0de-7000-8000-000000000202

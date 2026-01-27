@@ -1,7 +1,7 @@
 class <%= migration_class_name %> < ActiveRecord::Migration[<%= ActiveRecord::Migration.current_version %>]
   def change
     create_table :<%= table_name %>, force: true, id: false do |t|
-      t.primary_key :id, :string, default: -> { "ULID()" }
+      t.primary_key :id, :string, default: -> { "uuid7()" }
 <% attributes.each do |attribute| -%>
 <% if attribute.password_digest? -%>
       t.string :password_digest<%= attribute.inject_options %>

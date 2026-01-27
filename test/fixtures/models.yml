@@ -1,9 +1,9 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 #
-# Use hardcoded ULIDs to maintain referential integrity across fixtures.
+# Use hardcoded UUIDv7s to maintain referential integrity across fixtures.
 
 gpt4:
-  id: 01JTEST000000000MDLGPT004
+  id: 01961a2a-c0de-7000-8000-000000000201
   model_id: gpt-4
   name: GPT-4
   provider: openai
@@ -18,7 +18,7 @@ gpt4:
         cached_input_per_million: 15
 
 claude:
-  id: 01JTEST000000000MDLCLAUD1
+  id: 01961a2a-c0de-7000-8000-000000000202
   model_id: claude-3-opus-20240229
   name: Claude 3 Opus
   provider: anthropic
