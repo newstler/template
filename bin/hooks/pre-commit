@@ -1,0 +1,12 @@
+#!/bin/bash
+# Pre-commit hook - runs CI checks before allowing commit
+
+echo "Running pre-commit checks..."
+bin/ci
+
+if [ $? -ne 0 ]; then
+  echo ""
+  echo "Pre-commit checks failed. Commit aborted."
+  echo "Fix the issues above and try again."
+  exit 1
+fi
