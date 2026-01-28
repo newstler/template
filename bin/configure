@@ -28,6 +28,10 @@ def to_class_name(string)
   string.split(/[-_]/).map(&:capitalize).join
 end
 
+def to_service_name(string)
+  string.gsub(/([A-Z])/, '-\1').downcase.sub(/^-/, "").gsub(/[^a-z0-9-]/, "-")
+end
+
 def replace_in_file(file_path, old_content, new_content)
   return unless File.exist?(file_path)
 
@@ -63,6 +67,28 @@ FileUtils.chdir APP_ROOT do
   puts "Current directory: #{directory_name}"
   project_name = prompt("Project name (CamelCase)", suggested_name)
   project_name = to_class_name(project_name) # Ensure proper format
+  service_name = to_service_name(project_name)
+
+  puts "\n── Deployment Configuration... ──\n"
+
+  domain = prompt("App domain (e.g., myapp.example.com)", "app.example.com")
+  server_ip = prompt("Server IP address", "192.168.0.1")
+
+  puts "\n── SMTP Configuration (optional)... ──\n"
+  puts "Press Enter to skip if you want to configure later.\n"
+
+  smtp_address = prompt("SMTP server address (e.g., smtp.postmarkapp.com)")
+  smtp_username = ""
+  smtp_password = ""
+  unless smtp_address.empty?
+    smtp_username = prompt("SMTP username")
+    smtp_password = prompt("SMTP password")
+  end
+
+  # Extract base domain from the full domain for mailer from address
+  domain_parts = domain.split(".")
+  base_domain = domain_parts.length > 2 ? domain_parts[-2..].join(".") : domain
+  mailer_from = prompt("Mailer from address", "noreply@#{base_domain}")
 
   puts "\n── Renaming project from Template to #{project_name}... ──\n"
 
@@ -112,9 +138,28 @@ FileUtils.chdir APP_ROOT do
     )
   end
 
+  puts "\n── Configuring deploy files... ──\n"
+
+  # Update config/deploy.yml
+  replace_in_file("config/deploy.yml", "service: template", "service: #{service_name}")
+  replace_in_file("config/deploy.yml", "image: template", "image: #{service_name}")
+  replace_in_file("config/deploy.yml", "host: app.example.com", "host: #{domain}")
+  replace_in_file("config/deploy.yml", "- 192.168.0.1", "- #{server_ip}")
+  replace_in_file("config/deploy.yml", "template_storage:/rails/storage", "#{service_name}_storage:/rails/storage")
+
+  # Update config/environments/production.rb
+  replace_in_file("config/environments/production.rb", 'host: "app.example.com"', "host: \"#{domain}\"")
+  replace_in_file("config/environments/production.rb", '"app.example.com"', "\"#{domain}\"")
+  replace_in_file("config/environments/production.rb", '/.*\.example\.com/', "/.*\\.#{Regexp.escape(base_domain).gsub('\\.', '\\.')}/")
+  # SMTP address comes from credentials - no file replacement needed
+
+  # Update Dockerfile comment
+  replace_in_file("Dockerfile", "docker build -t template", "docker build -t #{service_name}")
+  replace_in_file("Dockerfile", "--name template template", "--name #{service_name} #{service_name}")
+
   puts "\n── Configuring first admin... ──\n"
 
-  admin_email = prompt("Admin email address", "admin@example.com")
+  admin_email = prompt("Admin email address", "admin@#{base_domain}")
 
   puts "\n── Configuring AI API Keys (optional)... ──\n"
   puts "RubyLLM supports OpenAI and Anthropic (Claude) APIs."
@@ -134,6 +179,10 @@ FileUtils.chdir APP_ROOT do
   # Store config temporarily
   config_data = {
     "admin_email" => admin_email,
+    "mailer_from" => mailer_from,
+    "smtp_address" => smtp_address,
+    "smtp_username" => smtp_username,
+    "smtp_password" => smtp_password,
     "openai_api_key" => openai_api_key,
     "anthropic_api_key" => anthropic_api_key,
     "replica_bucket" => replica_bucket,
@@ -161,44 +210,48 @@ FileUtils.chdir APP_ROOT do
   # Load config data
   config_data = YAML.load_file(".configure_temp.yml")
 
-  # Build credentials YAML content
-  has_ai_keys = !config_data["openai_api_key"].to_s.empty? || !config_data["anthropic_api_key"].to_s.empty?
-  has_litestream = !config_data["replica_bucket"].to_s.empty?
+  # Build credentials hash
+  credentials_hash = {
+    "secret_key_base" => SecureRandom.hex(64),
+    "mailer" => { "from_address" => config_data["mailer_from"] }
+  }
 
-  if has_ai_keys || has_litestream
-    # Build credentials hash
-    credentials_hash = {}
+  # Add SMTP credentials if provided
+  # Add SMTP credentials if provided
+  if !config_data["smtp_address"].to_s.empty?
+    credentials_hash["smtp"] = {
+      "address" => config_data["smtp_address"],
+      "username" => config_data["smtp_username"],
+      "password" => config_data["smtp_password"]
+    }
+  end
 
-    # Add AI credentials if provided
-    if has_ai_keys
-      credentials_hash["openai"] = { "api_key" => config_data["openai_api_key"] } unless config_data["openai_api_key"].to_s.empty?
-      credentials_hash["anthropic"] = { "api_key" => config_data["anthropic_api_key"] } unless config_data["anthropic_api_key"].to_s.empty?
-    end
+  # Add AI credentials if provided
+  credentials_hash["openai"] = { "api_key" => config_data["openai_api_key"] } unless config_data["openai_api_key"].to_s.empty?
+  credentials_hash["anthropic"] = { "api_key" => config_data["anthropic_api_key"] } unless config_data["anthropic_api_key"].to_s.empty?
 
-    # Add Litestream credentials if provided
-    if has_litestream
-      credentials_hash["litestream"] = {
-        "replica_bucket" => config_data["replica_bucket"],
-        "replica_key_id" => config_data["replica_key_id"],
-        "replica_access_key" => config_data["replica_access_key"]
-      }
-    end
+  # Add Litestream credentials if provided
+  if !config_data["replica_bucket"].to_s.empty?
+    credentials_hash["litestream"] = {
+      "replica_bucket" => config_data["replica_bucket"],
+      "replica_key_id" => config_data["replica_key_id"],
+      "replica_access_key" => config_data["replica_access_key"]
+    }
+  end
 
-    # Write directly to development credentials
-    require "active_support/encrypted_configuration"
+  require "active_support/encrypted_configuration"
+  FileUtils.mkdir_p("config/credentials")
 
-    # Create credentials directory if it doesn't exist
-    FileUtils.mkdir_p("config/credentials")
-
-    # Initialize development credentials
-    key_path = "config/credentials/development.key"
-    credentials_path = "config/credentials/development.yml.enc"
+  # Write to both development and production credentials
+  %w[development production].each do |env|
+    key_path = "config/credentials/#{env}.key"
+    credentials_path = "config/credentials/#{env}.yml.enc"
 
     # Generate key if it doesn't exist
     unless File.exist?(key_path)
       key = ActiveSupport::EncryptedConfiguration.generate_key
       File.write(key_path, key)
-      puts "  ✓ Generated development key: #{key_path}"
+      puts "  ✓ Generated #{env} key: #{key_path}"
     end
 
     # Write the credentials
@@ -210,26 +263,23 @@ FileUtils.chdir APP_ROOT do
     )
 
     config.write(YAML.dump(credentials_hash))
-
-    puts "  ✓ Development credentials updated"
-    puts "  ✓ Saved to: #{credentials_path}"
-    puts "  ✓ Key saved to: #{key_path}"
-  else
-    puts "  ⊝ No credentials to write (no API keys or Litestream configured)"
+    puts "  ✓ #{env.capitalize} credentials updated: #{credentials_path}"
   end
 
   # Clean up temp files
   File.delete(".configure_temp.yml") if File.exist?(".configure_temp.yml")
 
   # Mark as configured
-  File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nAdmin: #{admin_email}\n")
+  File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nDomain: #{domain}\nAdmin: #{admin_email}\n")
 
   puts "\n" + "═" * 60
   puts "  ✓ Configuration Complete!"
   puts "═" * 60
   puts
   puts "Project: #{project_name}"
-  puts "Admin: #{admin_email}"
+  puts "Domain:  #{domain}"
+  puts "Server:  #{server_ip}"
+  puts "Admin:   #{admin_email}"
   puts
   puts "Running bin/setup to install dependencies and setup database..."
   puts
