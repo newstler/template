@@ -6,7 +6,7 @@ class UserMailer < ApplicationMailer
 
     mail(
       to: @user.email,
-      subject: "Your magic link to sign in"
+      subject: t(".subject")
     )
   end
 end

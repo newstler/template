@@ -1,9 +1,9 @@
-<% content_for :title, "Home" %>
+<% content_for :title, t(".title") %>
 
 <div class="max-w-4xl mx-auto">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-dark-50">Welcome, <%= @user.name %>!</h1>
-    <p class="text-dark-400 mt-1">You're successfully signed in</p>
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".welcome", name: @user.name) %></h1>
+    <p class="text-dark-400 mt-1"><%= t(".signed_in") %></p>
   </div>
 
   <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -12,19 +12,19 @@
         <div class="w-10 h-10 bg-indigo-500/20 rounded-full flex items-center justify-center">
           <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-indigo-400" %>
         </div>
-        <h2 class="text-xl font-semibold text-dark-50 ml-3">Your Profile</h2>
+        <h2 class="text-xl font-semibold text-dark-50 ml-3"><%= t(".profile.heading") %></h2>
       </div>
       <dl class="space-y-3">
         <div>
-          <dt class="text-sm font-medium text-dark-400">Email</dt>
+          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.email") %></dt>
           <dd class="text-sm text-dark-100"><%= @user.email %></dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-dark-400">Name</dt>
+          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.name") %></dt>
           <dd class="text-sm text-dark-100"><%= @user.name %></dd>
         </div>
         <div>
-          <dt class="text-sm font-medium text-dark-400">Member Since</dt>
+          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.member_since") %></dt>
           <dd class="text-sm text-dark-100"><%= @user.created_at.strftime("%B %d, %Y") %></dd>
         </div>
       </dl>
@@ -35,18 +35,18 @@
         <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
           <%= inline_svg "icons/shield.svg", class: "w-6 h-6 text-green-400" %>
         </div>
-        <h2 class="text-xl font-semibold text-dark-50 ml-3">Authentication</h2>
+        <h2 class="text-xl font-semibold text-dark-50 ml-3"><%= t(".authentication.heading") %></h2>
       </div>
       <div class="space-y-3">
         <p class="text-sm text-dark-300">
-          You're signed in using magic link authentication. No passwords needed!
+          <%= t(".authentication.description") %>
         </p>
         <div class="bg-green-500/10 rounded-lg p-3">
           <div class="flex items-start">
             <%= inline_svg "icons/shield.svg", class: "w-4 h-4 text-green-400 mt-0.5 mr-2 flex-shrink-0" %>
             <div class="text-xs text-green-300">
-              <strong class="font-medium">Secure & Passwordless</strong>
-              <p class="mt-1 text-green-400/80">Every time you sign in, you'll receive a fresh magic link via email.</p>
+              <strong class="font-medium"><%= t(".authentication.secure_title") %></strong>
+              <p class="mt-1 text-green-400/80"><%= t(".authentication.secure_description") %></p>
             </div>
           </div>
         </div>
@@ -58,15 +58,15 @@
     <div class="flex">
       <%= inline_svg "icons/lightning.svg", class: "w-6 h-6 text-blue-400 mt-0.5 mr-3 flex-shrink-0" %>
       <div class="flex-1">
-        <h3 class="text-sm font-medium text-blue-300 mb-2">Getting Started</h3>
+        <h3 class="text-sm font-medium text-blue-300 mb-2"><%= t(".getting_started.heading") %></h3>
         <p class="text-sm text-blue-400/80 mb-3">
-          This is a template application. You can customize this dashboard or add your own features.
+          <%= t(".getting_started.description") %>
         </p>
         <ul class="text-sm text-blue-400/80 space-y-1 list-disc list-inside">
-          <li>Check out the code in <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/controllers/home_controller.rb</code></li>
-          <li>Modify this view in <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/views/home/index.html.erb</code></li>
-          <li>Add your own models, controllers, and views</li>
-          <li>See <code class="bg-blue-500/20 px-1 rounded text-blue-300">CLAUDE.md</code> for architecture guidelines</li>
+          <li><%= t(".getting_started.tip_controllers") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/controllers/home_controller.rb</code></li>
+          <li><%= t(".getting_started.tip_views") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/views/home/index.html.erb</code></li>
+          <li><%= t(".getting_started.tip_models") %></li>
+          <li><%= t(".getting_started.tip_claude") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">CLAUDE.md</code> <%= t(".getting_started.tip_claude_suffix") %></li>
         </ul>
       </div>
     </div>

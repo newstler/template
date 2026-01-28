@@ -1,0 +1,11 @@
+---
+en:
+  sessions:
+    new:
+      email_help: We'll send you a magic link to sign in. If you don't have an account,
+        one will be created automatically.
+      email_label: Email address
+      email_placeholder: you@example.com
+      heading: Welcome
+      subheading: Sign in with a magic link sent to your email
+      submit: Send Magic Link

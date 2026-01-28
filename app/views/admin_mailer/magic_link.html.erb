@@ -1,18 +1,18 @@
-<h1>Admin Sign In</h1>
+<h1><%= t(".heading") %></h1>
 
-<p>Hi Admin,</p>
+<p><%= t(".greeting") %></p>
 
-<p>Click the button below to sign in to the admin panel:</p>
+<p><%= t(".instruction") %></p>
 
 <p>
   <a href="<%= @magic_link_url %>" style="display: inline-block; padding: 12px 24px; background-color: #DC2626; color: white; text-decoration: none; border-radius: 6px;">
-    Admin Sign In
+    <%= t(".button") %>
   </a>
 </p>
 
-<p>Or copy and paste this link into your browser:</p>
+<p><%= t(".link_instruction") %></p>
 <p><%= @magic_link_url %></p>
 
-<p><small>This link will expire in 15 minutes.</small></p>
+<p><small><%= t(".expiry") %></small></p>
 
-<p><small>If you didn't request this, please contact another administrator immediately.</small></p>
+<p><small><%= t(".ignore") %></small></p>

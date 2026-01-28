@@ -1,12 +1,12 @@
 <p style="color: green"><%= notice %></p>
 
-<% content_for :title, "Models" %>
+<% content_for :title, t(".title") %>
 
-<h1>Models</h1>
+<h1><%= t(".heading") %></h1>
 
 <% if current_admin %>
   <p>
-    <%= button_to "Refresh Models", models_refresh_path, method: :post %>
+    <%= button_to t(".refresh"), models_refresh_path, method: :post %>
   </p>
 <% end %>
 
@@ -14,10 +14,10 @@
   <table>
     <thead>
       <tr>
-        <th>Provider</th>
-        <th>Model</th>
-        <th>Context Window</th>
-        <th>$/1M tokens (In/Out)</th>
+        <th><%= t(".table.provider") %></th>
+        <th><%= t(".table.model") %></th>
+        <th><%= t(".table.context_window") %></th>
+        <th><%= t(".table.pricing") %></th>
         <th colspan="2"></th>
       </tr>
     </thead>
@@ -27,4 +27,4 @@
   </table>
 </div>
 
-<%= link_to "Back to chats", chats_path %>
+<%= link_to t(".back"), chats_path %>

@@ -1,0 +1,36 @@
+---
+en:
+  controllers:
+    admins:
+      sessions:
+        create:
+          alert: Admin not found. Only existing admins can log in.
+          notice: Check your email for a magic link!
+        destroy:
+          notice: Signed out successfully
+        rate_limit:
+          long: Too many attempts. Try again later.
+          short: Too many attempts. Please wait.
+          verify: Too many verification attempts.
+        verify:
+          alert: Invalid or expired magic link
+          notice: Welcome back, admin!
+    application:
+      authenticate_admin: Please log in as admin
+      authenticate_user: Please log in
+    models:
+      refreshes:
+        create:
+          notice: Models refreshed successfully
+    sessions:
+      create:
+        notice: Check your email for a magic link!
+      destroy:
+        notice: Signed out successfully
+      rate_limit:
+        long: Too many attempts. Try again later.
+        short: Too many attempts. Please wait.
+        verify: Too many verification attempts.
+      verify:
+        alert: Invalid or expired magic link
+        notice: Welcome back, %{name}!

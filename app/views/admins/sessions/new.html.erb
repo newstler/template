@@ -4,27 +4,27 @@
       <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/25">
         <%= inline_svg "icons/shield.svg", class: "w-8 h-8 text-white" %>
       </div>
-      <h1 class="text-3xl font-bold text-dark-50 mb-2">Admin Access</h1>
-      <p class="text-dark-400">Sign in with your admin magic link</p>
+      <h1 class="text-3xl font-bold text-dark-50 mb-2"><%= t(".heading") %></h1>
+      <p class="text-dark-400"><%= t(".subheading") %></p>
     </div>
 
     <div class="bg-dark-950 py-8 px-6 rounded-xl border border-dark-700">
       <%= form_with scope: :session, url: admins_session_path, method: :post, class: "space-y-6" do |form| %>
         <div>
-          <%= form.label :email, "Admin email address", class: "block text-sm font-medium text-dark-200 mb-2" %>
+          <%= form.label :email, t(".email_label"), class: "block text-sm font-medium text-dark-200 mb-2" %>
           <%= form.email_field :email,
             required: true,
             autofocus: true,
             autocomplete: "email",
-            placeholder: "admin@example.com",
+            placeholder: t(".email_placeholder"),
             class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 focus:outline-none transition-all placeholder-dark-500" %>
           <p class="mt-2 text-sm text-dark-400">
-            Only existing admins can sign in. You'll receive a magic link via email.
+            <%= t(".email_help") %>
           </p>
         </div>
 
         <div>
-          <%= form.submit "Send Admin Magic Link",
+          <%= form.submit t(".submit"),
             class: "w-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-700 hover:to-pink-700 text-white py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500/50 font-medium transition-all cursor-pointer shadow-lg shadow-purple-500/25" %>
         </div>
       <% end %>
@@ -34,8 +34,8 @@
       <div class="flex">
         <%= inline_svg "icons/shield.svg", class: "w-5 h-5 text-amber-400 mt-0.5 mr-3 flex-shrink-0" %>
         <div class="text-sm text-amber-300">
-          <strong class="font-medium">Restricted Area</strong>
-          <p class="mt-1 text-amber-400/80">This is the admin login. If you need admin access, contact an existing administrator.</p>
+          <strong class="font-medium"><%= t(".restricted_area") %></strong>
+          <p class="mt-1 text-amber-400/80"><%= t(".restricted_message") %></p>
         </div>
       </div>
     </div>

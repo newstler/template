@@ -1,14 +1,14 @@
-<% content_for :title, "Chats" %>
+<% content_for :title, t(".title") %>
 
 <div class="max-w-4xl mx-auto">
   <div class="flex items-center justify-between mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-dark-50">Your Chats</h1>
-      <p class="text-dark-400 mt-1">Continue a conversation or start a new one</p>
+      <h1 class="text-2xl font-bold text-dark-50"><%= t(".heading") %></h1>
+      <p class="text-dark-400 mt-1"><%= t(".subheading") %></p>
     </div>
     <%= link_to new_chat_path, class: "inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-lg shadow-blue-500/25" do %>
       <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
-      New Chat
+      <%= t(".new_chat") %>
     <% end %>
   </div>
 
@@ -24,20 +24,20 @@
                 </div>
                 <div>
                   <h3 class="font-medium text-dark-100 group-hover:text-blue-400 transition-colors">
-                    <%= chat.model&.name || 'Default Model' %>
+                    <%= chat.model&.name || t("common.default") %>
                   </h3>
                 </div>
               </div>
               <% if chat.messages.any? %>
                 <p class="text-dark-400 text-sm truncate pl-11">
                   <% first_user_message = chat.messages.find { |m| m.role == 'user' } %>
-                  <%= first_user_message&.content&.truncate(100) || "No messages yet" %>
+                  <%= first_user_message&.content&.truncate(100) || t(".no_messages") %>
                 </p>
               <% end %>
             </div>
             <div class="flex items-center gap-3 ml-4 flex-shrink-0">
               <span class="text-xs text-dark-500">
-                <%= time_ago_in_words(chat.created_at) %> ago
+                <%= t(".time_ago", time: time_ago_in_words(chat.created_at)) %>
               </span>
               <%= inline_svg "icons/chevron-right.svg", class: "w-4 h-4 text-dark-500 group-hover:text-blue-400 transition-colors" %>
             </div>
@@ -49,11 +49,11 @@
         <div class="w-16 h-16 bg-dark-800 rounded-full flex items-center justify-center mx-auto mb-4">
           <%= inline_svg "icons/chat.svg", class: "w-8 h-8 text-dark-500" %>
         </div>
-        <h3 class="text-lg font-medium text-dark-100 mb-2">No chats yet</h3>
-        <p class="text-dark-400 mb-6">Start a conversation with an AI assistant</p>
+        <h3 class="text-lg font-medium text-dark-100 mb-2"><%= t(".empty.heading") %></h3>
+        <p class="text-dark-400 mb-6"><%= t(".empty.description") %></p>
         <%= link_to new_chat_path, class: "inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium" do %>
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
-          Start Your First Chat
+          <%= t(".empty.cta") %>
         <% end %>
       </div>
     <% end %>

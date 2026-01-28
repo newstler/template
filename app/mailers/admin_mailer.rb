@@ -6,7 +6,7 @@ class AdminMailer < ApplicationMailer
 
     mail(
       to: @admin.email,
-      subject: "Your admin magic link to sign in"
+      subject: t(".subject")
     )
   end
 end

@@ -1,9 +1,9 @@
-Hi <%= @user.name %>,
+<%= t(".greeting", name: @user.name) %>
 
-Click the link below to sign in to your account:
+<%= t(".instruction") %>
 
 <%= @magic_link_url %>
 
-This link will expire in 15 minutes.
+<%= t(".expiry") %>
 
-If you didn't request this, you can safely ignore this email.
+<%= t(".ignore") %>

@@ -14,7 +14,7 @@
       <%= form.text_area :content,
           rows: 1,
           class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none focus:border-0 focus:shadow-none placeholder-dark-400 text-dark-100",
-          placeholder: "Reply...",
+          placeholder: t("messages.form.placeholder"),
           autofocus: true,
           style: "box-shadow: none !important;",
           data: {
@@ -31,7 +31,7 @@
         <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/png,image/jpeg,image/gif,image/webp,.pdf" %>
       </div>
       <div class="flex items-center gap-3">
-        <span class="text-sm text-dark-400"><%= @chat.model&.name || 'Default' %></span>
+        <span class="text-sm text-dark-400"><%= @chat.model&.name || t("common.default") %></span>
         <%= form.button type: "submit", class: "bg-dark-600 hover:bg-dark-500 text-white rounded-lg p-2 transition-colors cursor-pointer" do %>
           <%= inline_svg "icons/arrow-up.svg", class: "w-4 h-4" %>
         <% end %>

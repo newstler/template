@@ -1,0 +1,28 @@
+---
+en:
+  home:
+    index:
+      authentication:
+        description: You're signed in using magic link authentication. No passwords
+          needed!
+        heading: Authentication
+        secure_description: Every time you sign in, you'll receive a fresh magic link
+          via email.
+        secure_title: Secure & Passwordless
+      getting_started:
+        description: This is a template application. You can customize this dashboard
+          or add your own features.
+        heading: Getting Started
+        tip_claude: See
+        tip_claude_suffix: for architecture guidelines
+        tip_controllers: Check out the code in
+        tip_models: Add your own models, controllers, and views
+        tip_views: Modify this view in
+      profile:
+        email: Email
+        heading: Your Profile
+        member_since: Member Since
+        name: Name
+      signed_in: You're successfully signed in
+      title: Home
+      welcome: Welcome, %{name}!

@@ -1,16 +1,16 @@
 <div id="<%= dom_id chat %>">
   <div>
-    <strong>Model:</strong>
-    <%= chat.model&.name || 'Default' %>
+    <strong><%= t("models.show.model", default: "Model") %>:</strong>
+    <%= chat.model&.name || t("common.default") %>
   </div>
 
   <div>
-    <strong>Messages:</strong>
+    <strong><%= t("messages.count", default: "Messages") %>:</strong>
     <%= chat.messages.count %>
   </div>
 
   <div>
-    <strong>Created:</strong>
+    <strong><%= t("common.created", default: "Created") %>:</strong>
     <%= chat.created_at.strftime("%B %d, %Y at %I:%M %p") %>
   </div>
 </div>

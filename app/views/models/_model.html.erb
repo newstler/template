@@ -11,6 +11,6 @@
       <% end %>
     <% end %>
   </td>
-  <td><%= link_to "Show", model %></td>
-  <td><%= link_to "Start chat", new_chat_path(model: model.model_id) %></td>
+  <td><%= link_to t("models.model.show"), model %></td>
+  <td><%= link_to t("models.model.start_chat"), new_chat_path(model: model.model_id) %></td>
 </tr>

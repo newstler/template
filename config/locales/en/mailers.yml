@@ -1,0 +1,22 @@
+---
+en:
+  admin_mailer:
+    magic_link:
+      button: Admin Sign In
+      expiry: This link will expire in 15 minutes.
+      greeting: Hi Admin,
+      heading: Admin Sign In
+      ignore: If you didn't request this, please contact another administrator immediately.
+      instruction: 'Click the button below to sign in to the admin panel:'
+      link_instruction: 'Or copy and paste this link into your browser:'
+      subject: Your admin magic link to sign in
+  user_mailer:
+    magic_link:
+      button: Sign In
+      expiry: This link will expire in 15 minutes.
+      greeting: Hi %{name},
+      heading: Sign in to your account
+      ignore: If you didn't request this, you can safely ignore this email.
+      instruction: 'Click the button below to sign in to your account:'
+      link_instruction: 'Or copy and paste this link into your browser:'
+      subject: Your magic link to sign in

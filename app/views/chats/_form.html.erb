@@ -14,7 +14,7 @@
       <%= form.text_area :prompt,
           rows: 1,
           class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none focus:border-0 focus:shadow-none placeholder-dark-400 text-dark-100",
-          placeholder: "What would you like to discuss?",
+          placeholder: t("chats.form.prompt_placeholder"),
           autofocus: true,
           style: "box-shadow: none !important;",
           data: {
@@ -33,8 +33,9 @@
       <div class="flex items-center gap-3">
         <div class="relative flex items-center">
           <% default_model = Model.find_by(model_id: RubyLLM.config.default_model) %>
+          <% default_label = default_model ? t("chats.form.default_model", name: default_model.name) : t("chats.form.default_model_not_set") %>
           <%= form.select :model,
-              options_for_select([["Default (#{default_model&.name || 'Not set'})", ""]] + Model.enabled.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
+              options_for_select([[default_label, ""]] + Model.enabled.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
               {},
               class: "text-sm text-dark-400 select-transparent ring-0 outline-none focus:ring-0 focus:outline-none cursor-pointer pr-5 appearance-none",
               data: { controller: "auto-width-select", action: "change->auto-width-select#resize" } %>

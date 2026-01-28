@@ -22,10 +22,10 @@ class ApplicationController < ActionController::Base
   helper_method :current_admin
 
   def authenticate_user!
-    redirect_to new_session_path, alert: "Please log in" unless current_user
+    redirect_to new_session_path, alert: t("controllers.application.authenticate_user") unless current_user
   end
 
   def authenticate_admin!
-    redirect_to new_admins_session_path, alert: "Please log in as admin" unless current_admin
+    redirect_to new_admins_session_path, alert: t("controllers.application.authenticate_admin") unless current_admin
   end
 end

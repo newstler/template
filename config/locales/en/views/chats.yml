@@ -1,0 +1,25 @@
+---
+en:
+  chats:
+    form:
+      default_model: Default (%{name})
+      default_model_not_set: Default (Not set)
+      prompt_placeholder: What would you like to discuss?
+    index:
+      empty:
+        cta: Start Your First Chat
+        description: Start a conversation with an AI assistant
+        heading: No chats yet
+      heading: Your Chats
+      new_chat: New Chat
+      no_messages: No messages yet
+      subheading: Continue a conversation or start a new one
+      time_ago: "%{time} ago"
+      title: Chats
+    new:
+      back: Back to chats
+      heading: Start a New Chat
+      subheading: Choose a model and begin your conversation
+      title: New chat
+    show:
+      title: Chat
