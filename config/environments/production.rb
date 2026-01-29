@@ -60,6 +60,9 @@ Rails.application.configure do
   # Set host to be used by links generated in mailer templates.
   config.action_mailer.default_url_options = { host: "app.example.com" }
 
+  # Default from address for emails.
+  config.action_mailer.default_options = { from: "noreply@app.example.com" }
+
   # Outgoing SMTP server configuration (from credentials).
   config.action_mailer.smtp_settings = {
     user_name: Rails.application.credentials.dig(:smtp, :username),

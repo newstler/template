@@ -2,35 +2,111 @@
 # frozen_string_literal: true
 
 require "fileutils"
-require "io/console"
 require "yaml"
 require "securerandom"
 
 APP_ROOT = File.expand_path("..", __dir__)
 
-def system!(*args)
-  system(*args, exception: true)
+# Install lipgloss if not available
+begin
+  require "lipgloss"
+rescue LoadError
+  puts "Installing lipgloss gem for terminal styling..."
+  system("gem install lipgloss --no-document") || abort("Failed to install lipgloss gem")
+  Gem.clear_paths
+  require "lipgloss"
 end
 
-def prompt(question, default = nil)
-  print question
-  print " [#{default}]" if default
-  print ": "
-  answer = $stdin.gets.chomp
-  answer.empty? && default ? default : answer
+def system!(*args)
+  system(*args, exception: true)
 end
 
 def project_name_from_directory
   File.basename(APP_ROOT)
 end
 
+# Converts to Ruby module name for config/application.rb
+# "my_project" -> "MyProject", "template" -> "Template", "MyApp" -> "MyApp"
 def to_class_name(string)
-  string.split(/[-_]/).map(&:capitalize).join
+  return string if string.nil? || string.empty?
+  return string.split(/[-_]/).map(&:capitalize).join if string.match?(/[-_]/)
+
+  string[0].upcase + string[1..].to_s
 end
 
+# Converts to kebab-case for Docker service names, S3 buckets, etc.
+# "ProjectName" -> "project-name"
 def to_service_name(string)
   string.gsub(/([A-Z])/, '-\1').downcase.sub(/^-/, "").gsub(/[^a-z0-9-]/, "-")
 end
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Styles
+# ─────────────────────────────────────────────────────────────────────────────
+
+VIOLET = "#7D56F4"
+PURPLE = "#874BFD"
+GREEN = "#04B575"
+MUTED = "#626262"
+WHITE = "#FAFAFA"
+ORANGE = "#FF9F1C"
+CYAN = "#00D9FF"
+
+HEADER_STYLE = Lipgloss::Style.new
+  .border(:rounded)
+  .border_foreground(VIOLET)
+  .padding_top(1)
+  .padding_bottom(1)
+  .padding_left(4)
+  .padding_right(4)
+  .bold(true)
+  .foreground(WHITE)
+
+SECTION_STYLE = Lipgloss::Style.new
+  .foreground(PURPLE)
+  .bold(true)
+  .margin_top(1)
+  .margin_bottom(1)
+
+SUCCESS_STYLE = Lipgloss::Style.new
+  .foreground(GREEN)
+
+MUTED_STYLE = Lipgloss::Style.new
+  .foreground(MUTED)
+  .italic(true)
+
+SUMMARY_STYLE = Lipgloss::Style.new
+  .border(:rounded)
+  .border_foreground(GREEN)
+  .padding_top(1)
+  .padding_bottom(1)
+  .padding_left(2)
+  .padding_right(2)
+
+WARNING_STYLE = Lipgloss::Style.new
+  .foreground(ORANGE)
+  .bold(true)
+
+PROMPT_STYLE = Lipgloss::Style.new
+  .foreground(CYAN)
+  .bold(true)
+
+DEFAULT_STYLE = Lipgloss::Style.new
+  .foreground(MUTED)
+
+INPUT_STYLE = Lipgloss::Style.new
+  .foreground("#FFD700")
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Output helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
+def header(text) = puts HEADER_STYLE.render(text)
+def section(text) = puts SECTION_STYLE.render("── #{text} ──")
+def success(text) = puts SUCCESS_STYLE.render(text)
+def muted(text) = puts MUTED_STYLE.render(text)
+def warning(text) = puts WARNING_STYLE.render(text)
+def summary(text) = puts SUMMARY_STYLE.render(text)
 
 def replace_in_file(file_path, old_content, new_content)
   return unless File.exist?(file_path)
@@ -38,161 +114,243 @@ def replace_in_file(file_path, old_content, new_content)
   content = File.read(file_path)
   if content.include?(old_content)
     File.write(file_path, content.gsub(old_content, new_content))
-    puts "  ✓ Updated #{file_path}"
+    success("  ✓ Updated #{file_path}")
   end
 end
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Prompts
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ANSI escape codes for cursor control
+CURSOR_UP = "\e[1A"
+CLEAR_LINE = "\e[2K"
+YELLOW_INPUT = "\e[33m"
+RESET_COLOR = "\e[0m"
+
+def prompt(question, default = nil)
+  label = PROMPT_STYLE.render(question)
+  colon = DEFAULT_STYLE.render(":")
+
+  if default
+    default_hint = DEFAULT_STYLE.render(" [#{default}]")
+    print "#{label}#{default_hint}#{colon} #{YELLOW_INPUT}"
+  else
+    print "#{label}#{colon} #{YELLOW_INPUT}"
+  end
+
+  answer = $stdin.gets.chomp
+  print RESET_COLOR
+  result = answer.empty? && default ? default : answer
+
+  # Rewrite the line with the final value
+  print "#{CURSOR_UP}#{CLEAR_LINE}"
+  puts "#{label}#{colon} #{INPUT_STYLE.render(result)}"
+
+  result
+end
+
+
+def confirm(question)
+  label = PROMPT_STYLE.render(question)
+  hint = DEFAULT_STYLE.render(" (y/N):")
+  print "#{label}#{hint} #{YELLOW_INPUT}"
+
+  answer = $stdin.gets.chomp
+  print RESET_COLOR
+  result = answer.downcase == "y"
+
+  # Rewrite the line with the final value
+  print "#{CURSOR_UP}#{CLEAR_LINE}"
+  puts "#{label}#{DEFAULT_STYLE.render(":")} #{INPUT_STYLE.render(result ? "Yes" : "No")}"
+
+  result
+end
+
+def secret_prompt(question, default = nil)
+  label = PROMPT_STYLE.render(question)
+  colon = DEFAULT_STYLE.render(":")
+
+  if default
+    default_hint = DEFAULT_STYLE.render(" [#{default}]")
+    print "#{label}#{default_hint}#{colon} #{YELLOW_INPUT}"
+  else
+    print "#{label}#{colon} #{YELLOW_INPUT}"
+  end
+
+  answer = $stdin.gets.chomp
+  print RESET_COLOR
+  result = answer.empty? && default ? default : answer
+
+  # Rewrite the line with stars instead of the actual value
+  print "#{CURSOR_UP}#{CLEAR_LINE}"
+  display_value = result.empty? ? "" : "*" * result.length
+  puts "#{label}#{colon} #{INPUT_STYLE.render(display_value)}"
+
+  result
+end
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────────────────────────────────────
+
 FileUtils.chdir APP_ROOT do
-  puts "═" * 60
-  puts "  Rails Project Configuration"
-  puts "═" * 60
+  puts
+  header("Rails Project Configuration")
   puts
 
-  # Check if already configured
   if File.exist?(".configured")
-    puts "⚠️  This project appears to be already configured."
-    print "Do you want to reconfigure? (y/N): "
-    answer = $stdin.gets.chomp
-    unless answer.downcase == "y"
+    warning("⚠️  This project appears to be already configured.")
+    puts
+    unless confirm("Do you want to reconfigure?")
       puts "Exiting..."
       exit 0
     end
     puts
   end
 
-  # Get project name
   directory_name = project_name_from_directory
   suggested_name = to_class_name(directory_name)
 
-  puts "Current directory: #{directory_name}"
+  muted("Current directory: #{directory_name}")
+  puts
+
+  # ── Project Identity ──
+
+  section("Project Identity")
+
   project_name = prompt("Project name (CamelCase)", suggested_name)
-  project_name = to_class_name(project_name) # Ensure proper format
+  project_name = to_class_name(project_name)
   service_name = to_service_name(project_name)
 
-  puts "\n── Deployment Configuration... ──\n"
+  port = prompt("Development server port", "3000")
+
+  # ── Deployment Configuration ──
+
+  section("Deployment Configuration")
 
   domain = prompt("App domain (e.g., myapp.example.com)", "app.example.com")
-  server_ip = prompt("Server IP address", "192.168.0.1")
 
-  puts "\n── SMTP Configuration (optional)... ──\n"
-  puts "Press Enter to skip if you want to configure later.\n"
-
-  smtp_address = prompt("SMTP server address (e.g., smtp.postmarkapp.com)")
-  smtp_username = ""
-  smtp_password = ""
-  unless smtp_address.empty?
-    smtp_username = prompt("SMTP username")
-    smtp_password = prompt("SMTP password")
-  end
-
-  # Extract base domain from the full domain for mailer from address
   domain_parts = domain.split(".")
   base_domain = domain_parts.length > 2 ? domain_parts[-2..].join(".") : domain
-  mailer_from = prompt("Mailer from address", "noreply@#{base_domain}")
-
-  puts "\n── Renaming project from Template to #{project_name}... ──\n"
-
-  # Update config/application.rb
-  replace_in_file(
-    "config/application.rb",
-    "module Template",
-    "module #{project_name}"
-  )
-
-  # Update Rakefile
-  replace_in_file(
-    "Rakefile",
-    "Template::Application",
-    "#{project_name}::Application"
-  )
-
-  # Update config/environments/*.rb
-  %w[development test production].each do |env|
-    replace_in_file(
-      "config/environments/#{env}.rb",
-      "Template::Application",
-      "#{project_name}::Application"
-    )
-  end
-
-  # Update config.ru
-  replace_in_file(
-    "config.ru",
-    "Template::Application",
-    "#{project_name}::Application"
-  )
-
-  # Update bin/rails
-  replace_in_file(
-    "bin/rails",
-    'APP_PATH = File.expand_path("../config/application", __dir__)',
-    "APP_PATH = File.expand_path(\"../config/application\", __dir__)"
-  )
-
-  # Update package.json if exists
-  if File.exist?("package.json")
-    replace_in_file(
-      "package.json",
-      '"name": "template"',
-      "\"name\": \"#{directory_name}\""
-    )
-  end
-
-  puts "\n── Configuring deploy files... ──\n"
-
-  # Update config/deploy.yml
-  replace_in_file("config/deploy.yml", "service: template", "service: #{service_name}")
-  replace_in_file("config/deploy.yml", "image: template", "image: #{service_name}")
-  replace_in_file("config/deploy.yml", "host: app.example.com", "host: #{domain}")
-  replace_in_file("config/deploy.yml", "- 192.168.0.1", "- #{server_ip}")
-  replace_in_file("config/deploy.yml", "template_storage:/rails/storage", "#{service_name}_storage:/rails/storage")
-
-  # Update config/environments/production.rb
-  replace_in_file("config/environments/production.rb", 'host: "app.example.com"', "host: \"#{domain}\"")
-  replace_in_file("config/environments/production.rb", '"app.example.com"', "\"#{domain}\"")
-  replace_in_file("config/environments/production.rb", '/.*\.example\.com/', "/.*\\.#{Regexp.escape(base_domain).gsub('\\.', '\\.')}/")
-  # SMTP address comes from credentials - no file replacement needed
-
-  # Update Dockerfile comment
-  replace_in_file("Dockerfile", "docker build -t template", "docker build -t #{service_name}")
-  replace_in_file("Dockerfile", "--name template template", "--name #{service_name} #{service_name}")
-
-  puts "\n── Configuring first admin... ──\n"
 
   admin_email = prompt("Admin email address", "admin@#{base_domain}")
 
-  puts "\n── Configuring AI API Keys (optional)... ──\n"
-  puts "RubyLLM supports OpenAI and Anthropic (Claude) APIs."
-  puts "Press Enter to skip if you want to configure them later.\n"
+  # ── SMTP Configuration ──
 
-  openai_api_key = prompt("OpenAI API Key")
-  anthropic_api_key = prompt("Anthropic (Claude) API Key")
+  section("SMTP Production Configuration (optional)")
+  muted("Press Enter to skip if you want to configure later.")
+  puts
 
-  puts "\n── Configuring Litestream (optional)... ──\n"
-  puts "Litestream provides SQLite replication to S3-compatible storage."
-  puts "Press Enter to skip if you don't need it yet.\n"
+  smtp_address = prompt("SMTP server (e.g., smtp.postmarkapp.com)")
+  smtp_username = ""
+  smtp_password = ""
+  unless smtp_address.to_s.empty?
+    smtp_username = prompt("SMTP username")
+    smtp_password = secret_prompt("SMTP password")
+  end
 
-  replica_bucket = prompt("S3 bucket name (e.g., my-app-backups)")
-  replica_key_id = prompt("S3 Access Key ID") unless replica_bucket.empty?
-  replica_access_key = prompt("S3 Secret Access Key") unless replica_bucket.empty?
+  mailer_from = prompt("Mailer from address", "noreply@#{base_domain}")
+
+  # ── AI API Keys ──
+  # TODO: RubyLLM supports many providers (OpenAI, Anthropic, Gemini, DeepSeek, etc.)
+  # Allow user to select which providers to configure instead of hardcoding OpenAI/Anthropic.
+
+  section("AI API Keys (optional)")
+  muted("RubyLLM supports many AI providers. Here you can configure OpenAI and Anthropic.")
+  muted("For other providers, add their credentials manually: rails credentials:edit --environment development/production")
+  muted("You can use different keys for development and production.")
+  puts
+
+  muted("Development keys:")
+  openai_api_key_dev = secret_prompt("OpenAI API Key (development)")
+  anthropic_api_key_dev = secret_prompt("Anthropic API Key (development)")
+
+  puts
+  muted("Production keys (leave blank to use same as development):")
+  openai_api_key_prod = secret_prompt("OpenAI API Key (production)")
+  anthropic_api_key_prod = secret_prompt("Anthropic API Key (production)")
+
+  # Fall back to dev keys if prod keys are empty
+  openai_api_key_prod = openai_api_key_dev if openai_api_key_prod.to_s.empty?
+  anthropic_api_key_prod = anthropic_api_key_dev if anthropic_api_key_prod.to_s.empty?
+
+  # ── Litestream Configuration ──
+
+  section("Litestream Configuration (optional)")
+  muted("Litestream provides SQLite replication to S3-compatible storage.")
+  muted("Press Enter to skip if you don't need it yet.")
+  puts
+
+  replica_bucket = prompt("S3 bucket name")
+  replica_key_id = ""
+  replica_access_key = ""
+
+  unless replica_bucket.to_s.empty?
+    replica_key_id = secret_prompt("S3 Access Key ID")
+    replica_access_key = secret_prompt("S3 Secret Access Key")
+  end
+
+  # ── Apply Configuration ──
+
+  section("Renaming project from Template to #{project_name}")
+
+  replace_in_file("config/application.rb", "module Template", "module #{project_name}")
+  replace_in_file("Rakefile", "Template::Application", "#{project_name}::Application")
+
+  %w[development test production].each do |env|
+    replace_in_file("config/environments/#{env}.rb", "Template::Application", "#{project_name}::Application")
+  end
+
+  replace_in_file("config.ru", "Template::Application", "#{project_name}::Application")
+
+  if File.exist?("package.json")
+    replace_in_file("package.json", '"name": "template"', "\"name\": \"#{directory_name}\"")
+  end
+
+  replace_in_file("config/locales/en.yml", "app_name: Template", "app_name: #{project_name}")
+  replace_in_file("app/views/layouts/application.html.erb", "Template", project_name)
+  replace_in_file("app/views/pwa/manifest.json.erb", "Template", project_name)
+  replace_in_file("public/site.webmanifest", "Template", project_name)
+
+  section("Configuring deploy files")
+
+  replace_in_file("config/deploy.yml", "service: template", "service: #{service_name}")
+  replace_in_file("config/deploy.yml", "image: template", "image: #{service_name}")
+  replace_in_file("config/deploy.yml", "app.example.com", domain)
+  replace_in_file("config/deploy.yml", "template_storage:/rails/storage", "#{service_name}_storage:/rails/storage")
+
+  replace_in_file("config/environments/production.rb", 'host: "app.example.com"', "host: \"#{domain}\"")
+  replace_in_file("config/environments/production.rb", '"app.example.com"', "\"#{domain}\"")
+  replace_in_file("config/environments/production.rb", '/.*\.example\.com/', "/.*\\.#{Regexp.escape(base_domain).gsub('\\.', '\\.')}/")
+  replace_in_file("config/environments/production.rb", 'from: "noreply@app.example.com"', "from: \"#{mailer_from}\"")
+
+  replace_in_file("Dockerfile", "docker build -t template", "docker build -t #{service_name}")
+  replace_in_file("Dockerfile", "--name template template", "--name #{service_name} #{service_name}")
+
+  if port != "3000"
+    replace_in_file("Procfile.dev", "bin/rails server", "bin/rails server -p #{port}")
+    replace_in_file("config/environments/development.rb", "port: 3000", "port: #{port}")
+  end
 
   # Store config temporarily
   config_data = {
     "admin_email" => admin_email,
-    "mailer_from" => mailer_from,
     "smtp_address" => smtp_address,
     "smtp_username" => smtp_username,
     "smtp_password" => smtp_password,
-    "openai_api_key" => openai_api_key,
-    "anthropic_api_key" => anthropic_api_key,
+    "openai_api_key_dev" => openai_api_key_dev,
+    "anthropic_api_key_dev" => anthropic_api_key_dev,
+    "openai_api_key_prod" => openai_api_key_prod,
+    "anthropic_api_key_prod" => anthropic_api_key_prod,
     "replica_bucket" => replica_bucket,
     "replica_key_id" => replica_key_id,
     "replica_access_key" => replica_access_key
   }
   File.write(".configure_temp.yml", YAML.dump(config_data))
 
-  # Update seeds file with admin email
-  seeds_content = <<~RUBY
+  # Update seeds
+  File.write("db/seeds.rb", <<~RUBY)
     # This file should ensure the existence of records required to run the application in every environment (production,
     # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
     # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
@@ -201,38 +359,36 @@ FileUtils.chdir APP_ROOT do
     admin = Admin.find_or_create_by!(email: "#{admin_email}")
     puts "✓ Admin created: \#{admin.email}"
   RUBY
+  success("  ✓ Updated db/seeds.rb")
 
-  File.write("db/seeds.rb", seeds_content)
-  puts "  ✓ Updated db/seeds.rb"
+  section("Writing credentials")
 
-  puts "\n── Writing credentials... ──\n"
-
-  # Load config data
   config_data = YAML.load_file(".configure_temp.yml")
 
-  # Build credentials hash
-  credentials_hash = {
-    "secret_key_base" => SecureRandom.hex(64),
-    "mailer" => { "from_address" => config_data["mailer_from"] }
+  # Development credentials: secret_key_base + AI keys only
+  dev_credentials = {
+    "secret_key_base" => SecureRandom.hex(64)
   }
+  dev_credentials["openai"] = { "api_key" => config_data["openai_api_key_dev"] } unless config_data["openai_api_key_dev"].to_s.empty?
+  dev_credentials["anthropic"] = { "api_key" => config_data["anthropic_api_key_dev"] } unless config_data["anthropic_api_key_dev"].to_s.empty?
 
-  # Add SMTP credentials if provided
-  # Add SMTP credentials if provided
+  # Production credentials: secret_key_base + AI keys + SMTP + Litestream
+  prod_credentials = {
+    "secret_key_base" => SecureRandom.hex(64)
+  }
+  prod_credentials["openai"] = { "api_key" => config_data["openai_api_key_prod"] } unless config_data["openai_api_key_prod"].to_s.empty?
+  prod_credentials["anthropic"] = { "api_key" => config_data["anthropic_api_key_prod"] } unless config_data["anthropic_api_key_prod"].to_s.empty?
+
   if !config_data["smtp_address"].to_s.empty?
-    credentials_hash["smtp"] = {
+    prod_credentials["smtp"] = {
       "address" => config_data["smtp_address"],
       "username" => config_data["smtp_username"],
       "password" => config_data["smtp_password"]
     }
   end
 
-  # Add AI credentials if provided
-  credentials_hash["openai"] = { "api_key" => config_data["openai_api_key"] } unless config_data["openai_api_key"].to_s.empty?
-  credentials_hash["anthropic"] = { "api_key" => config_data["anthropic_api_key"] } unless config_data["anthropic_api_key"].to_s.empty?
-
-  # Add Litestream credentials if provided
-  if !config_data["replica_bucket"].to_s.empty?
-    credentials_hash["litestream"] = {
+  if !config_data["replica_bucket"].to_s.empty? && !config_data["replica_key_id"].to_s.empty?
+    prod_credentials["litestream"] = {
       "replica_bucket" => config_data["replica_bucket"],
       "replica_key_id" => config_data["replica_key_id"],
       "replica_access_key" => config_data["replica_access_key"]
@@ -242,19 +398,16 @@ FileUtils.chdir APP_ROOT do
   require "active_support/encrypted_configuration"
   FileUtils.mkdir_p("config/credentials")
 
-  # Write to both development and production credentials
-  %w[development production].each do |env|
+  { "development" => dev_credentials, "production" => prod_credentials }.each do |env, credentials_hash|
     key_path = "config/credentials/#{env}.key"
     credentials_path = "config/credentials/#{env}.yml.enc"
 
-    # Generate key if it doesn't exist
     unless File.exist?(key_path)
       key = ActiveSupport::EncryptedConfiguration.generate_key
       File.write(key_path, key)
-      puts "  ✓ Generated #{env} key: #{key_path}"
+      success("  ✓ Generated #{env} key: #{key_path}")
     end
 
-    # Write the credentials
     config = ActiveSupport::EncryptedConfiguration.new(
       config_path: credentials_path,
       key_path: key_path,
@@ -263,34 +416,40 @@ FileUtils.chdir APP_ROOT do
     )
 
     config.write(YAML.dump(credentials_hash))
-    puts "  ✓ #{env.capitalize} credentials updated: #{credentials_path}"
+    success("  ✓ #{env.capitalize} credentials updated: #{credentials_path}")
   end
 
-  # Clean up temp files
   File.delete(".configure_temp.yml") if File.exist?(".configure_temp.yml")
-
-  # Mark as configured
   File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nDomain: #{domain}\nAdmin: #{admin_email}\n")
 
-  puts "\n" + "═" * 60
-  puts "  ✓ Configuration Complete!"
-  puts "═" * 60
+  # ── Summary ──
+
   puts
-  puts "Project: #{project_name}"
-  puts "Domain:  #{domain}"
-  puts "Server:  #{server_ip}"
-  puts "Admin:   #{admin_email}"
+  header("✓ Configuration Complete!")
   puts
-  puts "Running bin/setup to install dependencies and setup database..."
+  muted("Running bin/setup to install dependencies and setup database...")
   puts
 
-  # Run bin/setup (after credentials are written)
   system!("bin/setup")
 
-  puts "\n" + "═" * 60
-  puts "  ✓ All Done!"
-  puts "═" * 60
+  section("Seeding database")
+  system!("bin/rails db:seed")
+
+  section("Committing configuration")
+  commit_message = <<~MSG
+    Configure project: #{project_name}
+
+    Domain: #{domain}
+    Admin: #{admin_email}
+  MSG
+  system("git add -A")
+  system("git", "commit", "-m", commit_message.strip)
+  success("  ✓ Configuration committed")
+
   puts
+  header("✓ All Done!")
+  puts
+
   puts "Next steps:"
   puts "  1. Run: bin/dev"
   puts "  2. Visit: /admins/session/new"

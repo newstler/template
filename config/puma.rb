@@ -40,5 +40,13 @@ plugin :solid_queue if ENV["SOLID_QUEUE_IN_PUMA"]
 # In other environments, only set the PID file if requested.
 pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
 
-# Run litestream only in production.
-plugin :litestream if ENV.fetch("RAILS_ENV", "production") == "production"
+# Run litestream only in production when configured via credentials.
+if ENV.fetch("RAILS_ENV", "production") == "production"
+  begin
+    if Rails.application.credentials.dig(:litestream, :replica_bucket).present?
+      plugin :litestream
+    end
+  rescue => e
+    # Credentials not available or not configured - skip litestream
+  end
+end
