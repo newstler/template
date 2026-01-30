@@ -2,6 +2,8 @@ class User < ApplicationRecord
   include Costable
 
   has_many :chats, dependent: :destroy
+  has_many :memberships, dependent: :destroy
+  has_many :teams, through: :memberships
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :name, presence: true
@@ -21,6 +23,22 @@ class User < ApplicationRecord
   def regenerate_api_key!
     generate_api_key
     save!
+  end
+
+  def membership_for(team)
+    memberships.find_by(team: team)
+  end
+
+  def member_of?(team)
+    memberships.exists?(team: team)
+  end
+
+  def admin_of?(team)
+    memberships.exists?(team: team, role: %w[admin owner])
+  end
+
+  def owner_of?(team)
+    memberships.exists?(team: team, role: "owner")
   end
 
   private

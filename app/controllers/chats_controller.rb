@@ -8,22 +8,22 @@ class ChatsController < ApplicationController
   rate_limit to: 10, within: 1.minute, name: "chats/create", only: :create
 
   def index
-    @chats = current_user.chats.recent
+    @chats = current_user.chats.where(team: current_team).recent
   end
 
   def new
-    @chat = current_user.chats.build
+    @chat = current_user.chats.build(team: current_team)
     @selected_model = params[:model]
   end
 
   def create
     return unless prompt.present? || attachments.present?
 
-    @chat = current_user.chats.create!(model: model)
+    @chat = current_user.chats.create!(model: model, team: current_team)
     attachment_paths = store_attachments_temporarily(attachments)
     ChatResponseJob.perform_later(@chat.id, prompt, attachment_paths)
 
-    redirect_to @chat
+    redirect_to team_chat_path(current_team, @chat)
   end
 
   def show
@@ -33,7 +33,7 @@ class ChatsController < ApplicationController
   private
 
   def set_chat
-    @chat = current_user.chats.find(params[:id])
+    @chat = current_user.chats.where(team: current_team).find(params[:id])
   end
 
   def model

@@ -64,18 +64,23 @@ npx @anthropic-ai/mcp-inspector
 
 | Tool | Description | Auth Required |
 |------|-------------|---------------|
-| `list_chats` | List user's chats | User |
-| `show_chat` | Get chat with messages | User |
-| `create_chat` | Create new chat | User |
-| `update_chat` | Change chat's model | User |
-| `delete_chat` | Delete a chat | User |
-| `list_messages` | List chat messages | User |
-| `create_message` | Send message, get response | User |
+| `list_teams` | List user's teams | User |
+| `show_team` | Get team details with members | User |
+| `invite_member` | Invite user to team | User + Team + Admin |
+| `list_chats` | List user's chats in team | User + Team |
+| `show_chat` | Get chat with messages | User + Team |
+| `create_chat` | Create new chat | User + Team |
+| `update_chat` | Change chat's model | User + Team |
+| `delete_chat` | Delete a chat | User + Team |
+| `list_messages` | List chat messages | User + Team |
+| `create_message` | Send message, get response | User + Team |
 | `list_models` | List available AI models | None |
 | `show_model` | Get model details | None |
 | `refresh_models` | Sync models from providers | Admin |
 | `show_current_user` | Get current user info | User |
 | `update_current_user` | Update profile | User |
+
+**Note:** "User + Team" means both `x-api-key` and `x-team-slug` headers required.
 
 ### Available Resources
 
@@ -96,6 +101,7 @@ app/
 │   ├── chats/                   # Chat CRUD tools
 │   ├── messages/                # Message tools
 │   ├── models/                  # Model tools
+│   ├── teams/                   # Team management tools
 │   └── users/                   # User tools
 └── resources/
     ├── application_resource.rb  # Base class
@@ -326,7 +332,7 @@ one:
 
 Magic links (passwordless):
 
-- **Users**: `/session/new` → auto-create on first login → `/home`
+- **Users**: `/session/new` → auto-create on first login → team context
 - **Admins**: `/admins/session/new` → must exist in DB → `/madmin`
 - Separate interfaces, no links between them
 
@@ -338,7 +344,90 @@ user.signed_id(purpose: :magic_link, expires_in: 15.minutes)
 User.find_signed!(params[:token], purpose: :magic_link)
 ```
 
-Helpers: `current_user`, `current_admin`, `authenticate_user!`, `authenticate_admin!`
+Helpers: `current_user`, `current_admin`, `current_team`, `current_membership`, `authenticate_user!`, `authenticate_admin!`
+
+## Multitenancy
+
+Users belong to teams. All user-facing routes are team-scoped under `/t/:team_slug/...`.
+
+### Configuration
+
+Toggle via initializer (`config/initializers/multitenancy.rb`):
+
+```ruby
+Rails.configuration.x.multi_tenant = true   # Users can create/join multiple teams
+Rails.configuration.x.multi_tenant = false  # Single-tenant mode (default)
+```
+
+Configure during setup with `bin/configure`.
+
+### URL Structure
+
+```
+/t/:team_slug/           → Team home
+/t/:team_slug/chats      → Team's chats
+/t/:team_slug/members    → Team members (admin only for invite/remove)
+/t/:team_slug/settings   → Team settings (admin only)
+/teams                   → Team selection (multi-tenant only)
+```
+
+### Models
+
+```
+Team → has_many :memberships, has_many :users (through), has_many :chats
+Membership → belongs_to :user, belongs_to :team (role: owner/admin/member)
+User → has_many :memberships, has_many :teams (through)
+Chat → belongs_to :user, belongs_to :team
+```
+
+### Access Control
+
+```ruby
+# In controllers
+current_team           # The team from URL context
+current_membership     # User's membership in current team
+require_team_admin!    # Before action for admin-only routes
+
+# In models
+user.member_of?(team)  # Check membership
+user.admin_of?(team)   # Check admin/owner role
+user.owner_of?(team)   # Check owner role
+membership.admin?      # admin or owner
+membership.owner?      # owner only
+```
+
+### MCP Team Context
+
+Provide `x-team-slug` header for team-scoped operations:
+
+```bash
+curl -X POST -H "Content-Type: application/json" \
+  -H "x-api-key: your_api_key" \
+  -H "x-team-slug: my-team" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_chats","arguments":{}},"id":1}' \
+  http://localhost:3000/mcp/messages
+```
+
+### Single-Tenant Mode
+
+When `multi_tenant = false`:
+- First user creates a team automatically
+- Subsequent users auto-join that team as members
+- Team switching UI is hidden
+- `/teams` redirects to the single team
+
+### Team Invitations
+
+Reuses magic link flow with team context:
+
+```ruby
+# Generate invitation link
+token = user.signed_id(purpose: :magic_link, expires_in: 7.days)
+invite_url = verify_magic_link_url(token: token, team: team.slug, invited_by: inviter.id)
+
+# Link creates membership on verification
+UserMailer.team_invitation(user, team, inviter, invite_url).deliver_later
+```
 
 ## RubyLLM AI Chat
 

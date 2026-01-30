@@ -1,0 +1,21 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <%= link_to t(".edit_button"), edit_team_settings_path(current_team), class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+  </div>
+
+  <div class="card-bg p-6">
+    <dl class="space-y-6">
+      <div>
+        <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".name_label") %></dt>
+        <dd class="text-lg text-dark-100"><%= current_team.name %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".slug_label") %></dt>
+        <dd class="text-lg text-dark-100 font-mono">/t/<%= current_team.slug %></dd>
+      </div>
+    </dl>
+  </div>
+</div>

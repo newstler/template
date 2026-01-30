@@ -20,3 +20,13 @@ en:
       instruction: 'Click the button below to sign in to your account:'
       link_instruction: 'Or copy and paste this link into your browser:'
       subject: Your magic link to sign in
+    team_invitation:
+      button: Join Team
+      expiry: This link will expire in 7 days.
+      greeting: Hi %{name},
+      heading: You've been invited to join %{team_name}
+      ignore: If you didn't expect this invitation, you can safely ignore this email.
+      instruction: "%{inviter_name} has invited you to join %{team_name}. Click the
+        button below to accept:"
+      link_instruction: 'Or copy and paste this link into your browser:'
+      subject: You've been invited to join %{team_name}

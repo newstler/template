@@ -6,7 +6,7 @@
 
 <% if current_admin %>
   <p>
-    <%= button_to t(".refresh"), models_refresh_path, method: :post %>
+    <%= button_to t(".refresh"), team_models_refresh_path(current_team), method: :post %>
   </p>
 <% end %>
 
@@ -27,4 +27,4 @@
   </table>
 </div>
 
-<%= link_to t(".back"), chats_path %>
+<%= link_to t(".back"), team_chats_path(current_team) %>

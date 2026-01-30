@@ -28,6 +28,19 @@ class ApplicationTool < ActionTool::Base
     @current_user = User.find_by(api_key: api_key) if api_key.present?
   end
 
+  # Get current team from x-team-slug header
+  def current_team
+    return @current_team if defined?(@current_team)
+
+    slug = headers["x-team-slug"]
+
+    @current_team = if slug.present?
+      current_user&.teams&.find_by(slug: slug)
+    elsif !Team.multi_tenant?
+      Team.first
+    end
+  end
+
   # Get current admin from session (for browser-based requests)
   # Note: Session-based admin auth may not work via MCP - use API keys instead
   def current_admin
@@ -65,6 +78,15 @@ class ApplicationTool < ActionTool::Base
   # Require admin authentication - raise if not authenticated
   def require_admin!
     raise FastMcp::Tool::InvalidArgumentsError, "Admin authentication required." unless admin_authenticated?
+  end
+
+  # Require team context - raise if no team
+  def require_team!
+    require_authentication!
+
+    unless current_team && current_user.member_of?(current_team)
+      raise FastMcp::Tool::InvalidArgumentsError, "Team context required. Provide x-team-slug header."
+    end
   end
 
   # Standard success response format

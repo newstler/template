@@ -12,7 +12,7 @@
 <% end %>
 
 <p>
-  <%= link_to t(".start_chat"), new_chat_path(model: @model.model_id) %> |
-  <%= link_to t(".all_models"), models_path %> |
-  <%= link_to t(".back"), chats_path %>
+  <%= link_to t(".start_chat"), new_team_chat_path(current_team, model: @model.model_id) %> |
+  <%= link_to t(".all_models"), team_models_path(current_team) %> |
+  <%= link_to t(".back"), team_chats_path(current_team) %>
 </p>

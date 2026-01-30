@@ -1,12 +1,5 @@
 Rails.application.routes.draw do
   draw :madmin
-  resources :chats do
-    resources :messages, only: [ :create ]
-  end
-  resources :models, only: [ :index, :show ]
-  resource :models_refresh, only: [ :create ], controller: "models/refreshes"
-  # Redirect /home to root for clean URLs
-  get "home", to: redirect("/", status: 301)
 
   # User authentication (magic link - creates user on first use)
   resource :session, only: [ :new, :create, :destroy ]
@@ -16,6 +9,23 @@ Rails.application.routes.draw do
   namespace :admins do
     resource :session, only: [ :new, :create, :destroy ]
     get "auth/:token", to: "sessions#verify", as: :verify_magic_link
+  end
+
+  # Team management (multi-tenant only routes for listing/creating teams)
+  resources :teams, only: [ :index, :new, :create ], param: :slug
+
+  # Team-scoped routes
+  scope "/t/:team_slug", as: :team do
+    root "home#index", as: :root
+    resources :chats do
+      resources :messages, only: [ :create ]
+    end
+    resources :models, only: [ :index, :show ]
+    resource :models_refresh, only: [ :create ], controller: "models/refreshes"
+
+    # Team settings (multi-tenant only)
+    resource :settings, only: [ :show, :edit, :update ], controller: "teams/settings"
+    resources :members, only: [ :index, :new, :create, :destroy ], controller: "teams/members"
   end
 
   # Madmin admin panel (requires admin authentication)
@@ -32,6 +42,6 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  root "home#index"
+  # Root redirects to teams index (which handles single-team redirect)
+  root "teams#index"
 end

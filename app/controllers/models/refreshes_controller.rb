@@ -3,6 +3,6 @@ class Models::RefreshesController < ApplicationController
 
   def create
     Model.refresh!
-    redirect_to models_path, notice: t("controllers.models.refreshes.create.notice")
+    redirect_to team_models_path(current_team), notice: t("controllers.models.refreshes.create.notice")
   end
 end

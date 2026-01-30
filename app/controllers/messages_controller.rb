@@ -16,14 +16,14 @@ class MessagesController < ApplicationController
 
     respond_to do |format|
       format.turbo_stream
-      format.html { redirect_to @chat }
+      format.html { redirect_to team_chat_path(current_team, @chat) }
     end
   end
 
   private
 
   def set_chat
-    @chat = current_user.chats.find(params[:chat_id])
+    @chat = current_user.chats.where(team: current_team).find(params[:chat_id])
   end
 
   def content

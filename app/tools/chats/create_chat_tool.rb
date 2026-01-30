@@ -16,14 +16,14 @@ module Chats
     end
 
     def call(model_id:, initial_message: nil)
-      require_authentication!
+      require_team!
 
       model = Model.enabled.find_by(id: model_id)
       return error_response("Model not found or not enabled", code: "invalid_model") unless model
 
       chat = nil
       with_current_user do
-        chat = current_user.chats.create!(model: model)
+        chat = current_user.chats.create!(model: model, team: current_team)
 
         if initial_message.present?
           chat.ask(initial_message)

@@ -9,4 +9,16 @@ class UserMailer < ApplicationMailer
       subject: t(".subject")
     )
   end
+
+  def team_invitation(user, team, invited_by, invite_url)
+    @user = user
+    @team = team
+    @invited_by = invited_by
+    @invite_url = invite_url
+
+    mail(
+      to: @user.email,
+      subject: t(".subject", team_name: @team.name)
+    )
+  end
 end

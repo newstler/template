@@ -6,7 +6,7 @@
       <h1 class="text-2xl font-bold text-dark-50"><%= t(".heading") %></h1>
       <p class="text-dark-400 mt-1"><%= t(".subheading") %></p>
     </div>
-    <%= link_to new_chat_path, class: "inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-lg shadow-blue-500/25" do %>
+    <%= link_to new_team_chat_path(current_team), class: "inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-lg shadow-blue-500/25" do %>
       <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
       <%= t(".new_chat") %>
     <% end %>
@@ -15,7 +15,7 @@
   <div id="chats" class="space-y-3">
     <% if @chats.any? %>
       <% @chats.each do |chat| %>
-        <%= link_to chat, class: "block card-bg p-4 hover:bg-dark-800 transition-all group" do %>
+        <%= link_to team_chat_path(current_team, chat), class: "block card-bg p-4 hover:bg-dark-800 transition-all group" do %>
           <div class="flex items-start justify-between">
             <div class="flex-1 min-w-0">
               <div class="flex items-center gap-3 mb-1">
@@ -51,7 +51,7 @@
         </div>
         <h3 class="text-lg font-medium text-dark-100 mb-2"><%= t(".empty.heading") %></h3>
         <p class="text-dark-400 mb-6"><%= t(".empty.description") %></p>
-        <%= link_to new_chat_path, class: "inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium" do %>
+        <%= link_to new_team_chat_path(current_team), class: "inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium" do %>
           <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
           <%= t(".empty.cta") %>
         <% end %>

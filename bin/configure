@@ -268,6 +268,17 @@ FileUtils.chdir APP_ROOT do
 
   mailer_from = prompt("Mailer from address", "noreply@#{base_domain}")
 
+  # ── Multitenancy ──
+
+  section("Multitenancy")
+
+  multi_tenant = confirm("Enable multitenancy? (users can create/join multiple teams)")
+
+  # Update initializer file directly
+  initializer_path = "config/initializers/multitenancy.rb"
+  File.write(initializer_path, "Rails.configuration.x.multi_tenant = #{multi_tenant}\n")
+  success("  ✓ Updated #{initializer_path}")
+
   # ── AI API Keys ──
   # TODO: RubyLLM supports many providers (OpenAI, Anthropic, Gemini, DeepSeek, etc.)
   # Allow user to select which providers to configure instead of hardcoding OpenAI/Anthropic.

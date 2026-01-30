@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded UUIDv7s to maintain referential integrity across fixtures.
+
+one:
+  id: 01961a2a-c0de-7000-8000-000000000501
+  name: Team One
+  slug: team-one
+
+two:
+  id: 01961a2a-c0de-7000-8000-000000000502
+  name: Team Two
+  slug: team-two

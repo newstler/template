@@ -12,7 +12,7 @@
   <%= render "form", chat: @chat %>
 
   <div class="text-center mt-6">
-    <%= link_to chats_path, class: "inline-flex items-center gap-2 text-dark-400 hover:text-dark-200 transition-colors" do %>
+    <%= link_to team_chats_path(current_team), class: "inline-flex items-center gap-2 text-dark-400 hover:text-dark-200 transition-colors" do %>
       <%= inline_svg "icons/chevron-left.svg", class: "w-4 h-4" %>
       <%= t(".back") %>
     <% end %>

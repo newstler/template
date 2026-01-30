@@ -1,0 +1,38 @@
+---
+en:
+  teams:
+    index:
+      create_team: Create New Team
+      heading: Select a Team
+    members:
+      index:
+        admin: Admin
+        heading: Team Members
+        invite_button: Invite Member
+        invited_by: Invited by
+        member: Member
+        owner: Owner
+        remove: Remove
+        role: Role
+      new:
+        description: We'll send them an email invitation to join your team.
+        email_label: Email Address
+        email_placeholder: colleague@example.com
+        heading: Invite Team Member
+        submit: Send Invitation
+    new:
+      heading: Create a New Team
+      name_label: Team Name
+      name_placeholder: Enter team name
+      submit: Create Team
+    settings:
+      edit:
+        heading: Edit Team Settings
+        name_label: Team Name
+        name_placeholder: Enter team name
+        submit: Save Changes
+      show:
+        edit_button: Edit
+        heading: Team Settings
+        name_label: Team Name
+        slug_label: Team URL

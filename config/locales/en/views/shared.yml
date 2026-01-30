@@ -5,5 +5,8 @@ en:
       chats: Chats
       collapse: Collapse sidebar
       home: Home
+      members: Members
       new_chat: New Chat
+      switch_team: Switch Team
+      team_settings: Team Settings
       user: User

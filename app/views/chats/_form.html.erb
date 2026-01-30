@@ -1,4 +1,4 @@
-<%= form_with(model: chat, url: chats_path, data: { controller: "chat-input", chat_input_target: "form" }) do |form| %>
+<%= form_with(model: chat, url: team_chats_path(current_team), data: { controller: "chat-input", chat_input_target: "form" }) do |form| %>
   <% if chat.errors.any? %>
     <div class="bg-red-500/10 text-red-300 px-4 py-3 rounded-lg mb-4">
       <ul class="list-disc list-inside text-sm">

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_01_27_223309) do
+ActiveRecord::Schema[8.2].define(version: 2026_01_30_163319) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -50,11 +50,26 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_27_223309) do
     t.datetime "created_at", null: false
     t.integer "messages_count", default: 0, null: false
     t.string "model_id"
+    t.string "team_id"
     t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.string "user_id", null: false
     t.index ["model_id"], name: "index_chats_on_model_id"
+    t.index ["team_id"], name: "index_chats_on_team_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "memberships", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "invited_by_id"
+    t.string "role", default: "member", null: false
+    t.string "team_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_id", null: false
+    t.index ["invited_by_id"], name: "index_memberships_on_invited_by_id"
+    t.index ["team_id"], name: "index_memberships_on_team_id"
+    t.index ["user_id", "team_id"], name: "index_memberships_on_user_id_and_team_id", unique: true
+    t.index ["user_id"], name: "index_memberships_on_user_id"
   end
 
   create_table "messages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -102,6 +117,14 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_27_223309) do
     t.index ["provider"], name: "index_models_on_provider"
   end
 
+  create_table "teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.string "slug", null: false
+    t.datetime "updated_at", null: false
+    t.index ["slug"], name: "index_teams_on_slug", unique: true
+  end
+
   create_table "tool_calls", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.json "arguments", default: {}
     t.datetime "created_at", null: false
@@ -129,7 +152,11 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_27_223309) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "chats", "models"
+  add_foreign_key "chats", "teams"
   add_foreign_key "chats", "users"
+  add_foreign_key "memberships", "teams"
+  add_foreign_key "memberships", "users"
+  add_foreign_key "memberships", "users", column: "invited_by_id"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
   add_foreign_key "tool_calls", "messages"

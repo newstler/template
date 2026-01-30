@@ -1,0 +1,18 @@
+<h1><%= t(".heading", team_name: @team.name) %></h1>
+
+<p><%= t(".greeting", name: @user.name) %></p>
+
+<p><%= t(".instruction", inviter_name: @invited_by.name, team_name: @team.name) %></p>
+
+<p>
+  <a href="<%= @invite_url %>" style="display: inline-block; padding: 12px 24px; background-color: #4F46E5; color: white; text-decoration: none; border-radius: 6px;">
+    <%= t(".button") %>
+  </a>
+</p>
+
+<p><%= t(".link_instruction") %></p>
+<p><%= @invite_url %></p>
+
+<p><small><%= t(".expiry") %></small></p>
+
+<p><small><%= t(".ignore") %></small></p>

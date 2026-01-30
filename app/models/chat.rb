@@ -2,6 +2,7 @@ class Chat < ApplicationRecord
   include Costable
 
   belongs_to :user
+  belongs_to :team, optional: true
   belongs_to :model, optional: true, counter_cache: :chats_count
   acts_as_chat messages_foreign_key: :chat_id
 
