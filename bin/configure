@@ -52,6 +52,8 @@ WHITE = "#FAFAFA"
 ORANGE = "#FF9F1C"
 CYAN = "#00D9FF"
 HOTPINK = "#FF1493"
+GOLD = "#FFD700"
+YELLOW = "#FFFF00"
 
 HEADER_STYLE = Lipgloss::Style.new
   .border(:rounded)
@@ -96,7 +98,7 @@ DEFAULT_STYLE = Lipgloss::Style.new
   .foreground(MUTED)
 
 INPUT_STYLE = Lipgloss::Style.new
-  .foreground("#FFD700")
+  .foreground(GOLD)
 
 TIP_STYLE = Lipgloss::Style.new
   .foreground(HOTPINK)
@@ -131,8 +133,16 @@ end
 # ANSI escape codes for cursor control
 CURSOR_UP = "\e[1A"
 CLEAR_LINE = "\e[2K"
-YELLOW_INPUT = "\e[33m"
 RESET_COLOR = "\e[0m"
+
+# Convert hex color to ANSI true color escape sequence
+def ansi_color(hex)
+  hex = hex.delete("#")
+  r = hex[0..1].to_i(16)
+  g = hex[2..3].to_i(16)
+  b = hex[4..5].to_i(16)
+  "\e[38;2;#{r};#{g};#{b}m"
+end
 
 def prompt(question, default = nil)
   label = PROMPT_STYLE.render(question)
@@ -140,9 +150,9 @@ def prompt(question, default = nil)
 
   if default
     default_hint = DEFAULT_STYLE.render(" [#{default}]")
-    print "#{label}#{default_hint}#{colon} #{YELLOW_INPUT}"
+    print "#{label}#{default_hint}#{colon} #{ansi_color(YELLOW)}"
   else
-    print "#{label}#{colon} #{YELLOW_INPUT}"
+    print "#{label}#{colon} #{ansi_color(YELLOW)}"
   end
 
   answer = $stdin.gets.chomp
@@ -160,7 +170,7 @@ end
 def confirm(question)
   label = PROMPT_STYLE.render(question)
   hint = DEFAULT_STYLE.render(" (y/N):")
-  print "#{label}#{hint} #{YELLOW_INPUT}"
+  print "#{label}#{hint} #{ansi_color(YELLOW)}"
 
   answer = $stdin.gets.chomp
   print RESET_COLOR
@@ -179,9 +189,9 @@ def secret_prompt(question, default = nil)
 
   if default
     default_hint = DEFAULT_STYLE.render(" [#{default}]")
-    print "#{label}#{default_hint}#{colon} #{YELLOW_INPUT}"
+    print "#{label}#{default_hint}#{colon} #{ansi_color(YELLOW)}"
   else
-    print "#{label}#{colon} #{YELLOW_INPUT}"
+    print "#{label}#{colon} #{ansi_color(YELLOW)}"
   end
 
   answer = $stdin.gets.chomp
