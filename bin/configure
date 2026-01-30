@@ -422,18 +422,26 @@ FileUtils.chdir APP_ROOT do
   File.delete(".configure_temp.yml") if File.exist?(".configure_temp.yml")
   File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nDomain: #{domain}\nAdmin: #{admin_email}\n")
 
-  # ── Summary ──
+  # ── Git Remote ──
+
+  section("Configuring git remote")
+
+  # Rename origin to template (keep reference to template repo)
+  if system("git remote get-url origin > /dev/null 2>&1")
+    system("git remote rename origin template")
+    success("  ✓ Renamed origin to template")
+  end
 
   puts
-  header("✓ Configuration Complete!")
-  puts
-  muted("Running bin/setup to install dependencies and setup database...")
-  puts
+  muted("Enter your repository URL to set as origin (or press Enter to skip):")
+  repo_url = prompt("Repository URL (e.g., git@github.com:user/repo.git)")
 
-  system!("bin/setup")
+  unless repo_url.to_s.empty?
+    system("git", "remote", "add", "origin", repo_url)
+    success("  ✓ Set origin to #{repo_url}")
+  end
 
-  section("Seeding database")
-  system!("bin/rails db:seed")
+  # ── Commit ──
 
   section("Committing configuration")
   commit_message = <<~MSG
@@ -443,18 +451,13 @@ FileUtils.chdir APP_ROOT do
     Admin: #{admin_email}
   MSG
   system("git add -A")
-  system("git", "commit", "-m", commit_message.strip)
-  success("  ✓ Configuration committed")
+  if system("git", "commit", "-m", commit_message.strip)
+    success("  ✓ Configuration committed")
+  else
+    muted("  (no changes to commit)")
+  end
 
   puts
-  header("✓ All Done!")
-  puts
-
-  puts "Next steps:"
-  puts "  1. Run: bin/dev"
-  puts "  2. Visit: /admins/session/new"
-  puts "  3. Request magic link for: #{admin_email}"
-  puts "  4. Check your email and click the magic link"
-  puts "  5. Access Madmin admin panel at: /madmin"
+  header("✓ Configuration Complete!")
   puts
 end
