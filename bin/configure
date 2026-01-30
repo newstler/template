@@ -459,7 +459,7 @@ FileUtils.chdir APP_ROOT do
 
   # Show tip about updating from template
   puts
-  tip("💡 TIP: The original template is now available as 'template' remote.")
+  tip("💡  TIP: The original template is now available as 'template' remote.")
   tip("   To pull future updates and new features from the template:")
   tip("")
   tip("   git fetch template")
