@@ -6,19 +6,20 @@ require "tools/mcp_test_helper"
 module Messages
   class ListMessagesToolTest < McpToolTestCase
     setup do
+      @team = teams(:one)
       @user = users(:one)
       @chat = chats(:one)
     end
 
-    test "requires authentication" do
+    test "requires team API key" do
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Messages::ListMessagesTool, chat_id: @chat.id)
       end
-      assert_match(/Authentication required/, error.message)
+      assert_match(/x-api-key/, error.message)
     end
 
     test "returns messages for chat" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Messages::ListMessagesTool, chat_id: @chat.id)
 
@@ -27,7 +28,7 @@ module Messages
     end
 
     test "respects limit parameter" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Messages::ListMessagesTool, chat_id: @chat.id, limit: 1)
 
@@ -36,7 +37,7 @@ module Messages
     end
 
     test "returns error for non-existent chat" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Messages::ListMessagesTool, chat_id: "nonexistent")
 
@@ -45,7 +46,7 @@ module Messages
     end
 
     test "cannot access other user's chat messages" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
       other_chat = chats(:two)
 
       result = call_tool(Messages::ListMessagesTool, chat_id: other_chat.id)

@@ -32,7 +32,12 @@ en:
         name_placeholder: Enter team name
         submit: Save Changes
       show:
+        api_key_description: Use this API key to authenticate MCP tool requests for
+          this team.
+        api_key_heading: API Key
         edit_button: Edit
         heading: Team Settings
         name_label: Team Name
+        regenerate_api_key: Regenerate
+        regenerate_confirm: Are you sure? This will invalidate the current API key.
         slug_label: Team URL

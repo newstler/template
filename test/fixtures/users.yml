@@ -7,10 +7,8 @@ one:
   id: 01961a2a-c0de-7000-8000-000000000001
   email: user1@example.com
   name: User One
-  api_key: test_api_key_user_one_12345678901234567890123456789012
 
 two:
   id: 01961a2a-c0de-7000-8000-000000000002
   email: user2@example.com
   name: User Two
-  api_key: test_api_key_user_two_12345678901234567890123456789012

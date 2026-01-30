@@ -6,18 +6,19 @@ require "tools/mcp_test_helper"
 module Users
   class UpdateCurrentUserToolTest < McpToolTestCase
     setup do
+      @team = teams(:one)
       @user = users(:one)
     end
 
-    test "requires authentication" do
+    test "requires team API key" do
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Users::UpdateCurrentUserTool, name: "New Name")
       end
-      assert_match(/Authentication required/, error.message)
+      assert_match(/x-api-key/, error.message)
     end
 
     test "updates user name" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Users::UpdateCurrentUserTool, name: "Updated Name")
 
@@ -28,7 +29,7 @@ module Users
     end
 
     test "returns error when no updates provided" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Users::UpdateCurrentUserTool)
 

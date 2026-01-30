@@ -2,19 +2,22 @@
 
 # Helper module for testing MCP tools and resources
 module McpTestHelper
-  # Store current test user/admin for authentication
-  attr_accessor :mcp_test_user, :mcp_test_admin
+  # Store current test team/user/admin for authentication
+  attr_accessor :mcp_test_team, :mcp_test_user, :mcp_test_admin
 
   # Set up request context for MCP tools/resources
-  # @param user [User, nil] User to authenticate with
+  # @param team [Team, nil] Team to authenticate with (via API key)
+  # @param user [User, nil] User to authenticate with (via email header)
   # @param admin [Admin, nil] Admin to authenticate with
-  def mock_mcp_request(user: nil, admin: nil)
+  def mock_mcp_request(team: nil, user: nil, admin: nil)
+    @mcp_test_team = team
     @mcp_test_user = user
     @mcp_test_admin = admin
   end
 
   # Clear request context after test
   def clear_mcp_request
+    @mcp_test_team = nil
     @mcp_test_user = nil
     @mcp_test_admin = nil
   end
@@ -28,7 +31,8 @@ module McpTestHelper
 
     # Inject headers for authentication (fast-mcp uses lowercase with dashes)
     headers = {}
-    headers["x-api-key"] = @mcp_test_user.api_key if @mcp_test_user&.api_key
+    headers["x-api-key"] = @mcp_test_team.api_key if @mcp_test_team&.api_key
+    headers["x-user-email"] = @mcp_test_user.email if @mcp_test_user&.email
 
     # Override headers method on this instance
     tool.define_singleton_method(:headers) { headers }

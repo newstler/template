@@ -47,5 +47,7 @@ en:
         destroy:
           removed: "%{name} has been removed from the team"
       settings:
+        regenerate_api_key:
+          notice: API key regenerated successfully
         update:
           notice: Team settings updated

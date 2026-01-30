@@ -6,19 +6,20 @@ require "tools/mcp_test_helper"
 module Chats
   class ShowChatToolTest < McpToolTestCase
     setup do
+      @team = teams(:one)
       @user = users(:one)
       @chat = chats(:one)
     end
 
-    test "requires authentication" do
+    test "requires team API key" do
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Chats::ShowChatTool, id: @chat.id)
       end
-      assert_match(/Authentication required/, error.message)
+      assert_match(/x-api-key/, error.message)
     end
 
     test "returns chat with messages when authenticated" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::ShowChatTool, id: @chat.id)
 
@@ -28,7 +29,7 @@ module Chats
     end
 
     test "returns chat without messages when include_messages is false" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::ShowChatTool, id: @chat.id, include_messages: false)
 
@@ -38,7 +39,7 @@ module Chats
     end
 
     test "returns error for non-existent chat" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::ShowChatTool, id: "nonexistent")
 
@@ -47,7 +48,7 @@ module Chats
     end
 
     test "returns error for other user's chat" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
       other_chat = chats(:two)
 
       result = call_tool(Chats::ShowChatTool, id: other_chat.id)

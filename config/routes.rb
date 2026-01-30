@@ -24,7 +24,9 @@ Rails.application.routes.draw do
     resource :models_refresh, only: [ :create ], controller: "models/refreshes"
 
     # Team settings (multi-tenant only)
-    resource :settings, only: [ :show, :edit, :update ], controller: "teams/settings"
+    resource :settings, only: [ :show, :edit, :update ], controller: "teams/settings" do
+      patch :regenerate_api_key
+    end
     resources :members, only: [ :index, :new, :create, :destroy ], controller: "teams/members"
   end
 

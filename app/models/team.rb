@@ -7,6 +7,7 @@ class Team < ApplicationRecord
   validates :slug, presence: true, uniqueness: true
 
   before_validation :generate_slug, on: :create
+  before_create :generate_api_key
 
   class << self
     def multi_tenant?
@@ -22,7 +23,15 @@ class Team < ApplicationRecord
     chats.sum(:total_cost)
   end
 
+  def regenerate_api_key!
+    update!(api_key: SecureRandom.hex(32))
+  end
+
   private
+
+  def generate_api_key
+    self.api_key ||= SecureRandom.hex(32)
+  end
 
   def generate_slug
     return if slug.present?

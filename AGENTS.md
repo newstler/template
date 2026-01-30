@@ -32,16 +32,29 @@ Uses **Streamable HTTP** transport (recommended by MCP spec):
 
 ### Authentication
 
-API key authentication via `x-api-key` header (lowercase):
+**Team-level API key authentication**. Teams own API keys, and users are identified via email header.
+
+| Header | Purpose |
+|--------|---------|
+| `x-api-key` | Team's API key (required for all authenticated tools) |
+| `x-user-email` | User's email (required for user-specific operations) |
 
 ```bash
+# Team-only operation (e.g., list_models)
 curl -X POST -H "Content-Type: application/json" \
-  -H "x-api-key: your_api_key" \
-  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"show_current_user","arguments":{}},"id":1}' \
+  -H "x-api-key: your_team_api_key" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_models","arguments":{}},"id":1}' \
+  http://localhost:3000/mcp/messages
+
+# User-specific operation (e.g., list_chats)
+curl -X POST -H "Content-Type: application/json" \
+  -H "x-api-key: your_team_api_key" \
+  -H "x-user-email: user@example.com" \
+  -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_chats","arguments":{}},"id":1}' \
   http://localhost:3000/mcp/messages
 ```
 
-Users get an `api_key` on creation. Regenerate with `user.regenerate_api_key!`
+Teams get an `api_key` on creation. Regenerate in Team Settings or via `team.regenerate_api_key!`
 
 ### Testing with MCP Inspector
 
@@ -55,7 +68,7 @@ npx @anthropic-ai/mcp-inspector
 # 3. Configure:
 #    - Transport: Streamable HTTP
 #    - URL: http://localhost:3000/mcp/messages
-#    - Headers: { "x-api-key": "<user-api-key>" }
+#    - Headers: { "x-api-key": "<team-api-key>", "x-user-email": "<user-email>" }
 
 # 4. Connect and test tools
 ```
@@ -64,23 +77,23 @@ npx @anthropic-ai/mcp-inspector
 
 | Tool | Description | Auth Required |
 |------|-------------|---------------|
-| `list_teams` | List user's teams | User |
-| `show_team` | Get team details with members | User |
-| `invite_member` | Invite user to team | User + Team + Admin |
-| `list_chats` | List user's chats in team | User + Team |
-| `show_chat` | Get chat with messages | User + Team |
-| `create_chat` | Create new chat | User + Team |
-| `update_chat` | Change chat's model | User + Team |
-| `delete_chat` | Delete a chat | User + Team |
-| `list_messages` | List chat messages | User + Team |
-| `create_message` | Send message, get response | User + Team |
+| `list_teams` | List user's teams | Team + User |
+| `show_team` | Get team details with members | Team + User |
+| `invite_member` | Invite user to team | Team + User (admin) |
+| `list_chats` | List user's chats in team | Team + User |
+| `show_chat` | Get chat with messages | Team + User |
+| `create_chat` | Create new chat | Team + User |
+| `update_chat` | Change chat's model | Team + User |
+| `delete_chat` | Delete a chat | Team + User |
+| `list_messages` | List chat messages | Team + User |
+| `create_message` | Send message, get response | Team + User |
 | `list_models` | List available AI models | None |
 | `show_model` | Get model details | None |
 | `refresh_models` | Sync models from providers | Admin |
-| `show_current_user` | Get current user info | User |
-| `update_current_user` | Update profile | User |
+| `show_current_user` | Get current user info | Team + User |
+| `update_current_user` | Update profile | Team + User |
 
-**Note:** "User + Team" means both `x-api-key` and `x-team-slug` headers required.
+**Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required.
 
 ### Available Resources
 
@@ -133,9 +146,9 @@ module Cards
     end
 
     def call(limit: 20)
-      require_authentication!
+      require_user!  # Requires both x-api-key (team) and x-user-email headers
 
-      cards = current_user.cards.limit(limit)
+      cards = current_user.cards.where(team: current_team).limit(limit)
       success_response(cards.map { |c| serialize_card(c) })
     end
 
@@ -147,6 +160,11 @@ module Cards
   end
 end
 ```
+
+**Authentication helpers:**
+- `require_team!` - Only requires `x-api-key` (team API key)
+- `require_user!` - Requires both `x-api-key` and `x-user-email` (user must be team member)
+- `with_current_user { }` - Sets `Current.user` and `Current.team` for model callbacks
 
 ### Resource Patterns
 
@@ -398,12 +416,12 @@ membership.owner?      # owner only
 
 ### MCP Team Context
 
-Provide `x-team-slug` header for team-scoped operations:
+Team context is provided implicitly via the team's API key. No separate `x-team-slug` header is needed:
 
 ```bash
 curl -X POST -H "Content-Type: application/json" \
-  -H "x-api-key: your_api_key" \
-  -H "x-team-slug: my-team" \
+  -H "x-api-key: your_team_api_key" \
+  -H "x-user-email: user@example.com" \
   -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_chats","arguments":{}},"id":1}' \
   http://localhost:3000/mcp/messages
 ```

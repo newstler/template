@@ -16,8 +16,8 @@ module Models
       assert_match(/Admin authentication required/, error.message)
     end
 
-    test "requires admin even with user authentication" do
-      mock_mcp_request(user: users(:one))
+    test "requires admin even with team and user authentication" do
+      mock_mcp_request(team: teams(:one), user: users(:one))
 
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Models::RefreshModelsTool)

@@ -17,7 +17,7 @@ module Chats
     end
 
     def call(limit: 20, offset: 0, order: "recent")
-      require_team!
+      require_user!
 
       chats = current_user.chats.where(team: current_team)
       chats = order == "oldest" ? chats.chronologically : chats.recent

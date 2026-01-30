@@ -63,4 +63,18 @@ class TeamTest < ActiveSupport::TestCase
   ensure
     Rails.configuration.x.multi_tenant = original_value
   end
+
+  test "generates api_key on create" do
+    team = Team.create!(name: "API Key Team")
+    assert team.api_key.present?
+    assert_equal 64, team.api_key.length
+  end
+
+  test "regenerate_api_key! updates api_key" do
+    team = teams(:one)
+    original_key = team.api_key
+    team.regenerate_api_key!
+    assert_not_equal original_key, team.api_key
+    assert_equal 64, team.api_key.length
+  end
 end

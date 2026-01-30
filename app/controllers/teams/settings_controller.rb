@@ -16,6 +16,11 @@ class Teams::SettingsController < ApplicationController
     end
   end
 
+  def regenerate_api_key
+    current_team.regenerate_api_key!
+    redirect_to team_settings_path(current_team), notice: t("controllers.teams.settings.regenerate_api_key.notice")
+  end
+
   private
 
   def team_params

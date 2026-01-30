@@ -16,7 +16,7 @@ module Messages
     end
 
     def call(chat_id:, content:)
-      require_team!
+      require_user!
 
       chat = current_user.chats.where(team: current_team).find_by(id: chat_id)
       return error_response("Chat not found", code: "not_found") unless chat

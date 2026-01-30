@@ -3,6 +3,13 @@
 class ApplicationTool < ActionTool::Base
   # Authentication helpers available to all tools
   # Override in subclasses to customize authorization behavior
+  #
+  # Authentication flow:
+  #   1. x-api-key header → find Team
+  #   2. x-user-email header (optional) → find User, verify team membership
+  #
+  # Tools that only need team context use require_team!
+  # Tools that need user context use require_user! or with_current_user
 
   class << self
     # Mark a tool as requiring admin privileges
@@ -17,28 +24,25 @@ class ApplicationTool < ActionTool::Base
 
   private
 
-  # Get current user from API key header
-  # fast-mcp passes headers to tool via constructor, available as `headers`
-  # Headers are transformed by Rack transport: HTTP_X_API_KEY -> x-api-key
-  def current_user
-    return @current_user if defined?(@current_user)
-
-    # fast-mcp transforms headers to lowercase with dashes
-    api_key = headers["x-api-key"]
-    @current_user = User.find_by(api_key: api_key) if api_key.present?
-  end
-
-  # Get current team from x-team-slug header
+  # Primary auth: Team from API key
   def current_team
     return @current_team if defined?(@current_team)
 
-    slug = headers["x-team-slug"]
+    api_key = headers["x-api-key"]
+    @current_team = Team.find_by(api_key: api_key) if api_key.present?
+  end
 
-    @current_team = if slug.present?
-      current_user&.teams&.find_by(slug: slug)
-    elsif !Team.multi_tenant?
-      Team.first
+  # Secondary: User from email header (must be team member)
+  def current_user
+    return @current_user if defined?(@current_user)
+    return @current_user = nil unless current_team
+
+    email = headers["x-user-email"]
+    if email.present?
+      user = User.find_by(email: email)
+      @current_user = user if user&.member_of?(current_team)
     end
+    @current_user
   end
 
   # Get current admin from session (for browser-based requests)
@@ -51,16 +55,25 @@ class ApplicationTool < ActionTool::Base
     @current_admin = nil
   end
 
-  # Execute block with Current.user set for model callbacks
+  # Execute block with Current.user and Current.team set for model callbacks
   def with_current_user
+    require_user!
     previous_user = Current.user
+    previous_team = Current.team
     Current.user = current_user
+    Current.team = current_team
     yield
   ensure
     Current.user = previous_user
+    Current.team = previous_team
   end
 
-  # Check if user is authenticated
+  # Check if team is authenticated via API key
+  def team_authenticated?
+    current_team.present?
+  end
+
+  # Check if user is authenticated (team + user email)
   def authenticated?
     current_user.present?
   end
@@ -70,23 +83,29 @@ class ApplicationTool < ActionTool::Base
     current_admin.present?
   end
 
-  # Require user authentication - raise if not authenticated
+  # Require team authentication - raise if no valid API key
+  def require_team!
+    unless team_authenticated?
+      raise FastMcp::Tool::InvalidArgumentsError, "Valid x-api-key header required."
+    end
+  end
+
+  # Require user authentication - raise if no valid user
+  def require_user!
+    require_team!
+    unless authenticated?
+      raise FastMcp::Tool::InvalidArgumentsError, "x-user-email header required (must be team member)."
+    end
+  end
+
+  # Legacy alias for backwards compatibility
   def require_authentication!
-    raise FastMcp::Tool::InvalidArgumentsError, "Authentication required. Provide X-API-Key header." unless authenticated?
+    require_user!
   end
 
   # Require admin authentication - raise if not authenticated
   def require_admin!
     raise FastMcp::Tool::InvalidArgumentsError, "Admin authentication required." unless admin_authenticated?
-  end
-
-  # Require team context - raise if no team
-  def require_team!
-    require_authentication!
-
-    unless current_team && current_user.member_of?(current_team)
-      raise FastMcp::Tool::InvalidArgumentsError, "Team context required. Provide x-team-slug header."
-    end
   end
 
   # Standard success response format

@@ -18,4 +18,17 @@
       </div>
     </dl>
   </div>
+
+  <div class="card-bg p-6 mt-6">
+    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".api_key_heading") %></h2>
+    <p class="text-sm text-dark-400 mb-4"><%= t(".api_key_description") %></p>
+    <div class="flex items-center gap-4">
+      <code class="flex-1 px-4 py-2 bg-dark-800 rounded-lg text-sm font-mono text-dark-200 overflow-x-auto"><%= current_team.api_key %></code>
+      <%= button_to t(".regenerate_api_key"),
+          regenerate_api_key_team_settings_path(current_team),
+          method: :patch,
+          class: "px-4 py-2 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors text-sm",
+          data: { turbo_confirm: t(".regenerate_confirm") } %>
+    </div>
+  </div>
 </div>

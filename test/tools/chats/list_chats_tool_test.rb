@@ -6,19 +6,29 @@ require "tools/mcp_test_helper"
 module Chats
   class ListChatsToolTest < McpToolTestCase
     setup do
+      @team = teams(:one)
       @user = users(:one)
       @chat = chats(:one)
     end
 
-    test "requires authentication" do
+    test "requires team API key" do
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Chats::ListChatsTool)
       end
-      assert_match(/Authentication required/, error.message)
+      assert_match(/x-api-key/, error.message)
+    end
+
+    test "requires user email header" do
+      mock_mcp_request(team: @team)
+
+      error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
+        call_tool(Chats::ListChatsTool)
+      end
+      assert_match(/x-user-email/, error.message)
     end
 
     test "returns user chats when authenticated" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::ListChatsTool)
 
@@ -28,7 +38,7 @@ module Chats
     end
 
     test "respects limit parameter" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::ListChatsTool, limit: 1)
 
@@ -37,7 +47,7 @@ module Chats
     end
 
     test "returns chats in recent order by default" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::ListChatsTool)
 

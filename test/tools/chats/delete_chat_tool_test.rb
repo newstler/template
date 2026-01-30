@@ -6,19 +6,20 @@ require "tools/mcp_test_helper"
 module Chats
   class DeleteChatToolTest < McpToolTestCase
     setup do
+      @team = teams(:one)
       @user = users(:one)
       @chat = chats(:one)
     end
 
-    test "requires authentication" do
+    test "requires team API key" do
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Chats::DeleteChatTool, id: @chat.id)
       end
-      assert_match(/Authentication required/, error.message)
+      assert_match(/x-api-key/, error.message)
     end
 
     test "deletes chat" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       assert_difference "@user.chats.count", -1 do
         result = call_tool(Chats::DeleteChatTool, id: @chat.id)
@@ -29,7 +30,7 @@ module Chats
     end
 
     test "returns error for non-existent chat" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::DeleteChatTool, id: "nonexistent")
 
@@ -38,7 +39,7 @@ module Chats
     end
 
     test "cannot delete other user's chat" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
       other_chat = chats(:two)
 
       result = call_tool(Chats::DeleteChatTool, id: other_chat.id)

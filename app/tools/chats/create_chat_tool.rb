@@ -16,7 +16,7 @@ module Chats
     end
 
     def call(model_id:, initial_message: nil)
-      require_team!
+      require_user!
 
       model = Model.enabled.find_by(id: model_id)
       return error_response("Model not found or not enabled", code: "invalid_model") unless model

@@ -6,19 +6,20 @@ require "tools/mcp_test_helper"
 module Chats
   class CreateChatToolTest < McpToolTestCase
     setup do
+      @team = teams(:one)
       @user = users(:one)
       @model = models(:gpt4)
     end
 
-    test "requires authentication" do
+    test "requires team API key" do
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Chats::CreateChatTool, model_id: @model.id)
       end
-      assert_match(/Authentication required/, error.message)
+      assert_match(/x-api-key/, error.message)
     end
 
     test "creates chat with valid model when model is enabled" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       # Skip if no providers are configured (no API keys in test)
       skip "No providers configured" if Model.configured_providers.empty?
@@ -33,7 +34,7 @@ module Chats
     end
 
     test "returns error when model is not enabled" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       # In test environment without API keys, models are not enabled
       result = call_tool(Chats::CreateChatTool, model_id: @model.id)
@@ -48,7 +49,7 @@ module Chats
     end
 
     test "returns error for invalid model" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::CreateChatTool, model_id: "nonexistent")
 

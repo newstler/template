@@ -15,7 +15,7 @@ module Teams
     end
 
     def call(email:)
-      require_team!
+      require_user!
 
       membership = current_user.membership_for(current_team)
       unless membership&.admin?

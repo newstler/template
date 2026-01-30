@@ -6,18 +6,19 @@ require "tools/mcp_test_helper"
 module Users
   class ShowCurrentUserToolTest < McpToolTestCase
     setup do
+      @team = teams(:one)
       @user = users(:one)
     end
 
-    test "requires authentication" do
+    test "requires team API key" do
       error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
         call_tool(Users::ShowCurrentUserTool)
       end
-      assert_match(/Authentication required/, error.message)
+      assert_match(/x-api-key/, error.message)
     end
 
     test "returns current user info" do
-      mock_mcp_request(user: @user)
+      mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Users::ShowCurrentUserTool)
 
