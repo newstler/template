@@ -51,6 +51,7 @@ MUTED = "#626262"
 WHITE = "#FAFAFA"
 ORANGE = "#FF9F1C"
 CYAN = "#00D9FF"
+HOTPINK = "#FF1493"
 
 HEADER_STYLE = Lipgloss::Style.new
   .border(:rounded)
@@ -97,6 +98,10 @@ DEFAULT_STYLE = Lipgloss::Style.new
 INPUT_STYLE = Lipgloss::Style.new
   .foreground("#FFD700")
 
+TIP_STYLE = Lipgloss::Style.new
+  .foreground(HOTPINK)
+  .bold(true)
+
 # ─────────────────────────────────────────────────────────────────────────────
 # Output helpers
 # ─────────────────────────────────────────────────────────────────────────────
@@ -107,6 +112,7 @@ def success(text) = puts SUCCESS_STYLE.render(text)
 def muted(text) = puts MUTED_STYLE.render(text)
 def warning(text) = puts WARNING_STYLE.render(text)
 def summary(text) = puts SUMMARY_STYLE.render(text)
+def tip(text) = puts TIP_STYLE.render(text)
 
 def replace_in_file(file_path, old_content, new_content)
   return unless File.exist?(file_path)
@@ -440,6 +446,15 @@ FileUtils.chdir APP_ROOT do
     system("git", "remote", "add", "origin", repo_url)
     success("  ✓ Set origin to #{repo_url}")
   end
+
+  # Show tip about updating from template
+  puts
+  tip("💡 TIP: The original template is now available as 'template' remote.")
+  tip("   To pull future updates and new features from the template:")
+  tip("")
+  tip("   git fetch template")
+  tip("   git merge template/main")
+  puts
 
   # ── Commit ──
 
