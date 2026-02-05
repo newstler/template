@@ -1,4 +1,31 @@
 module ApplicationHelper
+  # ── Open Graph helpers ──
+  # Views set per-page values via content_for:
+  #   content_for :og_title, @post.title
+  #   content_for :og_description, @post.excerpt
+  #   content_for :og_image, url_for(@post.og_image)
+  #
+  # Layout falls back to app-wide defaults from i18n.
+
+  def og_title
+    content_for(:og_title).presence || content_for(:title).presence || t("app_name")
+  end
+
+  def og_description
+    content_for(:og_description).presence || t("og_image.description")
+  end
+
+  def og_image
+    if content_for?(:og_image)
+      src = content_for(:og_image)
+      src.start_with?("http") ? src : "#{request.base_url}#{src}"
+    else
+      "#{request.base_url}/og-image.png"
+    end
+  end
+
+  # ── Markdown ──
+
   class MarkdownRenderer < Redcarpet::Render::HTML
     include Rouge::Plugins::Redcarpet
 

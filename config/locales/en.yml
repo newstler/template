@@ -10,3 +10,6 @@ en:
     untitled: Untitled
   messages:
     count: Messages
+  og_image:
+    description: Build fast with Rails 8, Hotwire, SQLite, and AI chat.
+    tagline: AI-powered Rails 8 starter template

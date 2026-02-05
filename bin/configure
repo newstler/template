@@ -336,7 +336,6 @@ FileUtils.chdir APP_ROOT do
   end
 
   replace_in_file("config/locales/en.yml", "app_name: Template", "app_name: #{project_name}")
-  replace_in_file("app/views/layouts/application.html.erb", "Template", project_name)
   replace_in_file("app/views/pwa/manifest.json.erb", "Template", project_name)
   replace_in_file("public/site.webmanifest", "Template", project_name)
 

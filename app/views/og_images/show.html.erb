@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OG Image Preview</title>
+  <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+  <style>
+    /* Fixed dimensions for OG image */
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 1200px;
+      height: 630px;
+      overflow: hidden;
+    }
+
+    /* Hide dev tool indicators */
+    [data-nextjs-dialog-overlay],
+    [data-nextjs-dialog],
+    nextjs-portal,
+    #__next-build-indicator {
+      display: none !important;
+    }
+
+    /* Custom gradient background */
+    .og-bg {
+      background: linear-gradient(135deg,
+        oklch(14% 0.02 260) 0%,
+        oklch(18% 0.03 270) 50%,
+        oklch(12% 0.02 250) 100%
+      );
+    }
+
+    /* Accent gradient */
+    .accent-gradient {
+      background: linear-gradient(135deg,
+        oklch(62% 0.21 260) 0%,
+        oklch(50% 0.27 300) 100%
+      );
+    }
+
+    /* Glow effect */
+    .glow {
+      box-shadow:
+        0 0 60px oklch(62% 0.21 260 / 30%),
+        0 0 120px oklch(50% 0.27 300 / 20%);
+    }
+
+    /* Grid pattern overlay */
+    .grid-pattern {
+      background-image:
+        linear-gradient(oklch(100% 0 0 / 3%) 1px, transparent 1px),
+        linear-gradient(90deg, oklch(100% 0 0 / 3%) 1px, transparent 1px);
+      background-size: 40px 40px;
+    }
+  </style>
+</head>
+<body class="og-bg">
+  <div class="relative w-[1200px] h-[630px] flex items-center justify-center overflow-hidden">
+    <%# Grid pattern overlay %>
+    <div class="absolute inset-0 grid-pattern"></div>
+
+    <%# Decorative gradient orbs %>
+    <div class="absolute -top-32 -right-32 w-96 h-96 rounded-full accent-gradient opacity-20 blur-3xl"></div>
+    <div class="absolute -bottom-32 -left-32 w-96 h-96 rounded-full accent-gradient opacity-15 blur-3xl"></div>
+
+    <%# Content container %>
+    <div class="relative z-10 flex flex-col items-center text-center px-16">
+      <%# Logo/Icon %>
+      <div class="w-28 h-28 rounded-3xl accent-gradient flex items-center justify-center mb-10 glow">
+        <%= inline_svg "icons/lightning.svg", class: "w-14 h-14 text-white" %>
+      </div>
+
+      <%# App name %>
+      <h1 class="text-7xl font-bold text-white mb-6 tracking-tight">
+        <%= @app_name %>
+      </h1>
+
+      <%# Tagline %>
+      <p class="text-3xl text-dark-300 mb-12 max-w-3xl leading-relaxed">
+        <%= @tagline %>
+      </p>
+
+      <%# Tech stack badges %>
+      <div class="flex items-center gap-4">
+        <span class="px-5 py-2.5 bg-dark-700/60 rounded-full text-dark-200 text-lg font-medium border border-dark-600/50">
+          Rails 8
+        </span>
+        <span class="px-5 py-2.5 bg-dark-700/60 rounded-full text-dark-200 text-lg font-medium border border-dark-600/50">
+          Hotwire
+        </span>
+        <span class="px-5 py-2.5 bg-dark-700/60 rounded-full text-dark-200 text-lg font-medium border border-dark-600/50">
+          SQLite
+        </span>
+        <span class="px-5 py-2.5 bg-dark-700/60 rounded-full text-dark-200 text-lg font-medium border border-dark-600/50">
+          AI Chat
+        </span>
+      </div>
+    </div>
+
+    <%# Domain at bottom %>
+    <div class="absolute bottom-8 left-1/2 -translate-x-1/2">
+      <span class="text-xl text-dark-400 font-medium">
+        <%= @domain %>
+      </span>
+    </div>
+  </div>
+</body>
+</html>

@@ -1,200 +1,154 @@
 ---
 name: og-image
-description: Generate social media preview images (Open Graph) and configure meta tags. Creates a screenshot-optimized page using the project's existing design system, captures it at 1200x630, and sets up all social sharing meta tags.
+description: Generate social media preview images (Open Graph) for Rails apps. Creates an OG image using the project's design system at /og-image, screenshots it at 1200x630, and configures meta tags in the layout head.
 ---
 
-This skill creates professional Open Graph images for social media sharing. It analyzes the existing codebase to match the project's design system, generates a dedicated OG image page, screenshots it, and configures all necessary meta tags.
+This skill creates Open Graph images for social media sharing in Rails apps. It generates a dedicated page at `/og-image` matching the project's design system, then screenshots it for use in meta tags.
+
+## Architecture
+
+The OG system has three layers:
+
+1. **Helpers** in `ApplicationHelper` — `og_title`, `og_description`, `og_image`
+2. **Meta tags** in `app/views/layouts/application.html.erb` — call the helpers
+3. **Per-page overrides** — any view sets `content_for` to customize
+
+```
+Layout meta tags
+  └─ og_title   → content_for(:og_title) → content_for(:title) → t("app_name")
+  └─ og_description → content_for(:og_description) → t("og_image.description")
+  └─ og_image   → content_for(:og_image) → request.base_url + "/og-image.png"
+```
+
+## Existing Files
+
+These files already exist and should be edited, not recreated:
+
+| File | Purpose |
+|------|---------|
+| `app/helpers/application_helper.rb` | `og_title`, `og_description`, `og_image` helpers |
+| `app/views/layouts/application.html.erb` | OG + Twitter meta tags in `<head>` |
+| `app/controllers/og_images_controller.rb` | Renders the screenshot page |
+| `app/views/og_images/show.html.erb` | 1200x630 self-contained HTML page |
+| `config/routes.rb` | `GET /og-image` route |
+| `config/locales/en.yml` | `og_image.tagline` and `og_image.description` |
+| `lib/tasks/og_image.rake` | `rake og_image:generate` and `rake og_image:instructions` |
 
 ## Workflow
 
-### Phase 1: Codebase Analysis
+### Phase 1: Understand the Design System
 
-Explore the project to understand:
+Read these files to match the project aesthetic:
 
-1. **Framework Detection**
-   - Check `package.json` for Next.js, Vite, Astro, Remix, etc.
-   - Identify the routing pattern (file-based, config-based)
-   - Find where to create the `/og-image` route
+- `app/assets/tailwind/application.css` — OKLCH color palette, fonts, custom utilities
+- `app/views/layouts/application.html.erb` — existing meta tags and structure
+- `app/assets/images/icons/` — available SVG icons for the image
+- `config/locales/en.yml` — app name, tagline, description
 
-2. **Design System Discovery**
-   - Look for Tailwind config (`tailwind.config.js/ts`) for color palette
-   - Check for CSS variables in global styles (`:root` definitions)
-   - Find existing color tokens, font families, spacing scales
-   - Look for a theme or design tokens file
+### Phase 2: Update the OG Image Page
 
-3. **Branding Assets**
-   - Find logo files in `/public`, `/assets`, `/src/assets`
-   - Check for favicon, app icons
-   - Look for existing hero sections or landing pages with branding
+Edit `app/views/og_images/show.html.erb`. This is a self-contained page with `layout false`.
 
-4. **Product Information**
-   - Extract product name from `package.json`, landing page, or meta tags
-   - Find tagline/description from existing pages
-   - Look for existing OG/meta configuration to understand current setup
+**Requirements:**
+- Exactly 1200px wide × 630px tall
+- Uses the project's Tailwind stylesheet
+- All custom colors must use OKLCH (project rule)
+- Uses `inline_svg` for icons (project rule — never inline SVG)
+- No authentication required
 
-5. **Existing Components**
-   - Find reusable UI components that could be leveraged
-   - Check for glass effects, gradients, or distinctive visual patterns
-   - Identify the overall aesthetic (dark mode, light mode, etc.)
+**Template structure:**
 
-### Phase 2: OG Image Page Creation
-
-Create a dedicated route at `/og-image` (or equivalent for the framework):
-
-**Page Requirements:**
-- Fixed dimensions: exactly 1200px wide × 630px tall
-- Self-contained styling (no external dependencies that might not render)
-- Hide any dev tool indicators with CSS:
-```css
-[data-nextjs-dialog-overlay],
-[data-nextjs-dialog],
-nextjs-portal,
-#__next-build-indicator {
-  display: none !important;
-}
+```erb
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>OG Image</title>
+  <%%= stylesheet_link_tag "tailwind" %>
+  <style>
+    html, body { margin: 0; padding: 0; width: 1200px; height: 630px; overflow: hidden; }
+  </style>
+</head>
+<body>
+  <div class="relative w-[1200px] h-[630px] ...">
+    <%%= inline_svg "icons/lightning.svg", class: "w-14 h-14 text-white" %>
+    <h1><%%= @app_name %></h1>
+    <p><%%= @tagline %></p>
+    <span><%%= @domain %></span>
+  </div>
+</body>
+</html>
 ```
 
-**Content Structure:**
-- Product logo/icon (prominent placement)
-- Product name with distinctive typography
-- Tagline or value proposition
-- Visual representation of the product (mockup, illustration, or abstract design)
-- URL/domain at the bottom
-- Background that matches the project aesthetic (gradients, patterns, etc.)
+**Controller provides:**
+- `@app_name` — from `t("app_name")`
+- `@tagline` — from `t("og_image.tagline")`
+- `@domain` — from `request.host`
 
-**Design Principles:**
-- Use the project's existing color palette
-- Match the typography from the main site
-- Include visual elements that represent the product
-- Ensure high contrast for readability at small sizes (social previews are often small)
-- Test that text is readable when the image is scaled down to ~400px wide
+### Phase 3: Screenshot
 
-### Phase 3: Screenshot Capture
+Tell the user to generate the static image:
 
-Use Playwright to capture the OG image:
-
-1. Navigate to the OG image page (typically `http://localhost:3000/og-image` or similar)
-2. Resize viewport to exactly 1200×630
-3. Wait for any animations to complete or fonts to load
-4. Take a PNG screenshot
-5. Save to the project's public folder as `og-image.png`
-
-**Playwright Commands:**
 ```
-browser_navigate: http://localhost:{port}/og-image
-browser_resize: width=1200, height=630
-browser_take_screenshot: og-image.png (then copy to /public)
+1. Start server:     bin/dev
+2. Open:             http://localhost:3000/og-image
+3. DevTools (F12) → device toolbar → 1200 x 630
+4. Right-click → "Capture screenshot"
+5. Save as:          public/og-image.png
 ```
 
-### Phase 4: Meta Tag Configuration
+Or with Playwright: `rake og_image:generate`
 
-Audit and update the project's meta tag configuration. For Next.js App Router, update `layout.tsx`. For other frameworks, update the appropriate location.
+### Phase 4: Per-Page OG Images
 
-**Required Meta Tags:**
+Any view can override defaults using `content_for`:
 
-```typescript
-// Open Graph
-openGraph: {
-  title: "Product Name - Short Description",
-  description: "Compelling description for social sharing",
-  url: "https://yourdomain.com",
-  siteName: "Product Name",
-  locale: "en_US",
-  type: "website",
-  images: [{
-    url: "/og-image.png",  // or absolute URL
-    width: 1200,
-    height: 630,
-    alt: "Descriptive alt text for accessibility",
-    type: "image/png",
-  }],
-},
-
-// Twitter/X
-twitter: {
-  card: "summary_large_image",
-  title: "Product Name - Short Description",
-  description: "Compelling description for Twitter",
-  creator: "@handle",  // if provided
-  images: [{
-    url: "/og-image.png",
-    width: 1200,
-    height: 630,
-    alt: "Descriptive alt text",
-  }],
-},
-
-// Additional
-other: {
-  "theme-color": "#000000",  // match brand color
-  "msapplication-TileColor": "#000000",
-},
-
-appleWebApp: {
-  title: "Product Name",
-  statusBarStyle: "black-translucent",
-  capable: true,
-},
+```erb
+<%% content_for :og_title, @post.title %>
+<%% content_for :og_description, @post.excerpt %>
+<%% content_for :og_image, "/og-images/posts/#{@post.id}.png" %>
 ```
 
-**Ensure `metadataBase` is set** for relative URLs to resolve correctly:
-```typescript
-metadataBase: new URL("https://yourdomain.com"),
+The helpers in `ApplicationHelper` cascade:
+
+```ruby
+def og_title
+  content_for(:og_title).presence || content_for(:title).presence || t("app_name")
+end
+
+def og_description
+  content_for(:og_description).presence || t("og_image.description")
+end
+
+def og_image
+  if content_for?(:og_image)
+    src = content_for(:og_image)
+    src.start_with?("http") ? src : "#{request.base_url}#{src}"
+  else
+    "#{request.base_url}/og-image.png"
+  end
+end
 ```
 
-### Phase 5: Verification & Output
+### Phase 5: Verify
 
-1. **Verify the image exists** at the public path
-2. **Check meta tags** are correctly rendered in the HTML
-3. **Provide cache-busting instructions:**
-   - Facebook/LinkedIn: https://developers.facebook.com/tools/debug/
-   - Twitter/X: https://cards-dev.twitter.com/validator
-   - LinkedIn: https://www.linkedin.com/post-inspector/
+- [ ] `/og-image` renders at 1200×630
+- [ ] `public/og-image.png` exists
+- [ ] Meta tags render in page source (`og:image`, `twitter:image`)
+- [ ] `og:image` URL is absolute (includes protocol + domain)
+- [ ] Per-page overrides work via `content_for`
+- [ ] `rails test` passes
+- [ ] `bundle exec rubocop -A` passes
 
-4. **Summary output:**
-   - Path to generated OG image
-   - URL to preview the OG image page locally
-   - List of meta tags added/updated
-   - Links to social preview debuggers
+Social preview debuggers:
+- Facebook: https://developers.facebook.com/tools/debug/
+- Twitter: https://cards-dev.twitter.com/validator
+- LinkedIn: https://www.linkedin.com/post-inspector/
 
-## Prompting for Missing Information
+## Key Rules
 
-Only ask the user if these cannot be determined from the codebase:
-
-1. **Domain/URL** - If not found in existing config, ask: "What's your production domain? (e.g., https://example.com)"
-
-2. **Twitter/X handle** - If adding twitter:creator, ask: "What's your Twitter/X handle for attribution? (optional)"
-
-3. **Tagline** - If no clear tagline found, ask: "What's a short tagline for social previews? (1 sentence)"
-
-## Framework-Specific Notes
-
-**Next.js App Router:**
-- Create `/app/og-image/page.tsx`
-- Update metadata in `/app/layout.tsx`
-- Use `'use client'` directive for the OG page
-
-**Next.js Pages Router:**
-- Create `/pages/og-image.tsx`
-- Update `_app.tsx` or use `next-seo`
-
-**Vite/React:**
-- Create route via router config
-- Update `index.html` meta tags or use `react-helmet`
-
-**Astro:**
-- Create `/src/pages/og-image.astro`
-- Update layout with meta tags
-
-## Quality Checklist
-
-Before completing, verify:
-- [ ] OG image renders correctly at 1200×630
-- [ ] No dev tool indicators visible in screenshot
-- [ ] Image saved to public folder
-- [ ] Meta tags include og:image with absolute URL capability
-- [ ] Meta tags include twitter:card as summary_large_image
-- [ ] Meta tags include dimensions (width/height)
-- [ ] Meta tags include alt text for accessibility
-- [ ] theme-color is set to match brand
-- [ ] User informed of cache-busting URLs
+- **No env vars** — domain comes from `request.base_url` (configured via `bin/configure`)
+- **No hardcoded strings** — app name and tagline come from i18n (`config/locales/en.yml`)
+- **OKLCH colors only** — no hex/rgb/hsl in custom CSS
+- **`inline_svg` for icons** — never paste raw SVG into templates
+- **Minitest + fixtures** — for any new tests
