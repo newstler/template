@@ -23,5 +23,6 @@ namespace :madmin do
   end
   resources :tool_calls
   resources :users
+  resources :teams
   root to: "dashboard#show"
 end
