@@ -1,0 +1,14 @@
+---
+en:
+  teams:
+    billing:
+      show:
+        heading: Billing
+        manage_in_stripe: Manage in Stripe
+        period_ends_label: Current Period Ends
+        status:
+          active: Active
+          inactive: Inactive
+          past_due: Past Due
+        status_label: Subscription Status
+        view_plans: View Plans

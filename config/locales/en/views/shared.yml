@@ -2,11 +2,14 @@
 en:
   shared:
     sidebar:
+      billing: Billing
       chats: Chats
       collapse: Collapse sidebar
+      create_new_team: Create new...
       home: Home
+      invite_new: Invite new...
       members: Members
       new_chat: New Chat
-      switch_team: Switch Team
-      team_settings: Team Settings
+      settings: Settings
+      teams: Teams
       user: User

@@ -1,0 +1,39 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-3xl font-bold text-dark-50 mb-8"><%= t(".heading") %></h1>
+
+  <div class="card-bg p-6">
+    <dl class="space-y-6">
+      <div>
+        <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".status_label") %></dt>
+        <dd>
+          <% if current_team.subscribed? %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900/50 text-green-300"><%= t(".status.active") %></span>
+          <% elsif current_team.past_due? %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900/50 text-yellow-300"><%= t(".status.past_due") %></span>
+          <% else %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-dark-600 text-dark-300"><%= t(".status.inactive") %></span>
+          <% end %>
+        </dd>
+      </div>
+
+      <% if current_team.current_period_ends_at.present? %>
+        <div>
+          <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".period_ends_label") %></dt>
+          <dd class="text-lg text-dark-100"><%= l(current_team.current_period_ends_at, format: :long) %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+
+  <div class="mt-6 flex gap-4">
+    <% if @portal_url %>
+      <%= link_to t(".manage_in_stripe"), @portal_url, class: "inline-flex items-center gap-2 px-6 py-3 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors", target: "_blank", rel: "noopener" %>
+    <% end %>
+
+    <% unless current_team.subscribed? %>
+      <%= link_to t(".view_plans"), team_pricing_path(current_team), class: "inline-flex items-center gap-2 px-6 py-3 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+    <% end %>
+  </div>
+</div>

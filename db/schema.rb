@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_01_30_181759) do
+ActiveRecord::Schema[8.2].define(version: 2026_02_05_182154) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -120,11 +120,17 @@ ActiveRecord::Schema[8.2].define(version: 2026_01_30_181759) do
   create_table "teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "api_key", null: false
     t.datetime "created_at", null: false
+    t.datetime "current_period_ends_at"
     t.string "name", null: false
     t.string "slug", null: false
+    t.string "stripe_customer_id"
+    t.string "stripe_subscription_id"
+    t.string "subscription_status"
     t.datetime "updated_at", null: false
     t.index ["api_key"], name: "index_teams_on_api_key", unique: true
     t.index ["slug"], name: "index_teams_on_slug", unique: true
+    t.index ["stripe_customer_id"], name: "index_teams_on_stripe_customer_id", unique: true
+    t.index ["stripe_subscription_id"], name: "index_teams_on_stripe_subscription_id", unique: true
   end
 
   create_table "tool_calls", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|

@@ -1,0 +1,10 @@
+---
+en:
+  teams:
+    pricing:
+      show:
+        already_subscribed: Your team already has an active subscription.
+        description: Choose a plan that works for your team
+        heading: Plans & Pricing
+        manage_billing: Manage Billing
+        subscribe: Subscribe

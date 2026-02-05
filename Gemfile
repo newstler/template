@@ -79,4 +79,6 @@ gem "rouge"
 
 gem "fast-mcp", "~> 1.6"
 
+gem "stripe"
+
 gem "tidewave", "~> 0.4.1", group: :development

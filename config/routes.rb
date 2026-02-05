@@ -28,6 +28,16 @@ Rails.application.routes.draw do
       patch :regenerate_api_key
     end
     resources :members, only: [ :index, :new, :create, :destroy ], controller: "teams/members"
+
+    # Billing
+    resource :pricing, only: [ :show ], controller: "teams/pricing"
+    resource :billing, only: [ :show ], controller: "teams/billing"
+    resource :checkout, only: [ :create ], controller: "teams/checkouts"
+  end
+
+  # Webhooks
+  namespace :webhooks do
+    resource :stripe, only: [ :create ], controller: "stripe"
   end
 
   # Madmin admin panel (requires admin authentication)

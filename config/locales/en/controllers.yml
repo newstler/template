@@ -19,6 +19,7 @@ en:
       admin_required: Admin access required
       authenticate_admin: Please log in as admin
       authenticate_user: Please log in
+      subscription_required: An active subscription is required to access this feature
       team_not_found: Team not found or you don't have access
     models:
       refreshes:

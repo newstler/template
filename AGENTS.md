@@ -18,6 +18,7 @@ Delete these HTML comments and write what your app does.
 - **Admin**: Madmin at `/madmin`
 - **Icons**: inline_svg gem
 - **Primary Keys**: UUIDv7 (database-generated)
+- **Billing**: Stripe (subscriptions, checkout, customer portal)
 - **MCP**: fast-mcp gem for Model Context Protocol at `/mcp`
 
 ## MCP: Agent-Native Architecture
@@ -92,6 +93,11 @@ npx @anthropic-ai/mcp-inspector
 | `refresh_models` | Sync models from providers | Admin |
 | `show_current_user` | Get current user info | Team + User |
 | `update_current_user` | Update profile | Team + User |
+| `show_subscription` | Get team subscription status | Team + User (admin) |
+| `list_prices` | List available subscription prices | None |
+| `create_checkout` | Create Stripe Checkout session URL | Team + User (admin) |
+| `get_billing_portal` | Get Stripe Billing Portal URL | Team + User (admin) |
+| `cancel_subscription` | Cancel subscription at period end | Team + User (admin) |
 
 **Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required.
 
@@ -104,6 +110,7 @@ npx @anthropic-ai/mcp-inspector
 | User Chats | `app:///chats` | User's chat list |
 | Chat | `app:///chats/{id}` | Single chat with messages |
 | Chat Messages | `app:///chats/{chat_id}/messages` | Messages only |
+| Team Subscription | `app:///subscription` | Team subscription status |
 
 ### File Structure
 
@@ -114,6 +121,7 @@ app/
 │   ├── chats/                   # Chat CRUD tools
 │   ├── messages/                # Message tools
 │   ├── models/                  # Model tools
+│   ├── billing/                 # Billing & subscription tools
 │   ├── teams/                   # Team management tools
 │   └── users/                   # User tools
 └── resources/
@@ -386,6 +394,8 @@ Configure during setup with `bin/configure`.
 /t/:team_slug/chats      → Team's chats
 /t/:team_slug/members    → Team members (admin only for invite/remove)
 /t/:team_slug/settings   → Team settings (admin only)
+/t/:team_slug/pricing    → Subscription pricing (admin only)
+/t/:team_slug/billing    → Billing management (admin only)
 /teams                   → Team selection (multi-tenant only)
 ```
 
@@ -512,6 +522,10 @@ openai:
   api_key: sk-...
 anthropic:
   api_key: sk-ant-...
+stripe:
+  secret_key: sk_...
+  publishable_key: pk_...
+  webhook_secret: whsec_...
 litestream:  # optional
   replica_bucket: ...
 ```

@@ -61,4 +61,12 @@ class ApplicationController < ActionController::Base
       redirect_to team_root_path(current_team), alert: t("controllers.application.admin_required")
     end
   end
+
+  def require_subscription!
+    return unless current_team
+    return if current_team.subscription_active?
+
+    redirect_to team_pricing_path(current_team),
+      alert: t("controllers.application.subscription_required")
+  end
 end
