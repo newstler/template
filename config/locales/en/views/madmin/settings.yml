@@ -6,7 +6,7 @@ en:
         ai_providers: AI Providers
         anthropic_api_key: Anthropic API Key
         cancel: Cancel
-        heading: Edit Settings
+        heading: Edit API Keys
         key_placeholder: Enter key...
         litestream: Litestream
         litestream_replica_access_key: Secret Access Key
@@ -15,20 +15,18 @@ en:
         litestream_restart_note: Changes to Litestream settings require a server restart.
         openai_api_key: OpenAI API Key
         save: Save Settings
-        smtp: SMTP
-        smtp_address: Server Address
-        smtp_password: Password
-        smtp_username: Username
-        smtp_username_placeholder: your-username
         stripe: Stripe
         stripe_publishable_key: Publishable Key
         stripe_secret_key: Secret Key
         stripe_webhook_secret: Webhook Secret
+        trial_days: Free Trial Days
+        trial_days_hint: Number of days new teams get as a free trial. Set to 0 to
+          disable.
       show:
         ai_providers: AI Providers
         anthropic_api_key: Anthropic API Key
         edit_button: Edit Settings
-        heading: System Settings
+        heading: API Keys
         litestream: Litestream
         litestream_replica_access_key: Secret Access Key
         litestream_replica_bucket: Replica Bucket
@@ -36,11 +34,8 @@ en:
         litestream_restart_note: Changes to Litestream settings require a server restart.
         not_configured: Not configured
         openai_api_key: OpenAI API Key
-        smtp: SMTP
-        smtp_address: Server Address
-        smtp_password: Password
-        smtp_username: Username
         stripe: Stripe
         stripe_publishable_key: Publishable Key
         stripe_secret_key: Secret Key
         stripe_webhook_secret: Webhook Secret
+        trial_days: Free Trial Days

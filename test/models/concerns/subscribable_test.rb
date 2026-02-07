@@ -70,4 +70,29 @@ class SubscribableTest < ActiveSupport::TestCase
     assert_includes Team.unsubscribed, @team
     assert_includes Team.unsubscribed, teams(:two)
   end
+
+  test "cancellation_pending? is true when active and cancel_at_period_end" do
+    @team.update!(subscription_status: "active", cancel_at_period_end: true)
+    assert @team.cancellation_pending?
+  end
+
+  test "cancellation_pending? is false when active without cancel_at_period_end" do
+    @team.update!(subscription_status: "active", cancel_at_period_end: false)
+    assert_not @team.cancellation_pending?
+  end
+
+  test "cancellation_pending? is false when canceled" do
+    @team.update!(subscription_status: "canceled", cancel_at_period_end: true)
+    assert_not @team.cancellation_pending?
+  end
+
+  test "cancellation_pending? is false when trialing" do
+    @team.update!(subscription_status: "trialing", cancel_at_period_end: true)
+    assert_not @team.cancellation_pending?
+  end
+
+  test "subscribed? still returns true when cancellation is pending" do
+    @team.update!(subscription_status: "active", cancel_at_period_end: true)
+    assert @team.subscribed?
+  end
 end

@@ -1,0 +1,22 @@
+---
+en:
+  madmin:
+    mail:
+      edit:
+        cancel: Cancel
+        heading: Edit Mail Settings
+        key_placeholder: Enter key...
+        save: Save Settings
+        smtp: SMTP
+        smtp_address: Server Address
+        smtp_password: Password
+        smtp_username: Username
+        smtp_username_placeholder: your-username
+      show:
+        edit_button: Edit Settings
+        heading: Mail Settings
+        not_configured: Not configured
+        smtp: SMTP
+        smtp_address: Server Address
+        smtp_password: Password
+        smtp_username: Username

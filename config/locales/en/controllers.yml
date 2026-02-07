@@ -22,6 +22,12 @@ en:
       subscription_required: An active subscription is required to access this feature
       team_not_found: Team not found or you don't have access
     madmin:
+      mail:
+        update:
+          notice: Mail settings saved successfully
+      prices:
+        sync:
+          notice: Prices synced from Stripe
       settings:
         update:
           notice: Settings saved successfully
@@ -62,3 +68,8 @@ en:
           notice: API key regenerated successfully
         update:
           notice: Team settings updated
+      subscription_cancellations:
+        create:
+          notice: Your subscription will be canceled at the end of the billing period
+        destroy:
+          notice: Your subscription has been resumed

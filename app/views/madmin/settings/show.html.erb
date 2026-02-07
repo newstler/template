@@ -75,48 +75,9 @@
           <% end %>
         </dd>
       </div>
-    </dl>
-  </div>
-
-  <%# SMTP %>
-  <div class="card-bg p-6 mb-6">
-    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".smtp") %></h2>
-    <dl class="space-y-4">
       <div class="flex items-center justify-between">
-        <dt class="text-sm font-medium text-dark-400"><%= t(".smtp_address") %></dt>
-        <dd class="flex items-center gap-2">
-          <% if @setting.smtp_address.present? %>
-            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-            <code class="text-sm text-dark-200 font-mono"><%= @setting.smtp_address %></code>
-          <% else %>
-            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
-            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
-          <% end %>
-        </dd>
-      </div>
-      <div class="flex items-center justify-between">
-        <dt class="text-sm font-medium text-dark-400"><%= t(".smtp_username") %></dt>
-        <dd class="flex items-center gap-2">
-          <% if @setting.smtp_username.present? %>
-            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-            <code class="text-sm text-dark-200 font-mono"><%= @setting.smtp_username %></code>
-          <% else %>
-            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
-            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
-          <% end %>
-        </dd>
-      </div>
-      <div class="flex items-center justify-between">
-        <dt class="text-sm font-medium text-dark-400"><%= t(".smtp_password") %></dt>
-        <dd class="flex items-center gap-2">
-          <% if @setting.smtp_password.present? %>
-            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.smtp_password) %></code>
-          <% else %>
-            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
-            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
-          <% end %>
-        </dd>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".trial_days") %></dt>
+        <dd class="text-sm text-dark-200"><%= pluralize(@setting.trial_days, "day") %></dd>
       </div>
     </dl>
   </div>

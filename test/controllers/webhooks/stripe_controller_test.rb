@@ -50,6 +50,7 @@ class Webhooks::StripeControllerTest < ActionDispatch::IntegrationTest
       type: "customer.subscription.updated",
       data: {
         object: {
+          id: "sub_test456",
           customer: "cus_test123",
           status: "past_due",
           current_period_end: 1700000000
@@ -58,10 +59,19 @@ class Webhooks::StripeControllerTest < ActionDispatch::IntegrationTest
     }
     event = Stripe::Event.construct_from(event_data)
 
-    stub_webhook_and_post(event, event_data)
+    stub_webhook_and_post(event, event_data) do
+      team.define_singleton_method(:sync_subscription_from_stripe!) do
+        update!(subscription_status: "past_due", current_period_ends_at: Time.at(1700000000).utc)
+      end
+      Team.define_singleton_method(:find_by) do |**args|
+        args[:stripe_customer_id] == "cus_test123" ? team : nil
+      end
+    end
 
     team.reload
     assert_equal "past_due", team.subscription_status
+  ensure
+    Team.singleton_class.remove_method(:find_by) if Team.singleton_class.method_defined?(:find_by, false)
   end
 
   test "handles customer.subscription.deleted event" do

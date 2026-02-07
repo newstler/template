@@ -25,5 +25,9 @@ namespace :madmin do
   resources :users
   resources :teams
   resource :settings, only: [ :show, :edit, :update ]
+  resource :prices, only: [ :show ] do
+    post :sync, on: :member
+  end
+  resource :mail, only: [ :show, :edit, :update ], controller: "mail"
   root to: "dashboard#show"
 end

@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     resource :settings, only: [ :show, :edit, :update ], controller: "teams/settings" do
       patch :regenerate_api_key
     end
+    resource :name_check, only: [ :show ], controller: "teams/name_checks"
     resources :members, only: [ :index, :show, :new, :create, :destroy ], controller: "teams/members"
     resource :profile, only: [ :show, :edit, :update ], controller: "profiles"
 
@@ -37,6 +38,7 @@ Rails.application.routes.draw do
     resource :pricing, only: [ :show ], controller: "teams/pricing"
     resource :billing, only: [ :show ], controller: "teams/billing"
     resource :checkout, only: [ :create ], controller: "teams/checkouts"
+    resource :subscription_cancellation, only: [ :create, :destroy ], controller: "teams/subscription_cancellations"
   end
 
   # Webhooks

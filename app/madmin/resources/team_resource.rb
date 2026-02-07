@@ -4,6 +4,10 @@ class TeamResource < Madmin::Resource
     [ :index, :show ]
   end
 
+  def self.model_find(id)
+    model.find_by!(slug: id)
+  end
+
   # Attributes
   attribute :id, form: false
   attribute :name

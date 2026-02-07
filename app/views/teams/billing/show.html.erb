@@ -8,7 +8,11 @@
       <div>
         <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".status_label") %></dt>
         <dd>
-          <% if current_team.subscribed? %>
+          <% if current_team.trialing? %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-blue-900/50 text-blue-300"><%= t(".status.trialing") %></span>
+          <% elsif current_team.cancellation_pending? %>
+            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900/50 text-yellow-300"><%= t(".status.canceling") %></span>
+          <% elsif current_team.subscribed? %>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-900/50 text-green-300"><%= t(".status.active") %></span>
           <% elsif current_team.past_due? %>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-yellow-900/50 text-yellow-300"><%= t(".status.past_due") %></span>
@@ -18,7 +22,22 @@
         </dd>
       </div>
 
-      <% if current_team.current_period_ends_at.present? %>
+      <% if current_team.trialing? %>
+        <div>
+          <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".trial_ends_label") %></dt>
+          <dd class="text-lg text-dark-100">
+            <%= l(current_team.current_period_ends_at, format: :long) %>
+            <span class="text-sm text-dark-400">(<%= t(".days_remaining", count: current_team.trial_days_remaining) %>)</span>
+          </dd>
+        </div>
+      <% elsif current_team.cancellation_pending? %>
+        <div>
+          <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".cancellation_notice_label") %></dt>
+          <dd class="text-lg text-dark-100">
+            <%= t(".cancellation_notice", date: l(current_team.current_period_ends_at, format: :long)) %>
+          </dd>
+        </div>
+      <% elsif current_team.current_period_ends_at.present? %>
         <div>
           <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".period_ends_label") %></dt>
           <dd class="text-lg text-dark-100"><%= l(current_team.current_period_ends_at, format: :long) %></dd>
@@ -32,7 +51,13 @@
       <%= link_to t(".manage_in_stripe"), @portal_url, class: "inline-flex items-center gap-2 px-6 py-3 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors", target: "_blank", rel: "noopener" %>
     <% end %>
 
-    <% unless current_team.subscribed? %>
+    <% if current_team.cancellation_pending? %>
+      <%= button_to t(".resume_subscription"), team_subscription_cancellation_path(current_team), method: :delete, class: "inline-flex items-center gap-2 px-6 py-3 bg-green-700 hover:bg-green-600 text-white rounded-lg transition-colors" %>
+    <% elsif current_team.subscribed? && !current_team.trialing? %>
+      <%= button_to t(".cancel_subscription"), team_subscription_cancellation_path(current_team), method: :post, class: "inline-flex items-center gap-2 px-6 py-3 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors", data: { turbo_confirm: t(".cancel_confirm") } %>
+    <% end %>
+
+    <% unless current_team.subscribed? && !current_team.trialing? %>
       <%= link_to t(".view_plans"), team_pricing_path(current_team), class: "inline-flex items-center gap-2 px-6 py-3 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
     <% end %>
   </div>

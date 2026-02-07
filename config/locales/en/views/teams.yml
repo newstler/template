@@ -39,9 +39,12 @@ en:
       submit: Create Team
     settings:
       edit:
+        back: "← Back to settings"
         heading: Edit Team Settings
+        name_available: Name is available
         name_label: Team Name
         name_placeholder: Enter team name
+        name_taken: Name is already taken
         submit: Save Changes
       show:
         api_key_description: Use this API key to authenticate MCP tool requests for

@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 
 module Billing
-  class CancelSubscriptionTool < ApplicationTool
-    description "Cancel team subscription at end of billing period (admin only)"
+  class ResumeSubscriptionTool < ApplicationTool
+    description "Resume a canceled subscription before the billing period ends (admin only)"
 
     annotations(
-      title: "Cancel Subscription",
+      title: "Resume Subscription",
       read_only_hint: false,
       open_world_hint: true
     )
@@ -18,17 +18,17 @@ module Billing
         return error_response("Admin access required", code: "forbidden")
       end
 
-      unless current_team.stripe_subscription_id.present?
-        return error_response("No active subscription to cancel", code: "not_found")
+      unless current_team.cancellation_pending?
+        return error_response("No pending cancellation to resume", code: "not_found")
       end
 
-      current_team.cancel_subscription!
+      current_team.resume_subscription!
 
       success_response({
         subscription_status: current_team.subscription_status,
         cancel_at_period_end: current_team.cancel_at_period_end,
         current_period_ends_at: format_timestamp(current_team.current_period_ends_at)
-      }, message: "Subscription will be canceled at end of billing period")
+      }, message: "Subscription resumed successfully")
     end
   end
 end

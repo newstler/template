@@ -8,6 +8,8 @@ module Subscribable
   end
 
   def subscribed?
+    return false if trial_expired?
+
     subscription_status.in?(%w[active trialing])
   end
 
@@ -20,7 +22,21 @@ module Subscribable
   end
 
   def trialing?
-    subscription_status == "trialing"
+    subscription_status == "trialing" && !trial_expired?
+  end
+
+  def trial_expired?
+    subscription_status == "trialing" && current_period_ends_at.present? && current_period_ends_at.past?
+  end
+
+  def trial_days_remaining
+    return 0 unless trialing?
+
+    ((current_period_ends_at - Time.current) / 1.day).ceil
+  end
+
+  def cancellation_pending?
+    subscription_status == "active" && cancel_at_period_end?
   end
 
   def canceled?
@@ -45,7 +61,6 @@ module Subscribable
       customer: customer.id,
       mode: "subscription",
       line_items: [ { price: price_id, quantity: 1 } ],
-      subscription_data: { trial_period_days: 30 },
       success_url: success_url,
       cancel_url: cancel_url
     )
@@ -65,13 +80,22 @@ module Subscribable
     sync_subscription_from_stripe!
   end
 
+  def resume_subscription!
+    return unless stripe_subscription_id.present?
+
+    Stripe::Subscription.update(stripe_subscription_id, cancel_at_period_end: false)
+    sync_subscription_from_stripe!
+  end
+
   def sync_subscription_from_stripe!
     return unless stripe_subscription_id.present?
 
     subscription = Stripe::Subscription.retrieve(stripe_subscription_id)
+    period_end = subscription.items.data.first["current_period_end"]
     update!(
       subscription_status: subscription.status,
-      current_period_ends_at: Time.at(subscription.current_period_end).utc
+      current_period_ends_at: period_end ? Time.at(period_end).utc : nil,
+      cancel_at_period_end: subscription.cancel_at_period_end || false
     )
   end
 end

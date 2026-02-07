@@ -9,9 +9,13 @@ class Teams::SettingsController < ApplicationController
   end
 
   def update
-    if current_team.update(team_params)
+    current_team.assign_attributes(team_params)
+
+    if current_team.save
       redirect_to team_settings_path(current_team.slug), notice: t("controllers.teams.settings.update.notice")
     else
+      @team_form = current_team.dup.tap { |t| t.errors.merge!(current_team.errors) }
+      current_team.reload
       render :edit, status: :unprocessable_entity
     end
   end

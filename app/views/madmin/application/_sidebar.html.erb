@@ -63,14 +63,13 @@
       <% end %>
     </div>
 
-    <%# System Section %>
+    <%# Settings Section (collapsible) %>
     <div class="mt-4">
-      <div class="mb-2 px-3">
-        <span class="text-xs font-semibold text-dark-500 uppercase tracking-wider">System</span>
-      </div>
-      <div class="space-y-1">
-        <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "cog", label: "Settings" %>
-      </div>
+      <%= render "shared/sidebar_group", id: "settings", icon: "cog", label: "Settings" do %>
+        <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "cog", label: "API Keys", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/prices", icon: "dollar", label: "Prices", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/mail", icon: "messages", label: "Mail", nested: true %>
+      <% end %>
     </div>
 
   </nav>

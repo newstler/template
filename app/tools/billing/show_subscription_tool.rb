@@ -23,6 +23,8 @@ module Billing
         team_name: current_team.name,
         subscription_status: current_team.subscription_status,
         subscribed: current_team.subscribed?,
+        cancel_at_period_end: current_team.cancel_at_period_end,
+        cancellation_pending: current_team.cancellation_pending?,
         current_period_ends_at: format_timestamp(current_team.current_period_ends_at),
         stripe_customer_id: current_team.stripe_customer_id
       })

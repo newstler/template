@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_02_05_200000) do
+ActiveRecord::Schema[8.2].define(version: 2026_02_07_204410) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -130,11 +130,13 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_05_200000) do
     t.string "stripe_publishable_key"
     t.string "stripe_secret_key"
     t.string "stripe_webhook_secret"
+    t.integer "trial_days", default: 30
     t.datetime "updated_at", null: false
   end
 
   create_table "teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "api_key", null: false
+    t.boolean "cancel_at_period_end", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "current_period_ends_at"
     t.string "name", null: false

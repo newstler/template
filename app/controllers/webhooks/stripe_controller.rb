@@ -40,10 +40,8 @@ class Webhooks::StripeController < ActionController::Base
     team = Team.find_by(stripe_customer_id: subscription.customer)
     return unless team
 
-    team.update!(
-      subscription_status: subscription.status,
-      current_period_ends_at: Time.at(subscription.current_period_end).utc
-    )
+    team.update!(stripe_subscription_id: subscription.id) unless team.stripe_subscription_id.present?
+    team.sync_subscription_from_stripe!
   end
 
   def handle_subscription_deleted(subscription)
@@ -52,7 +50,8 @@ class Webhooks::StripeController < ActionController::Base
 
     team.update!(
       subscription_status: "canceled",
-      stripe_subscription_id: nil
+      stripe_subscription_id: nil,
+      cancel_at_period_end: false
     )
   end
 end
