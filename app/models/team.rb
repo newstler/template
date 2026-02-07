@@ -5,10 +5,10 @@ class Team < ApplicationRecord
   has_many :users, through: :memberships
   has_many :chats, dependent: :destroy
 
-  validates :name, presence: true
+  validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
 
-  before_validation :generate_slug, on: :create
+  before_validation :generate_slug
   before_create :generate_api_key
 
   class << self
@@ -36,13 +36,13 @@ class Team < ApplicationRecord
   end
 
   def generate_slug
-    return if slug.present?
+    return if slug.present? && !name_changed?
 
     base_slug = name&.parameterize
     self.slug = base_slug
 
     counter = 1
-    while Team.exists?(slug: self.slug)
+    while Team.where.not(id: id).exists?(slug: self.slug)
       self.slug = "#{base_slug}-#{counter}"
       counter += 1
     end

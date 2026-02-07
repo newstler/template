@@ -20,3 +20,9 @@ user_one_team_two:
   team_id: 01961a2a-c0de-7000-8000-000000000502
   invited_by_id: 01961a2a-c0de-7000-8000-000000000002
   role: member
+
+not_onboarded_team_one:
+  id: 01961a2a-c0de-7000-8000-000000000604
+  user_id: 01961a2a-c0de-7000-8000-000000000003
+  team_id: 01961a2a-c0de-7000-8000-000000000501
+  role: owner

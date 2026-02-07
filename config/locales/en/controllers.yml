@@ -29,6 +29,12 @@ en:
       refreshes:
         create:
           notice: Models refreshed successfully
+    onboardings:
+      update:
+        notice: Welcome, %{name}!
+    profiles:
+      update:
+        notice: Profile updated
     sessions:
       create:
         notice: Check your email for a magic link!

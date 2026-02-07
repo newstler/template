@@ -12,3 +12,7 @@ two:
   id: 01961a2a-c0de-7000-8000-000000000002
   email: user2@example.com
   name: User Two
+
+not_onboarded:
+  id: 01961a2a-c0de-7000-8000-000000000003
+  email: unonboarded@example.com

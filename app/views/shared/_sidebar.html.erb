@@ -64,7 +64,7 @@
 
   <%# User section %>
   <div class="p-3 border-t border-white/5">
-    <div class="flex items-center gap-3 mb-3">
+    <%= link_to (current_team ? team_profile_path(current_team) : root_path), class: "flex items-center gap-3 mb-3 rounded-lg px-2 py-2 -mx-2 hover:bg-white/5 transition-colors" do %>
       <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
         <span class="text-sm font-medium text-white"><%= current_user&.name&.first&.upcase || "U" %></span>
       </div>
@@ -72,7 +72,7 @@
         <p class="text-sm font-medium text-dark-100 truncate"><%= current_user&.name || t("shared.sidebar.user") %></p>
         <p class="text-xs text-dark-500 truncate"><%= current_user&.email %></p>
       </div>
-    </div>
+    <% end %>
     <%= button_to session_path, method: :delete, class: "w-full flex items-center gap-3 px-3 py-2.5 text-sm text-dark-400 hover:text-dark-100 hover:bg-white/5 rounded-lg transition-all duration-200" do %>
       <%= inline_svg "icons/sign-out.svg", class: "w-5 h-5 flex-shrink-0" %>
       <span data-sidebar-target="label" class="transition-[opacity,width] duration-300 opacity-100"><%= t("common.sign_out") %></span>

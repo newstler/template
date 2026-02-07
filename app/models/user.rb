@@ -6,7 +6,9 @@ class User < ApplicationRecord
   has_many :teams, through: :memberships
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :name, presence: true
+  validates :name, presence: true, on: :update
+
+  def onboarded? = name.present?
 
   def generate_magic_link_token
     signed_id(purpose: :magic_link, expires_in: 15.minutes)

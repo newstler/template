@@ -20,6 +20,18 @@ en:
         email_placeholder: colleague@example.com
         heading: Invite Team Member
         submit: Send Invitation
+      show:
+        admin: Admin
+        back: Back to members
+        email: Email
+        heading: Member Profile
+        invited_by: Invited by
+        joined: Joined
+        member: Member
+        name: Name
+        owner: Owner
+        role: Role
+        title: "%{name}"
     new:
       heading: Create a New Team
       name_label: Team Name

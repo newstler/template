@@ -45,6 +45,7 @@ module Subscribable
       customer: customer.id,
       mode: "subscription",
       line_items: [ { price: price_id, quantity: 1 } ],
+      subscription_data: { trial_period_days: 30 },
       success_url: success_url,
       cancel_url: cancel_url
     )

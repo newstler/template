@@ -23,11 +23,4 @@ class HomeControllerTest < ActionDispatch::IntegrationTest
     # With multiple teams, shows the team selection page
     assert_response :success
   end
-
-  private
-
-  def sign_in(user)
-    token = user.generate_magic_link_token
-    get verify_magic_link_path(token: token)
-  end
 end

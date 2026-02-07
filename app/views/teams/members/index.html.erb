@@ -24,10 +24,10 @@
         <% @memberships.each do |membership| %>
           <tr>
             <td class="px-6 py-4">
-              <div>
-                <div class="font-medium text-dark-100"><%= membership.user.name %></div>
+              <%= link_to team_member_path(current_team, membership), class: "block group" do %>
+                <div class="font-medium text-dark-100 group-hover:text-blue-400 transition-colors"><%= membership.user.name || membership.user.email %></div>
                 <div class="text-sm text-dark-400"><%= membership.user.email %></div>
-              </div>
+              <% end %>
             </td>
             <td class="px-6 py-4">
               <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= membership.owner? ? 'bg-purple-500/20 text-purple-300' : membership.admin? ? 'bg-blue-500/20 text-blue-300' : 'bg-dark-600 text-dark-300' %>">

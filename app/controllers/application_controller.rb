@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   before_action :set_current_user
+  before_action :require_onboarding!
   before_action :set_current_team, if: :team_scoped_request?
 
   private
@@ -60,6 +61,10 @@ class ApplicationController < ActionController::Base
     unless current_membership&.admin?
       redirect_to team_root_path(current_team), alert: t("controllers.application.admin_required")
     end
+  end
+
+  def require_onboarding!
+    redirect_to onboarding_path if current_user && !current_user.onboarded?
   end
 
   def require_subscription!

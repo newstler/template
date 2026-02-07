@@ -12,7 +12,7 @@ class SessionsController < ApplicationController
     with: -> { redirect_to new_session_path, alert: t("controllers.sessions.rate_limit.verify") }
 
   def new
-    # Show login form
+    redirect_to root_path if current_user
   end
 
   def create
@@ -20,12 +20,8 @@ class SessionsController < ApplicationController
     user = User.find_by(email: email)
 
     # Create user if doesn't exist (first magic link creates the account)
-    unless user
-      user = User.create!(
-        email: email,
-        name: email.split("@").first.titleize # Default name from email
-      )
-    end
+    # Name is collected during onboarding after first login
+    user ||= User.create!(email: email)
 
     # Send magic link
     UserMailer.magic_link(user).deliver_later
@@ -43,7 +39,12 @@ class SessionsController < ApplicationController
 
     session[:user_id] = user.id
 
-    redirect_to after_login_path(user, params[:team]), notice: t("controllers.sessions.verify.notice", name: user.name)
+    if user.onboarded?
+      redirect_to after_login_path(user, params[:team]), notice: t("controllers.sessions.verify.notice", name: user.name)
+    else
+      ensure_team_exists(user, params[:team])
+      redirect_to onboarding_path
+    end
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     redirect_to new_session_path, alert: t("controllers.sessions.verify.alert")
   end
@@ -67,7 +68,7 @@ class SessionsController < ApplicationController
   end
 
   def after_login_path(user, invited_team_slug = nil)
-    # If invited to a team, go there
+    # If invited to a team, go there (membership already created by handle_team_invitation)
     if invited_team_slug.present?
       team = Team.find_by(slug: invited_team_slug)
       return team_root_path(team) if team && user.member_of?(team)
@@ -75,26 +76,21 @@ class SessionsController < ApplicationController
 
     teams = user.teams
 
-    if Team.multi_tenant?
-      case teams.count
-      when 0
-        team = create_personal_team(user)
-        team_root_path(team)
-      when 1
-        team_root_path(teams.first)
-      else
-        teams_path
-      end
-    else
-      # Single-tenant: auto-join or create the one team
-      team = Team.first || create_personal_team(user)
-
-      unless user.member_of?(team)
-        user.memberships.create!(team: team, role: "member")
-      end
-
+    case teams.count
+    when 0
+      team = create_personal_team(user)
       team_root_path(team)
+    when 1
+      team_root_path(teams.first)
+    else
+      teams_path
     end
+  end
+
+  def ensure_team_exists(user, invited_team_slug = nil)
+    return if user.teams.exists?
+
+    create_personal_team(user)
   end
 
   def create_personal_team(user)

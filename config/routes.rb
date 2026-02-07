@@ -11,6 +11,9 @@ Rails.application.routes.draw do
     get "auth/:token", to: "sessions#verify", as: :verify_magic_link
   end
 
+  # Onboarding (first-time user setup, before team context)
+  resource :onboarding, only: [ :show, :update ]
+
   # Team management (multi-tenant only routes for listing/creating teams)
   resources :teams, only: [ :index, :new, :create ], param: :slug
 
@@ -27,7 +30,8 @@ Rails.application.routes.draw do
     resource :settings, only: [ :show, :edit, :update ], controller: "teams/settings" do
       patch :regenerate_api_key
     end
-    resources :members, only: [ :index, :new, :create, :destroy ], controller: "teams/members"
+    resources :members, only: [ :index, :show, :new, :create, :destroy ], controller: "teams/members"
+    resource :profile, only: [ :show, :edit, :update ], controller: "profiles"
 
     # Billing
     resource :pricing, only: [ :show ], controller: "teams/pricing"

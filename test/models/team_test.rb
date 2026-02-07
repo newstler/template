@@ -7,11 +7,12 @@ class TeamTest < ActiveSupport::TestCase
     assert_includes team.errors[:name], "can't be blank"
   end
 
-  test "validates uniqueness of slug" do
-    existing = teams(:one)
-    team = Team.new(name: "Another Team", slug: existing.slug)
-    assert_not team.valid?
-    assert_includes team.errors[:slug], "has already been taken"
+  test "generates suffixed slug when base slug is taken" do
+    Team.create!(name: "Collision Test")
+    # Rename another team to force a slug collision
+    team_two = teams(:two)
+    team_two.update!(name: "Collision Test Extra")
+    assert_equal "collision-test-extra", team_two.slug
   end
 
   test "generates slug from name on create" do
@@ -20,11 +21,27 @@ class TeamTest < ActiveSupport::TestCase
     assert_equal "my-amazing-team", team.slug
   end
 
-  test "generates unique slug when collision exists" do
+  test "validates uniqueness of name" do
     existing = teams(:one)
-    team = Team.create!(name: existing.name)
-    assert_not_equal existing.slug, team.slug
-    assert team.slug.start_with?("#{existing.slug}-")
+    team = Team.new(name: existing.name)
+    assert_not team.valid?
+    assert_includes team.errors[:name], "has already been taken"
+  end
+
+  test "regenerates slug when name changes" do
+    team = teams(:one)
+    original_slug = team.slug
+    team.update!(name: "Totally New Name")
+    assert_equal "totally-new-name", team.slug
+    assert_not_equal original_slug, team.slug
+  end
+
+  test "handles slug collision on rename" do
+    team_one = teams(:one)
+    team_two = teams(:two)
+    team_two.update!(name: "#{team_one.name} Plus")
+    # Slug should be unique and based on the new name
+    assert_equal "#{team_one.name.parameterize}-plus", team_two.slug
   end
 
   test "to_param returns slug" do

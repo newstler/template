@@ -1,0 +1,15 @@
+---
+en:
+  profiles:
+    edit:
+      heading: Edit Profile
+      name_label: Name
+      name_placeholder: Enter your name
+      submit: Save Changes
+    show:
+      edit_button: Edit
+      email: Email
+      heading: Profile
+      member_since: Member since
+      name: Name
+      title: Profile

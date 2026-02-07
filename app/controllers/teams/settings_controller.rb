@@ -10,7 +10,7 @@ class Teams::SettingsController < ApplicationController
 
   def update
     if current_team.update(team_params)
-      redirect_to team_settings_path(current_team), notice: t("controllers.teams.settings.update.notice")
+      redirect_to team_settings_path(current_team.slug), notice: t("controllers.teams.settings.update.notice")
     else
       render :edit, status: :unprocessable_entity
     end

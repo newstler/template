@@ -6,6 +6,10 @@ class Teams::MembersController < ApplicationController
     @memberships = current_team.memberships.includes(:user, :invited_by)
   end
 
+  def show
+    @membership = current_team.memberships.includes(:user, :invited_by).find(params[:id])
+  end
+
   def new
     @invite_email = params[:email]
   end
@@ -14,10 +18,8 @@ class Teams::MembersController < ApplicationController
     email = params[:email]
     user = User.find_or_initialize_by(email: email)
 
-    if user.new_record?
-      user.name = email.split("@").first.titleize
-      user.save!
-    end
+    # Name is collected during onboarding after first login
+    user.save! if user.new_record?
 
     if user.member_of?(current_team)
       redirect_to team_members_path(current_team), alert: t("controllers.teams.members.already_member")
