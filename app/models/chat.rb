@@ -3,7 +3,7 @@ class Chat < ApplicationRecord
 
   belongs_to :user
   belongs_to :team, optional: true
-  belongs_to :model, optional: true, counter_cache: :chats_count
+  belongs_to :model, optional: true
   acts_as_chat messages_foreign_key: :chat_id
 
   scope :chronologically, -> { order(created_at: :asc) }

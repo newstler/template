@@ -7,7 +7,7 @@ class Webhooks::StripeController < ActionController::Base
 
     begin
       event = Stripe::Webhook.construct_event(
-        payload, sig_header, Rails.application.credentials.dig(:stripe, :webhook_secret)
+        payload, sig_header, Setting.get(:stripe_webhook_secret)
       )
     rescue JSON::ParserError, Stripe::SignatureVerificationError
       head :bad_request

@@ -29,7 +29,7 @@ module Chats
 
         assert result[:success]
         assert result[:data][:id].present?
-        assert_equal @model.id, result[:data][:model_id]
+        assert_equal @model.model_id, result[:data][:model_id]
       end
     end
 

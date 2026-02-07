@@ -25,7 +25,7 @@ module Chats
       return error_response("Model not found or not enabled", code: "invalid_model") unless model
 
       with_current_user do
-        chat.update!(model: model)
+        chat.with_model(model.model_id)
       end
 
       success_response(

@@ -28,9 +28,9 @@ module Chats
       result = call_tool(Chats::UpdateChatTool, id: @chat.id, model_id: @new_model.id)
 
       assert result[:success]
-      assert_equal @new_model.id, result[:data][:model_id]
+      assert_equal @new_model.model_id, result[:data][:model_id]
       @chat.reload
-      assert_equal @new_model.id, @chat.model_id
+      assert_equal @new_model.model_id, @chat.model_id
     end
 
     test "returns error when new model is not enabled" do

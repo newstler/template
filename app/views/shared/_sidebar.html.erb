@@ -35,65 +35,27 @@
         <% end %>
       <% end %>
 
-      <%# Teams group %>
-      <%= render "shared/sidebar_group", id: "teams", icon: "users", label: t("shared.sidebar.teams") do %>
-        <%# Create new team - multi-tenant only %>
-        <% if Team.multi_tenant? %>
+      <%# Team dropdown - team name as the header %>
+      <%= render "shared/sidebar_group", id: "team", icon: "users", label: current_team.name do %>
+        <%= render "shared/sidebar_link",
+            path: team_members_path(current_team),
+            icon: "users",
+            label: t("shared.sidebar.members"),
+            nested: true %>
+
+        <% if current_membership&.admin? %>
           <%= render "shared/sidebar_link",
-              path: new_team_path,
-              icon: "plus",
-              label: t("shared.sidebar.create_new_team"),
+              path: team_billing_path(current_team),
+              icon: "credit-card",
+              label: t("shared.sidebar.billing"),
+              nested: true %>
+
+          <%= render "shared/sidebar_link",
+              path: team_settings_path(current_team),
+              icon: "cog",
+              label: t("shared.sidebar.settings"),
               nested: true %>
         <% end %>
-
-        <%# Current team section %>
-        <div class="mt-2 pt-2 border-t border-white/5">
-          <div class="px-3 py-1.5 text-xs font-medium text-dark-500 uppercase tracking-wider">
-            <%= current_team.name %>
-          </div>
-
-          <%# Members %>
-          <%= render "shared/sidebar_link",
-              path: team_members_path(current_team),
-              icon: "users",
-              label: t("shared.sidebar.members"),
-              nested: true %>
-
-          <%# Invite Member - admin only %>
-          <% if current_membership&.admin? %>
-            <%= render "shared/sidebar_link",
-                path: new_team_member_path(current_team),
-                icon: "user-plus",
-                label: t("shared.sidebar.invite_new"),
-                nested: true %>
-          <% end %>
-
-          <%# Team member list %>
-          <% current_team.users.limit(5).each do |member| %>
-            <div class="flex items-center gap-2 px-3 py-1.5 pl-11 text-sm text-dark-400">
-              <div class="w-5 h-5 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-                <span class="text-[10px] font-medium text-white"><%= member.name&.first&.upcase || member.email.first.upcase %></span>
-              </div>
-              <span class="truncate"><%= member.name || member.email %></span>
-            </div>
-          <% end %>
-
-          <%# Settings - admin only %>
-          <% if current_membership&.admin? %>
-            <%= render "shared/sidebar_link",
-                path: team_settings_path(current_team),
-                icon: "cog",
-                label: t("shared.sidebar.settings"),
-                nested: true %>
-
-            <%# Billing - admin only %>
-            <%= render "shared/sidebar_link",
-                path: team_billing_path(current_team),
-                icon: "credit-card",
-                label: t("shared.sidebar.billing"),
-                nested: true %>
-          <% end %>
-        </div>
       <% end %>
     <% else %>
       <%= render "shared/sidebar_link", path: root_path, icon: "home", label: t("shared.sidebar.home") %>

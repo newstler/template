@@ -24,7 +24,7 @@ class ModelTest < ActiveSupport::TestCase
     providers = Model.configured_providers
     assert_kind_of Array, providers
     providers.each do |provider|
-      assert Rails.application.credentials.dig(provider.to_sym, :api_key).present?
+      assert Setting.provider_configured?(provider)
     end
   end
 

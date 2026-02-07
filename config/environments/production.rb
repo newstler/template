@@ -63,14 +63,8 @@ Rails.application.configure do
   # Default from address for emails.
   config.action_mailer.default_options = { from: "noreply@app.example.com" }
 
-  # Outgoing SMTP server configuration (from credentials).
-  config.action_mailer.smtp_settings = {
-    user_name: Rails.application.credentials.dig(:smtp, :username),
-    password: Rails.application.credentials.dig(:smtp, :password),
-    address: Rails.application.credentials.dig(:smtp, :address) || "smtp.example.com",
-    port: 587,
-    authentication: :plain
-  }
+  # SMTP credentials are loaded from Setting via config/initializers/settings.rb.
+  config.action_mailer.smtp_settings = { port: 587, authentication: :plain }
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

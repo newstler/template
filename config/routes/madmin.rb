@@ -24,5 +24,6 @@ namespace :madmin do
   resources :tool_calls
   resources :users
   resources :teams
+  resource :settings, only: [ :show, :edit, :update ]
   root to: "dashboard#show"
 end

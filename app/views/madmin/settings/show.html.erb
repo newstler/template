@@ -1,0 +1,167 @@
+<div class="max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <%= link_to t(".edit_button"), main_app.edit_madmin_settings_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+  </div>
+
+  <%# AI Providers %>
+  <div class="card-bg p-6 mb-6">
+    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".ai_providers") %></h2>
+    <dl class="space-y-4">
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".openai_api_key") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.openai_api_key.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.openai_api_key) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".anthropic_api_key") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.anthropic_api_key.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.anthropic_api_key) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+
+  <%# Stripe %>
+  <div class="card-bg p-6 mb-6">
+    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".stripe") %></h2>
+    <dl class="space-y-4">
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".stripe_secret_key") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.stripe_secret_key.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.stripe_secret_key) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".stripe_publishable_key") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.stripe_publishable_key.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.stripe_publishable_key) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".stripe_webhook_secret") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.stripe_webhook_secret.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.stripe_webhook_secret) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+
+  <%# SMTP %>
+  <div class="card-bg p-6 mb-6">
+    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".smtp") %></h2>
+    <dl class="space-y-4">
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".smtp_address") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.smtp_address.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= @setting.smtp_address %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".smtp_username") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.smtp_username.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= @setting.smtp_username %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".smtp_password") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.smtp_password.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.smtp_password) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+
+  <%# Litestream %>
+  <div class="card-bg p-6">
+    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".litestream") %></h2>
+    <p class="text-sm text-dark-500 mb-4"><%= t(".litestream_restart_note") %></p>
+    <dl class="space-y-4">
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".litestream_replica_bucket") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.litestream_replica_bucket.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= @setting.litestream_replica_bucket %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".litestream_replica_key_id") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.litestream_replica_key_id.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.litestream_replica_key_id) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".litestream_replica_access_key") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.litestream_replica_access_key.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= mask_secret(@setting.litestream_replica_access_key) %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+</div>

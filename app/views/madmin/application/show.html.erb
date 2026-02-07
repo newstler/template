@@ -17,29 +17,33 @@
       <% resource.member_actions.each do |action| %>
         <%= instance_exec(@record, &action) %>
       <% end %>
-      <%= link_to resource.edit_path(@record), class: "btn btn-secondary" do %>
-        <%= inline_svg "icons/pencil.svg", class: "w-4 h-4" %>
-        <span>Edit</span>
+      <% if resource.actions.include?(:edit) %>
+        <%= link_to resource.edit_path(@record), class: "btn btn-secondary" do %>
+          <%= inline_svg "icons/pencil.svg", class: "w-4 h-4" %>
+          <span>Edit</span>
+        <% end %>
       <% end %>
-      <%= button_to resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this #{resource.friendly_name.downcase}?" }, class: "btn btn-danger" do %>
-        <%= inline_svg "icons/trash.svg", class: "w-4 h-4" %>
-        <span>Delete</span>
+      <% if resource.actions.include?(:destroy) || resource.actions.include?(:delete) %>
+        <%= button_to resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this #{resource.friendly_name.downcase}?" }, class: "btn btn-danger" do %>
+          <%= inline_svg "icons/trash.svg", class: "w-4 h-4" %>
+          <span>Delete</span>
+        <% end %>
       <% end %>
     </div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden">
-  <dl class="divide-y divide-dark-600">
+  <dl>
     <% resource.attributes.values.each do |attribute| %>
       <% next if attribute.field.nil? %>
       <% next unless attribute.field.visible?(action_name) %>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 px-6 py-4">
-        <dt class="text-sm font-medium text-dark-400">
+      <div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 px-6 py-4 border-b border-dark-600 last:border-b-0">
+        <dt class="text-sm font-medium text-dark-400 sm:w-48 sm:shrink-0">
           <%= attribute.field.options.label || attribute.name.to_s.titleize %>
         </dt>
-        <dd class="text-dark-100 sm:col-span-2">
+        <dd class="text-dark-100 min-w-0 break-words">
           <%= render partial: attribute.field.to_partial_path("show"), locals: { field: attribute.field, record: @record, resource: resource } %>
         </dd>
       </div>

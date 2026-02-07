@@ -835,28 +835,6 @@
     overflow: hidden;
   }
 
-  dl {
-    display: grid;
-    grid-template-columns: minmax(150px, 200px) 1fr;
-    gap: 0;
-  }
-
-  dt {
-    background-color: var(--color-dark-700);
-    color: var(--color-dark-400);
-    font-size: 0.875rem;
-    font-weight: 500;
-    padding: 0.875rem 1rem;
-    border-bottom: 1px solid var(--color-dark-600);
-  }
-
-  dd {
-    color: var(--color-dark-200);
-    padding: 0.875rem 1rem;
-    border-bottom: 1px solid var(--color-dark-600);
-    word-break: break-word;
-  }
-
   /* Madmin Member Actions */
   .member-actions {
     display: flex;

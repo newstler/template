@@ -1,1 +1,1 @@
-Stripe.api_key = Rails.application.credentials.dig(:stripe, :secret_key)
+# Stripe API key is loaded from Setting via config/initializers/settings.rb

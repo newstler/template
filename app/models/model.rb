@@ -13,7 +13,7 @@ class Model < ApplicationRecord
 
   def self.configured_providers
     distinct.pluck(:provider).select do |provider|
-      Rails.application.credentials.dig(provider.to_sym, :api_key).present?
+      Setting.provider_configured?(provider)
     end
   end
 end

@@ -183,29 +183,6 @@ def confirm(question)
   result
 end
 
-def secret_prompt(question, default = nil)
-  label = PROMPT_STYLE.render(question)
-  colon = DEFAULT_STYLE.render(":")
-
-  if default
-    default_hint = DEFAULT_STYLE.render(" [#{default}]")
-    print "#{label}#{default_hint}#{colon} #{ansi_color(YELLOW)}"
-  else
-    print "#{label}#{colon} #{ansi_color(YELLOW)}"
-  end
-
-  answer = $stdin.gets.chomp
-  print RESET_COLOR
-  result = answer.empty? && default ? default : answer
-
-  # Rewrite the line with stars instead of the actual value
-  print "#{CURSOR_UP}#{CLEAR_LINE}"
-  display_value = result.empty? ? "" : "*" * result.length
-  puts "#{label}#{colon} #{INPUT_STYLE.render(display_value)}"
-
-  result
-end
-
 # ─────────────────────────────────────────────────────────────────────────────
 # Main
 # ─────────────────────────────────────────────────────────────────────────────
@@ -252,20 +229,6 @@ FileUtils.chdir APP_ROOT do
 
   admin_email = prompt("Admin email address", "admin@#{base_domain}")
 
-  # ── SMTP Configuration ──
-
-  section("SMTP Production Configuration (optional)")
-  muted("Press Enter to skip if you want to configure later.")
-  puts
-
-  smtp_address = prompt("SMTP server (e.g., smtp.postmarkapp.com)")
-  smtp_username = ""
-  smtp_password = ""
-  unless smtp_address.to_s.empty?
-    smtp_username = prompt("SMTP username")
-    smtp_password = secret_prompt("SMTP password")
-  end
-
   mailer_from = prompt("Mailer from address", "noreply@#{base_domain}")
 
   # ── Multitenancy ──
@@ -278,76 +241,6 @@ FileUtils.chdir APP_ROOT do
   initializer_path = "config/initializers/multitenancy.rb"
   File.write(initializer_path, "Rails.configuration.x.multi_tenant = #{multi_tenant}\n")
   success("  ✓ Updated #{initializer_path}")
-
-  # ── AI API Keys ──
-  # TODO: RubyLLM supports many providers (OpenAI, Anthropic, Gemini, DeepSeek, etc.)
-  # Allow user to select which providers to configure instead of hardcoding OpenAI/Anthropic.
-
-  section("AI API Keys (optional)")
-  muted("RubyLLM supports many AI providers. Here you can configure OpenAI and Anthropic.")
-  muted("For other providers, add their credentials manually: rails credentials:edit --environment development/production")
-  muted("You can use different keys for development and production.")
-  puts
-
-  muted("Development keys:")
-  openai_api_key_dev = secret_prompt("OpenAI API Key (development)")
-  anthropic_api_key_dev = secret_prompt("Anthropic API Key (development)")
-
-  puts
-  muted("Production keys (leave blank to use same as development):")
-  openai_api_key_prod = secret_prompt("OpenAI API Key (production)")
-  anthropic_api_key_prod = secret_prompt("Anthropic API Key (production)")
-
-  # Fall back to dev keys if prod keys are empty
-  openai_api_key_prod = openai_api_key_dev if openai_api_key_prod.to_s.empty?
-  anthropic_api_key_prod = anthropic_api_key_dev if anthropic_api_key_prod.to_s.empty?
-
-  # ── Stripe ──
-
-  section("Stripe (optional)")
-  muted("Stripe handles team billing and subscriptions.")
-  muted("Press Enter to skip if you want to configure later.")
-  puts
-
-  muted("Development keys:")
-  stripe_secret_key_dev = secret_prompt("Stripe Secret Key (development)")
-  stripe_publishable_key_dev = ""
-  stripe_webhook_secret_dev = ""
-  unless stripe_secret_key_dev.to_s.empty?
-    stripe_publishable_key_dev = secret_prompt("Stripe Publishable Key (development)")
-    stripe_webhook_secret_dev = secret_prompt("Stripe Webhook Secret (development)")
-  end
-
-  puts
-  muted("Production keys (leave blank to use same as development):")
-  stripe_secret_key_prod = secret_prompt("Stripe Secret Key (production)")
-  stripe_publishable_key_prod = ""
-  stripe_webhook_secret_prod = ""
-  unless stripe_secret_key_prod.to_s.empty?
-    stripe_publishable_key_prod = secret_prompt("Stripe Publishable Key (production)")
-    stripe_webhook_secret_prod = secret_prompt("Stripe Webhook Secret (production)")
-  end
-
-  # Fall back to dev keys if prod keys are empty
-  stripe_secret_key_prod = stripe_secret_key_dev if stripe_secret_key_prod.to_s.empty?
-  stripe_publishable_key_prod = stripe_publishable_key_dev if stripe_publishable_key_prod.to_s.empty?
-  stripe_webhook_secret_prod = stripe_webhook_secret_dev if stripe_webhook_secret_prod.to_s.empty?
-
-  # ── Litestream Configuration ──
-
-  section("Litestream Configuration (optional)")
-  muted("Litestream provides SQLite replication to S3-compatible storage.")
-  muted("Press Enter to skip if you don't need it yet.")
-  puts
-
-  replica_bucket = prompt("S3 bucket name")
-  replica_key_id = ""
-  replica_access_key = ""
-
-  unless replica_bucket.to_s.empty?
-    replica_key_id = secret_prompt("S3 Access Key ID")
-    replica_access_key = secret_prompt("S3 Secret Access Key")
-  end
 
   # ── Apply Configuration ──
 
@@ -390,28 +283,6 @@ FileUtils.chdir APP_ROOT do
     replace_in_file("config/environments/development.rb", "port: 3000", "port: #{port}")
   end
 
-  # Store config temporarily
-  config_data = {
-    "admin_email" => admin_email,
-    "smtp_address" => smtp_address,
-    "smtp_username" => smtp_username,
-    "smtp_password" => smtp_password,
-    "openai_api_key_dev" => openai_api_key_dev,
-    "anthropic_api_key_dev" => anthropic_api_key_dev,
-    "openai_api_key_prod" => openai_api_key_prod,
-    "anthropic_api_key_prod" => anthropic_api_key_prod,
-    "stripe_secret_key_dev" => stripe_secret_key_dev,
-    "stripe_publishable_key_dev" => stripe_publishable_key_dev,
-    "stripe_webhook_secret_dev" => stripe_webhook_secret_dev,
-    "stripe_secret_key_prod" => stripe_secret_key_prod,
-    "stripe_publishable_key_prod" => stripe_publishable_key_prod,
-    "stripe_webhook_secret_prod" => stripe_webhook_secret_prod,
-    "replica_bucket" => replica_bucket,
-    "replica_key_id" => replica_key_id,
-    "replica_access_key" => replica_access_key
-  }
-  File.write(".configure_temp.yml", YAML.dump(config_data))
-
   # Update seeds
   File.write("db/seeds.rb", <<~RUBY)
     # This file should ensure the existence of records required to run the application in every environment (production,
@@ -426,56 +297,10 @@ FileUtils.chdir APP_ROOT do
 
   section("Writing credentials")
 
-  config_data = YAML.load_file(".configure_temp.yml")
-
-  # Development credentials: secret_key_base + AI keys only
-  dev_credentials = {
-    "secret_key_base" => SecureRandom.hex(64)
-  }
-  dev_credentials["openai"] = { "api_key" => config_data["openai_api_key_dev"] } unless config_data["openai_api_key_dev"].to_s.empty?
-  dev_credentials["anthropic"] = { "api_key" => config_data["anthropic_api_key_dev"] } unless config_data["anthropic_api_key_dev"].to_s.empty?
-  unless config_data["stripe_secret_key_dev"].to_s.empty?
-    dev_credentials["stripe"] = {
-      "secret_key" => config_data["stripe_secret_key_dev"],
-      "publishable_key" => config_data["stripe_publishable_key_dev"],
-      "webhook_secret" => config_data["stripe_webhook_secret_dev"]
-    }
-  end
-
-  # Production credentials: secret_key_base + AI keys + Stripe + SMTP + Litestream
-  prod_credentials = {
-    "secret_key_base" => SecureRandom.hex(64)
-  }
-  prod_credentials["openai"] = { "api_key" => config_data["openai_api_key_prod"] } unless config_data["openai_api_key_prod"].to_s.empty?
-  prod_credentials["anthropic"] = { "api_key" => config_data["anthropic_api_key_prod"] } unless config_data["anthropic_api_key_prod"].to_s.empty?
-  unless config_data["stripe_secret_key_prod"].to_s.empty?
-    prod_credentials["stripe"] = {
-      "secret_key" => config_data["stripe_secret_key_prod"],
-      "publishable_key" => config_data["stripe_publishable_key_prod"],
-      "webhook_secret" => config_data["stripe_webhook_secret_prod"]
-    }
-  end
-
-  if !config_data["smtp_address"].to_s.empty?
-    prod_credentials["smtp"] = {
-      "address" => config_data["smtp_address"],
-      "username" => config_data["smtp_username"],
-      "password" => config_data["smtp_password"]
-    }
-  end
-
-  if !config_data["replica_bucket"].to_s.empty? && !config_data["replica_key_id"].to_s.empty?
-    prod_credentials["litestream"] = {
-      "replica_bucket" => config_data["replica_bucket"],
-      "replica_key_id" => config_data["replica_key_id"],
-      "replica_access_key" => config_data["replica_access_key"]
-    }
-  end
-
   require "active_support/encrypted_configuration"
   FileUtils.mkdir_p("config/credentials")
 
-  { "development" => dev_credentials, "production" => prod_credentials }.each do |env, credentials_hash|
+  %w[development production].each do |env|
     key_path = "config/credentials/#{env}.key"
     credentials_path = "config/credentials/#{env}.yml.enc"
 
@@ -484,6 +309,8 @@ FileUtils.chdir APP_ROOT do
       File.write(key_path, key)
       success("  ✓ Generated #{env} key: #{key_path}")
     end
+
+    credentials_hash = { "secret_key_base" => SecureRandom.hex(64) }
 
     config = ActiveSupport::EncryptedConfiguration.new(
       config_path: credentials_path,
@@ -496,7 +323,6 @@ FileUtils.chdir APP_ROOT do
     success("  ✓ #{env.capitalize} credentials updated: #{credentials_path}")
   end
 
-  File.delete(".configure_temp.yml") if File.exist?(".configure_temp.yml")
   File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nDomain: #{domain}\nAdmin: #{admin_email}\n")
 
   # ── Git Remote ──
@@ -545,5 +371,8 @@ FileUtils.chdir APP_ROOT do
 
   puts
   header("✓ Configuration Complete!")
+  puts
+  tip("💡  TIP: Configure API keys (AI, Stripe, SMTP, Litestream) in the admin panel:")
+  tip("   /madmin/settings")
   puts
 end

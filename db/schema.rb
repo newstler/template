@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_02_05_182154) do
+ActiveRecord::Schema[8.2].define(version: 2026_02_05_200000) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -115,6 +115,22 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_05_182154) do
     t.index ["family"], name: "index_models_on_family"
     t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
     t.index ["provider"], name: "index_models_on_provider"
+  end
+
+  create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "anthropic_api_key"
+    t.datetime "created_at", null: false
+    t.string "litestream_replica_access_key"
+    t.string "litestream_replica_bucket"
+    t.string "litestream_replica_key_id"
+    t.string "openai_api_key"
+    t.string "smtp_address"
+    t.string "smtp_password"
+    t.string "smtp_username"
+    t.string "stripe_publishable_key"
+    t.string "stripe_secret_key"
+    t.string "stripe_webhook_secret"
+    t.datetime "updated_at", null: false
   end
 
   create_table "teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
