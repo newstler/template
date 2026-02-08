@@ -14,6 +14,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Deployment**: Kamal 2
 - **Authentication**: Magic Links (passwordless)
 - **Multitenancy**: Team-based with roles (owner/admin/member)
+- **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation
 - **Admin Panel**: Madmin
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
