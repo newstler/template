@@ -1,5 +1,13 @@
 module Madmin
   class TeamsController < Madmin::ResourceController
+    private
+
+    def set_record
+      @record = resource.model
+        .includes(memberships: :user, chats: [:model, :messages])
+        .find_by!(slug: params[:id])
+    end
+
     def scoped_resources
       resources = resource.model.send(valid_scope)
       resources = Madmin::Search.new(resources, resource, search_term).run
