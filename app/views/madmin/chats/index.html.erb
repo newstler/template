@@ -2,6 +2,11 @@
 
 <header class="header">
   <h1><%= resource.friendly_name.pluralize %></h1>
+  <% setting = Setting.instance %>
+  <%= button_to main_app.toggle_public_chats_madmin_chats_path, method: :patch, class: "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors #{setting.public_chats? ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25' : 'bg-dark-700 text-dark-400 hover:bg-dark-600'}" do %>
+    <span class="w-2 h-2 rounded-full <%= setting.public_chats? ? 'bg-emerald-400' : 'bg-dark-500' %>"></span>
+    Public Chats <%= setting.public_chats? ? "On" : "Off" %>
+  <% end %>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">

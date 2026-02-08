@@ -14,7 +14,11 @@ namespace :madmin do
       post :send_magic_link
     end
   end
-  resources :chats
+  resources :chats do
+    collection do
+      patch :toggle_public_chats
+    end
+  end
   resources :messages
   resources :models do
     collection do

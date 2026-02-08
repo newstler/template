@@ -4,20 +4,6 @@
   </div>
 
   <%= form_with model: @setting, url: main_app.madmin_settings_path, method: :patch, class: "space-y-6" do |form| %>
-    <%# Features %>
-    <div class="bg-dark-900 py-8 px-6 rounded-xl border border-dark-700">
-      <h2 class="text-xl font-semibold text-dark-100 mb-6"><%= t(".features") %></h2>
-      <div class="space-y-4">
-        <label class="flex items-center gap-3 cursor-pointer">
-          <%= form.check_box :public_chats, class: "rounded border-dark-600 bg-dark-800 text-blue-500 focus:ring-blue-500/20 focus:ring-offset-0" %>
-          <div>
-            <span class="text-sm font-medium text-dark-200"><%= t(".public_chats") %></span>
-            <p class="text-xs text-dark-500"><%= t(".public_chats_hint") %></p>
-          </div>
-        </label>
-      </div>
-    </div>
-
     <%# Stripe %>
     <div class="bg-dark-900 py-8 px-6 rounded-xl border border-dark-700">
       <h2 class="text-xl font-semibold text-dark-100 mb-6"><%= t(".stripe") %></h2>

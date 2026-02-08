@@ -37,7 +37,7 @@
     <div>
       <span class="text-dark-400">Tokens:</span>
       <span class="font-medium text-dark-100">
-        In: <%= @record.messages.sum(&:input_tokens).to_i %> / Out: <%= @record.messages.sum(&:output_tokens).to_i %>
+        In: <%= @record.messages.sum { |m| m.input_tokens.to_i } %> / Out: <%= @record.messages.sum { |m| m.output_tokens.to_i } %>
       </span>
     </div>
     <div>

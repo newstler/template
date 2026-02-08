@@ -4,7 +4,17 @@
     <p class="text-dark-400">Overview of your application data and activity</p>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
+  <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-6 mb-8">
+    <div class="bg-gradient-to-br from-emerald-600/80 to-green-700/80 rounded-xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <div class="p-3 bg-white/20 rounded-lg">
+          <%= inline_svg "icons/dollar.svg", class: "w-6 h-6 text-white" %>
+        </div>
+      </div>
+      <p class="text-3xl font-bold text-white">$<%= number_with_precision(@metrics[:total_cost], precision: 2) %></p>
+      <p class="text-sm text-white/80 mt-1">Total AI Cost</p>
+    </div>
+
     <div class="card-bg p-6 hover:shadow-xl hover:shadow-black/30 transition-all">
       <div class="flex items-center justify-between mb-4">
         <div class="p-3 bg-blue-500/20 rounded-lg">
@@ -14,6 +24,17 @@
       </div>
       <p class="text-3xl font-bold text-dark-50"><%= number_with_delimiter(@metrics[:total_users]) %></p>
       <p class="text-sm text-dark-400 mt-1">Total Users</p>
+    </div>
+
+    <div class="card-bg p-6 hover:shadow-xl hover:shadow-black/30 transition-all">
+      <div class="flex items-center justify-between mb-4">
+        <div class="p-3 bg-indigo-500/20 rounded-lg">
+          <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-indigo-400" %>
+        </div>
+        <span class="text-xs font-medium text-green-400 bg-green-500/20 px-2 py-1 rounded-full">+<%= @metrics[:recent_teams] %></span>
+      </div>
+      <p class="text-3xl font-bold text-dark-50"><%= number_with_delimiter(@metrics[:total_teams]) %></p>
+      <p class="text-sm text-dark-400 mt-1">Total Teams</p>
     </div>
 
     <div class="card-bg p-6 hover:shadow-xl hover:shadow-black/30 transition-all">
@@ -45,24 +66,14 @@
         </div>
       </div>
       <p class="text-3xl font-bold text-dark-50"><%= number_with_delimiter(@metrics[:total_tokens]) %></p>
-      <p class="text-sm text-dark-400 mt-1">AI Tokens Used</p>
-    </div>
-
-    <div class="bg-gradient-to-br from-emerald-600/80 to-green-700/80 rounded-xl p-6 shadow-lg shadow-emerald-500/20 hover:shadow-xl hover:shadow-emerald-500/30 transition-all">
-      <div class="flex items-center justify-between mb-4">
-        <div class="p-3 bg-white/20 rounded-lg">
-          <%= inline_svg "icons/dollar.svg", class: "w-6 h-6 text-white" %>
-        </div>
-      </div>
-      <p class="text-3xl font-bold text-white">$<%= number_with_precision(@metrics[:total_cost], precision: 4) %></p>
-      <p class="text-sm text-white/80 mt-1">Total Cost</p>
+      <p class="text-sm text-dark-400 mt-1">AI Tokens</p>
     </div>
   </div>
 
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
     <div class="lg:col-span-2 card-bg p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-semibold text-dark-50">Activity Overview</h2>
+        <h2 class="text-lg font-semibold text-dark-50">Cost Overview</h2>
         <span class="text-sm text-dark-400">Last 7 days</span>
       </div>
       <div class="h-64">
@@ -72,92 +83,88 @@
 
     <div class="card-bg p-6">
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-lg font-semibold text-dark-50">Messages by Role</h2>
+        <h2 class="text-lg font-semibold text-dark-50">Subscriptions</h2>
+        <%= link_to "Teams", "/madmin/teams", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
       </div>
-      <div class="h-64 flex items-center justify-center">
-        <canvas id="roleChart"></canvas>
+      <div class="space-y-4">
+        <% sub_total = @subscription_stats.values.sum.to_f %>
+        <% [
+          ["Active", @subscription_stats[:active], "bg-emerald-500", "text-emerald-400"],
+          ["Trialing", @subscription_stats[:trialing], "bg-blue-500", "text-blue-400"],
+          ["Past Due", @subscription_stats[:past_due], "bg-amber-500", "text-amber-400"],
+          ["Canceled", @subscription_stats[:canceled], "bg-red-500", "text-red-400"],
+          ["None", @subscription_stats[:none], "bg-dark-500", "text-dark-400"]
+        ].each do |label, count, bar_color, text_color| %>
+          <div>
+            <div class="flex items-center justify-between mb-1">
+              <span class="text-sm <%= text_color %>"><%= label %></span>
+              <span class="text-sm font-medium text-dark-200"><%= count %></span>
+            </div>
+            <div class="w-full bg-dark-700 rounded-full h-2">
+              <div class="<%= bar_color %> h-2 rounded-full transition-all" style="width: <%= sub_total > 0 ? (count / sub_total * 100).round(1) : 0 %>%"></div>
+            </div>
+          </div>
+        <% end %>
       </div>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
-    <div class="card-bg p-4 hover:shadow-xl hover:shadow-black/30 transition-all">
-      <div class="flex items-center gap-3">
-        <div class="p-2 bg-indigo-500/20 rounded-lg">
-          <%= inline_svg "icons/shield.svg", class: "w-5 h-5 text-indigo-400" %>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-dark-50"><%= @metrics[:total_admins] %></p>
-          <p class="text-xs text-dark-400">Admins</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-bg p-4 hover:shadow-xl hover:shadow-black/30 transition-all">
-      <div class="flex items-center gap-3">
-        <div class="p-2 bg-pink-500/20 rounded-lg">
-          <%= inline_svg "icons/computer.svg", class: "w-5 h-5 text-pink-400" %>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-dark-50"><%= number_with_delimiter(@metrics[:total_models]) %></p>
-          <p class="text-xs text-dark-400">AI Models</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="card-bg p-4 hover:shadow-xl hover:shadow-black/30 transition-all">
-      <div class="flex items-center gap-3">
-        <div class="p-2 bg-teal-500/20 rounded-lg">
-          <%= inline_svg "icons/cog.svg", class: "w-5 h-5 text-teal-400" %>
-        </div>
-        <div>
-          <p class="text-2xl font-bold text-dark-50"><%= number_with_delimiter(@metrics[:total_tool_calls]) %></p>
-          <p class="text-xs text-dark-400">Tool Calls</p>
-        </div>
-      </div>
-    </div>
-
-    <div class="bg-gradient-to-br from-dark-700 to-dark-800 rounded-xl p-4 text-white shadow-lg shadow-black/20 hover:shadow-xl hover:shadow-black/30 transition-all">
-      <div class="flex items-center gap-3">
-        <div class="p-2 bg-white/10 rounded-lg">
-          <%= inline_svg "icons/chart.svg", class: "w-5 h-5 text-white" %>
-        </div>
-        <div>
-          <p class="text-2xl font-bold"><%= @metrics[:recent_users] + @metrics[:recent_chats] + @metrics[:recent_messages] %></p>
-          <p class="text-xs opacity-90">Weekly Activity</p>
+      <div class="mt-6 pt-4 border-t border-dark-700">
+        <div class="grid grid-cols-2 gap-4">
+          <div>
+            <p class="text-xs text-dark-400 mb-1">Monthly Revenue</p>
+            <% if @subscription_revenue[:available] %>
+              <p class="text-xl font-bold text-emerald-400">$<%= number_with_precision(@subscription_revenue[:mrr], precision: 2) %></p>
+            <% else %>
+              <p class="text-sm text-dark-500">Configure Stripe</p>
+            <% end %>
+          </div>
+          <div>
+            <p class="text-xs text-dark-400 mb-1">Total Revenue</p>
+            <% if @subscription_revenue[:available] %>
+              <p class="text-xl font-bold text-dark-50">$<%= number_with_precision(@subscription_revenue[:total], precision: 2) %></p>
+            <% else %>
+              <p class="text-sm text-dark-500">Configure Stripe</p>
+            <% end %>
+          </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
     <div class="card-bg p-6">
       <div class="flex items-center justify-between mb-4">
-        <h2 class="text-lg font-semibold text-dark-50">Recent Chats</h2>
-        <%= link_to "View all", "/madmin/chats", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
+        <h2 class="text-lg font-semibold text-dark-50">Recent Teams</h2>
+        <%= link_to "View all", "/madmin/teams", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
       </div>
-      <div class="space-y-3">
-        <% if @recent_chats.any? %>
-          <% @recent_chats.each do |chat| %>
-            <div class="flex items-center justify-between p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
-                  <%= chat.user.name.first.upcase %>
-                </div>
-                <div>
-                  <p class="font-medium text-dark-100"><%= chat.user.name %></p>
-                  <p class="text-sm text-dark-400"><%= chat.user.email %></p>
-                </div>
+      <div class="space-y-2">
+        <% if @recent_teams.any? %>
+          <% @recent_teams.each do |team| %>
+            <%= link_to "/madmin/teams/#{team.slug}", class: "block p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors" do %>
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-dark-100"><%= team.name %></span>
+                <% status = team.subscription_status || "none" %>
+                <% badge_class = case status
+                  when "active" then "bg-emerald-500/15 text-emerald-400"
+                  when "trialing" then "bg-blue-500/15 text-blue-400"
+                  when "past_due" then "bg-amber-500/15 text-amber-400"
+                  when "canceled" then "bg-red-500/15 text-red-400"
+                  else "bg-dark-700 text-dark-400"
+                end %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
+                  <%= status.titleize %>
+                </span>
               </div>
-              <div class="text-right">
-                <p class="text-sm text-dark-500"><%= time_ago_in_words(chat.created_at) %> ago</p>
-                <%= link_to "View", "/madmin/chats/#{chat.id}", class: "text-sm text-blue-400 hover:text-blue-300 font-medium" %>
+              <div class="flex items-center gap-2 text-xs text-dark-500">
+                <span><%= team.memberships.size %> members</span>
+                <span>&middot;</span>
+                <span><%= team.chats.size %> chats</span>
+                <span>&middot;</span>
+                <span><%= time_ago_in_words(team.created_at) %> ago</span>
               </div>
-            </div>
+            <% end %>
           <% end %>
         <% else %>
           <div class="text-center py-8 text-dark-400">
-            <p>No chats yet</p>
+            <p>No teams yet</p>
           </div>
         <% end %>
       </div>
@@ -168,28 +175,55 @@
         <h2 class="text-lg font-semibold text-dark-50">Recent Users</h2>
         <%= link_to "View all", "/madmin/users", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
       </div>
-      <div class="space-y-3">
+      <div class="space-y-2">
         <% if @recent_users.any? %>
           <% @recent_users.each do |user| %>
-            <div class="flex items-center justify-between p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 bg-gradient-to-br from-green-500 to-teal-500 rounded-full flex items-center justify-center text-white font-medium text-sm">
-                  <%= user.name.first.upcase %>
-                </div>
-                <div>
-                  <p class="font-medium text-dark-100"><%= user.name %></p>
-                  <p class="text-sm text-dark-400"><%= user.email %></p>
-                </div>
+            <%= link_to "/madmin/users/#{user.id}", class: "block p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors" do %>
+              <div class="flex items-center justify-between mb-1">
+                <span class="font-medium text-dark-100"><%= user.name || "Unnamed" %></span>
+                <span class="text-xs text-dark-500"><%= time_ago_in_words(user.created_at) %> ago</span>
               </div>
-              <div class="text-right">
-                <p class="text-sm text-dark-500"><%= time_ago_in_words(user.created_at) %> ago</p>
-                <%= link_to "View", "/madmin/users/#{user.id}", class: "text-sm text-blue-400 hover:text-blue-300 font-medium" %>
+              <div class="flex items-center gap-2 text-xs text-dark-500">
+                <span class="text-dark-400"><%= user.email %></span>
+                <span>&middot;</span>
+                <span><%= user.memberships.size %> teams</span>
               </div>
-            </div>
+            <% end %>
           <% end %>
         <% else %>
           <div class="text-center py-8 text-dark-400">
             <p>No users yet</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="card-bg p-6">
+      <div class="flex items-center justify-between mb-4">
+        <h2 class="text-lg font-semibold text-dark-50">Recent Chats</h2>
+        <%= link_to "View all", "/madmin/chats", class: "text-sm text-dark-400 hover:text-dark-200 font-medium" %>
+      </div>
+      <div class="space-y-2">
+        <% if @recent_chats.any? %>
+          <% @recent_chats.each do |chat| %>
+            <%= link_to "/madmin/chats/#{chat.id}", class: "block p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors" do %>
+              <div class="flex items-center justify-between mb-1">
+                <span class="text-sm font-medium text-dark-200 truncate"><%= chat.user&.name || chat.user&.email || "Unknown" %></span>
+                <span class="text-sm font-medium shrink-0 ml-2 <%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>">$<%= number_with_precision(chat.total_cost || 0, precision: 2) %></span>
+              </div>
+              <div class="text-sm text-dark-400 truncate mb-1"><%= chat.messages.min_by(&:created_at)&.content&.truncate(70) || "Empty chat" %></div>
+              <div class="flex items-center gap-2 text-xs text-dark-500">
+                <span><%= chat.model&.name || "Default" %></span>
+                <span>&middot;</span>
+                <span><%= chat.messages_count %> msgs</span>
+                <span>&middot;</span>
+                <span><%= time_ago_in_words(chat.created_at) %> ago</span>
+              </div>
+            <% end %>
+          <% end %>
+        <% else %>
+          <div class="text-center py-8 text-dark-400">
+            <p>No chats yet</p>
           </div>
         <% end %>
       </div>
@@ -203,6 +237,10 @@ document.addEventListener('DOMContentLoaded', function() {
   Chart.defaults.color = '#94a3b8';
   Chart.defaults.borderColor = '#334155';
 
+  const costData = <%= raw @activity_chart_data[:cost].to_json %>;
+  const maxCost = Math.max(...costData, 0);
+  const decimals = maxCost < 0.01 ? 4 : maxCost < 1 ? 3 : 2;
+
   const activityCtx = document.getElementById('activityChart').getContext('2d');
   new Chart(activityCtx, {
     type: 'line',
@@ -210,40 +248,15 @@ document.addEventListener('DOMContentLoaded', function() {
       labels: <%= raw @activity_chart_data[:labels].to_json %>,
       datasets: [
         {
-          label: 'Users',
-          data: <%= raw @activity_chart_data[:users].to_json %>,
-          borderColor: 'rgb(59, 130, 246)',
-          backgroundColor: 'rgba(59, 130, 246, 0.1)',
-          tension: 0.4,
-          fill: true,
-          yAxisID: 'y'
-        },
-        {
-          label: 'Chats',
-          data: <%= raw @activity_chart_data[:chats].to_json %>,
-          borderColor: 'rgb(147, 51, 234)',
-          backgroundColor: 'rgba(147, 51, 234, 0.1)',
-          tension: 0.4,
-          fill: true,
-          yAxisID: 'y'
-        },
-        {
-          label: 'Messages',
-          data: <%= raw @activity_chart_data[:messages].to_json %>,
-          borderColor: 'rgb(34, 197, 94)',
-          backgroundColor: 'rgba(34, 197, 94, 0.1)',
-          tension: 0.4,
-          fill: true,
-          yAxisID: 'y'
-        },
-        {
           label: 'Cost ($)',
-          data: <%= raw @activity_chart_data[:cost].to_json %>,
+          data: costData,
           borderColor: 'rgb(16, 185, 129)',
           backgroundColor: 'rgba(16, 185, 129, 0.1)',
-          tension: 0.4,
+          borderWidth: 2,
+          tension: 0.3,
           fill: true,
-          yAxisID: 'y1'
+          pointBackgroundColor: 'rgb(16, 185, 129)',
+          pointRadius: 4
         }
       ]
     },
@@ -252,37 +265,25 @@ document.addEventListener('DOMContentLoaded', function() {
       maintainAspectRatio: false,
       plugins: {
         legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            padding: 20
+          display: false
+        },
+        tooltip: {
+          callbacks: {
+            label: function(context) {
+              return '$' + context.parsed.y.toFixed(decimals);
+            }
           }
         }
       },
       scales: {
         y: {
-          type: 'linear',
-          display: true,
-          position: 'left',
           beginAtZero: true,
-          ticks: {
-            stepSize: 1
-          },
           grid: {
             color: 'rgba(51, 65, 85, 0.5)'
-          }
-        },
-        y1: {
-          type: 'linear',
-          display: true,
-          position: 'right',
-          beginAtZero: true,
-          grid: {
-            drawOnChartArea: false
           },
           ticks: {
             callback: function(value) {
-              return '$' + value.toFixed(4);
+              return '$' + value.toFixed(decimals);
             }
           }
         },
@@ -291,50 +292,9 @@ document.addEventListener('DOMContentLoaded', function() {
             display: false
           }
         }
-      },
-      interaction: {
-        intersect: false,
-        mode: 'index'
       }
     }
   });
 
-  <% if @message_role_data[:labels].any? %>
-  const roleCtx = document.getElementById('roleChart').getContext('2d');
-  new Chart(roleCtx, {
-    type: 'doughnut',
-    data: {
-      labels: <%= raw @message_role_data[:labels].to_json %>,
-      datasets: [{
-        data: <%= raw @message_role_data[:values].to_json %>,
-        backgroundColor: [
-          'rgb(59, 130, 246)',
-          'rgb(34, 197, 94)',
-          'rgb(147, 51, 234)',
-          'rgb(249, 115, 22)',
-          'rgb(236, 72, 153)'
-        ],
-        borderWidth: 0,
-        hoverOffset: 4
-      }]
-    },
-    options: {
-      responsive: true,
-      maintainAspectRatio: false,
-      plugins: {
-        legend: {
-          position: 'bottom',
-          labels: {
-            usePointStyle: true,
-            padding: 15
-          }
-        }
-      },
-      cutout: '60%'
-    }
-  });
-  <% else %>
-  document.getElementById('roleChart').parentElement.innerHTML = '<p class="text-dark-400 text-center">No messages yet</p>';
-  <% end %>
 });
 </script>

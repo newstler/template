@@ -1,5 +1,15 @@
 module Madmin
   class ChatsController < Madmin::ResourceController
+    skip_before_action :set_record, only: :toggle_public_chats
+
+    def toggle_public_chats
+      setting = Setting.instance
+      setting.update!(public_chats: !setting.public_chats?)
+      redirect_to main_app.madmin_chats_path, notice: "Public chats #{setting.public_chats? ? 'enabled' : 'disabled'}"
+    end
+
+    private
+
     def scoped_resources
       resources = super.includes(:user, :model, :messages)
 

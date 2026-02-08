@@ -4,7 +4,7 @@ module Madmin
 
     def set_record
       @record = resource.model
-        .includes(memberships: :user, chats: [:model, :messages])
+        .includes(memberships: :user, chats: [ :model, :messages ])
         .find_by!(slug: params[:id])
     end
 

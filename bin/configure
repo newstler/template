@@ -326,6 +326,59 @@ FileUtils.chdir APP_ROOT do
     success("  ✓ #{env.capitalize} credentials updated: #{credentials_path}")
   end
 
+  # ── Consolidate Migrations ──
+
+  section("Consolidating migrations")
+
+  schema_path = "db/schema.rb"
+  migrate_dir = "db/migrate"
+
+  if !File.exist?(schema_path)
+    warning("  ⚠ db/schema.rb not found, skipping migration consolidation")
+  elsif !Dir.exist?(migrate_dir)
+    warning("  ⚠ db/migrate/ not found, skipping migration consolidation")
+  elsif Dir.glob("#{migrate_dir}/*.rb").size <= 1
+    muted("  Already consolidated (1 or fewer migrations)")
+  else
+    schema_content = File.read(schema_path)
+    schema_match = schema_content.match(/ActiveRecord::Schema\[[\d.]+\]\.define\(.*?\) do\n(.*)\nend\n?\z/m)
+
+    if schema_match.nil?
+      warning("  ⚠ Could not parse db/schema.rb, skipping migration consolidation")
+    else
+      schema_body = schema_match[1]
+
+      # Build migration with correct indentation
+      timestamp = Time.now.strftime("%Y%m%d%H%M%S")
+      migration = "class CreateInitialSchema < ActiveRecord::Migration[8.2]\n"
+      migration << "  def change\n"
+      schema_body.each_line do |line|
+        migration << (line.strip.empty? ? "\n" : "  #{line}")
+      end
+      migration << "\n" unless migration.end_with?("\n")
+      migration << "  end\nend\n"
+
+      # Delete all old migrations
+      old_migrations = Dir.glob("#{migrate_dir}/*.rb")
+      old_migrations.each { |f| File.delete(f) }
+      muted("  Removed #{old_migrations.size} migration files")
+
+      # Write consolidated migration
+      migration_path = "#{migrate_dir}/#{timestamp}_create_initial_schema.rb"
+      File.write(migration_path, migration)
+      success("  ✓ Created #{migration_path}")
+
+      # Update schema.rb version to match new migration timestamp
+      new_version = timestamp.gsub(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '\1_\2_\3_\4\5\6')
+      updated_schema = schema_content.sub(
+        /ActiveRecord::Schema\[[\d.]+\]\.define\(version: \d[\d_]*\)/,
+        "ActiveRecord::Schema[8.2].define(version: #{new_version})"
+      )
+      File.write(schema_path, updated_schema)
+      success("  ✓ Updated schema.rb version")
+    end
+  end
+
   File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nDomain: #{domain}\nAdmin: #{admin_email}\n")
 
   # ── Git Remote ──

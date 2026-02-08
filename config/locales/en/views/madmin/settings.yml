@@ -4,7 +4,6 @@ en:
     settings:
       edit:
         cancel: Cancel
-        features: Features
         heading: Edit Settings
         key_placeholder: Enter key...
         litestream: Litestream
@@ -12,8 +11,6 @@ en:
         litestream_replica_bucket: Replica Bucket
         litestream_replica_key_id: Access Key ID
         litestream_restart_note: Changes to Litestream settings require a server restart.
-        public_chats: Public Chats
-        public_chats_hint: Allow end users to access the chat feature
         save: Save Settings
         stripe: Stripe
         stripe_publishable_key: Publishable Key
@@ -23,10 +20,7 @@ en:
         trial_days_hint: Number of days new teams get as a free trial. Set to 0 to
           disable.
       show:
-        disabled: Disabled
         edit_button: Edit Settings
-        enabled: Enabled
-        features: Features
         heading: Settings
         litestream: Litestream
         litestream_replica_access_key: Secret Access Key
@@ -34,7 +28,6 @@ en:
         litestream_replica_key_id: Access Key ID
         litestream_restart_note: Changes to Litestream settings require a server restart.
         not_configured: Not configured
-        public_chats: Public Chats
         stripe: Stripe
         stripe_publishable_key: Publishable Key
         stripe_secret_key: Secret Key
