@@ -4,8 +4,10 @@ en:
     mail:
       edit:
         cancel: Cancel
+        general: General
         heading: Edit Mail Settings
         key_placeholder: Enter key...
+        mail_from: From Address
         save: Save Settings
         smtp: SMTP
         smtp_address: Server Address
@@ -14,7 +16,9 @@ en:
         smtp_username_placeholder: your-username
       show:
         edit_button: Edit Settings
+        general: General
         heading: Mail Settings
+        mail_from: From Address
         not_configured: Not configured
         smtp: SMTP
         smtp_address: Server Address

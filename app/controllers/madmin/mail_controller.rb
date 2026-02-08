@@ -21,7 +21,7 @@ module Madmin
     private
 
     def mail_params
-      params.require(:setting).permit(:smtp_address, :smtp_username, :smtp_password)
+      params.require(:setting).permit(:mail_from, :smtp_address, :smtp_username, :smtp_password)
     end
   end
 end

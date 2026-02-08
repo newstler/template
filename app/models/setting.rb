@@ -1,6 +1,7 @@
 class Setting < ApplicationRecord
   ALLOWED_KEYS = %i[
     litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
+    mail_from
     public_chats
     smtp_address smtp_password smtp_username
     stripe_publishable_key stripe_secret_key stripe_webhook_secret
@@ -48,6 +49,8 @@ class Setting < ApplicationRecord
   end
 
   def configure_smtp!
+    ActionMailer::Base.default_options = { from: mail_from } if has_attribute?(:mail_from) && mail_from.present?
+
     return unless Rails.env.production?
     return if smtp_address.blank?
 

@@ -38,20 +38,14 @@
       <%= render "shared/sidebar_link", path: "/madmin/teams", icon: "users", label: "Teams" %>
     </div>
 
-    <%# Chats Section (collapsible with Messages nested) %>
-    <div class="mt-4">
-      <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: "Chats" do %>
-        <%= render "shared/sidebar_link", path: "/madmin/chats", icon: "chat", label: "All Chats", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/messages", icon: "messages", label: "Messages", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/tool_calls", icon: "wrench", label: "Tool Calls", nested: true %>
-      <% end %>
-    </div>
-
-    <%# AI Models Section %>
+    <%# AI Section (collapsible) %>
     <div class="mt-4">
       <%= render "shared/sidebar_group", id: "ai", icon: "cube", label: "AI" do %>
         <%= render "shared/sidebar_link", path: "/madmin/models", icon: "cube", label: "Models", nested: true %>
         <%= render "shared/sidebar_link", path: "/madmin/providers", icon: "cog", label: "Providers", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/chats", icon: "chat", label: "Chats", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/messages", icon: "messages", label: "Messages", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/tool_calls", icon: "wrench", label: "Tool Calls", nested: true %>
       <% end %>
     </div>
 

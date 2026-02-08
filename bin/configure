@@ -229,8 +229,6 @@ FileUtils.chdir APP_ROOT do
 
   admin_email = prompt("Admin email address", "admin@#{base_domain}")
 
-  mailer_from = prompt("Mailer from address", "noreply@#{base_domain}")
-
   # ── Multitenancy ──
 
   section("Multitenancy")
@@ -273,7 +271,7 @@ FileUtils.chdir APP_ROOT do
   replace_in_file("config/environments/production.rb", 'host: "app.example.com"', "host: \"#{domain}\"")
   replace_in_file("config/environments/production.rb", '"app.example.com"', "\"#{domain}\"")
   replace_in_file("config/environments/production.rb", '/.*\.example\.com/', "/.*\\.#{Regexp.escape(base_domain).gsub('\\.', '\\.')}/")
-  replace_in_file("config/environments/production.rb", 'from: "noreply@app.example.com"', "from: \"#{mailer_from}\"")
+  replace_in_file("config/environments/production.rb", 'from: "noreply@app.example.com"', "from: \"noreply@#{base_domain}\"")
 
   replace_in_file("Dockerfile", "docker build -t template", "docker build -t #{service_name}")
   replace_in_file("Dockerfile", "--name template template", "--name #{service_name} #{service_name}")
@@ -292,6 +290,11 @@ FileUtils.chdir APP_ROOT do
     # Create first admin
     admin = Admin.find_or_create_by!(email: "#{admin_email}")
     puts "✓ Admin created: \#{admin.email}"
+
+    # Set default mail from address
+    setting = Setting.instance
+    setting.update!(mail_from: "noreply@#{base_domain}") if setting.mail_from.blank?
+    puts "✓ Mail from: \#{setting.mail_from}"
   RUBY
   success("  ✓ Updated db/seeds.rb")
 

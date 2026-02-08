@@ -4,6 +4,24 @@
     <%= link_to t(".edit_button"), main_app.edit_madmin_mail_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
   </div>
 
+  <div class="card-bg p-6 mb-6">
+    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".general") %></h2>
+    <dl class="space-y-4">
+      <div class="flex items-center justify-between">
+        <dt class="text-sm font-medium text-dark-400"><%= t(".mail_from") %></dt>
+        <dd class="flex items-center gap-2">
+          <% if @setting.mail_from.present? %>
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= @setting.mail_from %></code>
+          <% else %>
+            <span class="w-2 h-2 bg-dark-500 rounded-full"></span>
+            <span class="text-sm text-dark-500"><%= t(".not_configured") %></span>
+          <% end %>
+        </dd>
+      </div>
+    </dl>
+  </div>
+
   <div class="card-bg p-6">
     <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".smtp") %></h2>
     <dl class="space-y-4">
