@@ -244,17 +244,30 @@ FileUtils.chdir APP_ROOT do
 
   section("Analytics")
 
-  muted("Nullitics privacy-first analytics is enabled by default (no cookies, no PII).")
-  muted("MaxMind GeoLite2 adds IP-to-country geolocation for analytics.")
-  puts
-
+  nullitics = false
   maxmind_account_id = nil
   maxmind_license_key = nil
 
-  if confirm("Configure MaxMind GeoLite2 for IP geolocation?")
-    maxmind_account_id = prompt("MaxMind Account ID")
-    maxmind_license_key = prompt("MaxMind License Key")
+  muted("Nullitics: privacy-first page analytics — no cookies, no PII, GDPR compliant.")
+  muted("Learn more at https://nullitics.com")
+  puts
+
+  if confirm("Enable Nullitics analytics?")
+    nullitics = true
+    puts
+    muted("MaxMind GeoLite2 adds country-level geolocation to analytics (optional).")
+    muted("Get a free license key at https://www.maxmind.com/en/geolite2/signup")
+    puts
+
+    if confirm("Configure MaxMind GeoLite2 for IP geolocation?")
+      maxmind_account_id = prompt("MaxMind Account ID")
+      maxmind_license_key = prompt("MaxMind License Key")
+    end
   end
+
+  initializer_path = "config/initializers/nullitics.rb"
+  File.write(initializer_path, "Rails.configuration.x.nullitics = #{nullitics}\n")
+  success("  ✓ Updated #{initializer_path}")
 
   # ── Apply Configuration ──
 
@@ -373,7 +386,7 @@ FileUtils.chdir APP_ROOT do
 
       # Build migration with correct indentation
       timestamp = Time.now.strftime("%Y%m%d%H%M%S")
-      migration = "class CreateInitialSchema < ActiveRecord::Migration[8.2]\n"
+      migration = +"class CreateInitialSchema < ActiveRecord::Migration[8.2]\n"
       migration << "  def change\n"
       schema_body.each_line do |line|
         migration << (line.strip.empty? ? "\n" : "  #{line}")

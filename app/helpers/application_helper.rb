@@ -27,7 +27,7 @@ module ApplicationHelper
   # ── Analytics ──
 
   def nullitics_enabled?
-    Geocoder.config[:ip_lookup] == :geoip2
+    Rails.configuration.x.nullitics
   end
 
   def country_code
