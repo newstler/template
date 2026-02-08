@@ -1,11 +1,18 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded UUIDv7s to maintain referential integrity across fixtures.
+# When fixtures have circular foreign keys, dynamic IDs break cross-references.
 
-# This model initially had no columns defined. If you add columns to the
-# model remove the "{}" from the fixture names and add the columns immediately
-# below each fixture, per the syntax in the comments below
-#
-one: {}
-# column: value
-#
-two: {}
-# column: value
+one:
+  id: 01961a2a-c0de-7000-8000-000000000001
+  email: user1@example.com
+  name: User One
+
+two:
+  id: 01961a2a-c0de-7000-8000-000000000002
+  email: user2@example.com
+  name: User Two
+
+not_onboarded:
+  id: 01961a2a-c0de-7000-8000-000000000003
+  email: unonboarded@example.com

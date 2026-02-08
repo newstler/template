@@ -1,0 +1,28 @@
+---
+en:
+  models:
+    index:
+      back: Back to chats
+      heading: Models
+      refresh: Refresh Models
+      table:
+        context_window: Context Window
+        model: Model
+        pricing: "$/1M tokens (In/Out)"
+        provider: Provider
+      title: Models
+    model:
+      show: Show
+      start_chat: Start chat
+    show:
+      all_models: All models
+      back: Back to chats
+      capabilities: Capabilities
+      context_window: Context Window
+      context_window_value: "%{count} tokens"
+      id: ID
+      max_output: Max Output
+      max_output_value: "%{count} tokens"
+      model: Model
+      provider: Provider
+      start_chat: Start chat with this model

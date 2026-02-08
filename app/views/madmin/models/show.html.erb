@@ -1,0 +1,138 @@
+<%= content_for :title, @record.name %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= @record.name %>
+  </h1>
+
+  <div class="actions">
+    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
+  </div>
+</header>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-6">
+    <div class="w-16 h-16 rounded-xl bg-gradient-to-br from-accent-600 to-accent-700 flex items-center justify-center text-2xl font-bold text-white shadow-lg">
+      <%= @record.name[0..1].upcase %>
+    </div>
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.name %></h2>
+      <div class="flex items-center gap-3 mt-2">
+        <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-dark-700 text-dark-200"><%= @record.provider.titleize %></span>
+        <% if @record.family.present? %>
+          <span class="text-dark-500"><%= @record.family %></span>
+        <% end %>
+      </div>
+      <p class="text-dark-500 text-sm mt-2">Model ID: <span class="font-mono text-dark-400"><%= @record.model_id %></span></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Context Window</div>
+    <div class="text-2xl font-bold text-dark-100"><%= number_with_delimiter(@record.context_window) || "-" %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Max Output</div>
+    <div class="text-2xl font-bold text-dark-100"><%= number_with_delimiter(@record.max_output_tokens) || "-" %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Total Chats</div>
+    <div class="text-2xl font-bold text-dark-100"><%= @record.chats_count %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Total Cost</div>
+    <div class="text-2xl font-bold <%= (@record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= @record.formatted_total_cost || "$0.00" %></div>
+  </div>
+</div>
+
+<% if @record.capabilities.present? && @record.capabilities.any? %>
+<div class="card-bg p-5 mb-6">
+  <div class="text-dark-500 text-sm mb-2">Capabilities</div>
+  <div class="flex flex-wrap gap-2">
+    <% @record.capabilities.each do |capability| %>
+      <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-300"><%= capability %></span>
+    <% end %>
+  </div>
+</div>
+<% end %>
+
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">Model ID</th>
+          <td class="font-mono text-sm"><%= @record.model_id %></td>
+        </tr>
+        <tr>
+          <th class="label">Name</th>
+          <td><%= @record.name %></td>
+        </tr>
+        <tr>
+          <th class="label">Provider</th>
+          <td><%= @record.provider %></td>
+        </tr>
+        <tr>
+          <th class="label">Family</th>
+          <td><%= @record.family || "-" %></td>
+        </tr>
+        <tr>
+          <th class="label">Context Window</th>
+          <td><%= number_with_delimiter(@record.context_window) || "-" %></td>
+        </tr>
+        <tr>
+          <th class="label">Max Output Tokens</th>
+          <td><%= number_with_delimiter(@record.max_output_tokens) || "-" %></td>
+        </tr>
+        <tr>
+          <th class="label">Knowledge Cutoff</th>
+          <td><%= @record.knowledge_cutoff&.strftime("%-d %B %Y") || "-" %></td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if @record.modalities.present? %>
+<div class="card-bg mt-6 overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Modalities</h2>
+  </div>
+  <div class="p-5">
+    <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.modalities) rescue @record.modalities %></pre>
+  </div>
+</div>
+<% end %>
+
+<% if @record.pricing.present? && @record.pricing.any? %>
+<div class="card-bg mt-6 overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Pricing</h2>
+  </div>
+  <div class="p-5">
+    <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.pricing) rescue @record.pricing %></pre>
+  </div>
+</div>
+<% end %>
+
+<% if @record.metadata.present? && @record.metadata.any? %>
+<div class="card-bg mt-6 overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Metadata</h2>
+  </div>
+  <div class="p-5">
+    <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.metadata) rescue @record.metadata %></pre>
+  </div>
+</div>
+<% end %>

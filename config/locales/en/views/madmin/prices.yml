@@ -1,0 +1,15 @@
+---
+en:
+  madmin:
+    prices:
+      show:
+        heading: Stripe Prices
+        no_prices: No prices found. Create products in Stripe Dashboard, then sync.
+        price_amount: Amount
+        price_id: Price ID
+        price_interval: Interval
+        price_product: Product
+        stripe_not_configured: Stripe is not configured
+        stripe_not_configured_hint: Add your Stripe API keys in API Keys settings
+          to manage prices.
+        sync_prices: Sync Prices

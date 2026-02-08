@@ -1,0 +1,35 @@
+---
+en:
+  madmin:
+    settings:
+      edit:
+        cancel: Cancel
+        heading: Edit Settings
+        key_placeholder: Enter key...
+        litestream: Litestream
+        litestream_replica_access_key: Secret Access Key
+        litestream_replica_bucket: Replica Bucket
+        litestream_replica_key_id: Access Key ID
+        litestream_restart_note: Changes to Litestream settings require a server restart.
+        save: Save Settings
+        stripe: Stripe
+        stripe_publishable_key: Publishable Key
+        stripe_secret_key: Secret Key
+        stripe_webhook_secret: Webhook Secret
+        trial_days: Free Trial Days
+        trial_days_hint: Number of days new teams get as a free trial. Set to 0 to
+          disable.
+      show:
+        edit_button: Edit Settings
+        heading: Settings
+        litestream: Litestream
+        litestream_replica_access_key: Secret Access Key
+        litestream_replica_bucket: Replica Bucket
+        litestream_replica_key_id: Access Key ID
+        litestream_restart_note: Changes to Litestream settings require a server restart.
+        not_configured: Not configured
+        stripe: Stripe
+        stripe_publishable_key: Publishable Key
+        stripe_secret_key: Secret Key
+        stripe_webhook_secret: Webhook Secret
+        trial_days: Free Trial Days

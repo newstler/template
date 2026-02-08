@@ -1,0 +1,94 @@
+<%= content_for :title, resource.friendly_name.pluralize %>
+
+<header class="header">
+  <h1><%= resource.friendly_name.pluralize %></h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search users...", class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :name, "User" %></th>
+        <th><%= sortable :teams_count, "Teams" %></th>
+        <th><%= sortable :chats_count, "Chats" %></th>
+        <th><%= sortable :total_cost, "Cost" %></th>
+        <th><%= sortable :created_at, "Joined" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <td>
+            <%= link_to resource.show_path(record), class: "flex items-center gap-3" do %>
+              <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(record.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
+              <div>
+                <div class="font-medium"><%= record.name.presence || "Unnamed" %></div>
+                <div class="text-xs text-dark-500"><%= record.email %></div>
+              </div>
+            <% end %>
+          </td>
+          <td>
+            <div class="flex flex-wrap gap-1">
+              <% record.memberships.each do |membership| %>
+                <% role_class = case membership.role
+                  when "owner" then "bg-purple-500/15 text-purple-400"
+                  when "admin" then "bg-blue-500/15 text-blue-400"
+                  else "bg-dark-700 text-dark-400"
+                end %>
+                <%= link_to "/madmin/teams/#{membership.team.slug}", class: "inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-xs font-medium #{role_class}" do %>
+                  <span><%= membership.team.name %></span>
+                  <% if membership.role != "member" %>
+                    <span class="opacity-60"><%= membership.role %></span>
+                  <% end %>
+                <% end %>
+              <% end %>
+              <% if record.memberships.empty? %>
+                <span class="text-xs">No teams</span>
+              <% end %>
+            </div>
+          </td>
+          <td><%= record.chats.size %></td>
+          <td class="<%= record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_total_cost || "-" %></td>
+          <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

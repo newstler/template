@@ -1,0 +1,34 @@
+# frozen_string_literal: true
+
+module <%= plural_class_name %>
+  class Delete<%= model_class %>Tool < ApplicationTool
+    description "Delete a <%= humanized_name %>"
+
+    annotations(
+      title: "Delete <%= humanized_name %>",
+      read_only_hint: false,
+      destructive_hint: true,
+      open_world_hint: false
+    )
+
+    arguments do
+      required(:id).filled(:string).description("The <%= singular_name %> ID to delete")
+    end
+
+    def call(id:)
+      require_authentication!
+
+      <%= singular_name %> = current_user.<%= plural_name %>.find_by(id: id)
+      return error_response("<%= humanized_name %> not found", code: "not_found") unless <%= singular_name %>
+
+      with_current_user do
+        <%= singular_name %>.destroy!
+      end
+
+      success_response(
+        { id: id },
+        message: "<%= humanized_name %> deleted successfully"
+      )
+    end
+  end
+end

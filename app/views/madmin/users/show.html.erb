@@ -1,0 +1,160 @@
+<%= content_for :title, @record.name || @record.email %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= @record.name || @record.email %>
+  </h1>
+
+  <div class="actions">
+    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
+  </div>
+</header>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-6">
+    <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.email.downcase.strip) %>?s=120&d=mp" class="w-24 h-24 rounded-full" alt="">
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.name || "Unnamed User" %></h2>
+      <p class="text-dark-400 mt-1"><%= @record.email %></p>
+      <p class="text-dark-500 text-sm mt-2">Member since <%= @record.created_at.strftime("%-d %B %Y") %></p>
+    </div>
+  </div>
+</div>
+
+<% chats_count = @record.chats.size %>
+<% total_messages = @record.chats.sum(&:messages_count) %>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Total Chats</div>
+    <div class="text-3xl font-bold text-dark-100"><%= chats_count %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Total Messages</div>
+    <div class="text-3xl font-bold text-dark-100"><%= total_messages %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Total Cost</div>
+    <div class="text-3xl font-bold <%= @record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= @record.formatted_total_cost || "$0.00" %></div>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">ID</th>
+          <td class="font-mono text-sm"><%= @record.id %></td>
+        </tr>
+        <tr>
+          <th class="label">Email</th>
+          <td><%= @record.email %></td>
+        </tr>
+        <tr>
+          <th class="label">Name</th>
+          <td><%= @record.name || "-" %></td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Updated</th>
+          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% memberships = @record.memberships %>
+<% if memberships.any? %>
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Teams (<%= memberships.size %>)</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Team</th>
+          <th>Role</th>
+          <th>Chats</th>
+          <th>Joined</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% memberships.each do |membership| %>
+          <tr>
+            <td>
+              <%= link_to "/madmin/teams/#{membership.team.slug}" do %>
+                <div class="font-medium"><%= membership.team.name %></div>
+                <div class="text-xs text-dark-500"><%= membership.team.slug %></div>
+              <% end %>
+            </td>
+            <td>
+              <% role_class = case membership.role
+                when "owner" then "bg-amber-500/15 text-amber-400"
+                when "admin" then "bg-purple-500/15 text-purple-400"
+                else "bg-dark-600 text-dark-300"
+              end %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= role_class %>">
+                <%= membership.role.titleize %>
+              </span>
+            </td>
+            <td><%= @record.chats.count { |c| c.team_id == membership.team_id } %></td>
+            <td class="text-sm"><%= membership.created_at.strftime("%-d %b %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
+<% if chats_count > 0 %>
+<% recent_chats = @record.chats.sort_by(&:created_at).reverse.first(5) %>
+<div class="card-bg mt-6 overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Recent Chats</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>First Message</th>
+          <th>Model</th>
+          <th>Messages</th>
+          <th>Cost</th>
+          <th>Created</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% recent_chats.each do |chat| %>
+          <tr>
+            <td class="max-w-xs">
+              <%= link_to "/madmin/chats/#{chat.id}", class: "block truncate hover:underline" do %>
+                <%= chat.messages.min_by(&:created_at)&.content&.truncate(60) || "Empty chat" %>
+              <% end %>
+            </td>
+            <td><%= chat.model&.name || "Default" %></td>
+            <td><%= chat.messages_count %></td>
+            <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= chat.formatted_total_cost || "-" %></td>
+            <td><%= chat.created_at.strftime("%-d %b %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+  <% if chats_count > 5 %>
+    <div class="px-5 py-3 border-t border-dark-700">
+      <%= link_to "View all #{chats_count} chats →", "/madmin/chats?q=#{@record.email}", class: "text-sm text-accent-400 hover:text-accent-300" %>
+    </div>
+  <% end %>
+</div>
+<% end %>

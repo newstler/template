@@ -1,0 +1,31 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-md mx-auto">
+  <div class="text-center mb-8">
+    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/25">
+      <%= inline_svg "icons/users.svg", class: "w-8 h-8 text-white" %>
+    </div>
+    <h1 class="text-3xl font-bold text-dark-50 mb-2"><%= t(".heading") %></h1>
+  </div>
+
+  <div class="space-y-4">
+    <% @teams.each do |team| %>
+      <%= link_to team_root_path(team), class: "block card-bg p-4 hover:border-blue-500/50 transition-all" do %>
+        <div class="flex items-center">
+          <div class="w-10 h-10 bg-gradient-to-br from-blue-500/20 to-purple-500/20 rounded-lg flex items-center justify-center">
+            <%= inline_svg "icons/users.svg", class: "w-5 h-5 text-blue-400" %>
+          </div>
+          <div class="ml-3 flex-1">
+            <h3 class="font-semibold text-dark-100"><%= team.name %></h3>
+            <p class="text-sm text-dark-400">/t/<%= team.slug %></p>
+          </div>
+          <%= inline_svg "icons/chevron-right.svg", class: "w-5 h-5 text-dark-400" %>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="mt-6 text-center">
+    <%= link_to t(".create_team"), new_team_path, class: "inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors" %>
+  </div>
+</div>

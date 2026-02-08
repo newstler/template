@@ -1,0 +1,12 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded UUIDv7s and explicit _id columns for referential integrity.
+# Note: tool_calls has circular FK with messages.
+
+search_call:
+  id: 01961a2a-c0de-7000-8000-000000000501
+  message_id: 01961a2a-c0de-7000-8000-000000000402
+  tool_call_id: call_abc123
+  name: search
+  arguments:
+    query: "weather in Paris"

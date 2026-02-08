@@ -1,0 +1,88 @@
+<%# Modern dark sidebar navigation - inspired by Anthropic/OpenAI/Lovable %>
+
+<%# Sidebar %>
+<aside data-sidebar-target="sidebar"
+       style="--sidebar-width: 16rem; width: var(--sidebar-width);"
+       class="fixed inset-y-0 left-0 z-40 bg-dark-850 transform -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out flex flex-col">
+
+  <%# Logo/Brand with collapse toggle %>
+  <div class="flex items-center h-16 px-3 sidebar-header">
+    <%= link_to (current_team ? team_root_path(current_team) : root_path), class: "flex items-center gap-3 text-white hover:opacity-80 transition-opacity overflow-hidden flex-1 min-w-0" do %>
+      <div class="w-10 h-10 bg-gradient-to-br from-accent-500 to-accent-700 rounded-lg flex items-center justify-center flex-shrink-0">
+        <%= inline_svg "icons/lightning.svg", class: "w-5 h-5 text-white" %>
+      </div>
+      <span data-sidebar-target="label" class="font-semibold text-lg whitespace-nowrap transition-[opacity,width] duration-300 opacity-100"><%= content_for(:app_name) || t("app_name") %></span>
+    <% end %>
+    <button type="button"
+            data-action="click->sidebar#toggleMinimize"
+            class="hidden lg:flex w-10 h-10 items-center justify-center text-dark-400 hover:text-dark-100 hover:bg-white/5 rounded-lg transition-colors flex-shrink-0"
+            title="<%= t("shared.sidebar.collapse") %>">
+      <%= inline_svg "icons/chevron-left.svg", class: "w-5 h-5 transition-transform duration-300", data: { sidebar_target: "collapseIcon" } %>
+    </button>
+  </div>
+
+  <%# Navigation %>
+  <nav class="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
+    <% if current_team %>
+      <%= render "shared/sidebar_link", path: team_root_path(current_team), icon: "home", label: t("shared.sidebar.home") %>
+
+      <%# Chats Section (collapsible) - only shown when chats are enabled %>
+      <% if Setting.chats_enabled? %>
+        <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: t("shared.sidebar.chats"), path: team_chats_path(current_team) do %>
+          <%= render "shared/sidebar_link", path: new_team_chat_path(current_team), icon: "plus", label: t("shared.sidebar.new_chat"), nested: true %>
+          <% current_user&.chats&.where(team: current_team)&.includes(:messages)&.order(updated_at: :desc)&.limit(10)&.each do |chat| %>
+            <% first_user_message = chat.messages.find { |m| m.role == "user" }&.content || t("common.untitled") %>
+            <%= render "shared/sidebar_link", path: team_chat_path(current_team, chat), icon: "chat", label: first_user_message, nested: true, truncate: true %>
+          <% end %>
+        <% end %>
+      <% end %>
+
+      <%# Team dropdown - team name as the header %>
+      <%= render "shared/sidebar_group", id: "team", icon: "users", label: current_team.name do %>
+        <%= render "shared/sidebar_link",
+            path: team_members_path(current_team),
+            icon: "users",
+            label: t("shared.sidebar.members"),
+            nested: true %>
+
+        <% if current_membership&.admin? %>
+          <%= render "shared/sidebar_link",
+              path: team_billing_path(current_team),
+              icon: "credit-card",
+              label: t("shared.sidebar.billing"),
+              nested: true %>
+
+          <%= render "shared/sidebar_link",
+              path: team_settings_path(current_team),
+              icon: "cog",
+              label: t("shared.sidebar.settings"),
+              nested: true %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <%= render "shared/sidebar_link", path: root_path, icon: "home", label: t("shared.sidebar.home") %>
+    <% end %>
+  </nav>
+
+  <%# User section %>
+  <div class="p-3 border-t border-white/5">
+    <%= link_to (current_team ? team_profile_path(current_team) : root_path), class: "flex items-center gap-3 mb-3 rounded-lg px-2 py-2 -mx-2 hover:bg-white/5 transition-colors" do %>
+      <div class="w-10 h-10 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="text-sm font-medium text-white"><%= current_user&.name&.first&.upcase || "U" %></span>
+      </div>
+      <div data-sidebar-target="label" class="flex-1 min-w-0 transition-[opacity,width] duration-300 opacity-100">
+        <p class="text-sm font-medium text-dark-100 truncate"><%= current_user&.name || t("shared.sidebar.user") %></p>
+        <p class="text-xs text-dark-500 truncate"><%= current_user&.email %></p>
+      </div>
+    <% end %>
+    <%= button_to session_path, method: :delete, class: "w-full flex items-center gap-3 px-3 py-2.5 text-sm text-dark-400 hover:text-dark-100 hover:bg-white/5 rounded-lg transition-all duration-200" do %>
+      <%= inline_svg "icons/sign-out.svg", class: "w-5 h-5 flex-shrink-0" %>
+      <span data-sidebar-target="label" class="transition-[opacity,width] duration-300 opacity-100"><%= t("common.sign_out") %></span>
+    <% end %>
+  </div>
+</aside>
+
+<%# Mobile overlay %>
+<div data-sidebar-target="overlay"
+     data-action="click->sidebar#close"
+     class="fixed inset-0 z-30 bg-black/50 backdrop-blur-sm hidden lg:hidden"></div>

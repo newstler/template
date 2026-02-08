@@ -1,0 +1,20 @@
+<% content_for :title, t(".title") %>
+
+<div class="max-w-2xl mx-auto py-12">
+  <div class="text-center mb-8">
+    <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-purple-500/25">
+      <%= inline_svg "icons/chat.svg", class: "w-8 h-8 text-white" %>
+    </div>
+    <h1 class="text-2xl font-bold text-dark-50 mb-2"><%= t(".heading") %></h1>
+    <p class="text-dark-400"><%= t(".subheading") %></p>
+  </div>
+
+  <%= render "form", chat: @chat %>
+
+  <div class="text-center mt-6">
+    <%= link_to team_chats_path(current_team), class: "inline-flex items-center gap-2 text-dark-400 hover:text-dark-200 transition-colors" do %>
+      <%= inline_svg "icons/chevron-left.svg", class: "w-4 h-4" %>
+      <%= t(".back") %>
+    <% end %>
+  </div>
+</div>

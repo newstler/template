@@ -2,12 +2,1011 @@
 @plugin "@tailwindcss/forms";
 @plugin "@tailwindcss/typography";
 
-/*
+/* Dark mode variant (class-based) */
+@custom-variant dark (&:where(.dark, .dark *));
 
-@layer components {
-  .btn-primary {
-    @apply py-2 px-4 bg-blue-200;
+/* ================================
+   Background Utilities (DRY - single source of truth)
+   ================================ */
+
+.body-bg {
+  @apply bg-dark-800 text-dark-100 min-h-screen;
+}
+
+.card-bg {
+  @apply bg-dark-700/50 rounded-xl shadow-lg shadow-black/10;
+}
+
+/* Transparent select override - resets browser/global dark theme styles */
+.select-transparent {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  -webkit-appearance: none !important;
+  -moz-appearance: none !important;
+  appearance: none !important;
+  background-image: none !important;
+
+  .dark &.text-dark-400 {
+    color: var(--color-dark-400) !important;
   }
 }
 
-*/
+/* Theme configuration - OKLCH colors + fonts */
+@theme {
+  /* Font family */
+  --font-sans: "Inter var", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  /* Dark theme palette - neutral greys (OKLCH) */
+  --color-dark-50: oklch(98% 0.005 250);
+  --color-dark-100: oklch(96% 0.005 250);
+  --color-dark-200: oklch(93% 0.005 250);
+  --color-dark-300: oklch(89% 0.005 250);
+  --color-dark-400: oklch(73% 0.01 250);
+  --color-dark-500: oklch(52% 0.015 250);
+  --color-dark-600: oklch(40% 0.015 250);
+  --color-dark-700: oklch(30% 0.015 250);
+  --color-dark-800: oklch(21% 0.015 250);
+  --color-dark-850: oklch(19% 0.015 250);
+  --color-dark-900: oklch(14% 0.01 250);
+  --color-dark-950: oklch(10% 0.01 250);
+
+  /* Accent colors (OKLCH) */
+  --color-accent-50: oklch(97% 0.02 260);
+  --color-accent-100: oklch(93% 0.05 260);
+  --color-accent-200: oklch(87% 0.08 260);
+  --color-accent-300: oklch(78% 0.13 260);
+  --color-accent-400: oklch(70% 0.17 260);
+  --color-accent-500: oklch(62% 0.21 260);
+  --color-accent-600: oklch(55% 0.22 260);
+  --color-accent-700: oklch(48% 0.22 260);
+}
+
+/* ================================
+   Additional CSS Variables (not in Tailwind theme)
+   ================================ */
+:root {
+  --sidebar-bg: oklch(8% 0.02 260);
+  --sidebar-hover: oklch(100% 0 0 / 5%);
+  --sidebar-active: oklch(62% 0.21 260 / 15%);
+
+  /* Glow effects */
+  --glow-blue: oklch(62% 0.21 260 / 40%);
+  --glow-purple: oklch(50% 0.27 300 / 40%);
+
+  /* Card styling */
+  --card-bg: oklch(23% 0.03 260 / 40%);
+  --card-shadow: 0 4px 24px oklch(0% 0 0 / 40%);
+  --card-border: oklch(100% 0 0 / 5%);
+}
+
+/* ================================
+   Prose styles for markdown content
+   ================================ */
+.prose {
+  line-height: 1.7;
+  color: var(--color-dark-200);
+
+  p {
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  h1, h2, h3, h4 {
+    font-weight: 600;
+    margin-top: 1.5rem;
+    margin-bottom: 0.75rem;
+    color: var(--color-dark-50);
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  strong, b {
+    font-weight: 600;
+    color: var(--color-dark-100);
+  }
+
+  ul, ol {
+    padding-left: 1.5rem;
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  ul {
+    list-style-type: disc;
+  }
+
+  ol {
+    list-style-type: decimal;
+  }
+
+  li {
+    margin-top: 0.25rem;
+    margin-bottom: 0.25rem;
+  }
+
+  blockquote {
+    border-left: 3px solid var(--color-dark-600);
+    padding-left: 1rem;
+    color: var(--color-dark-400);
+    font-style: italic;
+    margin: 1rem 0;
+  }
+
+  a {
+    color: oklch(70% 0.03 250);
+    text-decoration: underline;
+
+    &:hover {
+      color: oklch(91% 0.02 250);
+    }
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1rem 0;
+  }
+
+  th, td {
+    border: 1px solid var(--color-dark-700);
+    padding: 0.5rem;
+    text-align: left;
+  }
+
+  th {
+    background-color: var(--color-dark-700);
+    font-weight: 600;
+    color: var(--color-dark-100);
+  }
+
+  td {
+    background-color: var(--color-dark-800);
+  }
+
+  code {
+    background-color: var(--color-dark-700);
+    color: oklch(75% 0.18 350);
+    padding: 0.125rem 0.375rem;
+    border-radius: 0.25rem;
+    font-size: 0.875em;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+  }
+
+  pre {
+    background-color: var(--color-dark-800);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    overflow-x: auto;
+    margin: 1rem 0;
+
+    code {
+      background-color: transparent;
+      padding: 0;
+      color: var(--color-dark-200);
+    }
+  }
+}
+
+/* ================================
+   Rouge syntax highlighting
+   ================================ */
+.highlight {
+  background-color: var(--color-dark-700);
+  border-radius: 0.75rem;
+  padding: 1rem;
+  overflow-x: auto;
+  margin: 0.75rem 0;
+
+  pre {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+  }
+
+  /* Comment - green */
+  .c, .ch, .cd, .cm, .cpf, .c1, .cs {
+    color: oklch(62% 0.14 140) !important;
+  }
+
+  /* Keyword - blue */
+  .k, .kc, .kd, .kn, .kp, .kr, .kt {
+    color: oklch(68% 0.12 250) !important;
+  }
+
+  /* String - orange */
+  .s, .sb, .sc, .dl, .sd, .s2, .sh, .sx, .s1, .ss {
+    color: oklch(72% 0.1 50) !important;
+  }
+
+  /* Name - light blue */
+  .na, .nb, .nc, .no, .nd, .ni, .ne, .nf, .nl, .nn, .nt, .nv {
+    color: oklch(85% 0.1 220) !important;
+  }
+
+  /* Number - light green */
+  .m, .mb, .mf, .mh, .mi, .mo, .mx {
+    color: oklch(82% 0.08 130) !important;
+  }
+
+  /* Operator */
+  .o, .ow {
+    color: oklch(87% 0.01 250) !important;
+  }
+
+  /* Punctuation */
+  .p {
+    color: oklch(87% 0.01 250) !important;
+  }
+
+  /* Generic.Inserted - teal */
+  .gi {
+    color: oklch(75% 0.15 175) !important;
+  }
+
+  /* Generic.Deleted - red */
+  .gd {
+    color: oklch(62% 0.22 25) !important;
+  }
+
+  /* Generic.Heading - blue */
+  .gh {
+    color: oklch(68% 0.12 250) !important;
+    font-weight: bold;
+  }
+
+  /* Generic.Subheading - blue */
+  .gu {
+    color: oklch(68% 0.12 250) !important;
+  }
+
+  /* Error - red */
+  .err {
+    color: oklch(62% 0.22 25) !important;
+  }
+}
+
+/* ================================
+   Dark Theme Form Styles
+   ================================ */
+.dark {
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="number"],
+  input[type="search"],
+  input[type="url"],
+  input[type="date"],
+  input[type="datetime-local"],
+  textarea,
+  select {
+    background-color: var(--color-dark-700);
+    border-color: var(--color-dark-500);
+    color: var(--color-dark-100);
+
+    &:focus {
+      border-color: oklch(62% 0.21 260);
+      box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+    }
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-dark-500);
+  }
+}
+
+/* ================================
+   Dark Theme Card Styles
+   ================================ */
+.dark-card {
+  background-color: var(--color-dark-700);
+  border: 1px solid var(--color-dark-600);
+  border-radius: 0.75rem;
+
+  &-header {
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--color-dark-600);
+  }
+
+  &-body {
+    padding: 1.5rem;
+  }
+}
+
+/* ================================
+   Dark Theme Table Styles
+   ================================ */
+.dark-table {
+  width: 100%;
+  border-collapse: collapse;
+
+  th {
+    background-color: var(--color-dark-700);
+    color: var(--color-dark-300);
+    font-weight: 500;
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: 0.75rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid var(--color-dark-600);
+  }
+
+  td {
+    padding: 0.75rem 1rem;
+    border-bottom: 1px solid var(--color-dark-700);
+    color: var(--color-dark-200);
+  }
+
+  tbody tr:hover {
+    background-color: var(--color-dark-700);
+  }
+}
+
+/* ================================
+   Scrollbar Styles
+   ================================ */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-dark-800);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-dark-500);
+  border-radius: 4px;
+
+  &:hover {
+    background: var(--color-dark-400);
+  }
+}
+
+/* ================================
+   Button Styles
+   ================================ */
+.btn-dark {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  border-radius: 0.5rem;
+  transition: all 0.15s ease;
+
+  &-primary {
+    background: linear-gradient(135deg, oklch(62% 0.21 260) 0%, oklch(55% 0.22 260) 100%);
+    color: white;
+    border: none;
+
+    &:hover {
+      background: linear-gradient(135deg, oklch(55% 0.22 260) 0%, oklch(48% 0.22 260) 100%);
+      transform: translateY(-1px);
+    }
+  }
+
+  &-secondary {
+    background-color: var(--color-dark-700);
+    color: var(--color-dark-200);
+    border: 1px solid var(--color-dark-500);
+
+    &:hover {
+      background-color: var(--color-dark-600);
+      border-color: var(--color-dark-400);
+    }
+  }
+
+  &-danger {
+    background-color: oklch(62% 0.24 25 / 10%);
+    color: oklch(70% 0.19 25);
+    border: 1px solid oklch(62% 0.24 25 / 30%);
+
+    &:hover {
+      background-color: oklch(62% 0.24 25 / 20%);
+      border-color: oklch(62% 0.24 25 / 50%);
+    }
+  }
+}
+
+/* ================================
+   Madmin Dark Theme Overrides
+   ================================ */
+.dark {
+  /* Global text colors for Madmin */
+  h1, h2, h3, h4, h5, h6 {
+    color: var(--color-dark-50);
+  }
+
+  /* Only set default text color on elements without explicit Tailwind text-* classes */
+  /* Exclude elements inside nav links and buttons - they should inherit from parent */
+  p:not([class*="text-"]),
+  span:not([class*="text-"]):not(a span):not(a span span):not(button span),
+  div:not([class*="text-"]),
+  label:not([class*="text-"]) {
+    color: var(--color-dark-200);
+  }
+
+  a:not([class*="text-"]) {
+    color: var(--color-dark-100);
+    text-decoration: none;
+  }
+
+  /* Madmin Header */
+  .header {
+    background: transparent;
+    border: none;
+    margin-bottom: 1.5rem;
+
+    h1 {
+      color: var(--color-dark-50);
+      font-size: 1.875rem;
+      font-weight: 700;
+    }
+
+    .actions {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+  }
+
+  /* Madmin Buttons */
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5625rem 1rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    border-radius: 0.5rem;
+    transition: all 0.15s ease;
+    border: 1px solid var(--color-dark-500);
+    background-color: var(--color-dark-700);
+    color: var(--color-dark-200);
+    text-decoration: none;
+    line-height: 1.5;
+
+    &:hover {
+      background-color: var(--color-dark-600);
+      border-color: var(--color-dark-400);
+      color: var(--color-dark-100);
+    }
+
+    &-primary, &.btn-primary {
+      background: linear-gradient(135deg, oklch(62% 0.21 260) 0%, oklch(55% 0.22 260) 100%);
+      border: none;
+      color: white;
+
+      &:hover {
+        background: linear-gradient(135deg, oklch(55% 0.22 260) 0%, oklch(48% 0.22 260) 100%);
+        color: white;
+      }
+    }
+
+    &-secondary, &.btn-secondary {
+      background-color: var(--color-dark-700);
+      border: 1px solid var(--color-dark-500);
+      color: var(--color-dark-200);
+
+      &:hover {
+        background-color: var(--color-dark-600);
+        border-color: var(--color-dark-400);
+      }
+    }
+
+    &-danger, &.btn-danger {
+      background-color: oklch(62% 0.24 25 / 15%);
+      border: 1px solid oklch(62% 0.24 25 / 30%);
+      color: oklch(70% 0.19 25);
+
+      &:hover {
+        background-color: oklch(62% 0.24 25 / 25%);
+        border-color: oklch(62% 0.24 25 / 50%);
+      }
+    }
+
+    &-sm {
+      padding: 0.375rem 0.75rem;
+      font-size: 0.8125rem;
+    }
+  }
+
+  /* Madmin Filters */
+  .filters {
+    background-color: var(--color-dark-700);
+    border: 1px solid var(--color-dark-600);
+    border-radius: 0.75rem;
+    padding: 1rem;
+    margin-bottom: 1rem;
+
+    label {
+      color: var(--color-dark-300);
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Madmin Scopes */
+  .scopes {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+
+    .btn.active {
+      background-color: var(--color-dark-600);
+      border-color: var(--color-dark-400);
+      color: var(--color-dark-50);
+    }
+  }
+
+  /* Madmin Tables */
+  .table-scroll {
+    overflow-x: auto;
+    background-color: var(--color-dark-700);
+    border: 1px solid var(--color-dark-600);
+    border-radius: 0.75rem;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+
+    th {
+      background-color: var(--color-dark-700);
+      color: var(--color-dark-400);
+      font-weight: 500;
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.875rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--color-dark-600);
+
+      a:not([class*="text-"]) {
+        color: var(--color-dark-400);
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+
+        &:hover {
+          color: var(--color-dark-200);
+        }
+      }
+    }
+
+    td {
+      padding: 0.875rem 1rem;
+      border-bottom: 1px solid var(--color-dark-600);
+      color: var(--color-dark-400);
+
+      a:not([class*="text-"]) {
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: none;
+        }
+
+        &:hover .font-medium {
+          text-decoration: underline;
+        }
+      }
+
+      a.rounded-full {
+        transition: filter 0.15s ease;
+
+        &:hover {
+          filter: brightness(1.3);
+        }
+      }
+    }
+
+    tbody tr {
+      &:hover {
+        background-color: var(--color-dark-600);
+      }
+
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+
+  /* Madmin Pagination */
+  .pagination {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem 0;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    nav {
+      display: flex;
+      gap: 0.25rem;
+    }
+
+    a, span {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 2rem;
+      height: 2rem;
+      padding: 0 0.5rem;
+      font-size: 0.875rem;
+      border-radius: 0.375rem;
+      color: var(--color-dark-300);
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    a:hover {
+      background-color: var(--color-dark-700);
+      color: var(--color-dark-100);
+    }
+
+    a[disabled], span.current {
+      background-color: var(--color-dark-700);
+      color: var(--color-dark-50);
+      pointer-events: none;
+    }
+
+    .pagy-info, .info {
+      color: var(--color-dark-400);
+      font-size: 0.875rem;
+    }
+  }
+
+  /* Madmin Search */
+  .search {
+    display: flex;
+    align-items: center;
+
+    input[type="search"] {
+      background-color: var(--color-dark-700);
+      border: 1px solid var(--color-dark-500);
+      border-radius: 0.5rem;
+      padding: 0.5rem 0.75rem;
+      color: var(--color-dark-100);
+      font-size: 0.875rem;
+
+      &:focus {
+        outline: none;
+        border-color: oklch(62% 0.21 260);
+        box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+      }
+
+      &::placeholder {
+        color: var(--color-dark-500);
+      }
+    }
+  }
+
+  /* Madmin Forms */
+  .form-input,
+  .form-select,
+  input.form-input,
+  select.form-select {
+    background-color: var(--color-dark-700);
+    border: 1px solid var(--color-dark-500);
+    border-radius: 0.5rem;
+    padding: 0.5rem 0.75rem;
+    color: var(--color-dark-100);
+    font-size: 0.875rem;
+    line-height: 1.5;
+
+    &:focus {
+      outline: none;
+      border-color: oklch(62% 0.21 260);
+      box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+    }
+  }
+
+  /* Madmin Form Fields - styled form groups */
+  .form-field {
+    margin-bottom: 0;
+
+    input[type="text"],
+    input[type="email"],
+    input[type="password"],
+    input[type="number"],
+    input[type="url"],
+    input[type="date"],
+    input[type="datetime-local"],
+    input[type="time"],
+    textarea,
+    select {
+      width: 100%;
+      background-color: var(--color-dark-800);
+      border: 1px solid var(--color-dark-600);
+      border-radius: 0.5rem;
+      padding: 0.625rem 0.875rem;
+      color: var(--color-dark-100);
+      font-size: 0.9375rem;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+      &:hover {
+        border-color: var(--color-dark-500);
+      }
+
+      &:focus {
+        outline: none;
+        border-color: oklch(62% 0.21 260);
+        box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+      }
+
+      &::placeholder {
+        color: var(--color-dark-500);
+      }
+    }
+
+    textarea {
+      min-height: 100px;
+      resize: vertical;
+    }
+
+    select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%23737d8c' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+      background-position: right 0.5rem center;
+      background-repeat: no-repeat;
+      background-size: 1.5em 1.5em;
+      padding-right: 2.5rem;
+
+      &[multiple] {
+        background-image: none;
+        padding-right: 0.875rem;
+        min-height: 120px;
+      }
+
+      option {
+        padding: 0.5rem;
+        background-color: var(--color-dark-700);
+      }
+    }
+
+    input[type="checkbox"],
+    input[type="radio"] {
+      width: auto;
+      background-color: var(--color-dark-700);
+      border-color: var(--color-dark-500);
+
+      &:checked {
+        background-color: oklch(62% 0.21 260);
+        border-color: oklch(62% 0.21 260);
+      }
+    }
+  }
+
+  /* Madmin Form Group (legacy support) */
+  .form-group {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      color: var(--color-dark-300);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    .required {
+      color: oklch(70% 0.19 25);
+      margin-left: 0.25rem;
+    }
+
+    .form-description {
+      color: var(--color-dark-500);
+      font-size: 0.8125rem;
+      margin-top: 0.5rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background-color: var(--color-dark-800);
+      border: 1px solid var(--color-dark-600);
+      border-radius: 0.5rem;
+      padding: 0.625rem 0.875rem;
+      color: var(--color-dark-100);
+      font-size: 0.9375rem;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+
+      &:focus {
+        outline: none;
+        border-color: oklch(62% 0.21 260);
+        box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+      }
+    }
+  }
+
+  /* Madmin Show Page */
+  .show-page {
+    background-color: var(--color-dark-700);
+    border: 1px solid var(--color-dark-600);
+    border-radius: 0.75rem;
+    overflow: hidden;
+  }
+
+  /* Madmin Member Actions */
+  .member-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  /* Madmin Field specific styles */
+  .field-wrapper {
+    margin-bottom: 1.5rem;
+
+    label {
+      display: block;
+      color: var(--color-dark-300);
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+    }
+
+    input, textarea, select {
+      width: 100%;
+      background-color: var(--color-dark-700);
+      border: 1px solid var(--color-dark-500);
+      border-radius: 0.5rem;
+      padding: 0.625rem 0.875rem;
+      color: var(--color-dark-100);
+      font-size: 0.9375rem;
+
+      &:focus {
+        outline: none;
+        border-color: oklch(62% 0.21 260);
+        box-shadow: 0 0 0 3px oklch(62% 0.21 260 / 20%);
+      }
+    }
+  }
+
+  /* Madmin Flash messages */
+  .flash {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+
+    &.notice, &.success {
+      background-color: oklch(72% 0.19 145 / 15%);
+      border: 1px solid oklch(72% 0.19 145 / 30%);
+      color: oklch(78% 0.17 145);
+    }
+
+    &.alert, &.error {
+      background-color: oklch(62% 0.24 25 / 15%);
+      border: 1px solid oklch(62% 0.24 25 / 30%);
+      color: oklch(70% 0.19 25);
+    }
+  }
+
+  /* Madmin pre/code elements */
+  pre, code {
+    background-color: var(--color-dark-700);
+    color: var(--color-dark-200);
+  }
+
+  pre {
+    padding: 0.75rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
+
+  table pre, table code {
+    background-color: transparent;
+    margin: 0;
+    padding: 0;
+    white-space: pre-wrap;
+    word-break: break-word;
+  }
+}
+
+/* Link and button children should inherit color from parent */
+a[class*="text-"] span,
+a[class*="text-"] svg,
+button[class*="text-"] span,
+button[class*="text-"] svg {
+  color: inherit;
+}
+
+/* Chat textarea - fully transparent */
+#message_content,
+.chat-input textarea {
+  background-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+
+  &:focus {
+    background-color: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    outline: none !important;
+  }
+}
+
+/* ================================
+   Collapsible Sidebar
+   ================================ */
+
+/* Main content transition for sidebar collapse */
+@media (min-width: 1024px) {
+  [data-sidebar-target="mainContent"] {
+    padding-left: 16rem;
+    transition: padding-left 0.3s ease-in-out;
+
+    &.sidebar-collapsed {
+      padding-left: 4rem;
+    }
+  }
+}
+
+/* Collapsed sidebar styles */
+aside.sidebar-collapsed {
+  /* Hide nested links when sidebar is collapsed */
+  .sidebar-nested-link {
+    display: none;
+  }
+
+  /* Center icons when sidebar is collapsed */
+  nav a,
+  nav > div > div > a,
+  .p-3 a,
+  .p-3 button,
+  .p-3 form button {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0;
+  }
+
+  /* Center group headers when collapsed */
+  .sidebar-group-header > a,
+  .sidebar-group-header > div {
+    justify-content: center;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0;
+  }
+
+  /* Hide chevron toggle button when collapsed */
+  .sidebar-chevron {
+    display: none;
+  }
+
+  /* Hide the inner span wrapper gap when collapsed */
+  .sidebar-group-header > a > span,
+  .sidebar-group-header > div > span {
+    gap: 0;
+  }
+
+  /* Hide user info section when collapsed */
+  .p-3 > .flex.items-center.gap-3.mb-3 {
+    display: none;
+  }
+
+  /* Header section when collapsed - hide logo link, center the collapse button */
+  .sidebar-header {
+    justify-content: center;
+
+    & > a {
+      display: none;
+    }
+  }
+}

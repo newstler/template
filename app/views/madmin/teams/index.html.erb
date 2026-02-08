@@ -1,0 +1,97 @@
+<%= content_for :title, resource.friendly_name.pluralize %>
+
+<header class="header">
+  <h1><%= resource.friendly_name.pluralize %></h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search teams...", class: "form-input" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :name, "Team" %></th>
+        <th><%= sortable :owner_name, "Owner" %></th>
+        <th><%= sortable :members_count, "Members" %></th>
+        <th><%= sortable :chats_count, "Chats" %></th>
+        <th><%= sortable :total_cost, "Cost" %></th>
+        <th><%= sortable :subscription_status, "Subscription" %></th>
+        <th><%= sortable :created_at, "Created" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <td>
+            <%= link_to resource.show_path(record) do %>
+              <div class="font-medium"><%= record.name %></div>
+              <div class="text-xs text-dark-500"><%= record.slug %></div>
+            <% end %>
+          </td>
+          <td>
+            <% owner = record.memberships.find { |m| m.role == "owner" } %>
+            <% if owner %>
+              <%= link_to "/madmin/users/#{owner.user.id}", class: "flex items-center gap-3" do %>
+                <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(owner.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
+                <div>
+                  <div class="font-medium"><%= owner.user.name.presence || "Unnamed" %></div>
+                  <div class="text-xs text-dark-500"><%= owner.user.email %></div>
+                </div>
+              <% end %>
+            <% else %>
+              <span class="text-xs text-dark-500">No owner</span>
+            <% end %>
+          </td>
+          <td><%= record.memberships.size %></td>
+          <td><%= record.chats.size %></td>
+          <% cost = record.chats.sum(&:total_cost) %>
+          <td class="<%= cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>">
+            <% if cost.zero? %>-<% elsif cost < 0.0001 %>&lt;$0.0001<% else %>$<%= '%.4f' % cost %><% end %>
+          </td>
+          <td>
+            <% status = record.subscription_status || "none" %>
+            <% badge_class = case status
+              when "active" then "bg-emerald-500/15 text-emerald-400"
+              when "trialing" then "bg-blue-500/15 text-blue-400"
+              when "past_due" then "bg-amber-500/15 text-amber-400"
+              when "canceled" then "bg-red-500/15 text-red-400"
+              else "bg-dark-700 text-dark-400"
+            end %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
+              <%= status.titleize %>
+            </span>
+            <% if record.trialing? && record.trial_days_remaining > 0 %>
+              <span class="text-xs text-dark-500 ml-1"><%= record.trial_days_remaining %>d left</span>
+            <% end %>
+          </td>
+          <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

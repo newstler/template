@@ -1,0 +1,17 @@
+# frozen_string_literal: true
+
+module Mcp
+  class <%= resource_class_name %> < ApplicationResource
+    uri "<%= resource_uri %>"
+    resource_name "<%= humanized_name %>"
+    description "<%= humanized_name %> resource"
+    mime_type "application/json"
+
+    def content
+      return to_json({ error: "Not authenticated" }) unless authenticated?
+
+      # TODO: Implement resource content
+      to_json({ message: "Not implemented" })
+    end
+  end
+end

@@ -1,0 +1,47 @@
+<% content_for :title, t(".title", name: @membership.user.name || @membership.user.email) %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="mb-8">
+    <%= link_to t(".back"), team_members_path(current_team), class: "text-dark-400 hover:text-dark-300 transition-colors text-sm" %>
+  </div>
+
+  <div class="card-bg p-6">
+    <div class="flex items-center gap-4 mb-6 pb-6 border-b border-dark-700">
+      <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="text-xl font-semibold text-white"><%= @membership.user.name&.first&.upcase || "?" %></span>
+      </div>
+      <div>
+        <h1 class="text-2xl font-bold text-dark-50"><%= @membership.user.name || @membership.user.email %></h1>
+        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium mt-1 <%= @membership.owner? ? 'bg-purple-500/20 text-purple-300' : @membership.admin? ? 'bg-blue-500/20 text-blue-300' : 'bg-dark-600 text-dark-300' %>">
+          <%= t(".#{@membership.role}",
+            default: @membership.role.capitalize) %>
+        </span>
+      </div>
+    </div>
+
+    <dl class="space-y-4">
+      <div>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".name") %></dt>
+        <dd class="text-dark-100 mt-1"><%= @membership.user.name || "—" %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".email") %></dt>
+        <dd class="text-dark-100 mt-1"><%= @membership.user.email %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".role") %></dt>
+        <dd class="text-dark-100 mt-1"><%= @membership.role.capitalize %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".joined") %></dt>
+        <dd class="text-dark-100 mt-1"><%= @membership.created_at.strftime("%B %d, %Y") %></dd>
+      </div>
+      <% if @membership.invited_by %>
+        <div>
+          <dt class="text-sm font-medium text-dark-400"><%= t(".invited_by") %></dt>
+          <dd class="text-dark-100 mt-1"><%= @membership.invited_by.name || @membership.invited_by.email %></dd>
+        </div>
+      <% end %>
+    </dl>
+  </div>
+</div>

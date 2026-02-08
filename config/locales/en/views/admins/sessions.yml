@@ -1,0 +1,15 @@
+---
+en:
+  admins:
+    sessions:
+      new:
+        email_help: Only existing admins can sign in. You'll receive a magic link
+          via email.
+        email_label: Admin email address
+        email_placeholder: admin@example.com
+        heading: Admin Access
+        restricted_area: Restricted Area
+        restricted_message: This is the admin login. If you need admin access, contact
+          an existing administrator.
+        subheading: Sign in with your admin magic link
+        submit: Send Admin Magic Link

@@ -1,0 +1,13 @@
+---
+en:
+  onboardings:
+    show:
+      heading: Welcome! Let's get started
+      name_label: What's your name?
+      name_placeholder: Enter your name
+      subheading: Just a couple of things before we begin.
+      submit: Continue
+      team_name_help: You can change this later in team settings.
+      team_name_label: Name your team
+      team_name_placeholder: My Team
+      title: Get Started

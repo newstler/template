@@ -1,0 +1,30 @@
+<p style="color: green"><%= notice %></p>
+
+<% content_for :title, t(".title") %>
+
+<h1><%= t(".heading") %></h1>
+
+<% if current_admin %>
+  <p>
+    <%= button_to t(".refresh"), team_models_refresh_path(current_team), method: :post %>
+  </p>
+<% end %>
+
+<div id="models">
+  <table>
+    <thead>
+      <tr>
+        <th><%= t(".table.provider") %></th>
+        <th><%= t(".table.model") %></th>
+        <th><%= t(".table.context_window") %></th>
+        <th><%= t(".table.pricing") %></th>
+        <th colspan="2"></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= render @models %>
+    </tbody>
+  </table>
+</div>
+
+<%= link_to t(".back"), team_chats_path(current_team) %>

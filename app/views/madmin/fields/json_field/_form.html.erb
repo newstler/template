@@ -1,0 +1,7 @@
+<% val = field.value(record) %>
+<%= form.text_area field.attribute_name,
+    value: val ? JSON.pretty_generate(val) : "{}",
+    rows: 10,
+    class: "form-control font-mono text-sm",
+    placeholder: "Enter valid JSON" %>
+<p class="text-xs text-gray-500 mt-1">Enter valid JSON format</p>

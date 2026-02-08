@@ -1,0 +1,44 @@
+<%= form_with model: [:madmin, record], url: (record.persisted? ? resource.show_path(record) : resource.index_path), local: true, class: "space-y-6" do |form| %>
+  <% if form.object.errors.any? %>
+    <div class="p-4 rounded-lg bg-red-500/10 border border-red-500/30">
+      <div class="flex items-start gap-3">
+        <%= inline_svg "icons/x-circle.svg", class: "w-5 h-5 text-red-400 mt-0.5 shrink-0" %>
+        <div>
+          <p class="font-medium text-red-400">
+            <%= pluralize form.object.errors.full_messages.count, "error" %> prevented this <%= resource.friendly_name.downcase %> from being saved:
+          </p>
+          <ul class="mt-2 space-y-1 text-sm text-red-300">
+            <% form.object.errors.full_messages.each do |message| %>
+              <li><%= message %></li>
+            <% end %>
+          </ul>
+        </div>
+      </div>
+    </div>
+  <% end %>
+
+  <div class="grid grid-cols-1 gap-6">
+    <% resource.attributes.values.select{ _1.field.present? && _1.field.visible?(action_name) }.each do |attribute| %>
+      <div class="form-field">
+        <label class="block text-sm font-medium text-dark-300 mb-2">
+          <%= attribute.field.options.label || attribute.name.to_s.titleize %>
+          <% if attribute.field.required? %>
+            <span class="text-red-400 ml-1">*</span>
+          <% end %>
+        </label>
+        <%= render partial: attribute.field.to_partial_path("form"), locals: { field: attribute.field, record: record, form: form, resource: resource } %>
+        <% if attribute.field.options.description.present? %>
+          <p class="mt-2 text-sm text-dark-500"><%= attribute.field.options.description %></p>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="flex items-center gap-3 pt-4 border-t border-dark-600">
+    <%= form.submit class: "btn btn-primary cursor-pointer" %>
+    <%= link_to "Cancel", (record.persisted? ? resource.show_path(record) : resource.index_path), class: "btn btn-secondary" %>
+    <% if record.persisted? %>
+      <%= link_to "View", resource.show_path(record), class: "btn btn-secondary ml-auto" %>
+    <% end %>
+  </div>
+<% end %>

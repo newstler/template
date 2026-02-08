@@ -1,0 +1,17 @@
+<%= content_for :title, "Edit #{resource.display_name(@record)}" %>
+
+<div class="mb-8">
+  <nav class="flex items-center gap-2 text-sm text-dark-400 mb-4">
+    <%= link_to resource.friendly_name.pluralize, resource.index_path, class: "hover:text-dark-200 transition-colors" %>
+    <span>/</span>
+    <%= link_to resource.display_name(@record), resource.show_path(@record), class: "hover:text-dark-200 transition-colors" %>
+    <span>/</span>
+    <span class="text-dark-200">Edit</span>
+  </nav>
+  <h1 class="text-3xl font-bold text-dark-50">Edit <%= resource.friendly_name %></h1>
+  <p class="text-dark-400 mt-1">Update the <%= resource.friendly_name.downcase %> details below</p>
+</div>
+
+<div class="card-bg p-6">
+  <%= render partial: "form", locals: { record: @record, resource: resource } %>
+</div>

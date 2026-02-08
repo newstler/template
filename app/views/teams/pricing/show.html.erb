@@ -1,0 +1,78 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-4xl mx-auto">
+  <div class="text-center mb-12">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <p class="mt-3 text-dark-400"><%= t(".description") %></p>
+  </div>
+
+  <% if current_team.trialing? %>
+    <div class="card-bg p-4 mb-8 text-center">
+      <p class="text-dark-200">
+        <%= t(".trial_active", count: current_team.trial_days_remaining) %>
+      </p>
+    </div>
+  <% end %>
+
+  <% if current_team.subscribed? && !current_team.trialing? %>
+    <div class="card-bg p-6 text-center">
+      <p class="text-dark-200 mb-4"><%= t(".already_subscribed") %></p>
+      <%= link_to t(".manage_billing"), team_billing_path(current_team), class: "inline-flex items-center gap-2 px-6 py-3 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors" %>
+    </div>
+  <% else %>
+    <div data-controller="pricing-toggle">
+      <% if @yearly_prices.any? && @monthly_prices.any? %>
+        <div class="flex justify-center mb-8">
+          <div class="inline-flex rounded-lg bg-dark-800 p-1">
+            <button type="button"
+              class="px-4 py-2 text-sm font-medium rounded-md transition-colors"
+              data-pricing-toggle-target="monthlyButton"
+              data-action="click->pricing-toggle#showMonthly">
+              <%= t(".monthly") %>
+            </button>
+            <button type="button"
+              class="px-4 py-2 text-sm font-medium rounded-md transition-colors"
+              data-pricing-toggle-target="yearlyButton"
+              data-action="click->pricing-toggle#showYearly">
+              <%= t(".yearly") %>
+            </button>
+          </div>
+        </div>
+      <% end %>
+
+      <div data-pricing-toggle-target="monthlyPrices">
+        <div class="grid gap-6 justify-center" style="grid-template-columns: repeat(<%= [@monthly_prices.size, 3].min %>, minmax(0, 1fr));">
+          <% @monthly_prices.each do |price| %>
+            <div class="card-bg p-6 flex flex-col">
+              <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= price.product_name %></h2>
+              <div class="mb-6">
+                <span class="text-3xl font-bold text-dark-50"><%= price.formatted_amount %></span>
+                <span class="text-dark-400">/ <%= t(".month") %></span>
+              </div>
+              <div class="mt-auto">
+                <%= button_to t(".subscribe"), team_checkout_path(current_team), params: { price_id: price.id }, data: { turbo: false }, class: "w-full px-6 py-3 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors text-center font-medium" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+
+      <div data-pricing-toggle-target="yearlyPrices" class="hidden">
+        <div class="grid gap-6 justify-center" style="grid-template-columns: repeat(<%= [@yearly_prices.size, 3].min %>, minmax(0, 1fr));">
+          <% @yearly_prices.each do |price| %>
+            <div class="card-bg p-6 flex flex-col">
+              <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= price.product_name %></h2>
+              <div class="mb-6">
+                <span class="text-3xl font-bold text-dark-50"><%= price.formatted_amount %></span>
+                <span class="text-dark-400">/ <%= t(".year") %></span>
+              </div>
+              <div class="mt-auto">
+                <%= button_to t(".subscribe"), team_checkout_path(current_team), params: { price_id: price.id }, data: { turbo: false }, class: "w-full px-6 py-3 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors text-center font-medium" %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

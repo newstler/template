@@ -1,0 +1,73 @@
+<%= content_for :title, resource.friendly_name.pluralize %>
+
+<header class="header">
+  <h1><%= resource.friendly_name.pluralize %></h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search tool calls...", class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :name, "Name" %></th>
+        <th><%= sortable :tool_call_id, "Tool Call ID" %></th>
+        <th><%= sortable :message_id, "Message" %></th>
+        <th><%= sortable :created_at, "Created" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <td>
+            <%= link_to resource.show_path(record), class: "font-medium hover:underline" do %>
+              <%= record.name %>
+            <% end %>
+          </td>
+          <td class="font-mono text-sm text-dark-400"><%= record.tool_call_id.to_s.truncate(20) %></td>
+          <td class="max-w-xs">
+            <%= link_to "/madmin/messages/#{record.message_id}", class: "block truncate hover:underline" do %>
+              <%= record.message&.content&.truncate(50) || "Message ##{record.message_id.to_s[0..7]}" %>
+            <% end %>
+          </td>
+          <td><%= record.created_at.strftime("%-d %B %Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

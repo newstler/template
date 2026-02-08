@@ -1,0 +1,42 @@
+# i18n-tasks configuration
+# https://github.com/glebm/i18n-tasks
+
+base_locale: en
+locales: [en]
+
+# Paths to translation files
+data:
+  read:
+    - config/locales/%{locale}.yml
+    - config/locales/%{locale}/**/*.yml
+
+# Paths to scan for translation keys
+search:
+  paths:
+    - app/
+
+  # Patterns to ignore
+  exclude:
+    - app/assets/
+
+# Report missing and unused keys
+ignore_missing:
+  - 'activerecord.*'
+  - 'errors.*'
+  - 'helpers.select.*'
+  - 'number.*'
+  - 'date.*'
+  - 'time.*'
+  - 'support.*'
+  - 'helpers.submit.*'
+
+ignore_unused:
+  - 'activerecord.*'
+  - 'date.*'
+  - 'time.*'
+  - 'number.*'
+  - 'support.*'
+  # Allow common keys to be defined even if not always used
+  - 'common.*'
+  - 'app_name'
+  - 'messages.count'

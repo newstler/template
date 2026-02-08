@@ -1,0 +1,40 @@
+<div class="max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <%= button_to t(".sync_prices"), main_app.sync_madmin_prices_path, method: :post, class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors text-sm font-medium" %>
+  </div>
+
+  <div class="card-bg p-6">
+    <% if @setting.stripe_secret_key.blank? %>
+      <div class="text-center py-8">
+        <p class="text-dark-400 mb-2"><%= t(".stripe_not_configured") %></p>
+        <p class="text-sm text-dark-500"><%= t(".stripe_not_configured_hint") %></p>
+      </div>
+    <% elsif @prices.any? %>
+      <table class="w-full text-sm">
+        <thead>
+          <tr class="text-dark-500 text-left">
+            <th class="pb-3 font-medium"><%= t(".price_product") %></th>
+            <th class="pb-3 font-medium"><%= t(".price_amount") %></th>
+            <th class="pb-3 font-medium"><%= t(".price_interval") %></th>
+            <th class="pb-3 font-medium"><%= t(".price_id") %></th>
+          </tr>
+        </thead>
+        <tbody class="text-dark-200">
+          <% @prices.each do |price| %>
+            <tr class="border-t border-dark-700/50">
+              <td class="py-3"><%= price.product_name %></td>
+              <td class="py-3"><%= price.formatted_amount %></td>
+              <td class="py-3"><%= price.formatted_interval %></td>
+              <td class="py-3"><code class="text-xs font-mono text-dark-400"><%= price.id %></code></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <div class="text-center py-8">
+        <p class="text-dark-400"><%= t(".no_prices") %></p>
+      </div>
+    <% end %>
+  </div>
+</div>

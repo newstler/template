@@ -1,0 +1,18 @@
+<% content_for :title, @model.name %>
+
+<h1><%= @model.name %></h1>
+
+<p><strong><%= t(".id") %>:</strong> <%= @model.model_id %></p>
+<p><strong><%= t(".provider") %>:</strong> <%= @model.provider %></p>
+<p><strong><%= t(".context_window") %>:</strong> <%= t(".context_window_value", count: number_with_delimiter(@model.context_window)) %></p>
+<p><strong><%= t(".max_output") %>:</strong> <%= t(".max_output_value", count: number_with_delimiter(@model.max_output_tokens)) %></p>
+
+<% if @model.capabilities.any? %>
+  <p><strong><%= t(".capabilities") %>:</strong> <%= @model.capabilities.join(", ") %></p>
+<% end %>
+
+<p>
+  <%= link_to t(".start_chat"), new_team_chat_path(current_team, model: @model.model_id) %> |
+  <%= link_to t(".all_models"), team_models_path(current_team) %> |
+  <%= link_to t(".back"), team_chats_path(current_team) %>
+</p>

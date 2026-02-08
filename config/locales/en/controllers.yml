@@ -1,0 +1,79 @@
+---
+en:
+  controllers:
+    admins:
+      sessions:
+        create:
+          alert: Admin not found. Only existing admins can log in.
+          notice: Check your email for a magic link!
+        destroy:
+          notice: Signed out successfully
+        rate_limit:
+          long: Too many attempts. Try again later.
+          short: Too many attempts. Please wait.
+          verify: Too many verification attempts.
+        verify:
+          alert: Invalid or expired magic link
+          notice: Welcome back, admin!
+    application:
+      admin_required: Admin access required
+      authenticate_admin: Please log in as admin
+      authenticate_user: Please log in
+      chats_disabled: Chats are not available at the moment
+      subscription_required: An active subscription is required to access this feature
+      team_not_found: Team not found or you don't have access
+    madmin:
+      mail:
+        update:
+          notice: Mail settings saved successfully
+      prices:
+        sync:
+          notice: Prices synced from Stripe
+      providers:
+        update:
+          notice: Provider credentials saved successfully
+      settings:
+        update:
+          notice: Settings saved successfully
+    models:
+      refreshes:
+        create:
+          notice: Models refreshed successfully
+    onboardings:
+      update:
+        notice: Welcome, %{name}!
+    profiles:
+      update:
+        notice: Profile updated
+    sessions:
+      create:
+        notice: Check your email for a magic link!
+      destroy:
+        notice: Signed out successfully
+      rate_limit:
+        long: Too many attempts. Try again later.
+        short: Too many attempts. Please wait.
+        verify: Too many verification attempts.
+      verify:
+        alert: Invalid or expired magic link
+        notice: Welcome back, %{name}!
+    teams:
+      create:
+        notice: Team created successfully
+      members:
+        already_member: This user is already a member of the team
+        cannot_remove_last_owner: Cannot remove the last owner
+        create:
+          notice: Invitation sent to %{email}
+        destroy:
+          removed: "%{name} has been removed from the team"
+      settings:
+        regenerate_api_key:
+          notice: API key regenerated successfully
+        update:
+          notice: Team settings updated
+      subscription_cancellations:
+        create:
+          notice: Your subscription will be canceled at the end of the billing period
+        destroy:
+          notice: Your subscription has been resumed

@@ -1,0 +1,95 @@
+<%# Modern dark sidebar navigation for Madmin - uses shared partials for consistent design %>
+
+<%# Sidebar %>
+<aside data-sidebar-target="sidebar"
+       class="fixed inset-y-0 left-0 z-40 w-64 bg-dark-850 transform -translate-x-full lg:translate-x-0 transition-transform duration-200 ease-in-out flex flex-col">
+
+  <%# Logo/Brand %>
+  <div class="flex items-center h-16 px-4">
+    <%= link_to "/madmin", class: "flex items-center gap-3 text-white hover:opacity-80 transition-opacity" do %>
+      <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
+        <%= inline_svg "icons/shield.svg", class: "w-5 h-5 text-white" %>
+      </div>
+      <span class="font-semibold text-lg"><%= Madmin.site_name %> Admin</span>
+    <% end %>
+  </div>
+
+  <%# Navigation %>
+  <nav class="flex-1 overflow-y-auto py-4 px-3 flex flex-col">
+    <%# Dashboard %>
+    <div class="space-y-1">
+      <%= render "shared/sidebar_link", path: "/madmin", icon: "dashboard", label: "Dashboard" %>
+      <%= link_to main_app.root_path, class: "flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors", target: "_blank" do %>
+        <%= inline_svg "icons/external-link.svg", class: "w-5 h-5 flex-shrink-0" %>
+        <span>Open Main App</span>
+      <% end %>
+    </div>
+
+    <%# Separator %>
+    <div class="my-4 border-t border-dark-700"></div>
+
+    <%# App Data %>
+    <div class="mb-2 px-3">
+      <span class="text-xs font-semibold text-dark-500 uppercase tracking-wider">Data</span>
+    </div>
+    <div class="space-y-1">
+      <%= render "shared/sidebar_link", path: "/madmin/teams", icon: "users", label: "Teams" %>
+      <%= render "shared/sidebar_link", path: "/madmin/users", icon: "user", label: "Users" %>
+    </div>
+
+    <%# Spacer to push System to bottom %>
+    <div class="flex-1"></div>
+
+    <%# System %>
+    <div class="border-t border-dark-700 pt-4 mb-2 px-3">
+      <span class="text-xs font-semibold text-dark-500 uppercase tracking-wider">System</span>
+    </div>
+
+    <%# AI Section (collapsible) %>
+    <div class="mt-1">
+      <%= render "shared/sidebar_group", id: "ai", icon: "cube", label: "AI" do %>
+        <%= render "shared/sidebar_link", path: "/madmin/providers", icon: "cog", label: "Providers", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/models", icon: "cube", label: "Models", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/chats", icon: "chat", label: "Chats", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/messages", icon: "messages", label: "Messages", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/tool_calls", icon: "wrench", label: "Tool Calls", nested: true %>
+      <% end %>
+    </div>
+
+    <%# Active Storage Section (collapsible) %>
+    <div class="mt-1">
+      <%= render "shared/sidebar_group", id: "storage", icon: "folder", label: "Active Storage" do %>
+        <%= render "shared/sidebar_link", path: "/madmin/active_storage/blobs", icon: "file", label: "Blobs", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/active_storage/attachments", icon: "paperclip", label: "Attachments", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/active_storage/variant_records", icon: "image", label: "Variants", nested: true %>
+      <% end %>
+    </div>
+
+    <%# Settings Section (collapsible) %>
+    <div class="mt-1">
+      <%= render "shared/sidebar_group", id: "settings", icon: "cog", label: "Settings" do %>
+        <%= render "shared/sidebar_link", path: "/madmin/admins", icon: "shield", label: "Admins", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "key", label: "API Keys", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/prices", icon: "dollar", label: "Prices", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/mail", icon: "mail", label: "Mail", nested: true %>
+      <% end %>
+    </div>
+
+  </nav>
+
+  <%# Admin section %>
+  <div class="px-3 pb-4">
+    <div class="border-t border-dark-700 pt-3 space-y-1">
+      <% if defined?(current_admin) && current_admin %>
+        <%= link_to "/madmin/admins/#{current_admin.id}", class: "flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors" do %>
+          <%= inline_svg "icons/shield.svg", class: "w-5 h-5 flex-shrink-0" %>
+          <span class="truncate"><%= current_admin.email %></span>
+        <% end %>
+      <% end %>
+      <%= button_to main_app.admins_session_path, method: :delete, class: "w-full flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors", data: { turbo_confirm: "Sign out from admin panel?" } do %>
+        <%= inline_svg "icons/sign-out.svg", class: "w-5 h-5 flex-shrink-0" %>
+        <span>Sign Out</span>
+      <% end %>
+    </div>
+  </div>
+</aside>

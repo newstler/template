@@ -1,0 +1,74 @@
+<% content_for :title, t(".title") %>
+
+<div class="max-w-4xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".welcome", name: @user.name) %></h1>
+    <p class="text-dark-400 mt-1"><%= t(".signed_in") %></p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="card-bg p-6">
+      <div class="flex items-center mb-4">
+        <div class="w-10 h-10 bg-indigo-500/20 rounded-full flex items-center justify-center">
+          <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-indigo-400" %>
+        </div>
+        <h2 class="text-xl font-semibold text-dark-50 ml-3"><%= t(".profile.heading") %></h2>
+      </div>
+      <dl class="space-y-3">
+        <div>
+          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.email") %></dt>
+          <dd class="text-sm text-dark-100"><%= @user.email %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.name") %></dt>
+          <dd class="text-sm text-dark-100"><%= @user.name %></dd>
+        </div>
+        <div>
+          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.member_since") %></dt>
+          <dd class="text-sm text-dark-100"><%= @user.created_at.strftime("%B %d, %Y") %></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="card-bg p-6">
+      <div class="flex items-center mb-4">
+        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
+          <%= inline_svg "icons/shield.svg", class: "w-6 h-6 text-green-400" %>
+        </div>
+        <h2 class="text-xl font-semibold text-dark-50 ml-3"><%= t(".authentication.heading") %></h2>
+      </div>
+      <div class="space-y-3">
+        <p class="text-sm text-dark-300">
+          <%= t(".authentication.description") %>
+        </p>
+        <div class="bg-green-500/10 rounded-lg p-3">
+          <div class="flex items-start">
+            <%= inline_svg "icons/shield.svg", class: "w-4 h-4 text-green-400 mt-0.5 mr-2 flex-shrink-0" %>
+            <div class="text-xs text-green-300">
+              <strong class="font-medium"><%= t(".authentication.secure_title") %></strong>
+              <p class="mt-1 text-green-400/80"><%= t(".authentication.secure_description") %></p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="mt-8 bg-blue-500/10 rounded-xl p-6 shadow-lg shadow-blue-500/5">
+    <div class="flex">
+      <%= inline_svg "icons/lightning.svg", class: "w-6 h-6 text-blue-400 mt-0.5 mr-3 flex-shrink-0" %>
+      <div class="flex-1">
+        <h3 class="text-sm font-medium text-blue-300 mb-2"><%= t(".getting_started.heading") %></h3>
+        <p class="text-sm text-blue-400/80 mb-3">
+          <%= t(".getting_started.description") %>
+        </p>
+        <ul class="text-sm text-blue-400/80 space-y-1 list-disc list-inside">
+          <li><%= t(".getting_started.tip_controllers") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/controllers/home_controller.rb</code></li>
+          <li><%= t(".getting_started.tip_views") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/views/home/index.html.erb</code></li>
+          <li><%= t(".getting_started.tip_models") %></li>
+          <li><%= t(".getting_started.tip_claude") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">CLAUDE.md</code> <%= t(".getting_started.tip_claude_suffix") %></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

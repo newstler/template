@@ -1,0 +1,50 @@
+<div class="max-w-3xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+  </div>
+
+  <%= form_with model: @setting, url: main_app.madmin_mail_path, method: :patch, class: "space-y-6" do |form| %>
+    <div class="bg-dark-900 py-8 px-6 rounded-xl border border-dark-700">
+      <h2 class="text-xl font-semibold text-dark-100 mb-6"><%= t(".general") %></h2>
+      <div class="space-y-4">
+        <div>
+          <%= form.label :mail_from, t(".mail_from"), class: "block text-sm font-medium text-dark-200 mb-2" %>
+          <%= form.email_field :mail_from,
+            placeholder: "noreply@example.com",
+            class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all placeholder-dark-500 text-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="bg-dark-900 py-8 px-6 rounded-xl border border-dark-700">
+      <h2 class="text-xl font-semibold text-dark-100 mb-6"><%= t(".smtp") %></h2>
+      <div class="space-y-4">
+        <div>
+          <%= form.label :smtp_address, t(".smtp_address"), class: "block text-sm font-medium text-dark-200 mb-2" %>
+          <%= form.text_field :smtp_address,
+            placeholder: "smtp.postmarkapp.com",
+            class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all placeholder-dark-500 text-sm" %>
+        </div>
+        <div>
+          <%= form.label :smtp_username, t(".smtp_username"), class: "block text-sm font-medium text-dark-200 mb-2" %>
+          <%= form.text_field :smtp_username,
+            placeholder: t(".smtp_username_placeholder"),
+            class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all placeholder-dark-500 text-sm" %>
+        </div>
+        <div>
+          <%= form.label :smtp_password, t(".smtp_password"), class: "block text-sm font-medium text-dark-200 mb-2" %>
+          <%= form.password_field :smtp_password,
+            value: @setting.smtp_password,
+            placeholder: t(".key_placeholder"),
+            class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all placeholder-dark-500 font-mono text-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-4">
+      <%= form.submit t(".save"),
+        class: "bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-medium transition-all cursor-pointer shadow-lg shadow-blue-500/25" %>
+      <%= link_to t(".cancel"), main_app.madmin_mail_path, class: "text-dark-400 hover:text-dark-300 transition-colors" %>
+    </div>
+  <% end %>
+</div>

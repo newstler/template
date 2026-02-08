@@ -1,0 +1,86 @@
+<%= content_for :title, resource.friendly_name.pluralize %>
+
+<header class="header">
+  <h1><%= resource.friendly_name.pluralize %></h1>
+
+  <div class="actions">
+    <%= button_to "Refresh Models from RubyLLM",
+        "/madmin/models/refresh_all",
+        method: :post,
+        class: "btn btn-primary",
+        data: { turbo_confirm: "Refresh all models from RubyLLM?" } %>
+
+    <%= link_to resource.new_path, class: "btn btn-secondary" do %>
+      New <%= tag.span resource.friendly_name, class: "hidden md:inline-block" %>
+    <% end %>
+  </div>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search models...", class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :provider, class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <% providers = Model.distinct.order(:provider).pluck(:provider) %>
+      <%= f.select :provider,
+          options_for_select([["All providers", ""]] + providers.map { |p| [p.titleize, p] }, params[:provider]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? || params[:provider].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :provider, "Provider" %></th>
+        <th><%= sortable :family, "Family" %></th>
+        <th><%= sortable :name, "Name" %></th>
+        <th><%= sortable :chats_count, "Chats" %></th>
+        <th><%= sortable :total_cost, "Total Cost" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <td>
+            <span class="px-2 py-1 text-xs font-medium rounded bg-dark-600 text-dark-200">
+              <%= record.provider %>
+            </span>
+          </td>
+          <td><%= record.family %></td>
+          <td>
+            <%= link_to resource.show_path(record), class: "font-medium hover:underline" do %>
+              <%= record.name %>
+            <% end %>
+          </td>
+          <td><%= record.chats_count %></td>
+          <td class="<%= (record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_total_cost || "-" %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

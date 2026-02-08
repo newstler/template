@@ -1,0 +1,111 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= resource.display_name(@record) %>
+  </h1>
+
+  <% if resource.member_actions.any? %>
+    <div class="actions">
+      <% resource.member_actions.each do |action| %>
+        <%= instance_exec(@record, &action) %>
+      <% end %>
+    </div>
+  <% end %>
+</header>
+
+<div class="card-bg p-4 mb-6">
+  <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
+    <div>
+      <span class="text-dark-400">User:</span>
+      <%= link_to @record.user&.name || @record.user&.email, "/madmin/users/#{@record.user_id}", class: "font-medium text-dark-300 hover:text-dark-100" %>
+    </div>
+    <div>
+      <span class="text-dark-400">Model:</span>
+      <span class="font-medium text-dark-100"><%= @record.model&.name || 'Default' %></span>
+    </div>
+    <div>
+      <span class="text-dark-400">Created:</span>
+      <span class="font-medium text-dark-100"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+    </div>
+    <div>
+      <span class="text-dark-400">Messages:</span>
+      <span class="font-medium text-dark-100"><%= @record.messages_count %></span>
+    </div>
+    <div>
+      <span class="text-dark-400">Tokens:</span>
+      <span class="font-medium text-dark-100">
+        In: <%= @record.messages.sum { |m| m.input_tokens.to_i } %> / Out: <%= @record.messages.sum { |m| m.output_tokens.to_i } %>
+      </span>
+    </div>
+    <div>
+      <span class="text-dark-400">Total Cost:</span>
+      <span class="font-medium text-emerald-400"><%= @record.formatted_total_cost || 'N/A' %></span>
+    </div>
+  </div>
+</div>
+
+<div class="card-bg">
+  <div class="p-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Conversation</h2>
+  </div>
+  <div class="p-6 max-h-[600px] overflow-y-auto">
+    <div class="max-w-3xl mx-auto">
+      <% @record.messages.each do |message| %>
+        <div class="mb-6">
+          <% if message.role == 'user' %>
+            <div class="flex justify-end">
+              <div class="max-w-[85%]">
+                <div class="bg-blue-600 text-white rounded-2xl rounded-br-md px-4 py-3">
+                  <% if message.attachments.any? %>
+                    <div class="flex flex-wrap gap-2 mb-2">
+                      <% message.attachments.each do |attachment| %>
+                        <% if attachment.content_type.start_with?("image/") && attachment.variable? %>
+                          <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                            <%= image_tag main_app.url_for(attachment.variant(resize_to_limit: [200, 200])), class: "rounded-lg max-w-[200px] max-h-[200px]" %>
+                          </button>
+                        <% elsif attachment.content_type.start_with?("image/") %>
+                          <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                            <%= image_tag main_app.url_for(attachment), class: "rounded-lg max-w-[200px] max-h-[200px]" %>
+                          </button>
+                        <% else %>
+                          <button type="button" class="flex items-center gap-2 bg-blue-500/30 hover:bg-blue-500/40 rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="document">
+                            <span><%= attachment.content_type == "application/pdf" ? "📕" : "📄" %></span>
+                            <span class="truncate max-w-[150px]"><%= attachment.filename %></span>
+                          </button>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                  <div class="whitespace-pre-wrap"><%= message.content %></div>
+                </div>
+                <div class="text-xs text-dark-400 text-right mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+              </div>
+            </div>
+          <% elsif message.role == 'system' %>
+            <div class="flex justify-center">
+              <div>
+                <div class="bg-dark-700 text-dark-300 rounded-lg px-4 py-2 text-sm italic">
+                  <span class="font-medium">System:</span> <%= message.content.truncate(200) %>
+                </div>
+                <div class="text-xs text-dark-400 text-center mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
+              </div>
+            </div>
+          <% else %>
+            <div>
+              <div class="prose max-w-none"><%= markdown(message.content) %></div>
+              <div class="text-xs text-dark-400 mt-2">
+                <%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %>
+                <% if message.formatted_cost %>
+                  <span class="ml-2 text-emerald-400"><%= message.formatted_cost %></span>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

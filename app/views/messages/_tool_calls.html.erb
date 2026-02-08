@@ -1,0 +1,7 @@
+<div class="mt-3 space-y-2">
+  <% message.tool_calls.each do |tool_call| %>
+    <div class="bg-gray-100 rounded-lg px-3 py-2 font-mono text-sm text-gray-700">
+      <span class="text-purple-600 font-medium"><%= tool_call.name %></span>(<%= tool_call.arguments.map { |k, v| "#{k}: #{v.inspect}" }.join(", ") %>)
+    </div>
+  <% end %>
+</div>

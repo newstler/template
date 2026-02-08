@@ -1,0 +1,459 @@
+#!/usr/bin/env ruby
+# frozen_string_literal: true
+
+require "fileutils"
+require "yaml"
+require "securerandom"
+
+APP_ROOT = File.expand_path("..", __dir__)
+
+# Install lipgloss if not available
+begin
+  require "lipgloss"
+rescue LoadError
+  puts "Installing lipgloss gem for terminal styling..."
+  system("gem install lipgloss --no-document") || abort("Failed to install lipgloss gem")
+  Gem.clear_paths
+  require "lipgloss"
+end
+
+def system!(*args)
+  system(*args, exception: true)
+end
+
+def project_name_from_directory
+  File.basename(APP_ROOT)
+end
+
+# Converts to Ruby module name for config/application.rb
+# "my_project" -> "MyProject", "template" -> "Template", "MyApp" -> "MyApp"
+def to_class_name(string)
+  return string if string.nil? || string.empty?
+  return string.split(/[-_]/).map(&:capitalize).join if string.match?(/[-_]/)
+
+  string[0].upcase + string[1..].to_s
+end
+
+# Converts to kebab-case for Docker service names, S3 buckets, etc.
+# "ProjectName" -> "project-name"
+def to_service_name(string)
+  string.gsub(/([A-Z])/, '-\1').downcase.sub(/^-/, "").gsub(/[^a-z0-9-]/, "-")
+end
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Styles
+# ─────────────────────────────────────────────────────────────────────────────
+
+VIOLET = "#7D56F4"
+PURPLE = "#874BFD"
+GREEN = "#04B575"
+MUTED = "#626262"
+WHITE = "#FAFAFA"
+ORANGE = "#FF9F1C"
+CYAN = "#00D9FF"
+HOTPINK = "#FF1493"
+GOLD = "#FFD700"
+YELLOW = "#FFFF00"
+
+HEADER_STYLE = Lipgloss::Style.new
+  .border(:rounded)
+  .border_foreground(VIOLET)
+  .padding_top(1)
+  .padding_bottom(1)
+  .padding_left(4)
+  .padding_right(4)
+  .bold(true)
+  .foreground(WHITE)
+
+SECTION_STYLE = Lipgloss::Style.new
+  .foreground(PURPLE)
+  .bold(true)
+  .margin_top(1)
+  .margin_bottom(1)
+
+SUCCESS_STYLE = Lipgloss::Style.new
+  .foreground(GREEN)
+
+MUTED_STYLE = Lipgloss::Style.new
+  .foreground(MUTED)
+  .italic(true)
+
+SUMMARY_STYLE = Lipgloss::Style.new
+  .border(:rounded)
+  .border_foreground(GREEN)
+  .padding_top(1)
+  .padding_bottom(1)
+  .padding_left(2)
+  .padding_right(2)
+
+WARNING_STYLE = Lipgloss::Style.new
+  .foreground(ORANGE)
+  .bold(true)
+
+PROMPT_STYLE = Lipgloss::Style.new
+  .foreground(CYAN)
+  .bold(true)
+
+DEFAULT_STYLE = Lipgloss::Style.new
+  .foreground(MUTED)
+
+INPUT_STYLE = Lipgloss::Style.new
+  .foreground(GOLD)
+
+TIP_STYLE = Lipgloss::Style.new
+  .foreground(HOTPINK)
+  .bold(true)
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Output helpers
+# ─────────────────────────────────────────────────────────────────────────────
+
+def header(text) = puts HEADER_STYLE.render(text)
+def section(text) = puts SECTION_STYLE.render("── #{text} ──")
+def success(text) = puts SUCCESS_STYLE.render(text)
+def muted(text) = puts MUTED_STYLE.render(text)
+def warning(text) = puts WARNING_STYLE.render(text)
+def summary(text) = puts SUMMARY_STYLE.render(text)
+def tip(text) = puts TIP_STYLE.render(text)
+
+def replace_in_file(file_path, old_content, new_content)
+  return unless File.exist?(file_path)
+
+  content = File.read(file_path)
+  if content.include?(old_content)
+    File.write(file_path, content.gsub(old_content, new_content))
+    success("  ✓ Updated #{file_path}")
+  end
+end
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Prompts
+# ─────────────────────────────────────────────────────────────────────────────
+
+# ANSI escape codes for cursor control
+CURSOR_UP = "\e[1A"
+CLEAR_LINE = "\e[2K"
+RESET_COLOR = "\e[0m"
+
+# Convert hex color to ANSI true color escape sequence
+def ansi_color(hex)
+  hex = hex.delete("#")
+  r = hex[0..1].to_i(16)
+  g = hex[2..3].to_i(16)
+  b = hex[4..5].to_i(16)
+  "\e[38;2;#{r};#{g};#{b}m"
+end
+
+def prompt(question, default = nil)
+  label = PROMPT_STYLE.render(question)
+  colon = DEFAULT_STYLE.render(":")
+
+  if default
+    default_hint = DEFAULT_STYLE.render(" [#{default}]")
+    print "#{label}#{default_hint}#{colon} #{ansi_color(YELLOW)}"
+  else
+    print "#{label}#{colon} #{ansi_color(YELLOW)}"
+  end
+
+  answer = $stdin.gets.chomp
+  print RESET_COLOR
+  result = answer.empty? && default ? default : answer
+
+  # Rewrite the line with the final value
+  print "#{CURSOR_UP}#{CLEAR_LINE}"
+  puts "#{label}#{colon} #{INPUT_STYLE.render(result)}"
+
+  result
+end
+
+
+def confirm(question)
+  label = PROMPT_STYLE.render(question)
+  hint = DEFAULT_STYLE.render(" (y/N):")
+  print "#{label}#{hint} #{ansi_color(YELLOW)}"
+
+  answer = $stdin.gets.chomp
+  print RESET_COLOR
+  result = answer.downcase == "y"
+
+  # Rewrite the line with the final value
+  print "#{CURSOR_UP}#{CLEAR_LINE}"
+  puts "#{label}#{DEFAULT_STYLE.render(":")} #{INPUT_STYLE.render(result ? "Yes" : "No")}"
+
+  result
+end
+
+# ─────────────────────────────────────────────────────────────────────────────
+# Main
+# ─────────────────────────────────────────────────────────────────────────────
+
+FileUtils.chdir APP_ROOT do
+  puts
+  header("Rails Project Configuration")
+  puts
+
+  if File.exist?(".configured")
+    warning("⚠️  This project appears to be already configured.")
+    puts
+    unless confirm("Do you want to reconfigure?")
+      puts "Exiting..."
+      exit 0
+    end
+    puts
+  end
+
+  directory_name = project_name_from_directory
+  suggested_name = to_class_name(directory_name)
+
+  muted("Current directory: #{directory_name}")
+  puts
+
+  # ── Project Identity ──
+
+  section("Project Identity")
+
+  project_name = prompt("Project name (CamelCase)", suggested_name)
+  project_name = to_class_name(project_name)
+  service_name = to_service_name(project_name)
+
+  port = prompt("Development server port", "3000")
+
+  # ── Deployment Configuration ──
+
+  section("Deployment Configuration")
+
+  domain = prompt("App domain (e.g., myapp.example.com)", "app.example.com")
+
+  domain_parts = domain.split(".")
+  base_domain = domain_parts.length > 2 ? domain_parts[-2..].join(".") : domain
+
+  admin_email = prompt("Admin email address", "admin@#{base_domain}")
+
+  # ── Analytics ──
+
+  section("Analytics")
+
+  nullitics = false
+  maxmind_account_id = nil
+  maxmind_license_key = nil
+
+  muted("Nullitics: privacy-first page analytics — no cookies, no PII, GDPR compliant.")
+  muted("Learn more at https://nullitics.com")
+  puts
+
+  if confirm("Enable Nullitics analytics?")
+    nullitics = true
+    puts
+    muted("MaxMind GeoLite2 adds country-level geolocation to analytics (optional).")
+    muted("Get a free license key at https://www.maxmind.com/en/geolite2/signup")
+    puts
+
+    if confirm("Configure MaxMind GeoLite2 for IP geolocation?")
+      maxmind_account_id = prompt("MaxMind Account ID")
+      maxmind_license_key = prompt("MaxMind License Key")
+    end
+  end
+
+  initializer_path = "config/initializers/nullitics.rb"
+  File.write(initializer_path, "Rails.configuration.x.nullitics = #{nullitics}\n")
+  success("  ✓ Updated #{initializer_path}")
+
+  # ── Apply Configuration ──
+
+  section("Renaming project from Template to #{project_name}")
+
+  replace_in_file("config/application.rb", "module Template", "module #{project_name}")
+  replace_in_file("Rakefile", "Template::Application", "#{project_name}::Application")
+
+  %w[development test production].each do |env|
+    replace_in_file("config/environments/#{env}.rb", "Template::Application", "#{project_name}::Application")
+  end
+
+  replace_in_file("config.ru", "Template::Application", "#{project_name}::Application")
+
+  if File.exist?("package.json")
+    replace_in_file("package.json", '"name": "template"', "\"name\": \"#{directory_name}\"")
+  end
+
+  replace_in_file("config/locales/en.yml", "app_name: Template", "app_name: #{project_name}")
+  replace_in_file("app/views/pwa/manifest.json.erb", "Template", project_name)
+  replace_in_file("public/site.webmanifest", "Template", project_name)
+
+  section("Configuring deploy files")
+
+  replace_in_file("config/deploy.yml", "service: template", "service: #{service_name}")
+  replace_in_file("config/deploy.yml", "image: template", "image: #{service_name}")
+  replace_in_file("config/deploy.yml", "app.example.com", domain)
+  replace_in_file("config/deploy.yml", "template_storage:/rails/storage", "#{service_name}_storage:/rails/storage")
+
+  replace_in_file("config/environments/production.rb", 'host: "app.example.com"', "host: \"#{domain}\"")
+  replace_in_file("config/environments/production.rb", '"app.example.com"', "\"#{domain}\"")
+  replace_in_file("config/environments/production.rb", '/.*\.example\.com/', "/.*\\.#{Regexp.escape(base_domain).gsub('\\.', '\\.')}/")
+  replace_in_file("config/environments/production.rb", 'from: "noreply@app.example.com"', "from: \"noreply@#{base_domain}\"")
+
+  replace_in_file("Dockerfile", "docker build -t template", "docker build -t #{service_name}")
+  replace_in_file("Dockerfile", "--name template template", "--name #{service_name} #{service_name}")
+
+  if port != "3000"
+    replace_in_file("Procfile.dev", "bin/rails server", "bin/rails server -p #{port}")
+    replace_in_file("config/environments/development.rb", "port: 3000", "port: #{port}")
+  end
+
+  # Update seeds
+  File.write("db/seeds.rb", <<~RUBY)
+    # This file should ensure the existence of records required to run the application in every environment (production,
+    # development, test). The code here should be idempotent so that it can be executed at any point in every environment.
+    # The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
+
+    # Create first admin
+    admin = Admin.find_or_create_by!(email: "#{admin_email}")
+    puts "✓ Admin created: \#{admin.email}"
+
+    # Set default mail from address
+    setting = Setting.instance
+    setting.update!(mail_from: "noreply@#{base_domain}") if setting.mail_from.blank?
+    puts "✓ Mail from: \#{setting.mail_from}"
+  RUBY
+  success("  ✓ Updated db/seeds.rb")
+
+  section("Writing credentials")
+
+  require "active_support/encrypted_configuration"
+  FileUtils.mkdir_p("config/credentials")
+
+  %w[development production].each do |env|
+    key_path = "config/credentials/#{env}.key"
+    credentials_path = "config/credentials/#{env}.yml.enc"
+
+    unless File.exist?(key_path)
+      key = ActiveSupport::EncryptedConfiguration.generate_key
+      File.write(key_path, key)
+      success("  ✓ Generated #{env} key: #{key_path}")
+    end
+
+    credentials_hash = { "secret_key_base" => SecureRandom.hex(64) }
+
+    if maxmind_account_id && !maxmind_account_id.empty?
+      credentials_hash["maxmind"] = {
+        "account_id" => maxmind_account_id,
+        "license_key" => maxmind_license_key,
+      }
+    end
+
+    config = ActiveSupport::EncryptedConfiguration.new(
+      config_path: credentials_path,
+      key_path: key_path,
+      env_key: "RAILS_MASTER_KEY",
+      raise_if_missing_key: false
+    )
+
+    config.write(YAML.dump(credentials_hash))
+    success("  ✓ #{env.capitalize} credentials updated: #{credentials_path}")
+  end
+
+  # ── Consolidate Migrations ──
+
+  section("Consolidating migrations")
+
+  schema_path = "db/schema.rb"
+  migrate_dir = "db/migrate"
+
+  if !File.exist?(schema_path)
+    warning("  ⚠ db/schema.rb not found, skipping migration consolidation")
+  elsif !Dir.exist?(migrate_dir)
+    warning("  ⚠ db/migrate/ not found, skipping migration consolidation")
+  elsif Dir.glob("#{migrate_dir}/*.rb").size <= 1
+    muted("  Already consolidated (1 or fewer migrations)")
+  else
+    schema_content = File.read(schema_path)
+    schema_match = schema_content.match(/ActiveRecord::Schema\[[\d.]+\]\.define\(.*?\) do\n(.*)\nend\n?\z/m)
+
+    if schema_match.nil?
+      warning("  ⚠ Could not parse db/schema.rb, skipping migration consolidation")
+    else
+      schema_body = schema_match[1]
+
+      # Build migration with correct indentation
+      timestamp = Time.now.strftime("%Y%m%d%H%M%S")
+      migration = +"class CreateInitialSchema < ActiveRecord::Migration[8.2]\n"
+      migration << "  def change\n"
+      schema_body.each_line do |line|
+        migration << (line.strip.empty? ? "\n" : "  #{line}")
+      end
+      migration << "\n" unless migration.end_with?("\n")
+      migration << "  end\nend\n"
+
+      # Delete all old migrations
+      old_migrations = Dir.glob("#{migrate_dir}/*.rb")
+      old_migrations.each { |f| File.delete(f) }
+      muted("  Removed #{old_migrations.size} migration files")
+
+      # Write consolidated migration
+      migration_path = "#{migrate_dir}/#{timestamp}_create_initial_schema.rb"
+      File.write(migration_path, migration)
+      success("  ✓ Created #{migration_path}")
+
+      # Update schema.rb version to match new migration timestamp
+      new_version = timestamp.gsub(/(\d{4})(\d{2})(\d{2})(\d{2})(\d{2})(\d{2})/, '\1_\2_\3_\4\5\6')
+      updated_schema = schema_content.sub(
+        /ActiveRecord::Schema\[[\d.]+\]\.define\(version: \d[\d_]*\)/,
+        "ActiveRecord::Schema[8.2].define(version: #{new_version})"
+      )
+      File.write(schema_path, updated_schema)
+      success("  ✓ Updated schema.rb version")
+    end
+  end
+
+  File.write(".configured", "Configured on #{Time.now}\nProject: #{project_name}\nDomain: #{domain}\nAdmin: #{admin_email}\n")
+
+  # ── Git Remote ──
+
+  section("Configuring git remote")
+
+  # Rename origin to template (keep reference to template repo)
+  if system("git remote get-url origin > /dev/null 2>&1")
+    system("git remote rename origin template")
+    success("  ✓ Renamed origin to template")
+  end
+
+  puts
+  muted("Enter your repository URL to set as origin (or press Enter to skip):")
+  repo_url = prompt("Repository URL (e.g., git@github.com:user/repo.git)")
+
+  unless repo_url.to_s.empty?
+    system("git", "remote", "add", "origin", repo_url)
+    success("  ✓ Set origin to #{repo_url}")
+  end
+
+  # Show tip about updating from template
+  puts
+  tip("💡  TIP: The original template is now available as 'template' remote.")
+  tip("   To pull future updates and new features from the template:")
+  tip("")
+  tip("   git fetch template")
+  tip("   git merge template/main")
+  puts
+
+  # ── Commit ──
+
+  section("Committing configuration")
+  commit_message = <<~MSG
+    Configure project: #{project_name}
+
+    Domain: #{domain}
+    Admin: #{admin_email}
+  MSG
+  system("git add -A")
+  if system("git", "commit", "-m", commit_message.strip)
+    success("  ✓ Configuration committed")
+  else
+    muted("  (no changes to commit)")
+  end
+
+  puts
+  header("✓ Configuration Complete!")
+  puts
+  tip("💡  TIP: Configure API keys (AI, Stripe, SMTP, Litestream) in the admin panel:")
+  tip("   /madmin/settings")
+  puts
+end

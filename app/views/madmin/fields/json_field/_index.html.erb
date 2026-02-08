@@ -1,0 +1,5 @@
+<% if field.value(record).present? %>
+  <code class="text-xs"><%= truncate(field.formatted_json(record), length: 50) %></code>
+<% else %>
+  <span class="text-gray-400">—</span>
+<% end %>

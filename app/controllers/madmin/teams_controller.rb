@@ -1,0 +1,45 @@
+module Madmin
+  class TeamsController < Madmin::ResourceController
+    private
+
+    def set_record
+      @record = resource.model
+        .includes(memberships: :user, chats: [ :model, :messages ])
+        .find_by!(slug: params[:id])
+    end
+
+    def scoped_resources
+      resources = resource.model.send(valid_scope)
+      resources = Madmin::Search.new(resources, resource, search_term).run
+      resources = resources.includes(memberships: :user, chats: [])
+
+      dir = sort_direction == "asc" ? "ASC" : "DESC"
+
+      case sort_column
+      when "owner_name"
+        resources
+          .left_joins(memberships: :user)
+          .where(memberships: { role: "owner" })
+          .or(resources.left_joins(memberships: :user).where(memberships: { id: nil }))
+          .reorder(Arel.sql("users.name #{dir}"))
+      when "members_count"
+        resources
+          .left_joins(:memberships)
+          .group("teams.id")
+          .reorder(Arel.sql("COUNT(memberships.id) #{dir}"))
+      when "chats_count"
+        resources
+          .left_joins(:chats)
+          .group("teams.id")
+          .reorder(Arel.sql("COUNT(chats.id) #{dir}"))
+      when "total_cost"
+        resources
+          .left_joins(:chats)
+          .group("teams.id")
+          .reorder(Arel.sql("COALESCE(SUM(chats.total_cost), 0) #{dir}"))
+      else
+        resources.reorder(sort_column => sort_direction)
+      end
+    end
+  end
+end

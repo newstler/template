@@ -1,0 +1,72 @@
+<%= content_for :title, resource.friendly_name.pluralize %>
+
+<header class="header">
+  <h1><%= resource.friendly_name.pluralize %></h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search by filename...", class: "form-input" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :filename, "Filename" %></th>
+        <th><%= sortable :content_type, "Content Type" %></th>
+        <th><%= sortable :byte_size, "Size" %></th>
+        <th><%= sortable :created_at, "Created" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <td>
+            <%= link_to resource.show_path(record), class: "flex items-center gap-3 font-medium hover:underline" do %>
+              <% if record.image? && record.variable? %>
+                <div class="w-10 h-10 rounded overflow-hidden bg-dark-800 flex-shrink-0">
+                  <%= image_tag main_app.url_for(record.variant(resize_to_limit: [80, 80])), class: "w-full h-full object-cover" %>
+                </div>
+              <% elsif record.image? %>
+                <div class="w-10 h-10 rounded overflow-hidden bg-dark-800 flex-shrink-0">
+                  <%= image_tag main_app.url_for(record), class: "w-full h-full object-cover" %>
+                </div>
+              <% else %>
+                <div class="w-10 h-10 rounded bg-dark-700 flex items-center justify-center flex-shrink-0">
+                  <span class="text-xs text-dark-400"><%= record.filename.extension.upcase.truncate(4, omission: "") %></span>
+                </div>
+              <% end %>
+              <span class="truncate"><%= record.filename %></span>
+            <% end %>
+          </td>
+          <td class="text-dark-400"><%= record.content_type %></td>
+          <td><%= number_to_human_size(record.byte_size) %></td>
+          <td><%= record.created_at.strftime("%-d %B %Y") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

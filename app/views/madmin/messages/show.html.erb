@@ -1,0 +1,108 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= resource.display_name(@record) %>
+  </h1>
+
+  <% if resource.member_actions.any? %>
+    <div class="actions">
+      <% resource.member_actions.each do |action| %>
+        <%= instance_exec(@record, &action) %>
+      <% end %>
+    </div>
+  <% end %>
+</header>
+
+<div class="card-bg p-5 mb-6">
+  <div class="grid grid-cols-2 gap-4 text-sm">
+    <div>
+      <span class="text-dark-500">Chat:</span>
+      <span class="font-medium"><%= link_to @record.chat_id, "/madmin/chats/#{@record.chat_id}", class: "text-dark-300 hover:text-dark-100" %></span>
+    </div>
+    <div>
+      <span class="text-dark-500">Role:</span>
+      <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= @record.role == 'user' ? 'bg-blue-500/20 text-blue-300' : @record.role == 'assistant' ? 'bg-green-500/20 text-green-300' : 'bg-dark-700 text-dark-300' %>">
+        <%= @record.role %>
+      </span>
+    </div>
+    <div>
+      <span class="text-dark-500">Created:</span>
+      <span class="font-medium text-dark-200"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
+    </div>
+    <div>
+      <span class="text-dark-500">Tokens:</span>
+      <span class="font-medium text-dark-200">
+        <% if @record.input_tokens.present? || @record.output_tokens.present? %>
+          In: <%= @record.input_tokens || 0 %> / Out: <%= @record.output_tokens || 0 %>
+        <% else %>
+          N/A
+        <% end %>
+      </span>
+    </div>
+    <div>
+      <span class="text-dark-500">Cost:</span>
+      <span class="font-medium text-emerald-400"><%= @record.formatted_cost || 'N/A' %></span>
+    </div>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4">
+    <h2 class="text-lg font-semibold text-dark-100">Message Content</h2>
+  </div>
+  <div class="p-5 pt-0">
+    <% if @record.role == 'user' %>
+      <div class="flex justify-end">
+        <div class="max-w-[85%] bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-blue-500/20">
+          <% if @record.attachments.any? %>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <% @record.attachments.each do |attachment| %>
+                <% if attachment.content_type.start_with?("image/") && attachment.variable? %>
+                  <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                    <%= image_tag main_app.url_for(attachment.variant(resize_to_limit: [200, 200])), class: "rounded-lg max-w-[200px] max-h-[200px]" %>
+                  </button>
+                <% elsif attachment.content_type.start_with?("image/") %>
+                  <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                    <%= image_tag main_app.url_for(attachment), class: "rounded-lg max-w-[200px] max-h-[200px]" %>
+                  </button>
+                <% else %>
+                  <button type="button" class="flex items-center gap-2 bg-blue-500/30 hover:bg-blue-500/40 rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="document">
+                    <span><%= attachment.content_type == "application/pdf" ? "📕" : "📄" %></span>
+                    <span class="truncate max-w-[150px]"><%= attachment.filename %></span>
+                  </button>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="whitespace-pre-wrap"><%= @record.content %></div>
+        </div>
+      </div>
+    <% elsif @record.role == 'system' %>
+      <div class="bg-dark-800/50 text-dark-300 rounded-lg px-4 py-3">
+        <span class="font-medium text-dark-200">System Prompt:</span>
+        <div class="mt-2 whitespace-pre-wrap"><%= @record.content %></div>
+      </div>
+    <% else %>
+      <div class="prose max-w-none"><%= markdown(@record.content) %></div>
+    <% end %>
+  </div>
+</div>
+
+<% if @record.tool_calls.any? %>
+  <div class="card-bg mt-6 overflow-hidden">
+    <div class="px-5 py-4">
+      <h2 class="text-lg font-semibold text-dark-100">Tool Calls</h2>
+    </div>
+    <div class="p-5 pt-0">
+      <% @record.tool_calls.each do |tool_call| %>
+        <div class="bg-dark-800/50 rounded-lg p-4 mb-4 last:mb-0">
+          <div class="font-medium text-dark-100 mb-2"><%= tool_call.name %></div>
+          <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-3 overflow-x-auto"><%= JSON.pretty_generate(tool_call.arguments) rescue tool_call.arguments %></pre>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>

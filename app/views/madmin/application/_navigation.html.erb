@@ -1,0 +1,30 @@
+<nav>
+  <%= nav_link_to "Dashboard", "/madmin" %>
+
+  <% Madmin.menu.render do |item| %>
+    <% if item.url %>
+      <%= nav_link_to item.label, item.url, starts_with: item.url %>
+    <% else %>
+      <h4><%= item.label %></h4>
+    <% end %>
+
+    <% item.items.each do |item| %>
+      <%= nav_link_to item.label, item.url, starts_with: item.url %>
+    <% end %>
+  <% end %>
+</nav>
+
+<footer>
+  <div class="mb-4">
+    <%= button_to "Sign Out",
+        main_app.admins_session_path,
+        method: :delete,
+        class: "btn btn-sm",
+        data: { turbo_confirm: "Sign out from admin panel?" } %>
+  </div>
+
+  <%= link_to "https://github.com/excid3/madmin", target: :_blank do %>
+    <%= inline_svg "icons/github.svg", class: "w-4 h-4" %>
+    Madmin on GitHub
+  <% end %>
+</footer>

@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded UUIDv7s to maintain referential integrity across fixtures.
+
+one:
+  id: 01961a2a-c0de-7000-8000-000000000501
+  name: Team One
+  slug: team-one
+  api_key: test_api_key_team_one_12345678901234567890123456789012
+
+two:
+  id: 01961a2a-c0de-7000-8000-000000000502
+  name: Team Two
+  slug: team-two
+  api_key: test_api_key_team_two_12345678901234567890123456789012

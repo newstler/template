@@ -1,0 +1,29 @@
+# frozen_string_literal: true
+
+require "test_helper"
+require "tools/mcp_test_helper"
+
+module <%= plural_class_name %>
+  class Delete<%= model_class %>ToolTest < McpToolTestCase
+    setup do
+      @user = users(:one)
+      # @<%= singular_name %> = <%= plural_name %>(:one)
+    end
+
+    test "requires authentication" do
+      error = assert_raises(FastMcp::Tool::InvalidArgumentsError) do
+        call_tool(<%= plural_class_name %>::Delete<%= model_class %>Tool, id: "test")
+      end
+      assert_match(/Authentication required/, error.message)
+    end
+
+    test "returns error for non-existent <%= singular_name %>" do
+      mock_mcp_request(user: @user)
+
+      result = call_tool(<%= plural_class_name %>::Delete<%= model_class %>Tool, id: "nonexistent")
+
+      assert_not result[:success]
+      assert_equal "not_found", result[:code]
+    end
+  end
+end

@@ -1,0 +1,52 @@
+<%= form_with(model: chat, url: team_chats_path(current_team), data: { controller: "chat-input", chat_input_target: "form" }) do |form| %>
+  <% if chat.errors.any? %>
+    <div class="bg-red-500/10 text-red-300 px-4 py-3 rounded-lg mb-4">
+      <ul class="list-disc list-inside text-sm">
+        <% chat.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-dark-700 rounded-2xl shadow-lg shadow-black/20 focus-within:shadow-[0_0_20px_rgba(255,255,255,0.08)] transition-shadow">
+    <div class="p-3" data-chat-input-target="inputContainer">
+      <%= form.text_area :prompt,
+          rows: 1,
+          class: "w-full resize-none border-0 bg-transparent focus:ring-0 focus:outline-none focus:border-0 focus:shadow-none placeholder-dark-400 text-dark-100",
+          placeholder: t("chats.form.prompt_placeholder"),
+          autofocus: true,
+          style: "box-shadow: none !important;",
+          data: {
+            chat_input_target: "textarea",
+            action: "keydown->chat-input#submit input->chat-input#resize"
+          } %>
+    </div>
+    <div class="hidden flex flex-wrap gap-2 px-3 pb-2" data-chat-input-target="previewArea"></div>
+    <div class="flex items-center justify-between px-3 py-2">
+      <div class="flex items-center gap-2 text-dark-400">
+        <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">
+          <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
+        </button>
+        <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/png,image/jpeg,image/gif,image/webp,.pdf" %>
+      </div>
+      <div class="flex items-center gap-3">
+        <div class="relative flex items-center">
+          <% default_model = Model.find_by(model_id: RubyLLM.config.default_model) %>
+          <% default_label = default_model ? t("chats.form.default_model", name: default_model.name) : t("chats.form.default_model_not_set") %>
+          <%= form.select :model,
+              options_for_select([[default_label, ""]] + Model.enabled.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
+              {},
+              class: "text-sm text-dark-400 select-transparent ring-0 outline-none focus:ring-0 focus:outline-none cursor-pointer pr-5 appearance-none",
+              data: { controller: "auto-width-select", action: "change->auto-width-select#resize" } %>
+          <div class="absolute right-0 top-1/2 -translate-y-1/2 pointer-events-none text-dark-400">
+            <%= inline_svg "icons/chevron-down.svg", class: "w-4 h-4" %>
+          </div>
+        </div>
+        <%= form.button type: "submit", class: "bg-dark-600 hover:bg-dark-500 text-white rounded-lg p-2 transition-colors cursor-pointer" do %>
+          <%= inline_svg "icons/arrow-up.svg", class: "w-4 h-4" %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+<% end %>

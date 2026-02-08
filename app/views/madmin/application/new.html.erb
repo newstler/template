@@ -1,0 +1,15 @@
+<%= content_for :title, "New #{resource.friendly_name}" %>
+
+<div class="mb-8">
+  <nav class="flex items-center gap-2 text-sm text-dark-400 mb-4">
+    <%= link_to resource.friendly_name.pluralize, resource.index_path, class: "hover:text-dark-200 transition-colors" %>
+    <span>/</span>
+    <span class="text-dark-200">New</span>
+  </nav>
+  <h1 class="text-3xl font-bold text-dark-50">New <%= resource.friendly_name %></h1>
+  <p class="text-dark-400 mt-1">Create a new <%= resource.friendly_name.downcase %></p>
+</div>
+
+<div class="card-bg p-6">
+  <%= render partial: "form", locals: { record: @record, resource: resource } %>
+</div>

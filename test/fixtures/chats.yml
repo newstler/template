@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# Use hardcoded UUIDv7s and explicit _id columns for referential integrity.
+
+one:
+  id: 01961a2a-c0de-7000-8000-000000000301
+  user_id: 01961a2a-c0de-7000-8000-000000000001
+  team_id: 01961a2a-c0de-7000-8000-000000000501
+  model_id: 01961a2a-c0de-7000-8000-000000000201
+
+two:
+  id: 01961a2a-c0de-7000-8000-000000000302
+  user_id: 01961a2a-c0de-7000-8000-000000000002
+  team_id: 01961a2a-c0de-7000-8000-000000000502
+  model_id: 01961a2a-c0de-7000-8000-000000000202

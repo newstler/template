@@ -1,0 +1,26 @@
+---
+en:
+  teams:
+    billing:
+      show:
+        cancel_confirm: Are you sure you want to cancel your subscription? You will
+          retain access until the end of your billing period.
+        cancel_subscription: Cancel Subscription
+        cancellation_notice: Your subscription will end on %{date}
+        cancellation_notice_label: Cancellation Pending
+        days_remaining:
+          one: "%{count} day remaining"
+          other: "%{count} days remaining"
+        heading: Billing
+        manage_in_stripe: Manage in Stripe
+        period_ends_label: Current Period Ends
+        resume_subscription: Resume Subscription
+        status:
+          active: Active
+          canceling: Canceling
+          inactive: Inactive
+          past_due: Past Due
+          trialing: Free Trial
+        status_label: Subscription Status
+        trial_ends_label: Trial Ends
+        view_plans: View Plans

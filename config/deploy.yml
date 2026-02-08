@@ -2,15 +2,15 @@
 service: template
 
 # Name of the container image.
-image: your-user/template
+image: template
 
 # Deploy to these servers.
 servers:
   web:
-    - 192.168.0.1
+    - app.example.com
   # job:
   #   hosts:
-  #     - 192.168.0.1
+  #     - app.example.com
   #   cmd: bin/jobs
 
 # Enable SSL auto certification via Let's Encrypt and allow for multiple apps on a single web server.
@@ -21,15 +21,9 @@ proxy:
   ssl: true
   host: app.example.com
 
-# Credentials for your image host.
+# Use local registry for image storage.
 registry:
-  # Specify the registry server, if you're not using Docker Hub
-  # server: registry.digitalocean.com / ghcr.io / ...
-  username: your-user
-
-  # Always use an access token rather than real password when possible.
-  password:
-    - KAMAL_REGISTRY_PASSWORD
+  server: localhost:5555
 
 # Inject ENV variables into containers (secrets come from .kamal/secrets).
 env:
@@ -76,20 +70,23 @@ asset_path: /rails/public/assets
 # Configure the image builder.
 builder:
   arch: amd64
+  secrets:
+    - MAXMIND_ACCOUNT_ID
+    - MAXMIND_LICENSE_KEY
 
   # # Build image via remote server (useful for faster amd64 builds on arm64 computers)
   # remote: ssh://docker@docker-builder-server
   #
   # # Pass arguments and secrets to the Docker build process
   # args:
-  #   RUBY_VERSION: 3.4.0-preview2
+  #   RUBY_VERSION: 4.0.0
   # secrets:
   #   - GITHUB_TOKEN
-  #   - RAILS_MASTER_KEY
+  #   - SECRET_KEY_BASE
 
-# Use a different ssh user than root
-# ssh:
-#   user: app
+# Use root for ssh (default for most VPS providers)
+ssh:
+  user: root
 
 # Use accessory services (secrets come from .kamal/secrets).
 # accessories:

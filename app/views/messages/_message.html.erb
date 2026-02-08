@@ -1,0 +1,52 @@
+<div id="message_<%= message.id %>" class="mb-6">
+  <% if message.role == 'user' %>
+    <div class="flex justify-end">
+      <div class="max-w-[85%]">
+        <div class="bg-dark-700 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-black/20">
+          <% if message.attachments.any? %>
+            <div class="flex flex-wrap gap-2 mb-2">
+              <% message.attachments.each do |attachment| %>
+                <% if attachment.content_type.start_with?("image/") && attachment.variable? %>
+                  <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                    <%= image_tag url_for(attachment.variant(resize_to_limit: [200, 200])), class: "rounded-lg max-w-[200px] max-h-[200px]" %>
+                  </button>
+                <% elsif attachment.content_type.start_with?("image/") %>
+                  <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                    <%= image_tag url_for(attachment), class: "rounded-lg max-w-[200px] max-h-[200px]" %>
+                  </button>
+                <% else %>
+                  <button type="button" class="flex items-center gap-2 bg-dark-600 hover:bg-dark-500 rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="document">
+                    <span><%= attachment.content_type == "application/pdf" ? "📕" : "📄" %></span>
+                    <span class="truncate max-w-[150px]"><%= attachment.filename %></span>
+                  </button>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="whitespace-pre-wrap"><%= message.content %></div>
+        </div>
+        <div class="text-xs text-dark-500 text-right mt-1"><%= time_ago_in_words(message.created_at) %> ago</div>
+      </div>
+    </div>
+  <% else %>
+    <div>
+      <div id="message_<%= message.id %>_content" class="prose max-w-none" data-controller="typing-indicator">
+        <% if message.content.blank? %>
+          <div data-typing-indicator-target="dots" class="flex items-center gap-1.5 py-2">
+            <span class="w-2 h-2 rounded-full bg-dark-400 animate-bounce" style="animation-delay: 0ms"></span>
+            <span class="w-2 h-2 rounded-full bg-dark-400 animate-bounce" style="animation-delay: 150ms"></span>
+            <span class="w-2 h-2 rounded-full bg-dark-400 animate-bounce" style="animation-delay: 300ms"></span>
+          </div>
+        <% else %>
+          <%= markdown(message.content) %>
+        <% end %>
+      </div>
+      <% if message.tool_call? %>
+        <%= render "messages/tool_calls", message: message %>
+      <% end %>
+      <% unless message.content.blank? %>
+        <div class="text-xs text-dark-500 mt-2 not-prose"><%= time_ago_in_words(message.created_at) %> ago</div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

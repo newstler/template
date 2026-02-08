@@ -1,0 +1,35 @@
+<% content_for :title, t(".title") %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <%= link_to t(".edit_button"), edit_team_profile_path(current_team), class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+  </div>
+
+  <div class="card-bg p-6">
+    <div class="flex items-center gap-4 mb-6 pb-6 border-b border-dark-700">
+      <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="text-xl font-semibold text-white"><%= @user.name&.first&.upcase || "?" %></span>
+      </div>
+      <div>
+        <h2 class="text-xl font-semibold text-dark-50"><%= @user.name %></h2>
+        <p class="text-dark-400"><%= @user.email %></p>
+      </div>
+    </div>
+
+    <dl class="space-y-4">
+      <div>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".name") %></dt>
+        <dd class="text-dark-100 mt-1"><%= @user.name %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".email") %></dt>
+        <dd class="text-dark-100 mt-1"><%= @user.email %></dd>
+      </div>
+      <div>
+        <dt class="text-sm font-medium text-dark-400"><%= t(".member_since") %></dt>
+        <dd class="text-dark-100 mt-1"><%= @user.created_at.strftime("%B %d, %Y") %></dd>
+      </div>
+    </dl>
+  </div>
+</div>

@@ -1,0 +1,46 @@
+# frozen_string_literal: true
+
+module <%= plural_class_name %>
+  class Update<%= model_class %>Tool < ApplicationTool
+    description "Update a <%= humanized_name %>"
+
+    annotations(
+      title: "Update <%= humanized_name %>",
+      read_only_hint: false,
+      open_world_hint: false
+    )
+
+    arguments do
+      required(:id).filled(:string).description("The <%= singular_name %> ID")
+      # Add optional arguments for update
+      # optional(:name).filled(:string).description("The <%= singular_name %> name")
+    end
+
+    def call(id:, **args)
+      require_authentication!
+
+      <%= singular_name %> = current_user.<%= plural_name %>.find_by(id: id)
+      return error_response("<%= humanized_name %> not found", code: "not_found") unless <%= singular_name %>
+
+      with_current_user do
+        <%= singular_name %>.update!(args.compact)
+      end
+
+      success_response(
+        serialize_<%= singular_name %>(<%= singular_name %>),
+        message: "<%= humanized_name %> updated successfully"
+      )
+    rescue ActiveRecord::RecordInvalid => e
+      error_response(e.message, code: "validation_error")
+    end
+
+    private
+
+    def serialize_<%= singular_name %>(item)
+      {
+        id: item.id,
+        updated_at: format_timestamp(item.updated_at)
+      }
+    end
+  end
+end

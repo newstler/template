@@ -1,0 +1,12 @@
+---
+en:
+  shared:
+    sidebar:
+      billing: Billing
+      chats: Chats
+      collapse: Collapse sidebar
+      home: Home
+      members: Members
+      new_chat: New Chat
+      settings: Settings
+      user: User
