@@ -1,7 +1,5 @@
 one:
   id: 01961a2a-c0de-7000-8000-100000000001
-  openai_api_key: sk-test-openai-key-1234
-  anthropic_api_key: sk-ant-test-key-5678
   stripe_secret_key: sk_test_stripe_1234
   stripe_publishable_key: pk_test_stripe_1234
   stripe_webhook_secret: whsec_test_1234

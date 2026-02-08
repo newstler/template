@@ -4,7 +4,6 @@ class Teams::PricingController < ApplicationController
 
   def show
     @prices = Price.all
-    @monthly_prices = @prices.select { |p| p.interval == "month" }
-    @yearly_prices = @prices.select { |p| p.interval == "year" }
+    @monthly_prices, @yearly_prices = @prices.partition { |p| p.interval == "month" }
   end
 end

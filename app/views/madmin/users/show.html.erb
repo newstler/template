@@ -23,14 +23,16 @@
   </div>
 </div>
 
+<% chats_count = @record.chats.size %>
+<% total_messages = @record.chats.sum(&:messages_count) %>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1">Total Chats</div>
-    <div class="text-3xl font-bold text-dark-100"><%= @record.chats.count %></div>
+    <div class="text-3xl font-bold text-dark-100"><%= chats_count %></div>
   </div>
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1">Total Messages</div>
-    <div class="text-3xl font-bold text-dark-100"><%= @record.chats.sum(:messages_count) %></div>
+    <div class="text-3xl font-bold text-dark-100"><%= total_messages %></div>
   </div>
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1">Total Cost</div>
@@ -70,7 +72,8 @@
   </div>
 </div>
 
-<% if @record.chats.any? %>
+<% if chats_count > 0 %>
+<% recent_chats = @record.chats.includes(:model, :messages).order(created_at: :desc).limit(5) %>
 <div class="card-bg mt-6 overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
     <h2 class="text-lg font-semibold text-dark-100">Recent Chats</h2>
@@ -87,11 +90,11 @@
         </tr>
       </thead>
       <tbody>
-        <% @record.chats.order(created_at: :desc).limit(5).each do |chat| %>
+        <% recent_chats.each do |chat| %>
           <tr>
             <td class="max-w-xs">
               <%= link_to "/madmin/chats/#{chat.id}", class: "block truncate hover:underline" do %>
-                <%= chat.messages.order(:created_at).first&.content&.truncate(60) || "Empty chat" %>
+                <%= chat.messages.min_by(&:created_at)&.content&.truncate(60) || "Empty chat" %>
               <% end %>
             </td>
             <td><%= chat.model&.name || "Default" %></td>
@@ -103,9 +106,9 @@
       </tbody>
     </table>
   </div>
-  <% if @record.chats.count > 5 %>
+  <% if chats_count > 5 %>
     <div class="px-5 py-3 border-t border-dark-700">
-      <%= link_to "View all #{@record.chats.count} chats →", "/madmin/chats?q=#{@record.email}", class: "text-sm text-accent-400 hover:text-accent-300" %>
+      <%= link_to "View all #{chats_count} chats →", "/madmin/chats?q=#{@record.email}", class: "text-sm text-accent-400 hover:text-accent-300" %>
     </div>
   <% end %>
 </div>

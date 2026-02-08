@@ -7,7 +7,7 @@ class SettingTest < ActiveSupport::TestCase
   end
 
   test "get returns attribute value" do
-    assert_equal "sk-test-openai-key-1234", Setting.get(:openai_api_key)
+    assert_equal "sk_test_stripe_1234", Setting.get(:stripe_secret_key)
   end
 
   test "get returns nil for blank attributes" do
@@ -16,18 +16,13 @@ class SettingTest < ActiveSupport::TestCase
     assert_nil Setting.get(:smtp_address)
   end
 
-  test "provider_configured? returns true when key present" do
+  test "provider_configured? delegates to ProviderCredential" do
     assert Setting.provider_configured?(:openai)
     assert Setting.provider_configured?(:anthropic)
+    assert_not Setting.provider_configured?(:gemini)
   end
 
-  test "provider_configured? returns false when key blank" do
-    setting = Setting.instance
-    setting.update_column(:openai_api_key, nil)
-    assert_not Setting.provider_configured?(:openai)
-  end
-
-  test "reconfigure! sets RubyLLM keys" do
+  test "reconfigure! sets RubyLLM keys from provider credentials" do
     Setting.reconfigure!
     assert_equal "sk-test-openai-key-1234", RubyLLM.config.openai_api_key
     assert_equal "sk-ant-test-key-5678", RubyLLM.config.anthropic_api_key

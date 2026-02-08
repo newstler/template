@@ -3,17 +3,17 @@ en:
   madmin:
     settings:
       edit:
-        ai_providers: AI Providers
-        anthropic_api_key: Anthropic API Key
         cancel: Cancel
-        heading: Edit API Keys
+        features: Features
+        heading: Edit Settings
         key_placeholder: Enter key...
         litestream: Litestream
         litestream_replica_access_key: Secret Access Key
         litestream_replica_bucket: Replica Bucket
         litestream_replica_key_id: Access Key ID
         litestream_restart_note: Changes to Litestream settings require a server restart.
-        openai_api_key: OpenAI API Key
+        public_chats: Public Chats
+        public_chats_hint: Allow end users to access the chat feature
         save: Save Settings
         stripe: Stripe
         stripe_publishable_key: Publishable Key
@@ -23,17 +23,18 @@ en:
         trial_days_hint: Number of days new teams get as a free trial. Set to 0 to
           disable.
       show:
-        ai_providers: AI Providers
-        anthropic_api_key: Anthropic API Key
+        disabled: Disabled
         edit_button: Edit Settings
-        heading: API Keys
+        enabled: Enabled
+        features: Features
+        heading: Settings
         litestream: Litestream
         litestream_replica_access_key: Secret Access Key
         litestream_replica_bucket: Replica Bucket
         litestream_replica_key_id: Access Key ID
         litestream_restart_note: Changes to Litestream settings require a server restart.
         not_configured: Not configured
-        openai_api_key: OpenAI API Key
+        public_chats: Public Chats
         stripe: Stripe
         stripe_publishable_key: Publishable Key
         stripe_secret_key: Secret Key

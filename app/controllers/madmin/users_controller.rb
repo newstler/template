@@ -1,7 +1,7 @@
 module Madmin
   class UsersController < Madmin::ResourceController
     def scoped_resources
-      resources = super
+      resources = super.includes(:chats)
 
       if params[:created_at_from].present? && params[:created_at_to].present?
         resources = resources.where(created_at: params[:created_at_from]..params[:created_at_to])

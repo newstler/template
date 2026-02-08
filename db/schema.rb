@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_02_07_204410) do
+ActiveRecord::Schema[8.2].define(version: 2026_02_08_121032) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -117,13 +117,21 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_07_204410) do
     t.index ["provider"], name: "index_models_on_provider"
   end
 
+  create_table "provider_credentials", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "provider", null: false
+    t.datetime "updated_at", null: false
+    t.string "value"
+    t.index ["provider", "key"], name: "index_provider_credentials_on_provider_and_key", unique: true
+  end
+
   create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
-    t.string "anthropic_api_key"
     t.datetime "created_at", null: false
     t.string "litestream_replica_access_key"
     t.string "litestream_replica_bucket"
     t.string "litestream_replica_key_id"
-    t.string "openai_api_key"
+    t.boolean "public_chats", default: true, null: false
     t.string "smtp_address"
     t.string "smtp_password"
     t.string "smtp_username"

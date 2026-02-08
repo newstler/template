@@ -43,7 +43,11 @@ scope :preloaded, -> { includes(:author, :comments) }
 - Query objects (use scopes on models)
 - Callbacks for business logic (explicit method calls preferred)
 - `before_action` chains that are hard to follow
-- N+1 queries (use `preloaded` scopes)
+- N+1 queries (use `includes` in controllers)
+- `.count` on associations when counter cache exists (use `_count` column)
+- `.find_by`/`.order.first` on preloaded associations (use Ruby `.find { }`/`.min_by`)
+- Multiple passes over the same collection (use `partition`/`group_by`)
+- Looped `create`/`perform_later` (use `insert_all`/`perform_all_later`)
 - Empty directories created "for later"
 
 ## Testing

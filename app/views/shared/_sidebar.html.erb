@@ -26,12 +26,14 @@
     <% if current_team %>
       <%= render "shared/sidebar_link", path: team_root_path(current_team), icon: "home", label: t("shared.sidebar.home") %>
 
-      <%# Chats Section (collapsible) %>
-      <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: t("shared.sidebar.chats"), path: team_chats_path(current_team) do %>
-        <%= render "shared/sidebar_link", path: new_team_chat_path(current_team), icon: "plus", label: t("shared.sidebar.new_chat"), nested: true %>
-        <% current_user&.chats&.where(team: current_team)&.order(updated_at: :desc)&.limit(10)&.each do |chat| %>
-          <% first_user_message = chat.messages.find_by(role: "user")&.content || t("common.untitled") %>
-          <%= render "shared/sidebar_link", path: team_chat_path(current_team, chat), icon: "chat", label: first_user_message, nested: true, truncate: true %>
+      <%# Chats Section (collapsible) - only shown when chats are enabled %>
+      <% if Setting.chats_enabled? %>
+        <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: t("shared.sidebar.chats"), path: team_chats_path(current_team) do %>
+          <%= render "shared/sidebar_link", path: new_team_chat_path(current_team), icon: "plus", label: t("shared.sidebar.new_chat"), nested: true %>
+          <% current_user&.chats&.where(team: current_team)&.includes(:messages)&.order(updated_at: :desc)&.limit(10)&.each do |chat| %>
+            <% first_user_message = chat.messages.find { |m| m.role == "user" }&.content || t("common.untitled") %>
+            <%= render "shared/sidebar_link", path: team_chat_path(current_team, chat), icon: "chat", label: first_user_message, nested: true, truncate: true %>
+          <% end %>
         <% end %>
       <% end %>
 

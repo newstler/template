@@ -74,4 +74,10 @@ class ApplicationController < ActionController::Base
     redirect_to team_pricing_path(current_team),
       alert: t("controllers.application.subscription_required")
   end
+
+  def require_chats_enabled!
+    return if Setting.chats_enabled?
+
+    redirect_to team_root_path(current_team), alert: t("controllers.application.chats_disabled")
+  end
 end

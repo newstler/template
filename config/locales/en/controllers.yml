@@ -19,6 +19,7 @@ en:
       admin_required: Admin access required
       authenticate_admin: Please log in as admin
       authenticate_user: Please log in
+      chats_disabled: Chats are not available at the moment
       subscription_required: An active subscription is required to access this feature
       team_not_found: Team not found or you don't have access
     madmin:
@@ -28,6 +29,9 @@ en:
       prices:
         sync:
           notice: Prices synced from Stripe
+      providers:
+        update:
+          notice: Provider credentials saved successfully
       settings:
         update:
           notice: Settings saved successfully

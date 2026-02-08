@@ -22,8 +22,7 @@ module Madmin
 
     def setting_params
       params.require(:setting).permit(
-        :openai_api_key,
-        :anthropic_api_key,
+        :public_chats,
         :stripe_secret_key,
         :stripe_publishable_key,
         :stripe_webhook_secret,

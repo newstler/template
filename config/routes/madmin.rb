@@ -25,6 +25,11 @@ namespace :madmin do
   resources :users
   resources :teams
   resource :settings, only: [ :show, :edit, :update ]
+  resources :providers, only: [ :index ] do
+    collection do
+      patch :update
+    end
+  end
   resource :prices, only: [ :show ] do
     post :sync, on: :member
   end

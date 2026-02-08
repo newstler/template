@@ -2,13 +2,14 @@ class ChatsController < ApplicationController
   include Attachable
 
   before_action :authenticate_user!
+  before_action :require_chats_enabled!, only: [ :index, :new, :create ]
   before_action :set_chat, only: [ :show ]
 
   # Prevent chat spam
   rate_limit to: 10, within: 1.minute, name: "chats/create", only: :create
 
   def index
-    @chats = current_user.chats.where(team: current_team).recent
+    @chats = current_user.chats.where(team: current_team).includes(:model, :messages).recent
   end
 
   def new
@@ -33,7 +34,7 @@ class ChatsController < ApplicationController
   private
 
   def set_chat
-    @chat = current_user.chats.where(team: current_team).find(params[:id])
+    @chat = current_user.chats.where(team: current_team).includes(messages: [ :attachments, :tool_calls ]).find(params[:id])
   end
 
   def model

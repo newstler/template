@@ -12,7 +12,11 @@ class Setting < ApplicationRecord
   end
 
   def self.provider_configured?(provider)
-    get(:"#{provider}_api_key").present?
+    ProviderCredential.configured?(provider)
+  end
+
+  def self.chats_enabled?
+    get(:public_chats) != false && Model.configured_providers.any?
   end
 
   def self.reconfigure!
@@ -22,20 +26,13 @@ class Setting < ApplicationRecord
   end
 
   def reconfigure!
-    configure_ruby_llm!
+    ProviderCredential.configure_ruby_llm!
     configure_stripe!
     configure_smtp!
     configure_litestream!
   end
 
   private
-
-  def configure_ruby_llm!
-    RubyLLM.configure do |config|
-      config.openai_api_key = openai_api_key
-      config.anthropic_api_key = anthropic_api_key
-    end
-  end
 
   def configure_stripe!
     Stripe.api_key = stripe_secret_key

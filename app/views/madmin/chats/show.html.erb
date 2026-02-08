@@ -32,12 +32,12 @@
     </div>
     <div>
       <span class="text-dark-400">Messages:</span>
-      <span class="font-medium text-dark-100"><%= @record.messages.count %></span>
+      <span class="font-medium text-dark-100"><%= @record.messages_count %></span>
     </div>
     <div>
       <span class="text-dark-400">Tokens:</span>
       <span class="font-medium text-dark-100">
-        In: <%= @record.messages.sum(:input_tokens) || 0 %> / Out: <%= @record.messages.sum(:output_tokens) || 0 %>
+        In: <%= @record.messages.sum(&:input_tokens).to_i %> / Out: <%= @record.messages.sum(&:output_tokens).to_i %>
       </span>
     </div>
     <div>

@@ -28,9 +28,9 @@
                   </h3>
                 </div>
               </div>
-              <% if chat.messages.any? %>
+              <% if chat.messages_count > 0 %>
                 <p class="text-dark-400 text-sm truncate pl-11">
-                  <% first_user_message = chat.messages.find { |m| m.role == 'user' } %>
+                  <% first_user_message = chat.messages.find { |m| m.role == "user" } %>
                   <%= first_user_message&.content&.truncate(100) || t(".no_messages") %>
                 </p>
               <% end %>

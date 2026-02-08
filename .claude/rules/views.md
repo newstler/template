@@ -71,6 +71,32 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
 <%= render partial: "card", collection: @cards, spacer_template: "card_spacer" %>
 ```
 
+### Collection Rendering (REQUIRED)
+
+**Always use collection rendering instead of `.each` with `render`:**
+
+```erb
+<%# ❌ BAD: N partial lookups + N instrumentations %>
+<% @messages.each do |message| %>
+  <%= render message %>
+<% end %>
+
+<%# ✅ GOOD: 1 lookup + 1 instrumentation (~2x faster) %>
+<%= render partial: "messages/message", collection: @messages, as: :message %>
+```
+
+### Counter Caches in Views
+
+When a counter cache column exists, use it instead of `.count`:
+
+```erb
+<%# ❌ BAD: Triggers COUNT query %>
+<%= chat.messages.count %>
+
+<%# ✅ GOOD: Reads cached column %>
+<%= chat.messages_count %>
+```
+
 ## Forms
 
 ```erb

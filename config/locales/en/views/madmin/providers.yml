@@ -1,0 +1,36 @@
+---
+en:
+  madmin:
+    providers:
+      index:
+        description: Configure API keys for AI providers. New providers appear automatically
+          when supported by RubyLLM.
+        heading: AI Providers
+        key_placeholder: Enter key...
+        placeholders:
+          api_base: https://api.example.com
+          location: us-central1
+          region: us-east-1
+        providers:
+          anthropic: Anthropic
+          bedrock: Amazon Bedrock
+          deepseek: DeepSeek
+          gemini: Google Gemini
+          gpustack: GPUStack
+          mistral: Mistral
+          ollama: Ollama
+          openai: OpenAI
+          openrouter: OpenRouter
+          perplexity: Perplexity
+          vertexai: Google Vertex AI
+          xai: xAI
+        save: Save Providers
+        settings:
+          api_base: Base URL
+          api_key: API Key
+          location: Location
+          organization_id: Organization ID
+          project_id: Project ID
+          region: Region
+          secret_key: Secret Key
+          session_token: Session Token

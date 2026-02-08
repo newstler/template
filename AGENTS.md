@@ -602,6 +602,17 @@ Quick reference for working in this codebase:
 - CRUD only, nested resources for actions
 - Thin - delegate to models
 - `before_action :authenticate_user!`
+- **Always `includes()` associations** accessed in views
+
+### Performance (STRICT)
+- **Eager load** associations accessed in loops/views (`includes(:messages)`)
+- **Counter caches** over `.count` (use `chat.messages_count` not `chat.messages.count`)
+- **Collection rendering** over `.each` + `render` (`render partial: collection:`)
+- **Ruby methods on preloaded data** (`.find { }` not `.find_by`, `.sum(&:col)` not `.sum(:col)`)
+- **Single-pass iteration** (`partition`/`group_by` not multiple `select`)
+- **Bulk operations** (`insert_all`, `perform_all_later` over loops)
+- **Lazy Turbo Frames** for below-the-fold content
+- See `.claude/rules/performance.md` for full details
 
 ### Testing
 - **TDD: Write tests first**

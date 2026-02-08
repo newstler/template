@@ -47,7 +47,7 @@
         <tr>
           <td class="max-w-xs">
             <%= link_to resource.show_path(record), class: "block truncate" do %>
-              <%= record.messages.order(:created_at).first&.content&.truncate(80) || "Empty chat" %>
+              <%= record.messages.min_by(&:created_at)&.content&.truncate(80) || "Empty chat" %>
             <% end %>
           </td>
           <td>
