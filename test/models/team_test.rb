@@ -69,18 +69,6 @@ class TeamTest < ActiveSupport::TestCase
     assert_respond_to team, :chats
   end
 
-  test "multi_tenant? returns configuration value" do
-    original_value = Rails.configuration.x.multi_tenant
-
-    Rails.configuration.x.multi_tenant = true
-    assert Team.multi_tenant?
-
-    Rails.configuration.x.multi_tenant = false
-    assert_not Team.multi_tenant?
-  ensure
-    Rails.configuration.x.multi_tenant = original_value
-  end
-
   test "generates api_key on create" do
     team = Team.create!(name: "API Key Team")
     assert team.api_key.present?

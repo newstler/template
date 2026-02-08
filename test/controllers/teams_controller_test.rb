@@ -21,30 +21,15 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
-  test "new redirects when multi_tenant is false" do
+  test "new shows form" do
     sign_in(@user)
 
-    Rails.configuration.x.multi_tenant = false
-    get new_team_path
-    assert_redirected_to root_path
-  ensure
-    Rails.configuration.x.multi_tenant = false
-  end
-
-  test "new shows form when multi_tenant is true" do
-    sign_in(@user)
-
-    Rails.configuration.x.multi_tenant = true
     get new_team_path
     assert_response :success
-  ensure
-    Rails.configuration.x.multi_tenant = false
   end
 
-  test "create creates team and membership when multi_tenant is true" do
+  test "create creates team and membership" do
     sign_in(@user)
-
-    Rails.configuration.x.multi_tenant = true
 
     assert_difference -> { Team.count } => 1, -> { Membership.count } => 1 do
       post teams_path, params: { team: { name: "New Team" } }
@@ -55,22 +40,6 @@ class TeamsControllerTest < ActionDispatch::IntegrationTest
     assert_equal "new-team", team.slug
     assert @user.owner_of?(team)
     assert_redirected_to team_root_path(team)
-  ensure
-    Rails.configuration.x.multi_tenant = false
-  end
-
-  test "create redirects when multi_tenant is false" do
-    sign_in(@user)
-
-    Rails.configuration.x.multi_tenant = false
-
-    assert_no_difference "Team.count" do
-      post teams_path, params: { team: { name: "New Team" } }
-    end
-
-    assert_redirected_to root_path
-  ensure
-    Rails.configuration.x.multi_tenant = false
   end
 
   private

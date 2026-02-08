@@ -376,17 +376,6 @@ Helpers: `current_user`, `current_admin`, `current_team`, `current_membership`, 
 
 Users belong to teams. All user-facing routes are team-scoped under `/t/:team_slug/...`.
 
-### Configuration
-
-Toggle via initializer (`config/initializers/multitenancy.rb`):
-
-```ruby
-Rails.configuration.x.multi_tenant = true   # Users can create/join multiple teams
-Rails.configuration.x.multi_tenant = false  # Single-tenant mode (default)
-```
-
-Configure during setup with `bin/configure`.
-
 ### URL Structure
 
 ```
@@ -396,7 +385,7 @@ Configure during setup with `bin/configure`.
 /t/:team_slug/settings   → Team settings (admin only)
 /t/:team_slug/pricing    → Subscription pricing (admin only)
 /t/:team_slug/billing    → Billing management (admin only)
-/teams                   → Team selection (multi-tenant only)
+/teams                   → Team selection
 ```
 
 ### Models
@@ -435,14 +424,6 @@ curl -X POST -H "Content-Type: application/json" \
   -d '{"jsonrpc":"2.0","method":"tools/call","params":{"name":"list_chats","arguments":{}},"id":1}' \
   http://localhost:3000/mcp/messages
 ```
-
-### Single-Tenant Mode
-
-When `multi_tenant = false`:
-- First user creates a team automatically
-- Subsequent users auto-join that team as members
-- Team switching UI is hidden
-- `/teams` redirects to the single team
 
 ### Team Invitations
 

@@ -12,12 +12,6 @@ class Team < ApplicationRecord
   before_create :generate_api_key
   before_create :start_trial
 
-  class << self
-    def multi_tenant?
-      Rails.configuration.x.multi_tenant
-    end
-  end
-
   def to_param
     slug
   end

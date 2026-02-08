@@ -25,9 +25,7 @@
     <% end %>
   </div>
 
-  <% if Team.multi_tenant? %>
-    <div class="mt-6 text-center">
-      <%= link_to t(".create_team"), new_team_path, class: "inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors" %>
-    </div>
-  <% end %>
+  <div class="mt-6 text-center">
+    <%= link_to t(".create_team"), new_team_path, class: "inline-flex items-center gap-2 text-blue-400 hover:text-blue-300 transition-colors" %>
+  </div>
 </div>

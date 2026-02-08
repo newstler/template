@@ -1,6 +1,5 @@
 class TeamsController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_multi_tenant!, only: [ :new, :create ]
 
   def index
     @teams = current_user.teams
@@ -32,10 +31,6 @@ class TeamsController < ApplicationController
 
   def team_params
     params.require(:team).permit(:name)
-  end
-
-  def require_multi_tenant!
-    redirect_to root_path unless Team.multi_tenant?
   end
 
   def create_personal_team(user)

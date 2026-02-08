@@ -229,17 +229,6 @@ FileUtils.chdir APP_ROOT do
 
   admin_email = prompt("Admin email address", "admin@#{base_domain}")
 
-  # ── Multitenancy ──
-
-  section("Multitenancy")
-
-  multi_tenant = confirm("Enable multitenancy? (users can create/join multiple teams)")
-
-  # Update initializer file directly
-  initializer_path = "config/initializers/multitenancy.rb"
-  File.write(initializer_path, "Rails.configuration.x.multi_tenant = #{multi_tenant}\n")
-  success("  ✓ Updated #{initializer_path}")
-
   # ── Analytics ──
 
   section("Analytics")
