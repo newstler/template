@@ -26,6 +26,10 @@ class TeamResource < Madmin::Resource
     [ :id, :name, :slug, :created_at ]
   end
 
+  def self.sortable_columns
+    super + %w[owner_name members_count chats_count total_cost]
+  end
+
   def self.searchable_attributes
     [ :name, :slug ]
   end

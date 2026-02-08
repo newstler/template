@@ -117,6 +117,29 @@ rails generate madmin:views users  # For specific resource
 
 Views go in `app/views/madmin/`
 
+## Sortable Columns (STRICT)
+
+**Every column in a Madmin index table MUST be sortable.** No exceptions.
+
+- Add the column name to `self.sortable_columns` in the resource
+- Use `<%= sortable :column_name, "Label" %>` in the `<th>` (never plain `<th>Text</th>`)
+- For computed columns (counts, sums), add custom sort logic in the controller's `scoped_resources`
+
+```ruby
+# Resource
+def self.sortable_columns
+  super + %w[owner_name members_count chats_count total_cost]
+end
+
+# Controller - custom sort for computed columns
+when "chats_count"
+  resources.left_joins(:chats).group("teams.id")
+    .reorder(Arel.sql("COUNT(chats.id) #{sort_direction}"))
+when "total_cost"
+  resources.left_joins(:chats).group("teams.id")
+    .reorder(Arel.sql("COALESCE(SUM(chats.total_cost), 0) #{sort_direction}"))
+```
+
 ## Interface Separation
 
 **IMPORTANT:** Keep admin and user interfaces completely separate:

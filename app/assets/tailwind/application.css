@@ -441,11 +441,8 @@
   }
 
   a:not([class*="text-"]) {
-    color: oklch(70% 0.03 250);
-
-    &:hover {
-      color: oklch(91% 0.02 250);
-    }
+    color: var(--color-dark-100);
+    text-decoration: none;
   }
 
   /* Madmin Header */
@@ -571,7 +568,7 @@
 
     th {
       background-color: var(--color-dark-700);
-      color: var(--color-dark-300);
+      color: var(--color-dark-400);
       font-weight: 500;
       font-size: 0.75rem;
       text-transform: uppercase;
@@ -580,15 +577,15 @@
       text-align: left;
       border-bottom: 1px solid var(--color-dark-600);
 
-      a {
-        color: var(--color-dark-300);
+      a:not([class*="text-"]) {
+        color: var(--color-dark-400);
         text-decoration: none;
         display: inline-flex;
         align-items: center;
         gap: 0.25rem;
 
         &:hover {
-          color: var(--color-dark-100);
+          color: var(--color-dark-200);
         }
       }
     }
@@ -596,15 +593,25 @@
     td {
       padding: 0.875rem 1rem;
       border-bottom: 1px solid var(--color-dark-600);
-      color: var(--color-dark-200);
+      color: var(--color-dark-400);
 
-      a {
-        color: oklch(70% 0.03 250);
+      a:not([class*="text-"]) {
         text-decoration: none;
 
         &:hover {
-          color: oklch(91% 0.02 250);
+          text-decoration: none;
+        }
+
+        &:hover .font-medium {
           text-decoration: underline;
+        }
+      }
+
+      a.rounded-full {
+        transition: filter 0.15s ease;
+
+        &:hover {
+          filter: brightness(1.3);
         }
       }
     }

@@ -15,6 +15,10 @@ class UserResource < Madmin::Resource
   # Associations
   attribute :chats
 
+  def self.sortable_columns
+    super + %w[teams_count chats_count]
+  end
+
   def self.searchable_attributes
     [ :email, :name ]
   end
