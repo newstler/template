@@ -12,7 +12,8 @@ module Attachable
     attachments.reject(&:blank?).map do |attachment|
       temp_dir = Rails.root.join("tmp", "uploads", SecureRandom.uuid)
       FileUtils.mkdir_p(temp_dir)
-      temp_path = temp_dir.join(attachment.original_filename)
+      safe_filename = File.basename(attachment.original_filename).gsub(/[^\w.\-]/, "_")
+      temp_path = temp_dir.join(safe_filename)
       File.binwrite(temp_path, attachment.read)
       temp_path.to_s
     end

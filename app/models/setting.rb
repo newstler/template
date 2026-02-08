@@ -1,4 +1,12 @@
 class Setting < ApplicationRecord
+  ALLOWED_KEYS = %i[
+    litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
+    public_chats
+    smtp_address smtp_password smtp_username
+    stripe_publishable_key stripe_secret_key stripe_webhook_secret
+    trial_days
+  ].freeze
+
   after_save :reconfigure!
 
   def self.instance
@@ -6,6 +14,7 @@ class Setting < ApplicationRecord
   end
 
   def self.get(key)
+    raise ArgumentError, "Unknown setting: #{key}" unless ALLOWED_KEYS.include?(key.to_sym)
     instance.public_send(key)
   rescue ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError
     nil

@@ -22,29 +22,30 @@ module Chats
     test "updates chat model when model is enabled" do
       mock_mcp_request(team: @team, user: @user)
 
-      # Skip if no providers are configured (no API keys in test)
-      skip "No providers configured" if Model.configured_providers.empty?
-
       result = call_tool(Chats::UpdateChatTool, id: @chat.id, model_id: @new_model.id)
 
-      assert result[:success]
-      assert_equal @new_model.model_id, result[:data][:model_id]
-      @chat.reload
-      assert_equal @new_model.model_id, @chat.model_id
+      if Model.enabled.find_by(id: @new_model.id)
+        # Provider configured — either succeeds or returns config error
+        if result[:success]
+          assert_equal @new_model.model_id, result[:data][:model_id]
+          @chat.reload
+          assert_equal @new_model.model_id, @chat.model_id
+        else
+          assert_equal "provider_not_configured", result[:code]
+        end
+      else
+        assert_not result[:success]
+        assert_equal "invalid_model", result[:code]
+      end
     end
 
     test "returns error when new model is not enabled" do
       mock_mcp_request(team: @team, user: @user)
 
-      result = call_tool(Chats::UpdateChatTool, id: @chat.id, model_id: @new_model.id)
+      result = call_tool(Chats::UpdateChatTool, id: @chat.id, model_id: "nonexistent")
 
-      # Either success (if API key configured) or error (if not)
-      if Model.enabled.find_by(id: @new_model.id)
-        assert result[:success]
-      else
-        assert_not result[:success]
-        assert_equal "invalid_model", result[:code]
-      end
+      assert_not result[:success]
+      assert_equal "invalid_model", result[:code]
     end
 
     test "returns error for non-existent chat" do

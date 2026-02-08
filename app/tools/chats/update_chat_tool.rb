@@ -39,6 +39,8 @@ module Chats
       )
     rescue ActiveRecord::RecordInvalid => e
       error_response(e.message, code: "validation_error")
+    rescue RubyLLM::ConfigurationError => e
+      error_response(e.message, code: "provider_not_configured")
     end
   end
 end

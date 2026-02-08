@@ -39,7 +39,7 @@ class Admins::SessionsController < ApplicationController
   end
 
   def destroy
-    session[:admin_id] = nil
+    reset_session
     redirect_to root_path, notice: t("controllers.admins.sessions.destroy.notice")
   end
 end
