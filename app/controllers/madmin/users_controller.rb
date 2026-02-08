@@ -20,17 +20,19 @@ module Madmin
         resources = resources.where("DATE(created_at) = ?", date)
       end
 
+      dir = sort_direction == "asc" ? "ASC" : "DESC"
+
       case sort_column
       when "teams_count"
         resources
           .left_joins(:memberships)
           .group("users.id")
-          .reorder(Arel.sql("COUNT(memberships.id) #{sort_direction}"))
+          .reorder(Arel.sql("COUNT(memberships.id) #{dir}"))
       when "chats_count"
         resources
           .left_joins(:chats)
           .group("users.id")
-          .reorder(Arel.sql("COUNT(chats.id) #{sort_direction}"))
+          .reorder(Arel.sql("COUNT(chats.id) #{dir}"))
       else
         resources.reorder(sort_column => sort_direction)
       end
