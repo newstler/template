@@ -1,31 +1,50 @@
-# Rails 8 Template
+# AI-Native Rails Template
 
-A modern Rails 8 template following 37signals' vanilla Rails philosophy with built-in magic link authentication.
+A modern Rails template for building AI-powered apps — with built-in chat, MCP tools, multi-provider LLM support, and agent-native architecture. Follows 37signals' vanilla Rails philosophy.
 
 ## Tech Stack
 
-- **Ruby** 4.0.x
-- **Rails** 8.2.x
+- **Ruby** 4.0.x / **Rails** (edge)
+- **AI**: RubyLLM (OpenAI, Anthropic) with streaming chat
+- **MCP**: Model Context Protocol server via fast-mcp
 - **Database**: SQLite with Solid Stack (Cache, Queue, Cable)
 - **Replication**: Litestream (SQLite → S3-compatible storage)
 - **Frontend**: Hotwire (Turbo + Stimulus), Tailwind CSS 4
-- **Asset Pipeline**: Propshaft
+- **Billing**: Stripe (subscriptions, checkout, customer portal)
 - **Deployment**: Kamal 2
 - **Authentication**: Magic Links (passwordless)
+- **Multitenancy**: Team-based with roles (owner/admin/member)
 - **Admin Panel**: Madmin
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
 
+### AI & Agent-Native
+
+- **AI Chat** with OpenAI and Anthropic models
+  - Streaming responses via Turbo Streams
+  - Model switching per chat
+  - Token tracking and cost estimation
+- **MCP Server** — every UI action is also available as an MCP tool
+  - Streamable HTTP transport at `/mcp/messages`
+  - Team-level API key authentication
+  - 20+ tools for chats, messages, models, billing, teams, and users
+- **Agent-native architecture** — agents have full parity with human users
+
+### Platform
+
 - **Magic Link Authentication** for users and admins
   - Users: First magic link creates account, subsequent ones sign in
   - Admins: Only existing admins can create new admins
+- **Team-Based Multitenancy** with configurable single/multi-tenant modes
+  - Roles: owner, admin, member
+  - Team-scoped routes under `/t/:team_slug/`
+- **Stripe Billing** with subscriptions, checkout, and customer portal
 - **Litestream SQLite Replication** to S3-compatible storage (optional)
   - Continuous backup of all databases (main, cache, queue, cable)
-  - Configured via `bin/setup` wizard or Rails credentials
 - **UUIDv7 Primary Keys** for better distributed system support
 - **Solid Stack** for production-ready background jobs, caching, and cable
-- **Vanilla Rails** approach - no unnecessary abstractions
+- **Vanilla Rails** approach — no unnecessary abstractions
 
 ## Getting Started
 
