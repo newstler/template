@@ -93,7 +93,7 @@ Action: Method doesn't exist, check model implementation.
 If all tests pass:
 ```bash
 bundle exec rubocop -A
-bundle exec brakeman -q
+bin/brakeman --no-pager
 ```
 
 If tests fail:

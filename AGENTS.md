@@ -235,7 +235,7 @@ Before ANY commit:
 
 ```bash
 bin/ci
-# or: bundle exec rubocop -A && rails test && bundle exec brakeman -q
+# or: bundle exec rubocop -A && rails test && bin/brakeman --no-pager
 ```
 
 All must pass. No exceptions.

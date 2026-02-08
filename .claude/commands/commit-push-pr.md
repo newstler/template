@@ -21,7 +21,7 @@ Before committing, ensure code quality:
 ```bash
 bundle exec rubocop -A
 rails test
-bundle exec brakeman -q --no-pager
+bin/brakeman --no-pager
 ```
 
 If any quality gate fails, fix the issues before proceeding.

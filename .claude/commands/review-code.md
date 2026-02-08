@@ -65,7 +65,7 @@ git diff --cached  # If already staged
 ```bash
 bundle exec rubocop -A
 rails test
-bundle exec brakeman -q --no-pager
+bin/brakeman --no-pager
 ```
 
 ## 4. Common Issues

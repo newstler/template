@@ -113,5 +113,5 @@ Before completing any task:
 ```bash
 bundle exec rubocop -A     # Fix lint issues
 rails test                  # Run tests
-bundle exec brakeman -q     # Security check
+bin/brakeman --no-pager      # Security check
 ```

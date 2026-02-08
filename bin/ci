@@ -20,7 +20,7 @@ echo "✅ Tests complete"
 echo ""
 
 echo "🔒 Step 4/5: Running Brakeman security scan..."
-bundle exec brakeman -q --no-pager --no-exit-on-warn
+bin/brakeman --no-pager
 echo "✅ Security scan complete"
 echo ""
 
