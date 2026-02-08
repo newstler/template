@@ -24,6 +24,24 @@ module ApplicationHelper
     end
   end
 
+  # ── Analytics ──
+
+  def nullitics_enabled?
+    Geocoder.config[:ip_lookup] == :geoip2
+  end
+
+  def country_code
+    return @country_code if defined?(@country_code)
+
+    @country_code = Rails.cache.fetch("geo:#{request.remote_ip}", expires_in: 1.year) do
+      result = Geocoder.search(request.remote_ip).first
+      result&.country_code&.upcase
+    rescue => e
+      Rails.logger.warn "Geocoder lookup failed: #{e.message}"
+      nil
+    end
+  end
+
   # ── Markdown ──
 
   class MarkdownRenderer < Redcarpet::Render::HTML

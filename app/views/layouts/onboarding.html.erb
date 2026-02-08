@@ -13,9 +13,14 @@
 
     <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
+    <% if nullitics_enabled? %>
+    <% cc = country_code %>
+    <script type="text/javascript">new Image().src='https://nullitics.com/n.gif?u='+encodeURI(location.href)+'&r='+encodeURI(document.referrer)+'&d='+screen.width<%= "&c=#{cc}" if cc.present? %>;</script>
+    <% end %>
   </head>
 
   <body class="body-bg">
+    <% if nullitics_enabled? %><noscript><img src="https://nullitics.com/n.gif?u=<%= request.original_url %><%= "&c=#{cc}" if cc.present? %>" alt="" style="position:absolute;left:-9999px" /></noscript><% end %>
     <%= render "shared/flash" %>
 
     <main class="min-h-screen flex items-center justify-center p-4">

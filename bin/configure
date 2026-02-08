@@ -240,6 +240,22 @@ FileUtils.chdir APP_ROOT do
   File.write(initializer_path, "Rails.configuration.x.multi_tenant = #{multi_tenant}\n")
   success("  ✓ Updated #{initializer_path}")
 
+  # ── Analytics ──
+
+  section("Analytics")
+
+  muted("Nullitics privacy-first analytics is enabled by default (no cookies, no PII).")
+  muted("MaxMind GeoLite2 adds IP-to-country geolocation for analytics.")
+  puts
+
+  maxmind_account_id = nil
+  maxmind_license_key = nil
+
+  if confirm("Configure MaxMind GeoLite2 for IP geolocation?")
+    maxmind_account_id = prompt("MaxMind Account ID")
+    maxmind_license_key = prompt("MaxMind License Key")
+  end
+
   # ── Apply Configuration ──
 
   section("Renaming project from Template to #{project_name}")
@@ -314,6 +330,13 @@ FileUtils.chdir APP_ROOT do
     end
 
     credentials_hash = { "secret_key_base" => SecureRandom.hex(64) }
+
+    if maxmind_account_id && !maxmind_account_id.empty?
+      credentials_hash["maxmind"] = {
+        "account_id" => maxmind_account_id,
+        "license_key" => maxmind_license_key,
+      }
+    end
 
     config = ActiveSupport::EncryptedConfiguration.new(
       config_path: credentials_path,

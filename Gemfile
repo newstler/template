@@ -81,4 +81,7 @@ gem "fast-mcp", "~> 1.6"
 
 gem "stripe"
 
+gem "geocoder"
+gem "maxminddb"
+
 gem "tidewave", "~> 0.4.1", group: :development

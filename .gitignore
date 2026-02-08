@@ -49,3 +49,6 @@
 # Ignore key files for decrypting credentials and more.
 /config/credentials/*.key
 
+# MaxMind GeoLite2 database (downloaded during Docker build)
+db/*.mmdb
+

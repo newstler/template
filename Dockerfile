@@ -44,6 +44,20 @@ RUN bundle install && \
 # Copy application code
 COPY . .
 
+# Download MaxMind GeoLite2 database for IP geolocation (optional)
+RUN --mount=type=secret,id=MAXMIND_ACCOUNT_ID \
+    --mount=type=secret,id=MAXMIND_LICENSE_KEY \
+    if [ -f /run/secrets/MAXMIND_ACCOUNT_ID ] && [ -f /run/secrets/MAXMIND_LICENSE_KEY ]; then \
+      ACCOUNT_ID="$(cat /run/secrets/MAXMIND_ACCOUNT_ID)" && \
+      LICENSE_KEY="$(cat /run/secrets/MAXMIND_LICENSE_KEY)" && \
+      curl -sL -u "${ACCOUNT_ID}:${LICENSE_KEY}" \
+        "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz" | \
+      tar -xzf - --strip-components=1 -C db/ --wildcards "*/*.mmdb" && \
+      echo "GeoLite2 database downloaded successfully"; \
+    else \
+      echo "MAXMIND credentials not provided, skipping GeoLite2 download"; \
+    fi
+
 # Precompile bootsnap code for faster boot times (use -j 1 for QEMU compatibility)
 RUN bundle exec bootsnap precompile -j 1 app/ lib/
 
