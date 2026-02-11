@@ -7,8 +7,15 @@ class User < ApplicationRecord
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :name, presence: true, on: :update
+  validates :locale, inclusion: { in: ->(_) { Language.enabled_codes } }, allow_nil: true
+
+  before_validation :nilify_blank_locale
 
   def onboarded? = name.present?
+
+  def effective_locale(fallback: :en)
+    locale&.to_sym || fallback
+  end
 
   def generate_magic_link_token
     signed_id(purpose: :magic_link, expires_in: 15.minutes)
@@ -33,5 +40,11 @@ class User < ApplicationRecord
 
   def owner_of?(team)
     memberships.exists?(team: team, role: "owner")
+  end
+
+  private
+
+  def nilify_blank_locale
+    self.locale = nil if locale.blank?
   end
 end

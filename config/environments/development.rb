@@ -59,6 +59,9 @@ Rails.application.configure do
   # Highlight code that enqueued background job in logs.
   config.active_job.verbose_enqueue_logs = true
 
+  # Fall back to English for missing translations in non-English locales.
+  config.i18n.fallbacks = true
+
   # Raises error for missing translations.
   config.i18n.raise_on_missing_translations = true
 

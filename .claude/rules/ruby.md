@@ -49,6 +49,7 @@ scope :preloaded, -> { includes(:author, :comments) }
 - Multiple passes over the same collection (use `partition`/`group_by`)
 - Looped `create`/`perform_later` (use `insert_all`/`perform_all_later`)
 - Empty directories created "for later"
+- **`OpenStruct`** - never use it (slow, no typo protection, memory bloat). Use `Struct`, `Data`, plain hashes, or dedicated classes instead
 
 ## Testing
 

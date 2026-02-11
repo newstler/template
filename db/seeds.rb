@@ -22,10 +22,13 @@ languages = [
   { code: "ar", name: "Arabic", native_name: "\u0627\u0644\u0639\u0631\u0628\u064a\u0629" }
 ]
 
+available = Language.available_codes
 languages.each do |attrs|
+  next unless available.include?(attrs[:code])
+
   Language.find_or_create_by!(code: attrs[:code]) do |lang|
     lang.name = attrs[:name]
     lang.native_name = attrs[:native_name]
   end
 end
-puts "✓ #{Language.count} languages seeded"
+puts "✓ #{Language.count} languages seeded (#{available.size} locale files found)"

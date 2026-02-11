@@ -9,6 +9,7 @@ class UserResource < Madmin::Resource
   attribute :email, field: GravatarField, index: true, show: true, form: false
   attribute :email  # Regular field for editing
   attribute :name
+  attribute :locale
   attribute :created_at, form: false
   attribute :updated_at, form: false
 

@@ -1,7 +1,7 @@
 require "test_helper"
-require "ostruct"
 
 class TranslateContentJobTest < ActiveSupport::TestCase
+  MockResponse = Data.define(:content)
   include ActiveJob::TestHelper
 
   setup do
@@ -15,7 +15,7 @@ class TranslateContentJobTest < ActiveSupport::TestCase
   end
 
   test "translates content via RubyLLM" do
-    mock_response = OpenStruct.new(content: '{"title": "Hola Mundo", "body": "Cuerpo de prueba"}')
+    mock_response = MockResponse.new(content: '{"title": "Hola Mundo", "body": "Cuerpo de prueba"}')
     mock_chat = Object.new
     mock_chat.define_singleton_method(:ask) { |_prompt| mock_response }
 
@@ -34,7 +34,7 @@ class TranslateContentJobTest < ActiveSupport::TestCase
   end
 
   test "handles JSON wrapped in markdown code blocks" do
-    mock_response = OpenStruct.new(content: "```json\n{\"title\": \"Bonjour\", \"body\": \"Corps\"}\n```")
+    mock_response = MockResponse.new(content: "```json\n{\"title\": \"Bonjour\", \"body\": \"Corps\"}\n```")
     mock_chat = Object.new
     mock_chat.define_singleton_method(:ask) { |_prompt| mock_response }
 
@@ -53,7 +53,7 @@ class TranslateContentJobTest < ActiveSupport::TestCase
   end
 
   test "handles invalid JSON response gracefully" do
-    mock_response = OpenStruct.new(content: "This is not JSON")
+    mock_response = MockResponse.new(content: "This is not JSON")
     mock_chat = Object.new
     mock_chat.define_singleton_method(:ask) { |_prompt| mock_response }
 

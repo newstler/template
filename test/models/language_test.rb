@@ -76,8 +76,22 @@ class LanguageTest < ActiveSupport::TestCase
 
   test "bust cache on save" do
     Rails.cache.write("language_enabled_codes", [ "old_cached" ])
+    Rails.cache.write("language_available_codes", [ "old_cached" ])
     languages(:spanish).update!(name: "Updated Spanish")
-    # Cache should be cleared
     assert_nil Rails.cache.read("language_enabled_codes")
+    assert_nil Rails.cache.read("language_available_codes")
+  end
+
+  test "available_codes returns codes matching yml files in config/locales" do
+    codes = Language.available_codes
+    assert_includes codes, "en"
+    assert_kind_of Array, codes
+    assert_equal codes.sort, codes, "available_codes should be sorted"
+  end
+
+  test "cannot create language with code that has no yml file" do
+    lang = Language.new(code: "xx", name: "Unknown", native_name: "Unknown")
+    assert_not lang.valid?
+    assert_includes lang.errors[:code], "has no matching i18n yml file"
   end
 end

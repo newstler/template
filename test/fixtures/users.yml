@@ -7,11 +7,13 @@ one:
   id: 01961a2a-c0de-7000-8000-000000000001
   email: user1@example.com
   name: User One
+  locale: en
 
 two:
   id: 01961a2a-c0de-7000-8000-000000000002
   email: user2@example.com
   name: User Two
+  locale: es
 
 not_onboarded:
   id: 01961a2a-c0de-7000-8000-000000000003

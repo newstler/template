@@ -3,6 +3,9 @@ en:
   profiles:
     edit:
       heading: Edit Profile
+      locale_auto: Auto-detect
+      locale_help: Sets your UI language and the source language for translations
+      locale_label: Language
       name_label: Name
       name_placeholder: Enter your name
       submit: Save Changes
@@ -10,6 +13,8 @@ en:
       edit_button: Edit
       email: Email
       heading: Profile
+      language: Language
+      locale_auto: Auto-detect
       member_since: Member since
       name: Name
       title: Profile

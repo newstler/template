@@ -25,7 +25,7 @@ module Translatable
   end
 
   def source_locale
-    :en
+    Current.user&.effective_locale || :en
   end
 
   private

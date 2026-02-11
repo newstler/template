@@ -4,7 +4,7 @@ class ApplicationController < ActionController::Base
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   before_action :set_current_user
-  before_action :set_locale_from_header
+  before_action :set_locale
   before_action :require_onboarding!
   before_action :set_current_team, if: :team_scoped_request?
 
@@ -14,20 +14,27 @@ class ApplicationController < ActionController::Base
     Current.user = current_user
   end
 
-  def set_locale_from_header
+  def set_locale
     I18n.locale = detect_locale
   end
 
   def detect_locale
-    return I18n.default_locale unless request.headers["Accept-Language"]
-
-    accepted = parse_accept_language(request.headers["Accept-Language"])
-    enabled = Language.enabled_codes
-
-    accepted.each do |code|
-      return code.to_sym if enabled.include?(code)
+    # 1. User's stored preference
+    if current_user&.locale.present?
+      return current_user.locale.to_sym
     end
 
+    # 2. Accept-Language header
+    if request.headers["Accept-Language"]
+      accepted = parse_accept_language(request.headers["Accept-Language"])
+      enabled = Language.enabled_codes
+
+      accepted.each do |code|
+        return code.to_sym if enabled.include?(code)
+      end
+    end
+
+    # 3. Default
     I18n.default_locale
   end
 

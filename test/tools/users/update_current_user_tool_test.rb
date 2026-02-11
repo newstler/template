@@ -28,6 +28,28 @@ module Users
       assert_equal "Updated Name", @user.name
     end
 
+    test "updates user locale" do
+      mock_mcp_request(team: @team, user: @user)
+
+      result = call_tool(Users::UpdateCurrentUserTool, locale: "es")
+
+      assert result[:success]
+      assert_equal "es", result[:data][:locale]
+      @user.reload
+      assert_equal "es", @user.locale
+    end
+
+    test "clears locale with auto" do
+      @user.update!(locale: "es")
+      mock_mcp_request(team: @team, user: @user)
+
+      result = call_tool(Users::UpdateCurrentUserTool, locale: "auto")
+
+      assert result[:success]
+      @user.reload
+      assert_nil @user.locale
+    end
+
     test "returns error when no updates provided" do
       mock_mcp_request(team: @team, user: @user)
 
