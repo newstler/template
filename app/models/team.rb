@@ -4,6 +4,9 @@ class Team < ApplicationRecord
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
   has_many :chats, dependent: :destroy
+  has_many :team_languages, dependent: :destroy
+  has_many :languages, through: :team_languages
+  has_many :articles, dependent: :destroy
 
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
@@ -11,6 +14,7 @@ class Team < ApplicationRecord
   before_validation :generate_slug
   before_create :generate_api_key
   before_create :start_trial
+  after_create :setup_default_languages
 
   def to_param
     slug
@@ -22,6 +26,26 @@ class Team < ApplicationRecord
 
   def regenerate_api_key!
     update!(api_key: SecureRandom.hex(32))
+  end
+
+  def active_language_codes
+    team_languages.active.joins(:language).pluck("languages.code")
+  end
+
+  def translation_target_codes(exclude:)
+    active_language_codes - Array(exclude)
+  end
+
+  def enable_language!(language)
+    tl = team_languages.find_or_initialize_by(language: language)
+    tl.update!(active: true)
+    tl
+  end
+
+  def disable_language!(language)
+    tl = team_languages.find_by(language: language)
+    tl&.update!(active: false)
+    tl
   end
 
   private
@@ -36,6 +60,11 @@ class Team < ApplicationRecord
 
     self.subscription_status = "trialing"
     self.current_period_ends_at = trial_days.days.from_now
+  end
+
+  def setup_default_languages
+    english = Language.english
+    enable_language!(english) if english
   end
 
   def generate_slug

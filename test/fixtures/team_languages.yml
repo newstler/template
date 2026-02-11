@@ -1,0 +1,19 @@
+# Use hardcoded UUIDv7s to maintain referential integrity across fixtures.
+
+team_one_english:
+  id: 01961a2a-c0de-7000-8000-000000000901
+  team_id: 01961a2a-c0de-7000-8000-000000000501
+  language_id: 01961a2a-c0de-7000-8000-000000000801
+  active: true
+
+team_one_spanish:
+  id: 01961a2a-c0de-7000-8000-000000000902
+  team_id: 01961a2a-c0de-7000-8000-000000000501
+  language_id: 01961a2a-c0de-7000-8000-000000000802
+  active: true
+
+team_two_english:
+  id: 01961a2a-c0de-7000-8000-000000000903
+  team_id: 01961a2a-c0de-7000-8000-000000000502
+  language_id: 01961a2a-c0de-7000-8000-000000000801
+  active: true

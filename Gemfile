@@ -84,4 +84,6 @@ gem "stripe"
 gem "geocoder"
 gem "maxminddb"
 
+gem "mobility", "~> 1.3"
+
 gem "tidewave", "~> 0.4.1", group: :development

@@ -1,0 +1,18 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <%= link_to t(".new_article"), new_team_article_path(current_team), class: "inline-flex items-center gap-2 px-4 py-2 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors" %>
+  </div>
+
+  <% if @articles.any? %>
+    <div class="space-y-4">
+      <%= render partial: "articles/article", collection: @articles, as: :article %>
+    </div>
+  <% else %>
+    <div class="card-bg p-8 text-center">
+      <p class="text-dark-400"><%= t(".empty") %></p>
+    </div>
+  <% end %>
+</div>

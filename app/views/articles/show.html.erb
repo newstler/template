@@ -1,0 +1,32 @@
+<% content_for :title, @article.title %>
+
+<div class="max-w-3xl mx-auto">
+  <div class="mb-6">
+    <%= link_to t("common.back"), team_articles_path(current_team), class: "text-sm text-dark-400 hover:text-dark-200 transition-colors" %>
+  </div>
+
+  <article class="card-bg p-8">
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <h1 class="text-3xl font-bold text-dark-50"><%= @article.title %></h1>
+        <p class="text-sm text-dark-400 mt-2">
+          <%= @article.user.name %> &middot; <%= l(@article.created_at, format: :short) %>
+        </p>
+      </div>
+      <div class="flex items-center gap-2">
+        <span class="px-2 py-1 text-xs font-mono text-dark-400 bg-dark-800 rounded"><%= detected_locale.upcase %></span>
+      </div>
+    </div>
+
+    <% if @article.body.present? %>
+      <div class="prose prose-invert max-w-none text-dark-200">
+        <%= simple_format(@article.body) %>
+      </div>
+    <% end %>
+  </article>
+
+  <div class="flex items-center gap-4 mt-6">
+    <%= link_to t(".edit"), edit_team_article_path(current_team, @article), class: "px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors text-sm" %>
+    <%= button_to t(".delete"), team_article_path(current_team, @article), method: :delete, class: "px-4 py-2 text-red-400 hover:text-red-300 hover:bg-red-900/20 rounded-lg transition-colors text-sm", data: { turbo_confirm: t(".delete_confirm") } %>
+  </div>
+</div>

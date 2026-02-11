@@ -53,6 +53,12 @@
               nested: true %>
 
           <%= render "shared/sidebar_link",
+              path: team_languages_path(current_team),
+              icon: "globe",
+              label: t("shared.sidebar.languages"),
+              nested: true %>
+
+          <%= render "shared/sidebar_link",
               path: team_settings_path(current_team),
               icon: "cog",
               label: t("shared.sidebar.settings"),

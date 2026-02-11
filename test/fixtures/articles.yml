@@ -1,0 +1,15 @@
+# Use hardcoded UUIDv7s to maintain referential integrity across fixtures.
+
+one:
+  id: 01961a2a-c0de-7000-8000-000000001001
+  team_id: 01961a2a-c0de-7000-8000-000000000501
+  user_id: 01961a2a-c0de-7000-8000-000000000001
+  title: First Article
+  body: This is the body of the first article.
+
+two:
+  id: 01961a2a-c0de-7000-8000-000000001002
+  team_id: 01961a2a-c0de-7000-8000-000000000501
+  user_id: 01961a2a-c0de-7000-8000-000000000001
+  title: Second Article
+  body: This is the body of the second article.

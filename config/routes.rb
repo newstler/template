@@ -35,6 +35,9 @@ Rails.application.routes.draw do
     resource :profile, only: [ :show, :edit, :update ], controller: "profiles"
 
     # Billing
+    resources :articles
+    resources :languages, only: [ :index, :create, :destroy ], controller: "teams/languages"
+
     resource :pricing, only: [ :show ], controller: "teams/pricing"
     resource :billing, only: [ :show ], controller: "teams/billing"
     resource :checkout, only: [ :create ], controller: "teams/checkouts"

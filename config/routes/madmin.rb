@@ -28,6 +28,7 @@ namespace :madmin do
   resources :tool_calls
   resources :users
   resources :teams
+  resources :languages
   resource :settings, only: [ :show, :edit, :update ]
   resources :providers, only: [ :index ] do
     collection do

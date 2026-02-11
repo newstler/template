@@ -19,6 +19,7 @@ Delete these HTML comments and write what your app does.
 - **Icons**: inline_svg gem
 - **Primary Keys**: UUIDv7 (database-generated)
 - **Billing**: Stripe (subscriptions, checkout, customer portal)
+- **Multilingual**: Mobility gem (KeyValue backend) + RubyLLM auto-translation
 - **MCP**: fast-mcp gem for Model Context Protocol at `/mcp`
 
 ## MCP: Agent-Native Architecture
@@ -98,6 +99,15 @@ npx @anthropic-ai/mcp-inspector
 | `create_checkout` | Create Stripe Checkout session URL | Team + User (admin) |
 | `get_billing_portal` | Get Stripe Billing Portal URL | Team + User (admin) |
 | `cancel_subscription` | Cancel subscription at period end | Team + User (admin) |
+| `list_languages` | List all enabled languages | None |
+| `list_team_languages` | List team's active languages | Team + User |
+| `add_team_language` | Add language to team | Team + User (admin) |
+| `remove_team_language` | Remove language from team | Team + User (admin) |
+| `list_articles` | List team's articles | Team + User |
+| `show_article` | Get article with full content | Team + User |
+| `create_article` | Create new article | Team + User |
+| `update_article` | Update article | Team + User |
+| `delete_article` | Delete article | Team + User |
 
 **Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required.
 
@@ -111,6 +121,9 @@ npx @anthropic-ai/mcp-inspector
 | Chat | `app:///chats/{id}` | Single chat with messages |
 | Chat Messages | `app:///chats/{chat_id}/messages` | Messages only |
 | Team Subscription | `app:///subscription` | Team subscription status |
+| Available Languages | `app:///languages` | Enabled translation languages |
+| Team Languages | `app:///team/languages` | Team's active languages (directs to tool) |
+| Articles | `app:///articles` | Team's articles (directs to tool) |
 
 ### File Structure
 
@@ -451,6 +464,30 @@ Model → model_id, provider, capabilities
 
 Responses via `ChatResponseJob` (Solid Queue).
 
+## Multilingual Content
+
+Automatic translation of user-generated content via LLM. Uses the Mobility gem (KeyValue backend) for storage and RubyLLM for translation.
+
+```
+Language → code, name, native_name, enabled
+TeamLanguage → team, language, active (join model)
+Translatable → concern for auto-translation
+TranslateContentJob → LLM translation via gpt-4.1-nano
+BackfillTranslationsJob → translate existing content when language added
+```
+
+### Making a Model Translatable
+
+```ruby
+class Article < ApplicationRecord
+  include Translatable
+  belongs_to :team
+  translates :title, :body
+end
+```
+
+See `.claude/rules/multilingual.md` for full conventions.
+
 ## Testing
 
 Minitest + fixtures only (no RSpec, no FactoryBot):
@@ -600,6 +637,13 @@ Quick reference for working in this codebase:
 - Minitest + fixtures (no RSpec/FactoryBot)
 - Fixtures use hardcoded UUIDv7 strings for IDs
 - `Current.user = users(:one)` in setup
+
+### Multilingual
+- `include Translatable` + `translates :attr` on models with `team_id`
+- Mobility KeyValue backend (shared polymorphic tables)
+- Auto-translation via `TranslateContentJob` on create/update
+- `BackfillTranslationsJob` when team adds a language
+- English always required, cannot be disabled
 
 ### Frontend
 - Turbo Frames/Streams for updates

@@ -40,3 +40,5 @@ ignore_unused:
   - 'common.*'
   - 'app_name'
   - 'messages.count'
+  # Mobility translation keys are dynamic
+  - 'mobility.*'

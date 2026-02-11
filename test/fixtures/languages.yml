@@ -1,0 +1,29 @@
+# Use hardcoded UUIDv7s to maintain referential integrity across fixtures.
+
+english:
+  id: 01961a2a-c0de-7000-8000-000000000801
+  code: en
+  name: English
+  native_name: English
+  enabled: true
+
+spanish:
+  id: 01961a2a-c0de-7000-8000-000000000802
+  code: es
+  name: Spanish
+  native_name: "Espa\u00f1ol"
+  enabled: true
+
+french:
+  id: 01961a2a-c0de-7000-8000-000000000803
+  code: fr
+  name: French
+  native_name: "Fran\u00e7ais"
+  enabled: true
+
+disabled_lang:
+  id: 01961a2a-c0de-7000-8000-000000000804
+  code: de
+  name: German
+  native_name: Deutsch
+  enabled: false
