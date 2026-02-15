@@ -7,7 +7,7 @@ User-generated content is automatically translated via LLM when teams enable mul
 ## Making a Model Translatable
 
 1. Include the `Translatable` concern
-2. Call `translates` with the attribute names
+2. Call `translatable` for each attribute with its type (`:string` or `:text`)
 3. The model must `belong_to :team` (translations are team-scoped)
 
 ```ruby
@@ -15,7 +15,8 @@ class Article < ApplicationRecord
   include Translatable
   belongs_to :team
   belongs_to :user
-  translates :title, :body
+  translatable :title, type: :string
+  translatable :body, type: :text
 end
 ```
 
@@ -27,7 +28,7 @@ Translations are stored in two shared polymorphic tables:
 - `mobility_string_translations` - for string columns
 - `mobility_text_translations` - for text columns
 
-No per-model migration needed. The `Translatable` concern auto-detects column type.
+No per-model migration needed. You specify the type explicitly via the `type:` keyword.
 
 ### Translation Flow
 
@@ -81,6 +82,6 @@ record.skip_translation_callbacks = false
 ## Adding a New Translatable Model
 
 1. Create migration with `team_id` foreign key
-2. Include `Translatable` and call `translates`
+2. Include `Translatable` and call `translatable :attr, type: :string` (or `:text`)
 3. Add MCP tools for parity
 4. Write tests (concern handles translation queueing automatically)

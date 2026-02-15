@@ -28,7 +28,7 @@
       </div>
       <div>
         <dt class="text-sm font-medium text-dark-400"><%= t(".language") %></dt>
-        <dd class="text-dark-100 mt-1"><%= @user.locale.present? ? Language.find_by_code(@user.locale)&.native_name : t(".locale_auto") %></dd>
+        <dd class="text-dark-100 mt-1"><%= @user.locale.present? ? @user_language&.native_name : t(".locale_auto") %></dd>
       </div>
       <div>
         <dt class="text-sm font-medium text-dark-400"><%= t(".member_since") %></dt>

@@ -8,7 +8,7 @@ class BackfillTranslationsJob < ApplicationJob
       next if records.empty?
 
       jobs = records.map do |record|
-        TranslateContentJob.new(model_class.name, record.id, "en", target_locale)
+        TranslateContentJob.new(model_class.name, record.id, I18n.default_locale.to_s, target_locale)
       end
 
       ActiveJob.perform_all_later(jobs)

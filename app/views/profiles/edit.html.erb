@@ -30,7 +30,7 @@
         <%= form.label :locale, t(".locale_label"), class: "block text-sm font-medium text-dark-200 mb-2" %>
         <%= form.select :locale,
           options_for_select(
-            [[t(".locale_auto"), ""]] + Language.enabled.by_name.map { |l| ["#{l.native_name} (#{l.name})", l.code] },
+            [[t(".locale_auto"), ""]] + @languages.map { |l| ["#{l.native_name} (#{l.name})", l.code] },
             @user.locale.to_s
           ),
           {},

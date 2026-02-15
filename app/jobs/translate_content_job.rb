@@ -25,7 +25,7 @@ class TranslateContentJob < ApplicationJob
     end
 
     # Build translation prompt
-    target_language = Language.find_by_code(target_locale)&.name || target_locale
+    target_language = Language.find_by(code: target_locale)&.name || target_locale
     prompt = build_prompt(source_content, target_language)
 
     # Call LLM for translation
@@ -49,12 +49,10 @@ class TranslateContentJob < ApplicationJob
   private
 
   def translations_exist?(record, locale, attributes)
-    # Query translation tables directly to avoid fallback returning source locale content
-    conditions = { translatable_type: record.class.name, translatable_id: record.id, locale: locale.to_s }
-    attributes.all? do |attr|
-      Mobility::Backends::ActiveRecord::KeyValue::StringTranslation.exists?(conditions.merge(key: attr.to_s)) ||
-        Mobility::Backends::ActiveRecord::KeyValue::TextTranslation.exists?(conditions.merge(key: attr.to_s))
-    end
+    conditions = { translatable_type: record.class.name, translatable_id: record.id, locale: locale.to_s, key: attributes.map(&:to_s) }
+    existing_keys = Mobility::Backends::ActiveRecord::KeyValue::StringTranslation.where(conditions).pluck(:key) |
+      Mobility::Backends::ActiveRecord::KeyValue::TextTranslation.where(conditions).pluck(:key)
+    (attributes.map(&:to_s) - existing_keys).empty?
   end
 
   def build_prompt(content, target_language)

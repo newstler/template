@@ -77,7 +77,7 @@ class SessionsController < ApplicationController
 
     teams = user.teams
 
-    case teams.count
+    case teams.size
     when 0
       team = create_personal_team(user)
       team_root_path(team)

@@ -1,5 +1,16 @@
-# Register content translation locales so Mobility accepts them
-I18n.available_locales |= %i[en es fr de pt it nl ja ko zh ru ar]
+# Discover locales from config/locales directory (yml files and subdirectories)
+locale_path = Rails.root.join("config/locales")
+discovered_locales = Dir.children(locale_path).filter_map { |entry|
+  entry.delete_suffix(".yml").to_sym if entry.end_with?(".yml") || File.directory?(locale_path.join(entry))
+}.uniq
+
+# Register all discovered locales so Mobility accepts them
+I18n.available_locales |= discovered_locales
+
+# Build fallbacks: every non-default locale falls back to the default locale
+locale_fallbacks = (discovered_locales - [ I18n.default_locale ]).each_with_object({}) do |locale, hash|
+  hash[locale] = I18n.default_locale
+end
 
 Mobility.configure do
   plugins do
@@ -13,18 +24,6 @@ Mobility.configure do
 
     query
 
-    fallbacks(
-      es: :en,
-      fr: :en,
-      de: :en,
-      pt: :en,
-      it: :en,
-      nl: :en,
-      ja: :en,
-      ko: :en,
-      zh: :en,
-      ru: :en,
-      ar: :en
-    )
+    fallbacks(locale_fallbacks)
   end
 end

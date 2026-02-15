@@ -38,10 +38,6 @@ class LanguageTest < ActiveSupport::TestCase
     assert_equal languages(:english), Language.english
   end
 
-  test "self.find_by_code finds language by code" do
-    assert_equal languages(:spanish), Language.find_by_code("es")
-  end
-
   test "enabled scope returns only enabled languages" do
     enabled = Language.enabled
     assert_includes enabled, languages(:english)

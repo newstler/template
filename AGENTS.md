@@ -482,7 +482,8 @@ BackfillTranslationsJob → translate existing content when language added
 class Article < ApplicationRecord
   include Translatable
   belongs_to :team
-  translates :title, :body
+  translatable :title, type: :string
+  translatable :body, type: :text
 end
 ```
 
@@ -639,7 +640,7 @@ Quick reference for working in this codebase:
 - `Current.user = users(:one)` in setup
 
 ### Multilingual
-- `include Translatable` + `translates :attr` on models with `team_id`
+- `include Translatable` + `translatable :attr, type: :string` on models with `team_id`
 - Mobility KeyValue backend (shared polymorphic tables)
 - Auto-translation via `TranslateContentJob` on create/update
 - `BackfillTranslationsJob` when team adds a language
