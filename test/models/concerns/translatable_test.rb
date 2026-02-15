@@ -35,23 +35,17 @@ class TranslatableTest < ActiveSupport::TestCase
     end
   end
 
-  test "source_locale defaults to :en when no current user" do
-    Current.user = nil
+  test "source_locale returns current I18n locale" do
     article = articles(:one)
-    assert_equal :en, article.source_locale
-  end
 
-  test "source_locale uses current user effective locale" do
-    @user.update!(locale: "es")
-    Current.user = @user
-    article = articles(:one)
-    assert_equal :es, article.source_locale
-  end
+    I18n.with_locale(:es) do
+      assert_equal :es, article.source_locale
+    end
 
-  test "source_locale falls back to :en when user has no locale" do
-    @user.update!(locale: nil)
-    Current.user = @user
-    article = articles(:one)
+    I18n.with_locale(:ru) do
+      assert_equal :ru, article.source_locale
+    end
+
     assert_equal :en, article.source_locale
   end
 end
