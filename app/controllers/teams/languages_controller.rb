@@ -11,18 +11,18 @@ class Teams::LanguagesController < ApplicationController
     language = Language.enabled.find(params[:language_id])
     current_team.enable_language!(language)
     BackfillTranslationsJob.perform_later(current_team.id, language.code)
-    redirect_to team_languages_path(current_team), notice: t("controllers.teams.languages.create.notice", language: language.name)
+    redirect_to team_languages_path(current_team), notice: t("controllers.teams.languages.create.notice", language: language.localized_name)
   end
 
   def destroy
     language = Language.find(params[:id])
 
-    if language.english?
-      redirect_to team_languages_path(current_team), alert: t("controllers.teams.languages.destroy.cannot_remove_english")
+    if current_team.team_languages.active.count <= 1
+      redirect_to team_languages_path(current_team), alert: t("controllers.teams.languages.destroy.cannot_remove_last")
       return
     end
 
     current_team.disable_language!(language)
-    redirect_to team_languages_path(current_team), notice: t("controllers.teams.languages.destroy.notice", language: language.name)
+    redirect_to team_languages_path(current_team), notice: t("controllers.teams.languages.destroy.notice", language: language.localized_name)
   end
 end

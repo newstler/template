@@ -26,13 +26,16 @@ module Languages
       assert_not_includes @team.active_language_codes, "es"
     end
 
-    test "prevents removing English" do
+    test "prevents removing last language" do
       mock_mcp_request(team: @team, user: @user)
+
+      # Remove Spanish first so English is the only one left
+      call_tool(Languages::RemoveTeamLanguageTool, language_code: "es")
 
       result = call_tool(Languages::RemoveTeamLanguageTool, language_code: "en")
 
       assert_not result[:success]
-      assert_match(/English/, result[:error])
+      assert_match(/At least one language/, result[:error])
     end
   end
 end

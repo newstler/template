@@ -41,10 +41,11 @@ class Teams::LanguagesControllerTest < ActionDispatch::IntegrationTest
     assert_not_includes @team.active_language_codes, "es"
   end
 
-  test "destroy prevents removing English" do
-    english = languages(:english)
+  test "destroy prevents removing last language" do
+    # Remove Spanish first so English is the only one left
+    delete team_language_path(@team, languages(:spanish))
 
-    delete team_language_path(@team, english)
+    delete team_language_path(@team, languages(:english))
 
     assert_redirected_to team_languages_path(@team)
     assert_includes @team.active_language_codes, "en"

@@ -2,6 +2,7 @@
 en:
   shared:
     sidebar:
+      articles: Articles
       billing: Billing
       chats: Chats
       collapse: Collapse sidebar

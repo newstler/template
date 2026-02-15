@@ -17,14 +17,7 @@ class TeamLanguageTest < ActiveSupport::TestCase
     assert_includes active, team_languages(:team_one_spanish)
   end
 
-  test "prevents deactivating English" do
-    tl = team_languages(:team_one_english)
-    tl.active = false
-    assert_not tl.save
-    assert_includes tl.errors[:active], "cannot deactivate English"
-  end
-
-  test "allows deactivating non-English language" do
+  test "allows deactivating any language" do
     tl = team_languages(:team_one_spanish)
     tl.update!(active: false)
     assert_not tl.active?

@@ -8,8 +8,16 @@ en:
     loading: Loading...
     sign_out: Sign Out
     untitled: Untitled
+  language_name: English
+  languages:
+    de: German
+    en: English
+    es: Spanish
+    fr: French
+    ru: Russian
   messages:
     count: Messages
+  native_name: English
   og_image:
     description: Build fast with Rails 8, Hotwire, SQLite, and AI chat.
     tagline: AI-powered Rails 8 starter template

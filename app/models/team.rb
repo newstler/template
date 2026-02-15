@@ -14,7 +14,7 @@ class Team < ApplicationRecord
   before_validation :generate_slug
   before_create :generate_api_key
   before_create :start_trial
-  after_create :setup_default_languages
+  after_create :setup_default_language
 
   def to_param
     slug
@@ -62,15 +62,15 @@ class Team < ApplicationRecord
     self.current_period_ends_at = trial_days.days.from_now
   end
 
-  def setup_default_languages
-    english = Language.english
-    enable_language!(english) if english
+  def setup_default_language
+    language = Language.enabled.find_by(code: I18n.locale.to_s) || Language.english
+    enable_language!(language) if language
   end
 
   def generate_slug
     return if slug.present? && !name_changed?
 
-    base_slug = name&.parameterize
+    base_slug = name&.parameterize.presence || "team-#{SecureRandom.alphanumeric(6).downcase}"
     self.slug = base_slug
 
     counter = 1

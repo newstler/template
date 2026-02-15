@@ -14,17 +14,18 @@
       <% @active_languages.each do |language| %>
         <div class="flex items-center justify-between px-4 py-3 bg-dark-800 rounded-lg">
           <div class="flex items-center gap-3">
-            <span class="text-sm font-mono text-dark-400 uppercase w-8"><%= language.code %></span>
-            <span class="text-dark-100"><%= language.name %></span>
-            <span class="text-dark-400 text-sm"><%= language.native_name %></span>
+            <span class="text-dark-100"><%= language.localized_name %></span>
+            <% if language.code != I18n.locale.to_s %>
+              <span class="text-dark-400 text-sm"><%= language.native_name %></span>
+            <% end %>
           </div>
-          <% if language.english? %>
+          <% if @active_languages.size <= 1 %>
             <span class="px-3 py-1 text-xs font-medium text-dark-400 bg-dark-700 rounded-full"><%= t(".required") %></span>
           <% else %>
             <%= button_to team_language_path(current_team, language),
                 method: :delete,
                 class: "text-sm text-dark-400 hover:text-red-400 transition-colors",
-                data: { turbo_confirm: t(".remove_confirm", language: language.name) } do %>
+                data: { turbo_confirm: t(".remove_confirm", language: language.localized_name) } do %>
               <%= inline_svg "icons/trash.svg", class: "w-4 h-4" %>
             <% end %>
           <% end %>
@@ -42,7 +43,7 @@
       <%= form_with url: team_languages_path(current_team), method: :post, class: "flex items-center gap-4" do |f| %>
         <div class="flex-1">
           <%= f.select :language_id,
-              @available_languages.map { |l| ["#{l.name} (#{l.native_name})", l.id] },
+              @available_languages.map { |l| ["#{l.localized_name} (#{l.native_name})", l.id] },
               { prompt: t(".select_language") },
               class: "w-full px-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-dark-100 focus:ring-2 focus:ring-accent-500 focus:border-accent-500" %>
         </div>

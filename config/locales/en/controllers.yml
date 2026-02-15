@@ -71,7 +71,7 @@ en:
         create:
           notice: "%{language} added. Existing content is being translated."
         destroy:
-          cannot_remove_english: English cannot be removed
+          cannot_remove_last: At least one language is required
           notice: "%{language} removed from team languages"
       members:
         already_member: This user is already a member of the team

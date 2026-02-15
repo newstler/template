@@ -10,9 +10,26 @@ class Language < ApplicationRecord
   scope :enabled, -> { where(enabled: true) }
   scope :by_name, -> { order(:name) }
 
-  before_save :prevent_disabling_english
-
   after_save :bust_caches
+
+  def self.sync_from_locale_files!
+    Rails.cache.delete("language_available_codes")
+    codes = available_codes
+    existing_codes = pluck(:code)
+
+    # Add new languages
+    added = codes - existing_codes
+    added.each do |code|
+      name = I18n.t("language_name", locale: code, default: code.upcase)
+      native_name = I18n.t("native_name", locale: code, default: code.upcase)
+      create!(code: code, name: name, native_name: native_name)
+    end
+
+    removed_codes = existing_codes - codes
+    where(code: removed_codes).destroy_all if removed_codes.any?
+
+    { added: added, removed: removed_codes }
+  end
 
   def self.english
     find_by(code: "en")
@@ -37,18 +54,15 @@ class Language < ApplicationRecord
     end
   end
 
+  def localized_name
+    I18n.t("languages.#{code}", default: name)
+  end
+
   def english?
     code == "en"
   end
 
   private
-
-  def prevent_disabling_english
-    if english? && enabled_changed? && !enabled?
-      errors.add(:enabled, "cannot disable English")
-      throw :abort
-    end
-  end
 
   def bust_caches
     Rails.cache.delete("language_enabled_codes")

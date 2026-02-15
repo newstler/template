@@ -1,1 +1,9 @@
 es:
+  language_name: Spanish
+  native_name: "Español"
+  languages:
+    de: "Alemán"
+    en: "Inglés"
+    es: "Español"
+    fr: "Francés"
+    ru: Ruso

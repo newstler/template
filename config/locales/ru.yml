@@ -1,0 +1,499 @@
+---
+ru:
+  language_name: Russian
+  native_name: "Русский"
+  languages:
+    de: Немецкий
+    en: Английский
+    es: Испанский
+    fr: Французский
+    ru: Русский
+  app_name: Template
+  common:
+    back: Назад
+    created: Создано
+    default: По умолчанию
+    loading: "Загрузка..."
+    sign_out: Выйти
+    untitled: Без названия
+  messages:
+    count: Сообщения
+  og_image:
+    description: "Быстрая разработка на Rails 8, Hotwire, SQLite и AI-чат."
+    tagline: "AI-шаблон на Rails 8"
+  controllers:
+    admins:
+      sessions:
+        create:
+          alert: Администратор не найден. Вход только для существующих администраторов.
+          notice: Проверьте почту — мы отправили вам ссылку для входа!
+        destroy:
+          notice: Вы успешно вышли
+        rate_limit:
+          long: Слишком много попыток. Попробуйте позже.
+          short: Слишком много попыток. Подождите.
+          verify: Слишком много попыток подтверждения.
+        verify:
+          alert: Недействительная или просроченная ссылка
+          notice: "С возвращением, администратор!"
+    application:
+      admin_required: Требуется доступ администратора
+      authenticate_admin: Войдите как администратор
+      authenticate_user: Пожалуйста, войдите в систему
+      chats_disabled: Чаты сейчас недоступны
+      subscription_required: Для доступа к этой функции необходима активная подписка
+      team_not_found: Команда не найдена или у вас нет доступа
+    articles:
+      create:
+        notice: Статья создана
+      destroy:
+        notice: Статья удалена
+      update:
+        notice: Статья обновлена
+    madmin:
+      mail:
+        update:
+          notice: Настройки почты сохранены
+      prices:
+        sync:
+          notice: Цены синхронизированы из Stripe
+      providers:
+        update:
+          notice: Учётные данные провайдера сохранены
+      settings:
+        update:
+          notice: Настройки сохранены
+    models:
+      refreshes:
+        create:
+          notice: Модели обновлены
+    onboardings:
+      update:
+        notice: "Добро пожаловать, %{name}!"
+    profiles:
+      update:
+        notice: Профиль обновлён
+    sessions:
+      create:
+        notice: Проверьте почту — мы отправили вам ссылку для входа!
+      destroy:
+        notice: Вы успешно вышли
+      rate_limit:
+        long: Слишком много попыток. Попробуйте позже.
+        short: Слишком много попыток. Подождите.
+        verify: Слишком много попыток подтверждения.
+      verify:
+        alert: Недействительная или просроченная ссылка
+        notice: "С возвращением, %{name}!"
+    teams:
+      create:
+        notice: Команда создана
+      languages:
+        create:
+          notice: "%{language} добавлен. Существующий контент переводится."
+        destroy:
+          cannot_remove_last: Необходим хотя бы один язык
+          notice: "%{language} удалён из языков команды"
+      members:
+        already_member: Этот пользователь уже состоит в команде
+        cannot_remove_last_owner: Нельзя удалить последнего владельца
+        create:
+          notice: "Приглашение отправлено на %{email}"
+        destroy:
+          removed: "%{name} удалён из команды"
+      settings:
+        regenerate_api_key:
+          notice: API-ключ перегенерирован
+        update:
+          notice: Настройки команды обновлены
+      subscription_cancellations:
+        create:
+          notice: Ваша подписка будет отменена в конце расчётного периода
+        destroy:
+          notice: Ваша подписка возобновлена
+  admin_mailer:
+    magic_link:
+      button: Войти как администратор
+      expiry: Ссылка действительна 15 минут.
+      greeting: "Здравствуйте,"
+      heading: Вход для администратора
+      ignore: Если вы не запрашивали это, немедленно свяжитесь с другим администратором.
+      instruction: "Нажмите на кнопку ниже, чтобы войти в панель администратора:"
+      link_instruction: "Или скопируйте и вставьте эту ссылку в браузер:"
+      subject: Ссылка для входа администратора
+  user_mailer:
+    magic_link:
+      button: Войти
+      expiry: Ссылка действительна 15 минут.
+      greeting: "Здравствуйте, %{name}!"
+      heading: Вход в аккаунт
+      ignore: Если вы не запрашивали это, просто проигнорируйте это письмо.
+      instruction: "Нажмите на кнопку ниже, чтобы войти в свой аккаунт:"
+      link_instruction: "Или скопируйте и вставьте эту ссылку в браузер:"
+      subject: Ссылка для входа
+    team_invitation:
+      button: Присоединиться к команде
+      expiry: Ссылка действительна 7 дней.
+      greeting: "Здравствуйте, %{name}!"
+      heading: "Вас пригласили в команду %{team_name}"
+      ignore: Если вы не ожидали это приглашение, просто проигнорируйте это письмо.
+      instruction: "%{inviter_name} приглашает вас в команду %{team_name}. Нажмите на кнопку ниже, чтобы принять приглашение:"
+      link_instruction: "Или скопируйте и вставьте эту ссылку в браузер:"
+      subject: "Вас пригласили в команду %{team_name}"
+  shared:
+    sidebar:
+      articles: Статьи
+      billing: Оплата
+      chats: Чаты
+      collapse: Свернуть боковую панель
+      home: Главная
+      languages: Языки
+      members: Участники
+      new_chat: Новый чат
+      settings: Настройки
+      user: Пользователь
+  sessions:
+    new:
+      email_help: Мы отправим вам ссылку для входа. Если у вас нет аккаунта, он будет создан автоматически.
+      email_label: Электронная почта
+      email_placeholder: you@example.com
+      heading: Добро пожаловать
+      subheading: Войдите по ссылке, отправленной на вашу почту
+      submit: Отправить ссылку для входа
+  home:
+    index:
+      authentication:
+        description: Вы вошли с помощью магической ссылки. Никаких паролей!
+        heading: Аутентификация
+        secure_description: При каждом входе вы будете получать новую ссылку на почту.
+        secure_title: Безопасно и без паролей
+      getting_started:
+        description: Это шаблонное приложение. Вы можете настроить эту панель или добавить свои функции.
+        heading: Начало работы
+        tip_claude: Смотрите
+        tip_claude_suffix: для архитектурных рекомендаций
+        tip_controllers: Изучите код в
+        tip_models: Добавьте свои модели, контроллеры и представления
+        tip_views: Измените это представление в
+      profile:
+        email: Почта
+        heading: Ваш профиль
+        member_since: Участник с
+        name: Имя
+      signed_in: Вы успешно вошли в систему
+      title: Главная
+      welcome: "Добро пожаловать, %{name}!"
+  chats:
+    form:
+      default_model: "По умолчанию (%{name})"
+      default_model_not_set: По умолчанию (не задано)
+      prompt_placeholder: О чём хотите поговорить?
+    index:
+      empty:
+        cta: Начать первый чат
+        description: Начните разговор с AI-ассистентом
+        heading: Чатов пока нет
+      heading: Ваши чаты
+      new_chat: Новый чат
+      no_messages: Сообщений пока нет
+      subheading: Продолжите разговор или начните новый
+      time_ago: "%{time} назад"
+      title: Чаты
+    new:
+      back: Назад к чатам
+      heading: Начать новый чат
+      subheading: Выберите модель и начните разговор
+      title: Новый чат
+    show:
+      title: Чат
+  messages:
+    form:
+      placeholder: "Ответить..."
+  models:
+    index:
+      back: Назад к чатам
+      heading: Модели
+      refresh: Обновить модели
+      table:
+        context_window: Контекстное окно
+        model: Модель
+        pricing: "$/1М токенов (Вход/Выход)"
+        provider: Провайдер
+      title: Модели
+    model:
+      show: Подробнее
+      start_chat: Начать чат
+    show:
+      all_models: Все модели
+      back: Назад к чатам
+      capabilities: Возможности
+      context_window: Контекстное окно
+      context_window_value: "%{count} токенов"
+      id: ID
+      max_output: Макс. вывод
+      max_output_value: "%{count} токенов"
+      model: Модель
+      provider: Провайдер
+      start_chat: Начать чат с этой моделью
+  teams:
+    billing:
+      show:
+        cancel_confirm: Вы уверены, что хотите отменить подписку? Доступ сохранится до конца расчётного периода.
+        cancel_subscription: Отменить подписку
+        cancellation_notice: "Ваша подписка завершится %{date}"
+        cancellation_notice_label: Отмена запланирована
+        days_remaining:
+          one: "Остался %{count} день"
+          few: "Осталось %{count} дня"
+          many: "Осталось %{count} дней"
+          other: "Осталось %{count} дней"
+        heading: Оплата
+        manage_in_stripe: Управление в Stripe
+        period_ends_label: Текущий период заканчивается
+        resume_subscription: Возобновить подписку
+        status:
+          active: Активна
+          canceling: Отменяется
+          inactive: Неактивна
+          past_due: Просрочена
+          trialing: Пробный период
+        status_label: Статус подписки
+        trial_ends_label: Пробный период до
+        view_plans: Смотреть тарифы
+    pricing:
+      show:
+        already_subscribed: У вашей команды уже есть активная подписка.
+        description: Выберите подходящий тариф для вашей команды
+        heading: "Тарифы и цены"
+        manage_billing: Управление оплатой
+        month: месяц
+        monthly: Ежемесячно
+        subscribe: Подписаться
+        trial_active:
+          one: "Пробный период заканчивается через %{count} день. Оформите подписку, чтобы сохранить доступ."
+          few: "Пробный период заканчивается через %{count} дня. Оформите подписку, чтобы сохранить доступ."
+          many: "Пробный период заканчивается через %{count} дней. Оформите подписку, чтобы сохранить доступ."
+          other: "Пробный период заканчивается через %{count} дней. Оформите подписку, чтобы сохранить доступ."
+        year: год
+        yearly: Ежегодно
+    index:
+      create_team: Создать команду
+      heading: Выберите команду
+    members:
+      index:
+        admin: Администратор
+        heading: Участники команды
+        invite_button: Пригласить участника
+        invited_by: Приглашён
+        member: Участник
+        owner: Владелец
+        remove: Удалить
+        role: Роль
+      new:
+        description: Мы отправим приглашение на электронную почту.
+        email_label: Электронная почта
+        email_placeholder: colleague@example.com
+        heading: Пригласить участника
+        submit: Отправить приглашение
+      show:
+        admin: Администратор
+        back: Назад к участникам
+        email: Почта
+        heading: Профиль участника
+        invited_by: Приглашён
+        joined: Присоединился
+        member: Участник
+        name: Имя
+        owner: Владелец
+        role: Роль
+        title: "%{name}"
+    new:
+      heading: Создать новую команду
+      name_label: Название команды
+      name_placeholder: Введите название команды
+      submit: Создать команду
+    settings:
+      edit:
+        back: "← Назад к настройкам"
+        heading: Редактировать настройки команды
+        name_available: Название доступно
+        name_label: Название команды
+        name_placeholder: Введите название команды
+        name_taken: Название уже занято
+        submit: Сохранить
+      show:
+        api_key_description: Используйте этот API-ключ для аутентификации MCP-запросов этой команды.
+        api_key_heading: API-ключ
+        edit_button: Редактировать
+        heading: Настройки команды
+        name_label: Название команды
+        regenerate_api_key: Перегенерировать
+        regenerate_confirm: Вы уверены? Текущий API-ключ станет недействительным.
+        slug_label: URL команды
+    languages:
+      index:
+        active_description: Контент будет автоматически переведён на эти языки.
+        active_heading: Активные языки
+        add_button: Добавить язык
+        add_description: Добавьте язык для автоматического перевода контента.
+        add_heading: Добавить язык
+        heading: Языки
+        remove_confirm: "Удалить %{language} из языков команды?"
+        required: Обязательный
+        select_language: "Выберите язык..."
+  onboardings:
+    show:
+      heading: "Добро пожаловать! Давайте начнём"
+      name_label: Как вас зовут?
+      name_placeholder: Введите ваше имя
+      subheading: Пара вопросов перед началом работы.
+      submit: Продолжить
+      team_name_help: Вы сможете изменить это позже в настройках команды.
+      team_name_label: Назовите вашу команду
+      team_name_placeholder: Моя команда
+      title: Начало работы
+  admins:
+    sessions:
+      new:
+        email_help: Вход только для существующих администраторов. Вы получите ссылку на почту.
+        email_label: Почта администратора
+        email_placeholder: admin@example.com
+        heading: Панель администратора
+        restricted_area: Ограниченный доступ
+        restricted_message: Это вход для администраторов. Если вам нужен доступ, свяжитесь с администратором.
+        subheading: Войдите по ссылке для администратора
+        submit: Отправить ссылку для входа
+  articles:
+    edit:
+      heading: Редактировать статью
+    form:
+      body_label: Текст
+      body_placeholder: Напишите содержание статьи
+      title_label: Заголовок
+      title_placeholder: Введите заголовок статьи
+    index:
+      empty: Статей пока нет. Создайте первую статью.
+      heading: Статьи
+      new_article: Новая статья
+    new:
+      heading: Новая статья
+    show:
+      delete: Удалить
+      delete_confirm: Вы уверены, что хотите удалить эту статью?
+      edit: Редактировать
+  profiles:
+    edit:
+      heading: Редактировать профиль
+      locale_auto: Автоопределение
+      locale_help: Устанавливает язык интерфейса и исходный язык для переводов
+      locale_label: Язык
+      name_label: Имя
+      name_placeholder: Введите ваше имя
+      submit: Сохранить
+    show:
+      edit_button: Редактировать
+      email: Почта
+      heading: Профиль
+      language: Язык
+      locale_auto: Автоопределение
+      member_since: Участник с
+      name: Имя
+      title: Профиль
+  madmin:
+    mail:
+      edit:
+        cancel: Отмена
+        general: Основные
+        heading: Редактировать настройки почты
+        key_placeholder: "Введите ключ..."
+        mail_from: Адрес отправителя
+        save: Сохранить настройки
+        smtp: SMTP
+        smtp_address: Адрес сервера
+        smtp_password: Пароль
+        smtp_username: Имя пользователя
+        smtp_username_placeholder: your-username
+      show:
+        edit_button: Редактировать настройки
+        general: Основные
+        heading: Настройки почты
+        mail_from: Адрес отправителя
+        not_configured: Не настроено
+        smtp: SMTP
+        smtp_address: Адрес сервера
+        smtp_password: Пароль
+        smtp_username: Имя пользователя
+    prices:
+      show:
+        heading: Цены Stripe
+        no_prices: Цены не найдены. Создайте продукты в Stripe Dashboard, затем синхронизируйте.
+        price_amount: Сумма
+        price_id: ID цены
+        price_interval: Интервал
+        price_product: Продукт
+        stripe_not_configured: Stripe не настроен
+        stripe_not_configured_hint: Добавьте API-ключи Stripe в настройках для управления ценами.
+        sync_prices: Синхронизировать цены
+    providers:
+      index:
+        description: Настройте API-ключи для AI-провайдеров. Новые провайдеры появляются автоматически при поддержке RubyLLM.
+        heading: AI-провайдеры
+        key_placeholder: "Введите ключ..."
+        placeholders:
+          api_base: "https://api.example.com"
+          location: us-central1
+          region: us-east-1
+        providers:
+          anthropic: Anthropic
+          bedrock: Amazon Bedrock
+          deepseek: DeepSeek
+          gemini: Google Gemini
+          gpustack: GPUStack
+          mistral: Mistral
+          ollama: Ollama
+          openai: OpenAI
+          openrouter: OpenRouter
+          perplexity: Perplexity
+          vertexai: Google Vertex AI
+          xai: xAI
+        save: Сохранить провайдеры
+        settings:
+          api_base: Базовый URL
+          api_key: API-ключ
+          location: Расположение
+          organization_id: ID организации
+          project_id: ID проекта
+          region: Регион
+          secret_key: Секретный ключ
+          session_token: Токен сессии
+    settings:
+      edit:
+        cancel: Отмена
+        heading: Редактировать настройки
+        key_placeholder: "Введите ключ..."
+        litestream: Litestream
+        litestream_replica_access_key: Секретный ключ доступа
+        litestream_replica_bucket: Бакет реплики
+        litestream_replica_key_id: ID ключа доступа
+        litestream_restart_note: Изменения настроек Litestream требуют перезапуска сервера.
+        save: Сохранить настройки
+        stripe: Stripe
+        stripe_publishable_key: Публичный ключ
+        stripe_secret_key: Секретный ключ
+        stripe_webhook_secret: Секрет вебхука
+        trial_days: Пробный период (дни)
+        trial_days_hint: Количество дней бесплатного пробного периода для новых команд. 0 — отключить.
+      show:
+        edit_button: Редактировать настройки
+        heading: Настройки
+        litestream: Litestream
+        litestream_replica_access_key: Секретный ключ доступа
+        litestream_replica_bucket: Бакет реплики
+        litestream_replica_key_id: ID ключа доступа
+        litestream_restart_note: Изменения настроек Litestream требуют перезапуска сервера.
+        not_configured: Не настроено
+        stripe: Stripe
+        stripe_publishable_key: Публичный ключ
+        stripe_secret_key: Секретный ключ
+        stripe_webhook_secret: Секрет вебхука
+        trial_days: Пробный период (дни)

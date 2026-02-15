@@ -8,7 +8,7 @@ en:
         add_button: Add Language
         add_description: Add a language to enable automatic translation of content.
         add_heading: Add Language
-        heading: Team Languages
+        heading: Languages
         remove_confirm: Remove %{language} from team languages?
         required: Required
         select_language: Select a language...

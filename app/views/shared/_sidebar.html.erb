@@ -37,6 +37,8 @@
         <% end %>
       <% end %>
 
+      <%= render "shared/sidebar_link", path: team_articles_path(current_team), icon: "file", label: t("shared.sidebar.articles") %>
+
       <%# Team dropdown - team name as the header %>
       <%= render "shared/sidebar_group", id: "team", icon: "users", label: current_team.name do %>
         <%= render "shared/sidebar_link",

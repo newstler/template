@@ -25,8 +25,8 @@ module Languages
       language = Language.find_by(code: language_code)
       return error_response("Language not found: #{language_code}") unless language
 
-      if language.english?
-        return error_response("English cannot be removed")
+      if current_team.team_languages.active.count <= 1
+        return error_response("At least one language is required")
       end
 
       current_team.disable_language!(language)

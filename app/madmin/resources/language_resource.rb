@@ -1,9 +1,13 @@
 class LanguageResource < Madmin::Resource
+  def self.actions
+    [ :index, :show, :edit ]
+  end
+
   attribute :id, form: false
-  attribute :code
-  attribute :name
-  attribute :native_name
-  attribute :enabled
+  attribute :code, form: false, index: true
+  attribute :name, form: false, index: true
+  attribute :native_name, form: false, index: true
+  attribute :enabled, index: true
   attribute :created_at, form: false
   attribute :updated_at, form: false
 
@@ -12,7 +16,7 @@ class LanguageResource < Madmin::Resource
   end
 
   def self.form_attributes
-    [ :code, :name, :native_name, :enabled ]
+    [ :enabled ]
   end
 
   def self.searchable_attributes

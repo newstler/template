@@ -1,1 +1,9 @@
 fr:
+  language_name: French
+  native_name: "Français"
+  languages:
+    de: Allemand
+    en: Anglais
+    es: Espagnol
+    fr: "Français"
+    ru: Russe

@@ -54,14 +54,7 @@ class LanguageTest < ActiveSupport::TestCase
     assert_equal names.sort, names
   end
 
-  test "prevents disabling English" do
-    english = languages(:english)
-    english.enabled = false
-    assert_not english.save
-    assert_includes english.errors[:enabled], "cannot disable English"
-  end
-
-  test "allows disabling non-English language" do
+  test "allows disabling any language" do
     spanish = languages(:spanish)
     spanish.update!(enabled: false)
     assert_not spanish.enabled?
