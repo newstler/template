@@ -1,0 +1,20 @@
+---
+ru:
+  articles:
+    edit:
+      heading: Редактировать статью
+    form:
+      body_label: Текст
+      body_placeholder: Напишите содержание статьи
+      title_label: Заголовок
+      title_placeholder: Введите заголовок статьи
+    index:
+      empty: Статей пока нет. Создайте первую статью.
+      heading: Статьи
+      new_article: Новая статья
+    new:
+      heading: Новая статья
+    show:
+      delete: Удалить
+      delete_confirm: Вы уверены, что хотите удалить эту статью?
+      edit: Редактировать

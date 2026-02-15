@@ -1,0 +1,13 @@
+---
+ru:
+  onboardings:
+    show:
+      heading: "Добро пожаловать! Давайте начнём"
+      name_label: Как вас зовут?
+      name_placeholder: Введите ваше имя
+      subheading: Пара вопросов перед началом работы.
+      submit: Продолжить
+      team_name_help: Вы сможете изменить это позже в настройках команды.
+      team_name_label: Назовите вашу команду
+      team_name_placeholder: Моя команда
+      title: Начало работы

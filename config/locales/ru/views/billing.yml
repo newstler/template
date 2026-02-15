@@ -1,0 +1,27 @@
+---
+ru:
+  teams:
+    billing:
+      show:
+        cancel_confirm: Вы уверены, что хотите отменить подписку? Доступ сохранится до конца расчётного периода.
+        cancel_subscription: Отменить подписку
+        cancellation_notice: "Ваша подписка завершится %{date}"
+        cancellation_notice_label: Отмена запланирована
+        days_remaining:
+          one: "Остался %{count} день"
+          few: "Осталось %{count} дня"
+          many: "Осталось %{count} дней"
+          other: "Осталось %{count} дней"
+        heading: Оплата
+        manage_in_stripe: Управление в Stripe
+        period_ends_label: Текущий период заканчивается
+        resume_subscription: Возобновить подписку
+        status:
+          active: Активна
+          canceling: Отменяется
+          inactive: Неактивна
+          past_due: Просрочена
+          trialing: Пробный период
+        status_label: Статус подписки
+        trial_ends_label: Пробный период до
+        view_plans: Смотреть тарифы

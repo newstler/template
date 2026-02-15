@@ -1,0 +1,26 @@
+---
+ru:
+  madmin:
+    mail:
+      edit:
+        cancel: Отмена
+        general: Основные
+        heading: Редактировать настройки почты
+        key_placeholder: "Введите ключ..."
+        mail_from: Адрес отправителя
+        save: Сохранить настройки
+        smtp: SMTP
+        smtp_address: Адрес сервера
+        smtp_password: Пароль
+        smtp_username: Имя пользователя
+        smtp_username_placeholder: your-username
+      show:
+        edit_button: Редактировать настройки
+        general: Основные
+        heading: Настройки почты
+        mail_from: Адрес отправителя
+        not_configured: Не настроено
+        smtp: SMTP
+        smtp_address: Адрес сервера
+        smtp_password: Пароль
+        smtp_username: Имя пользователя

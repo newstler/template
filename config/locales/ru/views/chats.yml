@@ -1,0 +1,25 @@
+---
+ru:
+  chats:
+    form:
+      default_model: "По умолчанию (%{name})"
+      default_model_not_set: По умолчанию (не задано)
+      prompt_placeholder: О чём хотите поговорить?
+    index:
+      empty:
+        cta: Начать первый чат
+        description: Начните разговор с AI-ассистентом
+        heading: Чатов пока нет
+      heading: Ваши чаты
+      new_chat: Новый чат
+      no_messages: Сообщений пока нет
+      subheading: Продолжите разговор или начните новый
+      time_ago: "%{time} назад"
+      title: Чаты
+    new:
+      back: Назад к чатам
+      heading: Начать новый чат
+      subheading: Выберите модель и начните разговор
+      title: Новый чат
+    show:
+      title: Чат

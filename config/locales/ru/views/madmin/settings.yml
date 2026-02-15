@@ -1,0 +1,34 @@
+---
+ru:
+  madmin:
+    settings:
+      edit:
+        cancel: Отмена
+        heading: Редактировать настройки
+        key_placeholder: "Введите ключ..."
+        litestream: Litestream
+        litestream_replica_access_key: Секретный ключ доступа
+        litestream_replica_bucket: Бакет реплики
+        litestream_replica_key_id: ID ключа доступа
+        litestream_restart_note: Изменения настроек Litestream требуют перезапуска сервера.
+        save: Сохранить настройки
+        stripe: Stripe
+        stripe_publishable_key: Публичный ключ
+        stripe_secret_key: Секретный ключ
+        stripe_webhook_secret: Секрет вебхука
+        trial_days: Пробный период (дни)
+        trial_days_hint: Количество дней бесплатного пробного периода для новых команд. 0 — отключить.
+      show:
+        edit_button: Редактировать настройки
+        heading: Настройки
+        litestream: Litestream
+        litestream_replica_access_key: Секретный ключ доступа
+        litestream_replica_bucket: Бакет реплики
+        litestream_replica_key_id: ID ключа доступа
+        litestream_restart_note: Изменения настроек Litestream требуют перезапуска сервера.
+        not_configured: Не настроено
+        stripe: Stripe
+        stripe_publishable_key: Публичный ключ
+        stripe_secret_key: Секретный ключ
+        stripe_webhook_secret: Секрет вебхука
+        trial_days: Пробный период (дни)

@@ -1,0 +1,14 @@
+---
+ru:
+  teams:
+    languages:
+      index:
+        active_description: Контент будет автоматически переведён на эти языки.
+        active_heading: Активные языки
+        add_button: Добавить язык
+        add_description: Добавьте язык для автоматического перевода контента.
+        add_heading: Добавить язык
+        heading: Языки
+        remove_confirm: "Удалить %{language} из языков команды?"
+        required: Обязательный
+        select_language: "Выберите язык..."

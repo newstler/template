@@ -1,0 +1,35 @@
+---
+ru:
+  madmin:
+    providers:
+      index:
+        description: Настройте API-ключи для AI-провайдеров. Новые провайдеры появляются автоматически при поддержке RubyLLM.
+        heading: AI-провайдеры
+        key_placeholder: "Введите ключ..."
+        placeholders:
+          api_base: "https://api.example.com"
+          location: us-central1
+          region: us-east-1
+        providers:
+          anthropic: Anthropic
+          bedrock: Amazon Bedrock
+          deepseek: DeepSeek
+          gemini: Google Gemini
+          gpustack: GPUStack
+          mistral: Mistral
+          ollama: Ollama
+          openai: OpenAI
+          openrouter: OpenRouter
+          perplexity: Perplexity
+          vertexai: Google Vertex AI
+          xai: xAI
+        save: Сохранить провайдеры
+        settings:
+          api_base: Базовый URL
+          api_key: API-ключ
+          location: Расположение
+          organization_id: ID организации
+          project_id: ID проекта
+          region: Регион
+          secret_key: Секретный ключ
+          session_token: Токен сессии

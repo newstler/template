@@ -1,0 +1,92 @@
+---
+ru:
+  controllers:
+    admins:
+      sessions:
+        create:
+          alert: Администратор не найден. Вход только для существующих администраторов.
+          notice: Проверьте почту — мы отправили вам ссылку для входа!
+        destroy:
+          notice: Вы успешно вышли
+        rate_limit:
+          long: Слишком много попыток. Попробуйте позже.
+          short: Слишком много попыток. Подождите.
+          verify: Слишком много попыток подтверждения.
+        verify:
+          alert: Недействительная или просроченная ссылка
+          notice: "С возвращением, администратор!"
+    application:
+      admin_required: Требуется доступ администратора
+      authenticate_admin: Войдите как администратор
+      authenticate_user: Пожалуйста, войдите в систему
+      chats_disabled: Чаты сейчас недоступны
+      subscription_required: Для доступа к этой функции необходима активная подписка
+      team_not_found: Команда не найдена или у вас нет доступа
+    articles:
+      create:
+        notice: Статья создана
+      destroy:
+        notice: Статья удалена
+      update:
+        notice: Статья обновлена
+    madmin:
+      mail:
+        update:
+          notice: Настройки почты сохранены
+      prices:
+        sync:
+          notice: Цены синхронизированы из Stripe
+      providers:
+        update:
+          notice: Учётные данные провайдера сохранены
+      settings:
+        update:
+          notice: Настройки сохранены
+    models:
+      refreshes:
+        create:
+          notice: Модели обновлены
+    onboardings:
+      update:
+        notice: "Добро пожаловать, %{name}!"
+    profiles:
+      update:
+        notice: Профиль обновлён
+    sessions:
+      create:
+        notice: Проверьте почту — мы отправили вам ссылку для входа!
+      destroy:
+        notice: Вы успешно вышли
+      rate_limit:
+        long: Слишком много попыток. Попробуйте позже.
+        short: Слишком много попыток. Подождите.
+        verify: Слишком много попыток подтверждения.
+      verify:
+        alert: Недействительная или просроченная ссылка
+        notice: "С возвращением, %{name}!"
+    teams:
+      create:
+        notice: Команда создана
+      languages:
+        create:
+          notice: "%{language} добавлен. Существующий контент переводится."
+        destroy:
+          cannot_remove_last: Необходим хотя бы один язык
+          notice: "%{language} удалён из языков команды"
+      members:
+        already_member: Этот пользователь уже состоит в команде
+        cannot_remove_last_owner: Нельзя удалить последнего владельца
+        create:
+          notice: "Приглашение отправлено на %{email}"
+        destroy:
+          removed: "%{name} удалён из команды"
+      settings:
+        regenerate_api_key:
+          notice: API-ключ перегенерирован
+        update:
+          notice: Настройки команды обновлены
+      subscription_cancellations:
+        create:
+          notice: Ваша подписка будет отменена в конце расчётного периода
+        destroy:
+          notice: Ваша подписка возобновлена
