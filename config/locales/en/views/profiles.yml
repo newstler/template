@@ -2,6 +2,7 @@
 en:
   profiles:
     edit:
+      avatar_label: Avatar
       heading: Edit Profile
       locale_auto: Auto-detect
       locale_help: Sets your UI language and the source language for translations

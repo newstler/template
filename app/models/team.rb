@@ -1,12 +1,17 @@
 class Team < ApplicationRecord
   include Subscribable
 
+  has_one_attached :logo
+
   has_many :memberships, dependent: :destroy
   has_many :users, through: :memberships
   has_many :chats, dependent: :destroy
   has_many :team_languages, dependent: :destroy
   has_many :languages, through: :team_languages
   has_many :articles, dependent: :destroy
+
+  attribute :remove_logo, :boolean, default: false
+  after_save :purge_logo, if: :remove_logo
 
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
@@ -49,6 +54,10 @@ class Team < ApplicationRecord
   end
 
   private
+
+  def purge_logo
+    logo.purge_later
+  end
 
   def generate_api_key
     self.api_key ||= SecureRandom.hex(32)

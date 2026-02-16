@@ -41,6 +41,7 @@ ru:
       edit:
         back: "← Назад к настройкам"
         heading: Редактировать настройки команды
+        logo_label: Логотип
         name_available: Название доступно
         name_label: Название команды
         name_placeholder: Введите название команды
@@ -51,7 +52,9 @@ ru:
         api_key_heading: API-ключ
         edit_button: Редактировать
         heading: Настройки команды
+        logo_label: Логотип
         name_label: Название команды
+        no_logo: Логотип не загружен
         regenerate_api_key: Перегенерировать
         regenerate_confirm: Вы уверены? Текущий API-ключ станет недействительным.
         slug_label: URL команды

@@ -1,6 +1,9 @@
 ---
 en:
   shared:
+    image_upload:
+      drop_image: Drop image
+      uploading: Uploading…
     sidebar:
       articles: Articles
       billing: Billing

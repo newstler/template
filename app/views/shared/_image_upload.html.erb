@@ -1,0 +1,62 @@
+<%#
+  Shared image upload with drag-and-drop, preview, and removal.
+  Uses the image-upload Stimulus controller.
+
+  Required params:
+    form:       Form builder instance
+    field:      Symbol for the file field (e.g. :image, :cover_image)
+    attached:   Boolean — whether a file is currently attached
+    image_url:  URL of the current image (when attached), or nil
+
+  Optional params:
+    label:          Label text (default: none, caller renders own label)
+    multiple:       Allow multiple files (default: false)
+    remove_field:   Symbol for the hidden remove flag field (default: nil — no remove support)
+    aspect_class:   CSS class for aspect ratio (default: "aspect-[3/2]")
+    hint:           Hint text shown below (default: nil)
+%>
+<%
+  label_text = local_assigns[:label]
+  multiple = local_assigns[:multiple] || false
+  remove_field = local_assigns[:remove_field]
+  aspect_class = local_assigns[:aspect_class] || "aspect-[3/2]"
+  hint_text = local_assigns[:hint]
+%>
+
+<div data-controller="image-upload">
+  <% if label_text %>
+    <span class="block text-xs font-medium text-dark-400 mb-1"><%= label_text %></span>
+  <% end %>
+
+  <div data-image-upload-target="dropzone"
+       data-action="dragover->image-upload#dragover dragleave->image-upload#dragleave drop->image-upload#drop click->image-upload#browse"
+       class="relative w-full <%= aspect_class %> rounded-lg border-2 border-dashed border-dark-600 bg-dark-700/50 flex flex-col items-center justify-center cursor-pointer hover:border-accent-500 transition-colors">
+    <div data-image-upload-target="placeholder" class="<%= 'hidden' if attached %> text-center">
+      <%= inline_svg "icons/image.svg", class: "w-5 h-5 text-dark-500 mx-auto mb-1" %>
+      <span class="text-[10px] text-dark-500 block"><%= t("shared.image_upload.drop_image") %></span>
+    </div>
+    <div data-image-upload-target="preview" class="<%= 'hidden' unless attached %> absolute inset-0 rounded-lg overflow-hidden">
+      <img data-image-upload-target="previewImage" class="w-full h-full object-cover" alt=""
+           <% if attached && image_url %>src="<%= image_url %>"<% end %>>
+      <button type="button" data-action="click->image-upload#clear"
+              class="absolute top-1 right-1 w-5 h-5 bg-dark-900/80 rounded-full flex items-center justify-center text-dark-300 hover:text-red-400">
+        <%= inline_svg "icons/x.svg", class: "w-3 h-3" %>
+      </button>
+    </div>
+    <div data-image-upload-target="spinner" class="hidden absolute inset-0 rounded-lg bg-dark-900/60 backdrop-blur-xs flex flex-col items-center justify-center z-10 gap-2">
+      <svg class="w-6 h-6 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" class="text-white/20"></circle>
+        <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-white"></path>
+      </svg>
+      <span class="text-[10px] text-white/70 font-medium tracking-wide"><%= t("shared.image_upload.uploading") %></span>
+    </div>
+  </div>
+
+  <%= form.file_field field, accept: "image/*", multiple: multiple, data: { image_upload_target: "input" }, class: "hidden" %>
+  <% if remove_field %>
+    <%= form.hidden_field remove_field, value: "0", data: { image_upload_target: "removeFlag" } %>
+  <% end %>
+  <% if hint_text %>
+    <p class="text-xs text-dark-500 mt-1"><%= hint_text %></p>
+  <% end %>
+</div>

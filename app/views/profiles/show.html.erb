@@ -8,9 +8,13 @@
 
   <div class="card-bg p-6">
     <div class="flex items-center gap-4 mb-6 pb-6 border-b border-dark-700">
-      <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
-        <span class="text-xl font-semibold text-white"><%= @user.name&.first&.upcase || "?" %></span>
-      </div>
+      <% if @user.avatar.attached? %>
+        <%= image_tag url_for(@user.avatar), class: "w-16 h-16 rounded-full object-cover flex-shrink-0" %>
+      <% else %>
+        <div class="w-16 h-16 bg-gradient-to-br from-blue-600 to-purple-600 rounded-full flex items-center justify-center flex-shrink-0">
+          <span class="text-xl font-semibold text-white"><%= @user.name&.first&.upcase || "?" %></span>
+        </div>
+      <% end %>
       <div>
         <h2 class="text-xl font-semibold text-dark-50"><%= @user.name %></h2>
         <p class="text-dark-400"><%= @user.email %></p>

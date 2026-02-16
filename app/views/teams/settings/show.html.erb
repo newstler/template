@@ -9,6 +9,16 @@
   <div class="card-bg p-6">
     <dl class="space-y-6">
       <div>
+        <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".logo_label") %></dt>
+        <dd class="mt-1">
+          <% if current_team.logo.attached? %>
+            <%= image_tag url_for(current_team.logo), class: "w-20 h-20 rounded-lg object-cover" %>
+          <% else %>
+            <span class="text-dark-500 text-sm"><%= t(".no_logo") %></span>
+          <% end %>
+        </dd>
+      </div>
+      <div>
         <dt class="text-sm font-medium text-dark-400 mb-1"><%= t(".name_label") %></dt>
         <dd class="text-lg text-dark-100"><%= current_team.name %></dd>
       </div>

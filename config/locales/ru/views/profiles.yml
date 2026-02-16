@@ -2,6 +2,7 @@
 ru:
   profiles:
     edit:
+      avatar_label: Аватар
       heading: Редактировать профиль
       locale_auto: Автоопределение
       locale_help: Устанавливает язык интерфейса и исходный язык для переводов

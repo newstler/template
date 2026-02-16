@@ -1,9 +1,14 @@
 class User < ApplicationRecord
   include Costable
 
+  has_one_attached :avatar
+
   has_many :chats, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :teams, through: :memberships
+
+  attribute :remove_avatar, :boolean, default: false
+  after_save :purge_avatar, if: :remove_avatar
 
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :name, presence: true, on: :update
@@ -43,6 +48,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def purge_avatar
+    avatar.purge_later
+  end
 
   def nilify_blank_locale
     self.locale = nil if locale.blank?

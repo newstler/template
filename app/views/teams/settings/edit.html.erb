@@ -20,6 +20,19 @@
       <% end %>
 
       <div>
+        <span class="block text-sm font-medium text-dark-200 mb-2"><%= t(".logo_label") %></span>
+        <div class="w-32">
+          <%= render "shared/image_upload",
+              form: form,
+              field: :logo,
+              attached: team_form.logo.attached?,
+              image_url: (url_for(team_form.logo) if team_form.logo.attached?),
+              remove_field: :remove_logo,
+              aspect_class: "aspect-square" %>
+        </div>
+      </div>
+
+      <div>
         <%= form.label :name, t(".name_label"), class: "block text-sm font-medium text-dark-200 mb-2" %>
         <%= form.text_field :name,
           required: true,

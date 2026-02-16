@@ -1,6 +1,9 @@
 ---
 ru:
   shared:
+    image_upload:
+      drop_image: Перетащите изображение
+      uploading: Загрузка…
     sidebar:
       articles: Статьи
       billing: Оплата

@@ -6,6 +6,7 @@
     label: Link text
     nested: Boolean, if true applies nested styling (optional)
     truncate: Boolean, if true truncates with CSS ellipsis (optional)
+    image: Active Storage attachment or image URL to show instead of icon (optional)
 %>
 <%
   path_str = path.to_s.split('?').first
@@ -24,6 +25,10 @@
 %>
 
 <%= link_to path, class: "#{base_classes} #{is_active ? active_classes : inactive_classes} #{nested_classes}", title: label do %>
-  <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
+  <% if local_assigns[:image] %>
+    <%= image_tag image, class: "w-5 h-5 flex-shrink-0 rounded-full object-cover" %>
+  <% else %>
+    <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
+  <% end %>
   <span data-sidebar-target="label" class="<%= truncate_classes %> transition-[opacity,width] duration-300 opacity-100 whitespace-nowrap"><%= label %></span>
 <% end %>
