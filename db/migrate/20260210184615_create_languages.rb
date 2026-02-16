@@ -1,4 +1,4 @@
-class CreateLanguages < ActiveRecord::Migration[8.0]
+class CreateLanguages < ActiveRecord::Migration[8.2]
   def change
     create_table :languages, force: true, id: { type: :string, default: -> { "uuid7()" } } do |t|
       t.string :code, null: false

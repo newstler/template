@@ -1,4 +1,4 @@
-class CreateMobilityTranslations < ActiveRecord::Migration[8.0]
+class CreateMobilityTranslations < ActiveRecord::Migration[8.2]
   def change
     create_table :mobility_string_translations, force: true, id: { type: :string, default: -> { "uuid7()" } } do |t|
       t.string :locale, null: false
