@@ -1,5 +1,8 @@
 class Team < ApplicationRecord
+  extend FriendlyId
   include Subscribable
+
+  friendly_id :name, use: :slugged
 
   has_one_attached :logo
 
@@ -16,14 +19,9 @@ class Team < ApplicationRecord
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
 
-  before_validation :generate_slug
   before_create :generate_api_key
   before_create :start_trial
   after_create :setup_default_language
-
-  def to_param
-    slug
-  end
 
   def total_chat_cost
     chats.sum(:total_cost)
@@ -53,6 +51,27 @@ class Team < ApplicationRecord
     tl
   end
 
+  def normalize_friendly_id(input)
+    input.to_s.to_slug.transliterate(:cyrillic).transliterate.normalize.to_s.parameterize
+  end
+
+  def should_generate_new_friendly_id?
+    name_changed? || slug.blank?
+  end
+
+  def resolve_friendly_id_conflict(candidates)
+    base = candidates.first
+    separator = friendly_id_config.sequence_separator
+    counter = 2
+    slug = "#{base}#{separator}#{counter}"
+    scope = self.class.base_class.unscoped.where.not(id: id)
+    while scope.exists?(slug: slug)
+      counter += 1
+      slug = "#{base}#{separator}#{counter}"
+    end
+    slug
+  end
+
   private
 
   def purge_logo
@@ -74,18 +93,5 @@ class Team < ApplicationRecord
   def setup_default_language
     language = Language.enabled.find_by(code: I18n.locale.to_s) || Language.english
     enable_language!(language) if language
-  end
-
-  def generate_slug
-    return if slug.present? && !name_changed?
-
-    base_slug = name&.parameterize.presence || "team-#{SecureRandom.alphanumeric(6).downcase}"
-    self.slug = base_slug
-
-    counter = 1
-    while Team.where.not(id: id).exists?(slug: self.slug)
-      self.slug = "#{base_slug}-#{counter}"
-      counter += 1
-    end
   end
 end

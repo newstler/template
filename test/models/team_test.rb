@@ -40,13 +40,37 @@ class TeamTest < ActiveSupport::TestCase
     team_one = teams(:one)
     team_two = teams(:two)
     team_two.update!(name: "#{team_one.name} Plus")
-    # Slug should be unique and based on the new name
-    assert_equal "#{team_one.name.parameterize}-plus", team_two.slug
+    assert_equal "team-one-plus", team_two.slug
+  end
+
+  test "sequential suffix on slug collision" do
+    # "Команда" and "команда" produce the same slug "komanda" but different names
+    Team.create!(name: "Команда")
+    team_two = Team.create!(name: "команда")
+    assert_equal "komanda-2", team_two.slug
   end
 
   test "to_param returns slug" do
     team = teams(:one)
     assert_equal team.slug, team.to_param
+  end
+
+  test "transliterates Cyrillic names to ASCII slugs" do
+    team = Team.new(name: "Команда")
+    team.valid?
+    assert_equal "komanda", team.slug
+  end
+
+  test "transliterates accented Latin names to ASCII slugs" do
+    team = Team.new(name: "Équipe Française")
+    team.valid?
+    assert_equal "equipe-francaise", team.slug
+  end
+
+  test "transliterates mixed Cyrillic and Latin names" do
+    team = Team.new(name: "Über Команда")
+    team.valid?
+    assert_equal "uber-komanda", team.slug
   end
 
   test "total_chat_cost returns sum of all chat costs" do
