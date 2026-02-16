@@ -42,7 +42,7 @@ class Language < ApplicationRecord
   end
 
   def self.available_codes
-    Rails.cache.fetch("language_available_codes", expires_in: 5.minutes) do
+    Rails.cache.fetch("language_available_codes", expires_in: 1.hour) do
       locale_path = Rails.root.join("config/locales")
       Dir.children(locale_path).filter_map { |entry|
         entry.delete_suffix(".yml") if entry.end_with?(".yml") || File.directory?(locale_path.join(entry))

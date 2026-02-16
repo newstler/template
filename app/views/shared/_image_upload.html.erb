@@ -44,10 +44,7 @@
       </button>
     </div>
     <div data-image-upload-target="spinner" class="hidden absolute inset-0 rounded-lg bg-dark-900/60 backdrop-blur-xs flex flex-col items-center justify-center z-10 gap-2">
-      <svg class="w-6 h-6 animate-spin" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="12" cy="12" r="10" stroke="currentColor" stroke-width="2" class="text-white/20"></circle>
-        <path d="M12 2a10 10 0 0 1 10 10" stroke="currentColor" stroke-width="2" stroke-linecap="round" class="text-white"></path>
-      </svg>
+      <%= inline_svg "icons/spinner.svg", class: "w-6 h-6 animate-spin text-white" %>
       <span class="text-[10px] text-white/70 font-medium tracking-wide"><%= t("shared.image_upload.uploading") %></span>
     </div>
   </div>

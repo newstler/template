@@ -18,9 +18,6 @@ class BackfillTranslationsJob < ApplicationJob
   private
 
   def translatable_models
-    Rails.autoloaders.main.eager_load
-    ApplicationRecord.descendants.select { |klass|
-      klass.include?(Translatable) && klass.column_names.include?("team_id")
-    }
+    Translatable.registry.select { |klass| klass.column_names.include?("team_id") }
   end
 end

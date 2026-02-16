@@ -9,6 +9,16 @@ module Translatable
     attr_accessor :skip_translation_callbacks
 
     after_commit :queue_translations, on: [ :create, :update ]
+
+    Translatable.register(self)
+  end
+
+  def self.registry
+    @registry ||= []
+  end
+
+  def self.register(klass)
+    registry << klass unless registry.include?(klass)
   end
 
   class_methods do

@@ -3,7 +3,7 @@ class CreateArticles < ActiveRecord::Migration[8.0]
     create_table :articles, force: true, id: { type: :string, default: -> { "uuid7()" } } do |t|
       t.references :team, null: false, foreign_key: true, type: :string
       t.references :user, null: false, foreign_key: true, type: :string
-      t.string :title
+      t.string :title, null: false
       t.text :body
       t.timestamps
     end

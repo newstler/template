@@ -11,7 +11,7 @@ module Mcp
       languages = Language.enabled.by_name
 
       to_json({
-        languages_count: languages.count,
+        languages_count: languages.size,
         languages: languages.map { |l|
           {
             id: l.id,

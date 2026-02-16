@@ -52,11 +52,7 @@ class Teams::LanguagesControllerTest < ActionDispatch::IntegrationTest
   end
 
   test "non-admin cannot access languages" do
-    # User two is a member (not admin) of team two via user_one_team_two fixture
-    # but user_one is owner of team_one, so let's test with user_two on team_two
-    sign_in(users(:two))
-    # User two is owner of team two, which works.
-    # Instead, test with user_one on team_two (member role)
+    # user_one is a member (not admin) of team_two
     sign_in(users(:one))
     get team_languages_path(teams(:two))
     assert_response :redirect
