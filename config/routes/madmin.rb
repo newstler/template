@@ -28,6 +28,14 @@ namespace :madmin do
   resources :tool_calls
   resources :users
   resources :teams
+  resources :languages do
+    collection do
+      post :sync
+    end
+    member do
+      patch :toggle
+    end
+  end
   resource :settings, only: [ :show, :edit, :update ]
   resources :providers, only: [ :index ] do
     collection do

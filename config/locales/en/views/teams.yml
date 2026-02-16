@@ -41,6 +41,7 @@ en:
       edit:
         back: "← Back to settings"
         heading: Edit Team Settings
+        logo_label: Logo
         name_available: Name is available
         name_label: Team Name
         name_placeholder: Enter team name
@@ -52,7 +53,9 @@ en:
         api_key_heading: API Key
         edit_button: Edit
         heading: Team Settings
+        logo_label: Logo
         name_label: Team Name
+        no_logo: No logo uploaded
         regenerate_api_key: Regenerate
         regenerate_confirm: Are you sure? This will invalidate the current API key.
         slug_label: Team URL

@@ -5,3 +5,7 @@
 # Create first admin
 admin = Admin.find_or_create_by!(email: "admin@example.com")
 puts "✓ Admin created: #{admin.email}"
+
+# Seed languages from locale files
+result = Language.sync_from_locale_files!
+puts "✓ #{Language.count} languages total (added: #{result[:added].size}, removed: #{result[:removed].size})"

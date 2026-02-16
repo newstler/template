@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
+ActiveRecord::Schema[8.2].define(version: 2026_02_11_174628) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -46,6 +46,17 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
     t.index ["email"], name: "index_admins_on_email", unique: true
   end
 
+  create_table "articles", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.string "team_id", null: false
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.string "user_id", null: false
+    t.index ["team_id"], name: "index_articles_on_team_id"
+    t.index ["user_id"], name: "index_articles_on_user_id"
+  end
+
   create_table "chats", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.integer "messages_count", default: 0, null: false
@@ -57,6 +68,16 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
     t.index ["model_id"], name: "index_chats_on_model_id"
     t.index ["team_id"], name: "index_chats_on_team_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "languages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "code", null: false
+    t.datetime "created_at", null: false
+    t.boolean "enabled", default: true, null: false
+    t.string "name", null: false
+    t.string "native_name", null: false
+    t.datetime "updated_at", null: false
+    t.index ["code"], name: "index_languages_on_code", unique: true
   end
 
   create_table "memberships", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -93,6 +114,31 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
     t.index ["model_id"], name: "index_messages_on_model_id"
     t.index ["role"], name: "index_messages_on_role"
     t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
+  end
+
+  create_table "mobility_string_translations", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "locale", null: false
+    t.string "translatable_id", null: false
+    t.string "translatable_type", null: false
+    t.datetime "updated_at", null: false
+    t.string "value"
+    t.index ["translatable_id", "translatable_type", "key"], name: "index_mobility_string_translations_on_translatable_attribute"
+    t.index ["translatable_id", "translatable_type", "locale", "key"], name: "index_mobility_string_translations_on_keys", unique: true
+    t.index ["translatable_type", "key", "value", "locale"], name: "index_mobility_string_translations_on_query_keys"
+  end
+
+  create_table "mobility_text_translations", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "locale", null: false
+    t.string "translatable_id", null: false
+    t.string "translatable_type", null: false
+    t.datetime "updated_at", null: false
+    t.text "value"
+    t.index ["translatable_id", "translatable_type", "key"], name: "index_mobility_text_translations_on_translatable_attribute"
+    t.index ["translatable_id", "translatable_type", "locale", "key"], name: "index_mobility_text_translations_on_keys", unique: true
   end
 
   create_table "models", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -143,6 +189,17 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "team_languages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.datetime "created_at", null: false
+    t.string "language_id", null: false
+    t.string "team_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["language_id"], name: "index_team_languages_on_language_id"
+    t.index ["team_id", "language_id"], name: "index_team_languages_on_team_id_and_language_id", unique: true
+    t.index ["team_id"], name: "index_team_languages_on_team_id"
+  end
+
   create_table "teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "api_key", null: false
     t.boolean "cancel_at_period_end", default: false, null: false
@@ -176,6 +233,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
   create_table "users", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
+    t.string "locale"
     t.string "name"
     t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
@@ -184,6 +242,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "articles", "teams"
+  add_foreign_key "articles", "users"
   add_foreign_key "chats", "models"
   add_foreign_key "chats", "teams"
   add_foreign_key "chats", "users"
@@ -192,5 +252,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_08_151854) do
   add_foreign_key "memberships", "users", column: "invited_by_id"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
+  add_foreign_key "team_languages", "languages"
+  add_foreign_key "team_languages", "teams"
   add_foreign_key "tool_calls", "messages"
 end

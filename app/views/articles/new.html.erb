@@ -1,0 +1,6 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-2xl mx-auto">
+  <h1 class="text-3xl font-bold text-dark-50 mb-8"><%= t(".heading") %></h1>
+  <%= render "form", article: @article, form_url: team_articles_path(current_team) %>
+</div>

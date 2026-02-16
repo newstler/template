@@ -1,0 +1,15 @@
+<div class="card-bg p-6">
+  <div class="flex items-start justify-between">
+    <div>
+      <h2 class="text-xl font-semibold text-dark-100">
+        <%= link_to article.title, team_article_path(current_team, article), class: "hover:text-accent-400 transition-colors" %>
+      </h2>
+      <p class="text-sm text-dark-400 mt-1">
+        <%= article.user.name %> &middot; <%= l(article.created_at, format: :short) %>
+      </p>
+    </div>
+  </div>
+  <% if article.body.present? %>
+    <p class="text-dark-300 mt-3 line-clamp-2"><%= article.body %></p>
+  <% end %>
+</div>

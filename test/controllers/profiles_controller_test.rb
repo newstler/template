@@ -25,6 +25,31 @@ class ProfilesControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to team_profile_path(@team)
   end
 
+  test "updates locale" do
+    patch team_profile_path(@team), params: { user: { locale: "es" } }
+
+    @user.reload
+    assert_equal "es", @user.locale
+    assert_redirected_to team_profile_path(@team)
+  end
+
+  test "clears locale with blank value" do
+    @user.update!(locale: "es")
+
+    patch team_profile_path(@team), params: { user: { locale: "" } }
+
+    @user.reload
+    assert_nil @user.locale
+  end
+
+  test "rejects invalid locale" do
+    patch team_profile_path(@team), params: { user: { locale: "xx" } }
+
+    assert_response :unprocessable_entity
+    @user.reload
+    assert_equal "en", @user.locale
+  end
+
   test "redirects when not authenticated" do
     delete session_path
     get team_profile_path(@team)

@@ -1,0 +1,64 @@
+<%= content_for :title, "Languages" %>
+
+<header class="header">
+  <h1>Languages</h1>
+
+  <div class="actions">
+    <form class="search">
+      <%= hidden_field_tag :page, params[:page], value: 1 %>
+      <%= search_field_tag :q, params[:q], placeholder: "Search languages...", class: "form-input" %>
+    </form>
+
+    <% if params[:q].present? %>
+      <%= link_to resource.index_path, class: "btn btn-secondary" do %>
+        Clear
+      <% end %>
+    <% end %>
+
+    <%= button_to main_app.sync_madmin_languages_path, method: :post, class: "btn btn-primary" do %>
+      Sync Locale Files
+    <% end %>
+  </div>
+</header>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :name, "Name" %></th>
+        <th><%= sortable :native_name, "Native Name" %></th>
+        <th><%= sortable :code, "Code" %></th>
+        <th><%= sortable :enabled, "Enabled" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |language| %>
+        <tr>
+          <td>
+            <%= link_to language.name, main_app.madmin_language_path(language), class: "font-medium hover:underline" %>
+          </td>
+          <td><%= language.native_name %></td>
+          <td><%= language.code %></td>
+          <td>
+            <%= button_to main_app.toggle_madmin_language_path(language), method: :patch, class: "inline-flex" do %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity <%= language.enabled? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' %>">
+                <%= language.enabled? ? "Enabled" : "Disabled" %>
+              </span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

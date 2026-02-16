@@ -56,4 +56,29 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
     assert_nil session[:user_id]
   end
+
+  test "first login saves locale from Accept-Language header" do
+    user = users(:not_onboarded)
+    assert_nil user.locale
+
+    token = user.generate_magic_link_token
+    get verify_magic_link_path(token: token), headers: { "Accept-Language" => "en-US,en;q=0.9" }
+
+    user.reload
+    assert_equal "en", user.locale
+  end
+
+  test "returning login does not overwrite existing locale" do
+    user = users(:one)
+    assert_equal "en", user.locale
+
+    # Simulate the user having set their locale to es
+    user.update_column(:locale, "es")
+
+    token = user.generate_magic_link_token
+    get verify_magic_link_path(token: token), headers: { "Accept-Language" => "en-US,en;q=0.9" }
+
+    user.reload
+    assert_equal "es", user.locale
+  end
 end

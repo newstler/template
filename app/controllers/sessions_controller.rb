@@ -38,6 +38,7 @@ class SessionsController < ApplicationController
     end
 
     session[:user_id] = user.id
+    save_locale_from_header(user) if user.locale.nil?
 
     if user.onboarded?
       redirect_to after_login_path(user, params[:team]), notice: t("controllers.sessions.verify.notice", name: user.name)
@@ -76,7 +77,7 @@ class SessionsController < ApplicationController
 
     teams = user.teams
 
-    case teams.count
+    case teams.size
     when 0
       team = create_personal_team(user)
       team_root_path(team)
@@ -97,5 +98,19 @@ class SessionsController < ApplicationController
     team = Team.create!(name: "#{user.name || user.email.split('@').first}'s Team")
     team.memberships.create!(user: user, role: "owner")
     team
+  end
+
+  def save_locale_from_header(user)
+    return unless request.headers["Accept-Language"]
+
+    accepted = parse_accept_language(request.headers["Accept-Language"])
+    enabled = Language.enabled_codes
+
+    accepted.each do |code|
+      if enabled.include?(code)
+        user.update_column(:locale, code)
+        return
+      end
+    end
   end
 end

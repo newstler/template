@@ -1,0 +1,14 @@
+---
+ru:
+  madmin:
+    prices:
+      show:
+        heading: Цены Stripe
+        no_prices: Цены не найдены. Создайте продукты в Stripe Dashboard, затем синхронизируйте.
+        price_amount: Сумма
+        price_id: ID цены
+        price_interval: Интервал
+        price_product: Продукт
+        stripe_not_configured: Stripe не настроен
+        stripe_not_configured_hint: Добавьте API-ключи Stripe в настройках для управления ценами.
+        sync_prices: Синхронизировать цены

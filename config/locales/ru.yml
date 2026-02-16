@@ -1,0 +1,23 @@
+---
+ru:
+  language_name: Russian
+  native_name: "Русский"
+  languages:
+    de: Немецкий
+    en: Английский
+    es: Испанский
+    fr: Французский
+    ru: Русский
+  app_name: Template
+  common:
+    back: Назад
+    created: Создано
+    default: По умолчанию
+    loading: "Загрузка..."
+    sign_out: Выйти
+    untitled: Без названия
+  messages:
+    count: Сообщения
+  og_image:
+    description: "Быстрая разработка на Rails 8, Hotwire, SQLite и AI-чат."
+    tagline: "AI-шаблон на Rails 8"

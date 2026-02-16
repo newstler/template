@@ -1,0 +1,26 @@
+<%= form_with model: [current_team, article], url: form_url, class: "space-y-6" do |f| %>
+  <% if article.errors.any? %>
+    <div class="p-4 bg-red-900/20 border border-red-800 rounded-lg">
+      <ul class="list-disc list-inside text-sm text-red-400">
+        <% article.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= f.label :title, t(".title_label"), class: "block text-sm font-medium text-dark-300 mb-2" %>
+    <%= f.text_field :title, class: "w-full px-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-dark-100 focus:ring-2 focus:ring-accent-500 focus:border-accent-500", placeholder: t(".title_placeholder") %>
+  </div>
+
+  <div>
+    <%= f.label :body, t(".body_label"), class: "block text-sm font-medium text-dark-300 mb-2" %>
+    <%= f.text_area :body, rows: 10, class: "w-full px-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-dark-100 focus:ring-2 focus:ring-accent-500 focus:border-accent-500", placeholder: t(".body_placeholder") %>
+  </div>
+
+  <div class="flex items-center gap-4">
+    <%= f.submit class: "px-6 py-2 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors cursor-pointer" %>
+    <%= link_to t("common.back"), team_articles_path(current_team), class: "text-sm text-dark-400 hover:text-dark-200 transition-colors" %>
+  </div>
+<% end %>

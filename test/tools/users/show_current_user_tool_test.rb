@@ -26,6 +26,7 @@ module Users
       assert_equal @user.id, result[:data][:id]
       assert_equal @user.email, result[:data][:email]
       assert_equal @user.name, result[:data][:name]
+      assert_equal @user.locale, result[:data][:locale]
     end
   end
 end

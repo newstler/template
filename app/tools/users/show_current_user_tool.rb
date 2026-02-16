@@ -27,6 +27,7 @@ module Users
         id: user.id,
         email: user.email,
         name: user.name,
+        locale: user.locale,
         chats_count: user.chats.count,
         total_cost: user.total_cost.to_f,
         created_at: format_timestamp(user.created_at),

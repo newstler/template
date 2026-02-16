@@ -26,7 +26,11 @@
           class="<%= base_classes %> <%= is_active ? active_classes : inactive_classes %> w-full justify-between cursor-pointer sidebar-group-header"
           title="<%= label %>">
     <span class="flex items-center gap-3 min-w-0">
-      <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
+      <% if local_assigns[:image] %>
+        <%= image_tag image, class: "w-5 h-5 flex-shrink-0 rounded-full object-cover" %>
+      <% else %>
+        <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
+      <% end %>
       <span data-sidebar-target="label" class="transition-[opacity,width] duration-300 opacity-100 whitespace-nowrap"><%= label %></span>
     </span>
     <span data-sidebar-target="label" class="p-1 flex-shrink-0 sidebar-chevron">

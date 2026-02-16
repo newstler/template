@@ -1,0 +1,60 @@
+---
+ru:
+  teams:
+    index:
+      create_team: Создать команду
+      heading: Выберите команду
+    members:
+      index:
+        admin: Администратор
+        heading: Участники команды
+        invite_button: Пригласить участника
+        invited_by: Приглашён
+        member: Участник
+        owner: Владелец
+        remove: Удалить
+        role: Роль
+      new:
+        description: Мы отправим приглашение на электронную почту.
+        email_label: Электронная почта
+        email_placeholder: colleague@example.com
+        heading: Пригласить участника
+        submit: Отправить приглашение
+      show:
+        admin: Администратор
+        back: Назад к участникам
+        email: Почта
+        heading: Профиль участника
+        invited_by: Приглашён
+        joined: Присоединился
+        member: Участник
+        name: Имя
+        owner: Владелец
+        role: Роль
+        title: "%{name}"
+    new:
+      heading: Создать новую команду
+      name_label: Название команды
+      name_placeholder: Введите название команды
+      submit: Создать команду
+    settings:
+      edit:
+        back: "← Назад к настройкам"
+        heading: Редактировать настройки команды
+        logo_label: Логотип
+        name_available: Название доступно
+        name_label: Название команды
+        name_placeholder: Введите название команды
+        name_taken: Название уже занято
+        submit: Сохранить
+      show:
+        api_key_description: Используйте этот API-ключ для аутентификации MCP-запросов этой команды.
+        api_key_heading: API-ключ
+        edit_button: Редактировать
+        heading: Настройки команды
+        logo_label: Логотип
+        name_label: Название команды
+        no_logo: Логотип не загружен
+        regenerate_api_key: Перегенерировать
+        regenerate_confirm: Вы уверены? Текущий API-ключ станет недействительным.
+        slug_label: URL команды

@@ -1,0 +1,25 @@
+---
+ru:
+  home:
+    index:
+      authentication:
+        description: Вы вошли с помощью магической ссылки. Никаких паролей!
+        heading: Аутентификация
+        secure_description: При каждом входе вы будете получать новую ссылку на почту.
+        secure_title: Безопасно и без паролей
+      getting_started:
+        description: Это шаблонное приложение. Вы можете настроить эту панель или добавить свои функции.
+        heading: Начало работы
+        tip_claude: Смотрите
+        tip_claude_suffix: для архитектурных рекомендаций
+        tip_controllers: Изучите код в
+        tip_models: Добавьте свои модели, контроллеры и представления
+        tip_views: Измените это представление в
+      profile:
+        email: Почта
+        heading: Ваш профиль
+        member_since: Участник с
+        name: Имя
+      signed_in: Вы успешно вошли в систему
+      title: Главная
+      welcome: "Добро пожаловать, %{name}!"

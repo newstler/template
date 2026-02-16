@@ -1,0 +1,17 @@
+---
+ru:
+  shared:
+    image_upload:
+      drop_image: Перетащите изображение
+      uploading: Загрузка…
+    sidebar:
+      articles: Статьи
+      billing: Оплата
+      chats: Чаты
+      collapse: Свернуть боковую панель
+      home: Главная
+      languages: Языки
+      members: Участники
+      new_chat: Новый чат
+      settings: Настройки
+      user: Пользователь

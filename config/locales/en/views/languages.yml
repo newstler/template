@@ -1,0 +1,14 @@
+---
+en:
+  teams:
+    languages:
+      index:
+        active_description: Content will be automatically translated into these languages.
+        active_heading: Active Languages
+        add_button: Add Language
+        add_description: Add a language to enable automatic translation of content.
+        add_heading: Add Language
+        heading: Languages
+        remove_confirm: Remove %{language} from team languages?
+        required: Required
+        select_language: Select a language...

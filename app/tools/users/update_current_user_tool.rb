@@ -12,13 +12,15 @@ module Users
 
     arguments do
       optional(:name).filled(:string).description("The user's display name")
+      optional(:locale).filled(:string).description('Language code (e.g. "en", "es") or "auto" to clear')
     end
 
-    def call(name: nil)
+    def call(name: nil, locale: nil)
       require_authentication!
 
       updates = {}
       updates[:name] = name if name.present?
+      updates[:locale] = locale == "auto" ? nil : locale if locale.present?
 
       if updates.empty?
         return error_response("No updates provided", code: "no_updates")
@@ -31,6 +33,7 @@ module Users
           id: current_user.id,
           email: current_user.email,
           name: current_user.name,
+          locale: current_user.locale,
           updated_at: format_timestamp(current_user.updated_at)
         },
         message: "Profile updated successfully"

@@ -1,0 +1,21 @@
+---
+ru:
+  profiles:
+    edit:
+      avatar_label: Аватар
+      heading: Редактировать профиль
+      locale_auto: Автоопределение
+      locale_help: Устанавливает язык интерфейса и исходный язык для переводов
+      locale_label: Язык
+      name_label: Имя
+      name_placeholder: Введите ваше имя
+      submit: Сохранить
+    show:
+      edit_button: Редактировать
+      email: Почта
+      heading: Профиль
+      language: Язык
+      locale_auto: Автоопределение
+      member_since: Участник с
+      name: Имя
+      title: Профиль

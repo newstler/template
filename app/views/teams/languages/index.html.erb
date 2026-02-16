@@ -1,0 +1,54 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-2xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+  </div>
+
+  <%# Active languages %>
+  <div class="card-bg p-6 mb-6">
+    <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".active_heading") %></h2>
+    <p class="text-sm text-dark-400 mb-4"><%= t(".active_description") %></p>
+
+    <div class="space-y-3">
+      <% @active_languages.each do |language| %>
+        <div class="flex items-center justify-between px-4 py-3 bg-dark-800 rounded-lg">
+          <div class="flex items-center gap-3">
+            <span class="text-dark-100"><%= language.localized_name %></span>
+            <% if language.code != I18n.locale.to_s %>
+              <span class="text-dark-400 text-sm"><%= language.native_name %></span>
+            <% end %>
+          </div>
+          <% if @active_languages.size <= 1 %>
+            <span class="px-3 py-1 text-xs font-medium text-dark-400 bg-dark-700 rounded-full"><%= t(".required") %></span>
+          <% else %>
+            <%= button_to team_language_path(current_team, language),
+                method: :delete,
+                class: "text-sm text-dark-400 hover:text-red-400 transition-colors",
+                data: { turbo_confirm: t(".remove_confirm", language: language.localized_name) } do %>
+              <%= inline_svg "icons/trash.svg", class: "w-4 h-4" %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Add language %>
+  <% if @available_languages.any? %>
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".add_heading") %></h2>
+      <p class="text-sm text-dark-400 mb-4"><%= t(".add_description") %></p>
+
+      <%= form_with url: team_languages_path(current_team), method: :post, class: "flex items-center gap-4" do |f| %>
+        <div class="flex-1">
+          <%= f.select :language_id,
+              @available_languages.map { |l| ["#{l.localized_name} (#{l.native_name})", l.id] },
+              { prompt: t(".select_language") },
+              class: "w-full px-4 py-2 bg-dark-800 border border-dark-600 rounded-lg text-dark-100 focus:ring-2 focus:ring-accent-500 focus:border-accent-500" %>
+        </div>
+        <%= f.submit t(".add_button"), class: "px-4 py-2 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors text-sm cursor-pointer" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

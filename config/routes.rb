@@ -34,6 +34,10 @@ Rails.application.routes.draw do
     resources :members, only: [ :index, :show, :new, :create, :destroy ], controller: "teams/members"
     resource :profile, only: [ :show, :edit, :update ], controller: "profiles"
 
+    # Content
+    resources :articles
+    resources :languages, only: [ :index, :create, :destroy ], controller: "teams/languages"
+
     # Billing
     resource :pricing, only: [ :show ], controller: "teams/pricing"
     resource :billing, only: [ :show ], controller: "teams/billing"

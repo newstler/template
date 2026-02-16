@@ -1,14 +1,26 @@
 class User < ApplicationRecord
   include Costable
 
+  has_one_attached :avatar
+
   has_many :chats, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :teams, through: :memberships
 
+  attribute :remove_avatar, :boolean, default: false
+  after_save :purge_avatar, if: :remove_avatar
+
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :name, presence: true, on: :update
+  validates :locale, inclusion: { in: ->(_) { Language.enabled_codes } }, allow_nil: true
+
+  before_validation :nilify_blank_locale
 
   def onboarded? = name.present?
+
+  def effective_locale(fallback: :en)
+    locale&.to_sym || fallback
+  end
 
   def generate_magic_link_token
     signed_id(purpose: :magic_link, expires_in: 15.minutes)
@@ -33,5 +45,15 @@ class User < ApplicationRecord
 
   def owner_of?(team)
     memberships.exists?(team: team, role: "owner")
+  end
+
+  private
+
+  def purge_avatar
+    avatar.purge_later
+  end
+
+  def nilify_blank_locale
+    self.locale = nil if locale.blank?
   end
 end

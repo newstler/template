@@ -1,0 +1,21 @@
+# Mobility string translations for test fixtures
+
+article_one_title:
+  id: 01961a2a-c0de-7000-8000-000000002001
+  locale: en
+  key: title
+  value: First Article
+  translatable_id: 01961a2a-c0de-7000-8000-000000001001
+  translatable_type: Article
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>
+
+article_two_title:
+  id: 01961a2a-c0de-7000-8000-000000002002
+  locale: en
+  key: title
+  value: Second Article
+  translatable_id: 01961a2a-c0de-7000-8000-000000001002
+  translatable_type: Article
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

@@ -1,0 +1,28 @@
+---
+ru:
+  models:
+    index:
+      back: Назад к чатам
+      heading: Модели
+      refresh: Обновить модели
+      table:
+        context_window: Контекстное окно
+        model: Модель
+        pricing: "$/1М токенов (Вход/Выход)"
+        provider: Провайдер
+      title: Модели
+    model:
+      show: Подробнее
+      start_chat: Начать чат
+    show:
+      all_models: Все модели
+      back: Назад к чатам
+      capabilities: Возможности
+      context_window: Контекстное окно
+      context_window_value: "%{count} токенов"
+      id: ID
+      max_output: Макс. вывод
+      max_output_value: "%{count} токенов"
+      model: Модель
+      provider: Провайдер
+      start_chat: Начать чат с этой моделью
