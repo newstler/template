@@ -234,25 +234,12 @@ FileUtils.chdir APP_ROOT do
   section("Analytics")
 
   nullitics = false
-  maxmind_account_id = nil
-  maxmind_license_key = nil
 
   muted("Nullitics: privacy-first page analytics — no cookies, no PII, GDPR compliant.")
   muted("Learn more at https://nullitics.com")
   puts
 
-  if confirm("Enable Nullitics analytics?")
-    nullitics = true
-    puts
-    muted("MaxMind GeoLite2 adds country-level geolocation to analytics (optional).")
-    muted("Get a free license key at https://www.maxmind.com/en/geolite2/signup")
-    puts
-
-    if confirm("Configure MaxMind GeoLite2 for IP geolocation?")
-      maxmind_account_id = prompt("MaxMind Account ID")
-      maxmind_license_key = prompt("MaxMind License Key")
-    end
-  end
+  nullitics = confirm("Enable Nullitics analytics?")
 
   initializer_path = "config/initializers/nullitics.rb"
   File.write(initializer_path, "Rails.configuration.x.nullitics = #{nullitics}\n")
@@ -315,42 +302,6 @@ FileUtils.chdir APP_ROOT do
     puts "✓ Mail from: \#{setting.mail_from}"
   RUBY
   success("  ✓ Updated db/seeds.rb")
-
-  section("Writing credentials")
-
-  gem "activesupport"
-  require "active_support/encrypted_configuration"
-  FileUtils.mkdir_p("config/credentials")
-
-  %w[development production].each do |env|
-    key_path = "config/credentials/#{env}.key"
-    credentials_path = "config/credentials/#{env}.yml.enc"
-
-    unless File.exist?(key_path)
-      key = ActiveSupport::EncryptedConfiguration.generate_key
-      File.write(key_path, key)
-      success("  ✓ Generated #{env} key: #{key_path}")
-    end
-
-    credentials_hash = { "secret_key_base" => SecureRandom.hex(64) }
-
-    if maxmind_account_id && !maxmind_account_id.empty?
-      credentials_hash["maxmind"] = {
-        "account_id" => maxmind_account_id,
-        "license_key" => maxmind_license_key
-      }
-    end
-
-    config = ActiveSupport::EncryptedConfiguration.new(
-      config_path: credentials_path,
-      key_path: key_path,
-      env_key: "RAILS_MASTER_KEY",
-      raise_if_missing_key: false
-    )
-
-    config.write(YAML.dump(credentials_hash))
-    success("  ✓ #{env.capitalize} credentials updated: #{credentials_path}")
-  end
 
   # ── Consolidate Migrations ──
 
