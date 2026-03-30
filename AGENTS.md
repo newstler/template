@@ -531,22 +531,19 @@ app/assets/images/icons/      # SVG for inline_svg
 
 ## Credentials
 
+API keys (AI, Stripe, SMTP, Litestream) are managed in the admin panel at `/madmin/settings`.
+
+Rails encrypted credentials are used only for secrets that need to be available during Docker build:
+
 ```bash
-rails credentials:edit --environment development
+rails credentials:edit --environment production
 ```
 
 ```yaml
-secret_key_base: ...
-openai:
-  api_key: sk-...
-anthropic:
-  api_key: sk-ant-...
-stripe:
-  secret_key: sk_...
-  publishable_key: pk_...
-  webhook_secret: whsec_...
-litestream:  # optional
-  replica_bucket: ...
+# MaxMind GeoLite2 for IP geolocation (optional, for Nullitics analytics)
+maxmind:
+  account_id: "123456"
+  license_key: "abc..."
 ```
 
 ## Test-Driven Development
