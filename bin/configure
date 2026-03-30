@@ -318,7 +318,7 @@ FileUtils.chdir APP_ROOT do
 
   section("Writing credentials")
 
-  gem "activesupport"
+  require "bundler/setup"
   require "active_support/encrypted_configuration"
   FileUtils.mkdir_p("config/credentials")
 
