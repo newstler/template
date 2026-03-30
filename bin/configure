@@ -303,21 +303,6 @@ FileUtils.chdir APP_ROOT do
   RUBY
   success("  ✓ Updated db/seeds.rb")
 
-  section("Generating credential keys")
-
-  FileUtils.mkdir_p("config/credentials")
-
-  %w[development production].each do |env|
-    key_path = "config/credentials/#{env}.key"
-
-    unless File.exist?(key_path)
-      File.write(key_path, SecureRandom.hex(16))
-      success("  ✓ Generated #{env} key: #{key_path}")
-    else
-      muted("  #{env} key already exists")
-    end
-  end
-
   # ── Consolidate Migrations ──
 
   section("Consolidating migrations")
@@ -422,8 +407,5 @@ FileUtils.chdir APP_ROOT do
   puts
   tip("💡  TIP: Configure API keys (AI, Stripe, SMTP, Litestream) in the admin panel:")
   tip("   /madmin/settings")
-  puts
-  tip("💡  TIP: For MaxMind geolocation, add credentials via:")
-  tip("   rails credentials:edit --environment production")
   puts
 end

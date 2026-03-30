@@ -63,10 +63,9 @@ bin/setup
 On first run, `bin/setup` will launch the configuration wizard that:
 1. Renames the project from "Template" to your project name
 2. Configures deployment domain and admin email
-3. Generates credential encryption keys
-4. Renames git origin to `template` and asks for your repo URL
-5. Commits all configuration changes
-6. Installs dependencies, prepares database, and starts dev server
+3. Renames git origin to `template` and asks for your repo URL
+4. Commits all configuration changes
+5. Installs dependencies, prepares database, and starts dev server
 
 ### Pull Template Updates
 
