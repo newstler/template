@@ -46,6 +46,8 @@ class TranslatableTest < ActiveSupport::TestCase
       assert_equal :ru, article.source_locale
     end
 
-    assert_equal :en, article.source_locale
+    I18n.with_locale(:en) do
+      assert_equal :en, article.source_locale
+    end
   end
 end
