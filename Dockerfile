@@ -50,10 +50,12 @@ RUN --mount=type=secret,id=MAXMIND_ACCOUNT_ID \
     if [ -f /run/secrets/MAXMIND_ACCOUNT_ID ] && [ -f /run/secrets/MAXMIND_LICENSE_KEY ]; then \
       ACCOUNT_ID="$(cat /run/secrets/MAXMIND_ACCOUNT_ID)" && \
       LICENSE_KEY="$(cat /run/secrets/MAXMIND_LICENSE_KEY)" && \
-      curl -sL -u "${ACCOUNT_ID}:${LICENSE_KEY}" \
-        "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz" | \
-      tar -xzf - --strip-components=1 -C db/ --wildcards "*/*.mmdb" && \
-      echo "GeoLite2 database downloaded successfully"; \
+      curl -sfL -o /tmp/geolite2.tar.gz -u "${ACCOUNT_ID}:${LICENSE_KEY}" \
+        "https://download.maxmind.com/geoip/databases/GeoLite2-Country/download?suffix=tar.gz" && \
+      tar -xzf /tmp/geolite2.tar.gz --strip-components=1 -C db/ --wildcards "*/*.mmdb" && \
+      rm -f /tmp/geolite2.tar.gz && \
+      echo "GeoLite2 database downloaded successfully" || \
+      echo "WARNING: GeoLite2 download failed, skipping (non-fatal)"; \
     else \
       echo "MAXMIND credentials not provided, skipping GeoLite2 download"; \
     fi
