@@ -70,7 +70,7 @@ end
 
 gem "madmin", "~> 2.1"
 
-gem "ruby_llm", "~> 1.9"
+gem "ruby_llm", "~> 1.14"
 
 gem "inline_svg"
 
