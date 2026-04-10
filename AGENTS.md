@@ -99,6 +99,7 @@ npx @anthropic-ai/mcp-inspector
 | `create_checkout` | Create Stripe Checkout session URL | Team + User (admin) |
 | `get_billing_portal` | Get Stripe Billing Portal URL | Team + User (admin) |
 | `cancel_subscription` | Cancel subscription at period end | Team + User (admin) |
+| `resume_subscription` | Resume a canceled subscription before period ends | Team + User (admin) |
 | `list_languages` | List all enabled languages | None |
 | `list_team_languages` | List team's active languages | Team + User |
 | `add_team_language` | Add language to team | Team + User (admin) |
@@ -131,10 +132,12 @@ npx @anthropic-ai/mcp-inspector
 app/
 ├── tools/
 │   ├── application_tool.rb      # Base class with auth helpers
+│   ├── articles/                # Article CRUD tools
+│   ├── billing/                 # Billing & subscription tools
 │   ├── chats/                   # Chat CRUD tools
+│   ├── languages/               # Language management tools
 │   ├── messages/                # Message tools
 │   ├── models/                  # Model tools
-│   ├── billing/                 # Billing & subscription tools
 │   ├── teams/                   # Team management tools
 │   └── users/                   # User tools
 └── resources/

@@ -14,7 +14,8 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Deployment**: Kamal 2
 - **Authentication**: Magic Links (passwordless)
 - **Multitenancy**: Team-based with roles (owner/admin/member)
-- **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation
+- **Multilingual**: Mobility gem with RubyLLM auto-translation
+- **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation (optional)
 - **Admin Panel**: Madmin
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
@@ -29,17 +30,20 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **MCP Server** — every UI action is also available as an MCP tool
   - Streamable HTTP transport at `/mcp/messages`
   - Team-level API key authentication
-  - 20+ tools for chats, messages, models, billing, teams, and users
+  - 30+ tools for chats, messages, models, billing, teams, users, articles, and languages
 - **Agent-native architecture** — agents have full parity with human users
 
 ### Platform
 
 - **Magic Link Authentication** for users and admins
   - Users: First magic link creates account, subsequent ones sign in
-  - Admins: Only existing admins can create new admins
+  - Admins: Only existing admins can create new admins (via Madmin)
 - **Team-Based Multitenancy** with configurable single/multi-tenant modes
   - Roles: owner, admin, member
   - Team-scoped routes under `/t/:team_slug/`
+- **Multilingual Content** with automatic LLM translation
+  - Per-team language management
+  - Auto-translates user-generated content (articles, etc.) on save
 - **Stripe Billing** with subscriptions, checkout, and customer portal
 - **Litestream SQLite Replication** to S3-compatible storage (optional)
   - Continuous backup of all databases (main, cache, queue, cable)
@@ -63,9 +67,11 @@ bin/setup
 On first run, `bin/setup` will launch the configuration wizard that:
 1. Renames the project from "Template" to your project name
 2. Configures deployment domain and admin email
-3. Renames git origin to `template` and asks for your repo URL
-4. Commits all configuration changes
-5. Installs dependencies, prepares database, and starts dev server
+3. Optionally enables Nullitics analytics
+4. Consolidates migrations into a single initial schema
+5. Renames git origin to `template` and asks for your repo URL
+6. Commits all configuration changes
+7. Installs dependencies, prepares database, and starts dev server
 
 ### Pull Template Updates
 
@@ -91,10 +97,10 @@ Users can sign up and sign in using magic links sent to their email:
 
 ### Admin Authentication
 
-Admins must be created by other admins:
+Admins are managed via the Madmin admin panel:
 
-1. First admin is created via `rails db:seed` (update email in `db/seeds.rb`)
-2. Existing admins can create new admins at `/admins/admins`
+1. First admin is created via `rails db:seed` (email configured during `bin/setup`)
+2. Existing admins can create new admins at `/madmin/admins`
 3. New admin receives magic link via email
 4. Admin signs in at `/admins/session/new`
 
@@ -132,7 +138,7 @@ rm .configured && bin/setup
 
 ## Architecture Principles
 
-This template follows [37signals vanilla Rails philosophy](https://dev.37signals.com/) and patterns from [Layered Design for Ruby on Rails Applications](https://www.packtpub.com/product/layered-design-for-ruby-on-rails-applications/9781801813785):
+This template follows [37signals vanilla Rails philosophy](https://dev.37signals.com/):
 
 - **Rich domain models** over service objects
 - **CRUD controllers** - everything is a resource
@@ -147,13 +153,29 @@ See [CLAUDE.md](./CLAUDE.md) for complete guidelines.
 ```
 app/
 ├── controllers/
-│   ├── sessions_controller.rb        # User auth
-│   └── admins/
-│       ├── sessions_controller.rb    # Admin auth
-│       └── admins_controller.rb      # Admin management
+│   ├── sessions_controller.rb        # User auth (magic links)
+│   ├── chats_controller.rb           # AI chat
+│   ├── articles_controller.rb        # Multilingual articles
+│   ├── home_controller.rb            # Team dashboard
+│   ├── onboardings_controller.rb     # First-time user setup
+│   ├── profiles_controller.rb        # User profile
+│   ├── admins/
+│   │   └── sessions_controller.rb    # Admin auth
+│   ├── teams/                        # Team management
+│   │   ├── settings_controller.rb
+│   │   ├── members_controller.rb
+│   │   ├── pricing_controller.rb
+│   │   ├── billing_controller.rb
+│   │   └── languages_controller.rb
+│   └── madmin/                       # Admin panel overrides
 ├── models/
-│   ├── user.rb                       # User model
-│   └── admin.rb                      # Admin model
+│   ├── user.rb, admin.rb, team.rb    # Core models
+│   ├── chat.rb, message.rb, model.rb # AI chat
+│   ├── article.rb, language.rb       # Multilingual content
+│   ├── membership.rb                 # Team membership
+│   └── concerns/                     # Shared behavior
+├── tools/                            # MCP tools
+├── resources/                        # MCP resources
 ├── mailers/
 │   ├── user_mailer.rb                # User magic links
 │   └── admin_mailer.rb               # Admin magic links
@@ -194,9 +216,7 @@ maxmind:
 
 Litestream provides continuous replication of all SQLite databases to S3-compatible storage:
 
-**Setup options:**
-1. During `bin/setup` configuration wizard (easiest)
-2. Manually edit credentials: `rails credentials:edit --environment production`
+**Setup:** Configure S3-compatible credentials in the admin panel at `/madmin/settings`.
 
 **What gets replicated:**
 - Main database
@@ -218,6 +238,4 @@ MIT
 
 ## Credits
 
-Built by [Yuri Sidorov](https://yurisidorov.com) following best practices from:
-- [37signals](https://37signals.com/)
-- [Layered Design for Ruby on Rails Applications](https://www.packtpub.com/product/layered-design-for-ruby-on-rails-applications/9781801813785)
+Built by [Yuri Sidorov](https://yurisidorov.com) following best practices from [37signals](https://37signals.com/).
