@@ -7,6 +7,7 @@
     nested: Boolean, if true applies nested styling (optional)
     truncate: Boolean, if true truncates with CSS ellipsis (optional)
     image: Active Storage attachment or image URL to show instead of icon (optional)
+    counter: Integer count to display as badge (optional)
 %>
 <%
   path_str = path.to_s.split('?').first
@@ -16,6 +17,7 @@
   is_active = current_page?(path) || (!is_root && request.path.start_with?(path_str) && path_str.length > 1)
   nested = local_assigns[:nested] || false
   should_truncate = local_assigns[:truncate] || false
+  counter_value = local_assigns[:counter]
 
   base_classes = "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 hover:bg-white/5"
   active_classes = "text-white"
@@ -30,5 +32,8 @@
   <% else %>
     <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
   <% end %>
-  <span data-sidebar-target="label" class="<%= truncate_classes %> transition-[opacity,width] duration-300 opacity-100 whitespace-nowrap"><%= label %></span>
+  <span data-sidebar-target="label" class="<%= truncate_classes %> transition-[opacity,width] duration-300 opacity-100 whitespace-nowrap flex-1"><%= label %></span>
+  <% if counter_value && counter_value > 0 %>
+    <span data-sidebar-target="label" class="ml-auto text-xs font-medium tabular-nums px-1.5 py-0.5 rounded-md bg-white/5 text-dark-500"><%= number_to_human(counter_value, precision: 1, significant: true, format: "%n%u", units: { thousand: "k", million: "M" }) %></span>
+  <% end %>
 <% end %>

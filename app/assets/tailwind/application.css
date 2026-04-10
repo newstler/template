@@ -375,6 +375,29 @@
   }
 }
 
+/* Thin scrollbar for sidebar */
+.sidebar-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-dark-700) transparent;
+
+  &::-webkit-scrollbar {
+    width: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--color-dark-700);
+    border-radius: 2px;
+
+    &:hover {
+      background: var(--color-dark-600);
+    }
+  }
+}
+
 /* ================================
    Button Styles
    ================================ */

@@ -3,3 +3,5 @@ one:
   stripe_secret_key: sk_test_stripe_1234
   stripe_publishable_key: pk_test_stripe_1234
   stripe_webhook_secret: whsec_test_1234
+  default_model: gpt-4.1-nano
+  translation_model: gpt-4.1-nano

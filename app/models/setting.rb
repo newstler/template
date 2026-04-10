@@ -1,10 +1,12 @@
 class Setting < ApplicationRecord
   ALLOWED_KEYS = %i[
+    default_model
     litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
     mail_from
     public_chats
     smtp_address smtp_password smtp_username
     stripe_publishable_key stripe_secret_key stripe_webhook_secret
+    translation_model
     trial_days
   ].freeze
 
@@ -25,8 +27,16 @@ class Setting < ApplicationRecord
     ProviderCredential.configured?(provider)
   end
 
+  def self.default_model
+    get(:default_model).presence
+  end
+
+  def self.translation_model
+    get(:translation_model).presence
+  end
+
   def self.chats_enabled?
-    get(:public_chats) != false && Model.configured_providers.any?
+    default_model.present? && get(:public_chats) != false && Model.configured_providers.any?
   end
 
   def self.reconfigure!
@@ -37,12 +47,24 @@ class Setting < ApplicationRecord
 
   def reconfigure!
     ProviderCredential.configure_ruby_llm!
+    configure_default_model!
     configure_stripe!
     configure_smtp!
     configure_litestream!
   end
 
   private
+
+  def configure_default_model!
+    model_name = has_attribute?(:default_model) ? read_attribute(:default_model) : nil
+    return unless model_name.present?
+
+    RubyLLM.configure do |config|
+      config.default_model = model_name
+    end
+  rescue NameError, NoMethodError
+    # Column or RubyLLM config may not be available during initialization
+  end
 
   def configure_stripe!
     Stripe.api_key = stripe_secret_key

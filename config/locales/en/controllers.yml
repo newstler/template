@@ -30,6 +30,9 @@ en:
       update:
         notice: Article updated
     madmin:
+      ai_models:
+        update:
+          notice: AI model settings saved successfully
       mail:
         update:
           notice: Mail settings saved successfully

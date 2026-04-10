@@ -28,6 +28,8 @@ namespace :madmin do
   resources :tool_calls
   resources :users
   resources :teams
+  resources :articles
+  resources :memberships
   resources :languages do
     collection do
       post :sync
@@ -37,6 +39,7 @@ namespace :madmin do
     end
   end
   resource :settings, only: [ :show, :edit, :update ]
+  resource :ai_models, only: [ :show, :edit, :update ], controller: "ai_models"
   resources :providers, only: [ :index ] do
     collection do
       patch :update

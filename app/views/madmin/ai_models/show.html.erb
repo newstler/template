@@ -1,0 +1,54 @@
+<div class="max-w-3xl mx-auto">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <% if @available_models.any? %>
+      <%= link_to t(".edit_button"), main_app.edit_madmin_ai_models_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+    <% end %>
+  </div>
+
+  <% if @available_models.empty? %>
+    <div class="card-bg p-6 text-center">
+      <div class="text-dark-400 mb-2"><%= t(".no_models") %></div>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".no_models_hint") %></p>
+      <%= link_to t(".sync_models"), "/madmin/models", class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+    </div>
+  <% else %>
+    <div class="card-bg p-6 mb-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".chat_heading") %></h2>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".chat_description") %></p>
+      <dl class="space-y-4">
+        <div class="flex items-center justify-between">
+          <dt class="text-sm font-medium text-dark-400"><%= t(".default_model") %></dt>
+          <dd class="flex items-center gap-2">
+            <% if @setting.default_model.present? %>
+              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+              <code class="text-sm text-dark-200 font-mono"><%= @setting.default_model %></code>
+            <% else %>
+              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
+              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".translation_heading") %></h2>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".translation_description") %></p>
+      <dl class="space-y-4">
+        <div class="flex items-center justify-between">
+          <dt class="text-sm font-medium text-dark-400"><%= t(".translation_model") %></dt>
+          <dd class="flex items-center gap-2">
+            <% if @setting.translation_model.present? %>
+              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+              <code class="text-sm text-dark-200 font-mono"><%= @setting.translation_model %></code>
+            <% else %>
+              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
+              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+  <% end %>
+</div>
