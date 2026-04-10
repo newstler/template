@@ -1,0 +1,36 @@
+---
+en:
+  madmin:
+    ai_models:
+      edit:
+        cancel: Cancel
+        chat_description: The model used for new chat conversations when no specific
+          model is selected.
+        chat_heading: Chat Model
+        default_model: Default Model
+        default_model_hint: The AI model used for new chat conversations.
+        heading: Edit AI Models
+        no_models: No models available
+        no_models_hint: Sync models from AI providers first.
+        save: Save Settings
+        sync_models: Go to Models
+        translation_description: The model used for automatic content translation
+          between languages.
+        translation_heading: Translation Model
+        translation_model: Translation Model
+        translation_model_hint: A fast, cost-effective model is recommended for translations.
+      show:
+        chat_description: The model used for new chat conversations when no specific
+          model is selected.
+        chat_heading: Chat Model
+        default_model: Default Model
+        edit_button: Edit Settings
+        heading: AI Models
+        no_models: No models available
+        no_models_hint: Configure AI providers and sync models first.
+        not_configured: Not configured — chats and translations are disabled
+        sync_models: Go to Models
+        translation_description: The model used for automatic content translation
+          between languages.
+        translation_heading: Translation Model
+        translation_model: Translation Model

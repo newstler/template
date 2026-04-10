@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_02_11_174628) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -172,8 +172,185 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_11_174628) do
     t.index ["provider", "key"], name: "index_provider_credentials_on_provider_and_key", unique: true
   end
 
+  create_table "rails_error_dashboard_applications", force: :cascade do |t|
+    t.datetime "created_at"
+    t.text "description"
+    t.string "name", limit: 255, null: false
+    t.datetime "updated_at"
+    t.index ["name"], name: "index_rails_error_dashboard_applications_on_name", unique: true
+  end
+
+  create_table "rails_error_dashboard_cascade_patterns", force: :cascade do |t|
+    t.float "avg_delay_seconds"
+    t.float "cascade_probability"
+    t.bigint "child_error_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "frequency", default: 1, null: false
+    t.datetime "last_detected_at"
+    t.bigint "parent_error_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["cascade_probability"], name: "index_cascade_patterns_on_probability"
+    t.index ["child_error_id"], name: "index_cascade_patterns_on_child"
+    t.index ["parent_error_id", "child_error_id"], name: "index_cascade_patterns_on_parent_and_child", unique: true
+    t.index ["parent_error_id"], name: "index_cascade_patterns_on_parent"
+  end
+
+  create_table "rails_error_dashboard_diagnostic_dumps", force: :cascade do |t|
+    t.integer "application_id", null: false
+    t.datetime "captured_at", null: false
+    t.datetime "created_at", null: false
+    t.text "dump_data", null: false
+    t.string "note"
+    t.datetime "updated_at", null: false
+    t.index ["application_id"], name: "index_rails_error_dashboard_diagnostic_dumps_on_application_id"
+    t.index ["captured_at"], name: "index_diagnostic_dumps_on_captured_at"
+  end
+
+  create_table "rails_error_dashboard_error_baselines", force: :cascade do |t|
+    t.string "baseline_type", null: false
+    t.integer "count", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.string "error_type", null: false
+    t.float "mean"
+    t.float "percentile_95"
+    t.float "percentile_99"
+    t.datetime "period_end", null: false
+    t.datetime "period_start", null: false
+    t.string "platform", null: false
+    t.integer "sample_size", default: 0, null: false
+    t.float "std_dev"
+    t.datetime "updated_at", null: false
+    t.index ["error_type", "platform", "baseline_type", "period_start"], name: "index_error_baselines_on_type_platform_baseline_period"
+    t.index ["error_type", "platform"], name: "index_error_baselines_on_error_type_and_platform"
+    t.index ["period_end"], name: "index_error_baselines_on_period_end"
+  end
+
+  create_table "rails_error_dashboard_error_comments", force: :cascade do |t|
+    t.string "author_name", null: false
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.bigint "error_log_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["error_log_id", "created_at"], name: "index_error_comments_on_error_and_time"
+    t.index ["error_log_id"], name: "index_rails_error_dashboard_error_comments_on_error_log_id"
+  end
+
+  create_table "rails_error_dashboard_error_logs", force: :cascade do |t|
+    t.string "action_name"
+    t.string "app_version"
+    t.bigint "application_id", null: false
+    t.datetime "assigned_at"
+    t.string "assigned_to"
+    t.text "backtrace"
+    t.string "backtrace_signature"
+    t.text "breadcrumbs"
+    t.string "content_type", limit: 100
+    t.string "controller_name"
+    t.datetime "created_at", null: false
+    t.text "environment_info"
+    t.string "error_hash"
+    t.string "error_type", null: false
+    t.text "exception_cause"
+    t.integer "external_issue_number"
+    t.string "external_issue_provider", limit: 20
+    t.string "external_issue_url"
+    t.datetime "first_seen_at"
+    t.string "git_sha"
+    t.string "hostname", limit: 255
+    t.string "http_method", limit: 10
+    t.text "instance_variables"
+    t.string "ip_address"
+    t.datetime "last_seen_at"
+    t.text "local_variables"
+    t.text "message", null: false
+    t.boolean "muted", default: false, null: false
+    t.datetime "muted_at"
+    t.string "muted_by"
+    t.string "muted_reason"
+    t.datetime "occurred_at", null: false
+    t.integer "occurrence_count", default: 1, null: false
+    t.string "platform"
+    t.integer "priority_level", default: 0
+    t.integer "priority_score"
+    t.datetime "reopened_at"
+    t.integer "request_duration_ms"
+    t.text "request_params"
+    t.text "request_url"
+    t.text "resolution_comment"
+    t.string "resolution_reference"
+    t.boolean "resolved", default: false, null: false
+    t.datetime "resolved_at"
+    t.string "resolved_by_name"
+    t.float "similarity_score"
+    t.datetime "snoozed_until"
+    t.string "status", default: "new"
+    t.text "system_health"
+    t.datetime "updated_at", null: false
+    t.text "user_agent"
+    t.integer "user_id"
+    t.index ["app_version", "resolved", "occurred_at"], name: "index_error_logs_on_version_resolution_time"
+    t.index ["app_version"], name: "index_rails_error_dashboard_error_logs_on_app_version"
+    t.index ["application_id", "occurred_at"], name: "index_error_logs_on_app_occurred"
+    t.index ["application_id", "resolved"], name: "index_error_logs_on_app_resolved"
+    t.index ["application_id"], name: "index_rails_error_dashboard_error_logs_on_application_id"
+    t.index ["assigned_to", "status", "occurred_at"], name: "index_error_logs_on_assignment_workflow"
+    t.index ["backtrace_signature"], name: "index_rails_error_dashboard_error_logs_on_backtrace_signature"
+    t.index ["controller_name", "action_name", "error_hash"], name: "index_error_logs_on_controller_action_hash"
+    t.index ["error_hash", "resolved", "occurred_at"], name: "index_error_logs_on_hash_resolved_occurred"
+    t.index ["error_hash"], name: "index_rails_error_dashboard_error_logs_on_error_hash"
+    t.index ["error_type", "occurred_at"], name: "index_error_logs_on_error_type_and_occurred_at"
+    t.index ["error_type"], name: "index_rails_error_dashboard_error_logs_on_error_type"
+    t.index ["first_seen_at"], name: "index_rails_error_dashboard_error_logs_on_first_seen_at"
+    t.index ["git_sha"], name: "index_rails_error_dashboard_error_logs_on_git_sha"
+    t.index ["last_seen_at"], name: "index_rails_error_dashboard_error_logs_on_last_seen_at"
+    t.index ["muted"], name: "index_rails_error_dashboard_error_logs_on_muted"
+    t.index ["occurred_at"], name: "index_rails_error_dashboard_error_logs_on_occurred_at"
+    t.index ["occurrence_count"], name: "index_rails_error_dashboard_error_logs_on_occurrence_count"
+    t.index ["platform", "occurred_at"], name: "index_error_logs_on_platform_and_occurred_at"
+    t.index ["platform", "status", "occurred_at"], name: "index_error_logs_on_platform_status_time"
+    t.index ["platform"], name: "index_rails_error_dashboard_error_logs_on_platform"
+    t.index ["priority_level", "resolved", "occurred_at"], name: "index_error_logs_on_priority_resolution"
+    t.index ["priority_score"], name: "index_rails_error_dashboard_error_logs_on_priority_score"
+    t.index ["resolved", "occurred_at"], name: "index_error_logs_on_resolved_and_occurred_at"
+    t.index ["resolved"], name: "index_rails_error_dashboard_error_logs_on_resolved"
+    t.index ["similarity_score"], name: "index_rails_error_dashboard_error_logs_on_similarity_score"
+    t.index ["user_id"], name: "index_rails_error_dashboard_error_logs_on_user_id"
+  end
+
+  create_table "rails_error_dashboard_error_occurrences", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.bigint "error_log_id", null: false
+    t.datetime "occurred_at", null: false
+    t.string "request_id"
+    t.string "session_id"
+    t.datetime "updated_at", null: false
+    t.integer "user_id"
+    t.index ["error_log_id"], name: "index_error_occurrences_on_error_log"
+    t.index ["occurred_at", "error_log_id"], name: "index_error_occurrences_on_time_and_error"
+    t.index ["request_id"], name: "index_error_occurrences_on_request"
+    t.index ["user_id"], name: "index_error_occurrences_on_user"
+  end
+
+  create_table "rails_error_dashboard_swallowed_exceptions", force: :cascade do |t|
+    t.bigint "application_id"
+    t.datetime "created_at", null: false
+    t.string "exception_class", limit: 250, null: false
+    t.datetime "last_seen_at"
+    t.datetime "period_hour", null: false
+    t.integer "raise_count", default: 0, null: false
+    t.string "raise_location", limit: 250, null: false
+    t.integer "rescue_count", default: 0, null: false
+    t.string "rescue_location", limit: 250
+    t.datetime "updated_at", null: false
+    t.index ["application_id", "period_hour"], name: "index_swallowed_exceptions_on_app_and_hour"
+    t.index ["exception_class", "period_hour"], name: "index_swallowed_exceptions_on_class_and_hour"
+    t.index ["exception_class", "raise_location", "rescue_location", "period_hour", "application_id"], name: "index_swallowed_exceptions_upsert_key", unique: true
+    t.index ["period_hour"], name: "index_swallowed_exceptions_on_period_hour"
+  end
+
   create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "default_model"
     t.string "litestream_replica_access_key"
     t.string "litestream_replica_bucket"
     t.string "litestream_replica_key_id"
@@ -185,6 +362,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_11_174628) do
     t.string "stripe_publishable_key"
     t.string "stripe_secret_key"
     t.string "stripe_webhook_secret"
+    t.string "translation_model"
     t.integer "trial_days", default: 30
     t.datetime "updated_at", null: false
   end
@@ -252,6 +430,12 @@ ActiveRecord::Schema[8.2].define(version: 2026_02_11_174628) do
   add_foreign_key "memberships", "users", column: "invited_by_id"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
+  add_foreign_key "rails_error_dashboard_cascade_patterns", "rails_error_dashboard_error_logs", column: "child_error_id"
+  add_foreign_key "rails_error_dashboard_cascade_patterns", "rails_error_dashboard_error_logs", column: "parent_error_id"
+  add_foreign_key "rails_error_dashboard_diagnostic_dumps", "rails_error_dashboard_applications", column: "application_id"
+  add_foreign_key "rails_error_dashboard_error_comments", "rails_error_dashboard_error_logs", column: "error_log_id"
+  add_foreign_key "rails_error_dashboard_error_logs", "rails_error_dashboard_applications", column: "application_id"
+  add_foreign_key "rails_error_dashboard_error_occurrences", "rails_error_dashboard_error_logs", column: "error_log_id"
   add_foreign_key "team_languages", "languages"
   add_foreign_key "team_languages", "teams"
   add_foreign_key "tool_calls", "messages"

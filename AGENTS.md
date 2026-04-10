@@ -16,6 +16,7 @@ Delete these HTML comments and write what your app does.
 - **Frontend**: Hotwire (Turbo + Stimulus), Tailwind CSS 4
 - **Deployment**: Kamal 2
 - **Admin**: Madmin at `/madmin`
+- **Error Tracking**: Rails Error Dashboard (RED) at `/red`
 - **Icons**: inline_svg gem
 - **Primary Keys**: UUIDv7 (database-generated)
 - **Billing**: Stripe (subscriptions, checkout, customer portal)

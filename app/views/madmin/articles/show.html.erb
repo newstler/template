@@ -1,0 +1,87 @@
+<%= content_for :title, @record.title.truncate(40) %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= @record.title.truncate(50) %>
+  </h1>
+</header>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-5">
+    <div class="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center flex-shrink-0">
+      <%= inline_svg "icons/file.svg", class: "w-6 h-6 text-white" %>
+    </div>
+    <div class="flex-1 min-w-0">
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.title %></h2>
+      <div class="flex items-center gap-4 mt-2 text-sm text-dark-400">
+        <span>by
+          <%= link_to @record.user.name.presence || @record.user.email, "/madmin/users/#{@record.user.id}", class: "text-dark-200 hover:underline" %>
+        </span>
+        <span>&middot;</span>
+        <span>in
+          <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "text-dark-200 hover:underline" %>
+        </span>
+        <span>&middot;</span>
+        <span><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">ID</th>
+          <td class="font-mono text-sm"><%= @record.id %></td>
+        </tr>
+        <tr>
+          <th class="label">Title</th>
+          <td><%= @record.title %></td>
+        </tr>
+        <tr>
+          <th class="label">Team</th>
+          <td>
+            <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "hover:underline" %>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Author</th>
+          <td>
+            <%= link_to "/madmin/users/#{@record.user.id}", class: "flex items-center gap-2 hover:underline" do %>
+              <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.user.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
+              <span><%= @record.user.name.presence || @record.user.email %></span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Updated</th>
+          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% if @record.body.present? %>
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Body</h2>
+  </div>
+  <div class="p-5">
+    <div class="prose prose-invert max-w-none text-dark-200">
+      <%= simple_format(@record.body) %>
+    </div>
+  </div>
+</div>
+<% end %>

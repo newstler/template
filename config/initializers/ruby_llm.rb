@@ -1,4 +1,7 @@
 RubyLLM.configure do |config|
-  config.default_model = "gpt-4.1-nano"
+  model = Setting.default_model
+  config.default_model = model if model.present?
+  config.use_new_acts_as = true
+rescue ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError, NameError
   config.use_new_acts_as = true
 end

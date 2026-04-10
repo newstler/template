@@ -17,6 +17,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Multilingual**: Mobility gem with RubyLLM auto-translation
 - **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation (optional)
 - **Admin Panel**: Madmin
+- **Error Tracking**: Rails Error Dashboard (RED) at `/red`
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
@@ -107,9 +108,10 @@ Admins are managed via the Madmin admin panel:
 ### Admin Access
 
 - Admin panel: `/madmin`
+- Error dashboard: `/red` (Rails Error Dashboard)
 - Admin login: `/admins/session/new`
 
-Only authenticated admins can access Madmin.
+Only authenticated admins can access Madmin and the error dashboard.
 
 ## Development
 

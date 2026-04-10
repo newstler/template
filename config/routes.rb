@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount RailsErrorDashboard::Engine => "/red"  # RED (Rails Error Dashboard) — also works at /error_dashboard
   draw :madmin
 
   # User authentication (magic link - creates user on first use)

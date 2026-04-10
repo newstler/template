@@ -90,3 +90,5 @@ gem "friendly_id"
 gem "babosa"
 
 gem "tidewave", "~> 0.4.1", group: :development
+
+gem "rails_error_dashboard"
