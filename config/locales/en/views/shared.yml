@@ -1,6 +1,8 @@
 ---
 en:
   shared:
+    country_select:
+      search_placeholder: Search countries...
     image_upload:
       drop_image: Drop image
       uploading: Uploading…

@@ -1,0 +1,25 @@
+<%#
+  Locals:
+    form:           form builder
+    method:         symbol — the attribute to bind to
+    selected:       (optional) override selected alpha2 code
+    include_blank:  (optional, default true)
+    countries:      (optional) whitelist of alpha2 codes
+%>
+<div data-controller="country-select">
+  <input type="text"
+         data-country-select-target="filter"
+         data-action="input->country-select#filter"
+         placeholder="<%= t("shared.country_select.search_placeholder") %>"
+         class="w-full px-3 py-2 mb-2 bg-dark-800 border border-dark-700 rounded text-dark-100" />
+
+  <%= form.select method,
+                  country_options_for_select(
+                    local_assigns[:selected] || form.object.send(method),
+                    include_blank: local_assigns.fetch(:include_blank, true),
+                    countries: local_assigns[:countries]
+                  ),
+                  {},
+                  data: { "country-select-target": "select" },
+                  class: "w-full px-3 py-2 bg-dark-800 border border-dark-700 rounded text-dark-100" %>
+</div>
