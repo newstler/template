@@ -347,7 +347,7 @@ git commit -m "feat: searchable:install generator + run for SearchableThing"
 
 ## Task 5: End-to-end search test
 
-- [ ] **Step 1: Add integration tests**
+- [x] **Step 1: Add integration tests**
 
 Append to `test/models/concerns/searchable_test.rb`:
 
@@ -396,7 +396,7 @@ Append to `test/models/concerns/searchable_test.rb`:
   end
 ```
 
-- [ ] **Step 2: Run tests**
+- [x] **Step 2: Run tests**
 
 Run: `rails test test/models/concerns/searchable_test.rb`
 
@@ -406,7 +406,7 @@ Expected: PASS. If the update/destroy tests fail because of FTS sync issues, ver
 
 Verify with: `SearchableThing.first.rowid` — if this returns an integer, the FTS sync should work.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add test/models/concerns/searchable_test.rb
