@@ -81,4 +81,17 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
     user.reload
     assert_equal "es", user.locale
   end
+
+  test "first magic link login triggers WelcomeNotifier" do
+    assert_difference -> { Noticed::Event.where(type: "WelcomeNotifier").count }, 1 do
+      post session_path, params: { session: { email: "brand-new-welcome@example.com" } }
+    end
+  end
+
+  test "subsequent magic link logins do not re-send WelcomeNotifier" do
+    existing = users(:one)
+    assert_no_difference -> { Noticed::Event.where(type: "WelcomeNotifier").count } do
+      post session_path, params: { session: { email: existing.email } }
+    end
+  end
 end

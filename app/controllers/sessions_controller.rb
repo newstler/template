@@ -26,6 +26,9 @@ class SessionsController < ApplicationController
     # Send magic link
     UserMailer.magic_link(user).deliver_later
 
+    # Welcome new users (first creation only — not on every login)
+    WelcomeNotifier.with(record: user).deliver(user) if user.previously_new_record?
+
     redirect_to new_session_path, notice: t("controllers.sessions.create.notice")
   end
 
