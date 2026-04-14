@@ -867,7 +867,7 @@ git commit -m "feat: ConversationMailer with new_message and messages_digest"
 - Create: `test/jobs/conversation_notification_job_test.rb`
 - Create: `test/jobs/conversation_digest_notification_job_test.rb`
 
-- [ ] **Step 1: Port the digest job from sailing_plus**
+- [x] **Step 1: Port the digest job from sailing_plus**
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/jobs/conversation_digest_notification_job.rb`. Implement the template version in `app/jobs/conversation_digest_notification_job.rb`:
 
@@ -898,7 +898,7 @@ class ConversationDigestNotificationJob < ApplicationJob
 end
 ```
 
-- [ ] **Step 2: Create ConversationNotificationJob (immediate single-message email)**
+- [x] **Step 2: Create ConversationNotificationJob (immediate single-message email)**
 
 Create `app/jobs/conversation_notification_job.rb`:
 
@@ -918,7 +918,7 @@ class ConversationNotificationJob < ApplicationJob
 end
 ```
 
-- [ ] **Step 3: Write job tests**
+- [x] **Step 3: Write job tests**
 
 Create `test/jobs/conversation_notification_job_test.rb`:
 
@@ -960,13 +960,13 @@ class ConversationDigestNotificationJobTest < ActiveJob::TestCase
 end
 ```
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run: `rails test test/jobs/`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/jobs/conversation_notification_job.rb app/jobs/conversation_digest_notification_job.rb \
