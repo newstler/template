@@ -169,7 +169,7 @@ and AI agents don't reintroduce hardcoded models."
 - Modify: `Gemfile`
 - Modify: `Gemfile.lock`
 
-- [ ] **Step 1: Add the gem**
+- [x] **Step 1: Add the gem**
 
 Open `Gemfile`. After the line `gem "rails_error_dashboard"` (line 94), add:
 
@@ -180,25 +180,25 @@ Open `Gemfile`. After the line `gem "rails_error_dashboard"` (line 94), add:
 gem "noticed", "~> 2.0"
 ```
 
-- [ ] **Step 2: Bundle install**
+- [x] **Step 2: Bundle install**
 
 Run: `bundle install`
 
 Expected: `Bundle complete!` with noticed listed in the output. If bundle fails because of dependency conflicts, investigate — do not bypass.
 
-- [ ] **Step 3: Verify the gem is available**
+- [x] **Step 3: Verify the gem is available**
 
 Run: `bundle exec ruby -e 'require "noticed"; puts Noticed::VERSION'`
 
 Expected: prints `2.x.x` (a 2.x version string). Capture the exact version for the commit message.
 
-- [ ] **Step 4: Run test suite to confirm no regressions**
+- [x] **Step 4: Run test suite to confirm no regressions**
 
 Run: `rails test`
 
 Expected: PASS. Adding an unused gem should not break anything.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add Gemfile Gemfile.lock

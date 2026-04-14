@@ -335,6 +335,8 @@ GEM
       racc (~> 1.4)
     nokogiri (1.19.2-x86_64-linux-musl)
       racc (~> 1.4)
+    noticed (2.9.3)
+      rails (>= 6.1.0)
     ostruct (0.6.3)
     pagy (43.2.9)
       json
@@ -554,6 +556,7 @@ DEPENDENCIES
   madmin (~> 2.1)
   maxminddb
   mobility (~> 1.3)
+  noticed (~> 2.0)
   propshaft
   puma (>= 5.0)
   rails!
@@ -678,6 +681,7 @@ CHECKSUMS
   nokogiri (1.19.2-arm64-darwin) sha256=58d8ea2e31a967b843b70487a44c14c8ba1866daa1b9da9be9dbdf1b43dee205
   nokogiri (1.19.2-x86_64-linux-gnu) sha256=fa8feca882b73e871a9845f3817a72e9734c8e974bdc4fbad6e4bc6e8076b94f
   nokogiri (1.19.2-x86_64-linux-musl) sha256=93128448e61a9383a30baef041bf1f5817e22f297a1d400521e90294445069a8
+  noticed (2.9.3) sha256=9809d1100edc3ee208fbd88f4fe025a13e3b02e68c865bf705d197239ebcf3db
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
   pagy (43.2.9) sha256=6a167c8da72388883e8f4c8e29dc8f5577f9f934d8d0b704cb2f39d2cebd276e
   parallel (1.27.0) sha256=4ac151e1806b755fb4e2dc2332cbf0e54f2e24ba821ff2d3dcf86bf6dc4ae130
