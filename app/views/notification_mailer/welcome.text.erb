@@ -1,3 +1,5 @@
 <%= t("notifiers.welcome_notifier.email.heading") %>
 
 <%= t("notifiers.welcome_notifier.email.body_text", name: @user.name.presence || @user.email) %>
+
+<%= t("notifiers.welcome_notifier.email.cta") %>: <%= notifications_url %>
