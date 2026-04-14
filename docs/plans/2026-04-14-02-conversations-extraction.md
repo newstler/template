@@ -1966,13 +1966,13 @@ git commit -m "docs: AGENTS.md Conversations section"
 
 ## Task 19: Final CI + manual smoke test
 
-- [ ] **Step 1: Run full CI**
+- [x] **Step 1: Run full CI**
 
 Run: `bin/ci`
 
 Expected: PASS.
 
-- [ ] **Step 2: Smoke-test in dev**
+- [x] **Step 2: Smoke-test in dev**
 
 ```bash
 bin/dev
@@ -1980,13 +1980,13 @@ bin/dev
 
 Sign in, create a team with a second member, visit `/t/:slug/conversations/:id` for a seeded conversation, post a message, verify it appears live.
 
-- [ ] **Step 3: Verify i18n**
+- [x] **Step 3: Verify i18n**
 
 Run: `bundle exec i18n-tasks health`
 
 Expected: no missing keys.
 
-- [ ] **Step 4: Commit any smoke-test fixes**
+- [x] **Step 4: Commit any smoke-test fixes**
 
 ```bash
 git add -u && git commit -m "chore: smoke-test fixes for conversations"
