@@ -47,9 +47,8 @@ module Searchable
 
       fts = searchable_table_name
       ids = connection.select_values(
-        connection.sanitize_sql_array(
-          [ "SELECT id FROM #{fts} WHERE #{fts} MATCH ? ORDER BY bm25(#{fts})", sanitized ]
-        )
+        send(:sanitize_sql_array,
+          [ "SELECT id FROM #{fts} WHERE #{fts} MATCH ? ORDER BY bm25(#{fts})", sanitized ])
       )
 
       return none if ids.empty?
@@ -78,17 +77,21 @@ module Searchable
     placeholders = ([ "?" ] * (fields.length + 1)).join(", ")
     values = [ id ] + fields.map { |f| public_send(f).to_s }
 
-    sql = self.class.connection.sanitize_sql_array(
-      [ "INSERT OR REPLACE INTO #{fts} (#{columns}) VALUES (#{placeholders})" ] + values
+    # FTS5 auto-generates its own rowid; our string id is a plain UNINDEXED
+    # column, so INSERT OR REPLACE can't dedupe by id. Delete then insert.
+    conn = self.class.connection
+    conn.execute(self.class.send(:sanitize_sql_array, [ "DELETE FROM #{fts} WHERE id = ?", id ]))
+    conn.execute(
+      self.class.send(:sanitize_sql_array,
+        [ "INSERT INTO #{fts} (#{columns}) VALUES (#{placeholders})" ] + values)
     )
-    self.class.connection.execute(sql)
   rescue ActiveRecord::StatementInvalid => e
     Rails.logger.warn("[Searchable] index update failed for #{self.class.name}##{id}: #{e.message}")
   end
 
   def remove_from_search_index
     fts = self.class.searchable_table_name
-    sql = self.class.connection.sanitize_sql_array(
+    sql = self.class.send(:sanitize_sql_array,
       [ "DELETE FROM #{fts} WHERE id = ?", id ]
     )
     self.class.connection.execute(sql)

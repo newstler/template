@@ -252,7 +252,7 @@ git commit -m "feat: Searchable concern with FTS5-backed search class method"
 - Create: `lib/generators/searchable/install/install_generator.rb`
 - Create: `lib/generators/searchable/install/templates/migration.rb.tt`
 
-- [ ] **Step 1: Create the generator**
+- [x] **Step 1: Create the generator**
 
 Create `lib/generators/searchable/install/install_generator.rb`:
 
@@ -291,7 +291,7 @@ module Searchable
 end
 ```
 
-- [ ] **Step 2: Create the migration template**
+- [x] **Step 2: Create the migration template**
 
 Create `lib/generators/searchable/install/templates/migration.rb.tt`:
 
@@ -320,13 +320,13 @@ class Create<%= name.camelize %>Fts < ActiveRecord::Migration[8.1]
 end
 ```
 
-- [ ] **Step 3: Smoke-test the generator**
+- [x] **Step 3: Smoke-test the generator**
 
 Run: `bin/rails generate searchable:install SearchableThing name description tags`
 
 Expected: a new migration file appears in `db/migrate/`. Review its contents.
 
-- [ ] **Step 4: Run the generated migration**
+- [x] **Step 4: Run the generated migration**
 
 Run: `bin/rails db:migrate`
 
@@ -336,7 +336,7 @@ Expected: `searchable_things_fts` virtual table exists. Verify with:
 bin/rails runner 'puts ActiveRecord::Base.connection.execute("SELECT name FROM sqlite_master WHERE name = \"searchable_things_fts\"").to_a'
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add lib/generators/searchable db/migrate/*searchable_things_fts* db/schema.rb
