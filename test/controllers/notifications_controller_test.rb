@@ -33,6 +33,22 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to new_session_path
   end
 
+  test "layout shows unread count badge when user has unread notifications" do
+    WelcomeNotifier.with(record: @user).deliver(@user)
+    perform_enqueued_jobs
+    perform_enqueued_jobs
+
+    get notifications_path
+    assert_response :success
+    assert_select "[data-notifications-badge]", text: "1"
+  end
+
+  test "layout hides badge when user has no unread notifications" do
+    get notifications_path
+    assert_response :success
+    assert_select "[data-notifications-badge]", count: 0
+  end
+
   test "PATCH /notifications/:id/mark_read marks a notification as read" do
     WelcomeNotifier.with(record: @user).deliver(@user)
     perform_enqueued_jobs

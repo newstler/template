@@ -41,6 +41,19 @@
     <% else %>
       <%= render "shared/sidebar_link", path: root_path, icon: "home", label: t("shared.sidebar.home") %>
     <% end %>
+
+    <%# Notifications inbox link with unread badge %>
+    <%
+      unread_count = current_user&.notifications&.unread&.count || 0
+      is_notifications_active = current_page?(notifications_path)
+      notif_base = "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 hover:bg-white/5"
+      notif_state = is_notifications_active ? "text-white" : "text-dark-400 hover:text-dark-100"
+    %>
+    <%= link_to notifications_path, class: "#{notif_base} #{notif_state}", title: t("shared.sidebar.notifications") do %>
+      <%= inline_svg "icons/bell.svg", class: "w-5 h-5 flex-shrink-0" %>
+      <span data-sidebar-target="label" class="transition-[opacity,width] duration-300 opacity-100 whitespace-nowrap flex-1"><%= t("shared.sidebar.notifications") %></span>
+      <%= render "shared/notifications_badge" %>
+    <% end %>
   </nav>
 
   <%# Team & User section %>

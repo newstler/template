@@ -1,0 +1,9 @@
+<%# Renders a small red pill with the unread count next to the inbox link. %>
+<%# Zero-count case renders nothing. %>
+<% count = current_user&.notifications&.unread&.count || 0 %>
+<% if count > 0 %>
+  <span data-notifications-badge
+        class="inline-flex items-center justify-center px-2 py-0.5 ml-1 text-xs font-bold leading-none text-white bg-red-500 rounded-full">
+    <%= count > 99 ? "99+" : count %>
+  </span>
+<% end %>
