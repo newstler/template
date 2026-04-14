@@ -493,6 +493,100 @@ end
 
 See `.claude/rules/multilingual.md` for full conventions.
 
+## Notifications
+
+User-facing notifications via [Noticed v2](https://github.com/excid3/noticed). Database + email delivery shipped; Slack, Twilio, Vonage, web/mobile push available as opt-in adapters when a consuming app needs them.
+
+### Declaring a Notifier
+
+```ruby
+# app/notifiers/deal_confirmed_notifier.rb
+class DealConfirmedNotifier < ApplicationNotifier
+  deliver_by :email do |config|
+    config.mailer = "NotificationMailer"
+    config.method = :deal_confirmed
+    config.if     = -> { recipient.wants_notification?(kind: :deal_confirmed_notifier, channel: :email) }
+  end
+
+  notification_methods do
+    def message
+      I18n.t("notifiers.deal_confirmed_notifier.message", title: record.title)
+    end
+
+    def url
+      Rails.application.routes.url_helpers.deal_path(record)
+    end
+  end
+end
+```
+
+Subclass `ApplicationNotifier`, not `Noticed::Event` directly — the Turbo Stream broadcast hook is registered globally on `Noticed::Event` via `config/initializers/noticed_broadcasts.rb`.
+
+### Triggering a notification
+
+```ruby
+DealConfirmedNotifier.with(record: deal).deliver(recipient)
+# → creates noticed_event + noticed_notification rows (persistence is automatic in v2)
+# → renders the email via NotificationMailer#deal_confirmed (respects user preferences)
+# → broadcasts a Turbo Stream prepend to [recipient, :notifications]
+```
+
+### Reading the inbox
+
+```ruby
+current_user.notifications              # has_many :notifications via Notifiable concern
+current_user.notifications.unread       # provided by Noticed
+current_user.notifications.mark_as_read # bulk mark-read
+```
+
+### User preferences
+
+`User#notification_preferences` is a JSON column with the shape:
+
+```ruby
+{ "welcome_notifier" => { "email" => false, "database" => true } }
+```
+
+Missing keys mean opt-in (default behavior). Preferences are checked via `user.wants_notification?(kind:, channel:)` inside each Notifier's `deliver_by :if` block.
+
+### Live updates
+
+Any page that renders `<%= turbo_stream_from current_user, :notifications %>` will update live when a new notification arrives. Pages without the helper are unaffected.
+
+### Audit trail
+
+- `/madmin/noticed_events` — every event that was triggered, with its type, record, and params
+- `/madmin/noticed_notifications` — every delivery record, with recipient and read/seen state
+
+### File structure
+
+```
+app/
+├── notifiers/
+│   ├── application_notifier.rb            # Base class (subclass this, not Noticed::Event)
+│   ├── welcome_notifier.rb                # Reference notifier
+│   └── [domain notifiers]
+├── models/concerns/
+│   └── notifiable.rb                      # Recipient concern — wants_notification? helper
+├── mailers/
+│   └── notification_mailer.rb             # One method per notifier using :email delivery
+└── views/
+    ├── notification_mailer/
+    │   └── [method].{html,text}.erb       # One per notifier
+    └── notifications/
+        ├── index.html.erb                 # Inbox
+        ├── _notification.html.erb         # Row wrapper — dispatches by kind
+        └── kinds/
+            └── _[kind].html.erb           # Per-notifier UI partial
+
+config/initializers/
+└── noticed_broadcasts.rb                  # Turbo Stream broadcast hook on Noticed::Event
+```
+
+### Rule: no service-layer notification helpers
+
+Do not wrap `Notifier.with(...).deliver(recipient)` in a service method. The Notifier class *is* the service — calling it from a controller action or model callback is the pattern. If you find yourself wanting a `NotificationService`, that's a sign the Notifier class itself should absorb the logic.
+
 ## Testing
 
 Minitest + fixtures only (no RSpec, no FactoryBot):
