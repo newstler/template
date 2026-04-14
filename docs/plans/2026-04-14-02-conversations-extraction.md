@@ -1148,7 +1148,7 @@ git commit -m "feat: Teams::ConversationsController#show with participant guard"
 - Create: `app/controllers/teams/conversations/messages_controller.rb`
 - Create: `test/controllers/teams/conversations/messages_controller_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/controllers/teams/conversations/messages_controller_test.rb`:
 
@@ -1201,11 +1201,11 @@ class Teams::Conversations::MessagesControllerTest < ActionDispatch::Integration
 end
 ```
 
-- [ ] **Step 2: Run test, observe failure**
+- [x] **Step 2: Run test, observe failure**
 
 Run: `rails test test/controllers/teams/conversations/messages_controller_test.rb`
 
-- [ ] **Step 3: Create the controller**
+- [x] **Step 3: Create the controller**
 
 Create `app/controllers/teams/conversations/messages_controller.rb`:
 
@@ -1249,13 +1249,13 @@ class Teams::Conversations::MessagesController < ApplicationController
 end
 ```
 
-- [ ] **Step 4: Run test**
+- [x] **Step 4: Run test**
 
 Run: `rails test test/controllers/teams/conversations/messages_controller_test.rb`
 
 Expected: PASS (the `unprocessable_entity` test may need a `new.html.erb` template — create a minimal stub if needed).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/controllers/teams/conversations/messages_controller.rb \
