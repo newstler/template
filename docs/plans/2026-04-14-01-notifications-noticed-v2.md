@@ -219,7 +219,7 @@ in subsequent commits."
 
 **Why this task is explicit:** the template uses UUIDv7 string primary keys (see `.claude/rules/migrations.md`). Noticed's installer generates migrations that default to `bigint` primary keys and `bigint` polymorphic foreign keys. We must patch the generated migration to use `:string` ids with a `uuid7()` default, and make the polymorphic columns `type: :string`, before running it.
 
-- [ ] **Step 1: Run the Noticed installer to generate migrations**
+- [x] **Step 1: Run the Noticed installer to generate migrations**
 
 Run: `bin/rails noticed:install:migrations`
 
@@ -227,11 +227,11 @@ Expected: A new migration file appears in `db/migrate/` named `*_install_noticed
 
 Verify with: `ls db/migrate/*install_noticed*`
 
-- [ ] **Step 2: Read the generated migration**
+- [x] **Step 2: Read the generated migration**
 
 Read the file. It will create `noticed_events` and `noticed_notifications` tables. Note the current primary key configuration (bigint by default) and the polymorphic column types.
 
-- [ ] **Step 3: Patch the migration for UUIDv7**
+- [x] **Step 3: Patch the migration for UUIDv7**
 
 Rewrite the generated migration to use string primary keys with `uuid7()` defaults. The final content should be:
 
@@ -268,7 +268,7 @@ Note the critical changes from the stock Noticed migration:
 - `type: :string` on the `event` foreign key reference in `noticed_notifications`
 - `foreign_key: { to_table: :noticed_events }` to make the FK explicit
 
-- [ ] **Step 4: Run the migration**
+- [x] **Step 4: Run the migration**
 
 Run: `bin/rails db:migrate`
 
@@ -282,19 +282,19 @@ noticed_events
 noticed_notifications
 ```
 
-- [ ] **Step 5: Verify schema was updated**
+- [x] **Step 5: Verify schema was updated**
 
 Run: `grep -A 8 "create_table \"noticed_events\"" db/schema.rb`
 
 Expected: the schema entry uses `id: :string, default: -> { \"uuid7()\" }` and `t.string "record_type"`.
 
-- [ ] **Step 6: Run the full test suite**
+- [x] **Step 6: Run the full test suite**
 
 Run: `rails test`
 
 Expected: PASS. Fixtures are not yet using the new tables so this should be green.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add db/migrate/*install_noticed* db/schema.rb
