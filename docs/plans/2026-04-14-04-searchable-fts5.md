@@ -83,7 +83,7 @@ The concern is generic; we need a model to test it against. Create a dedicated t
 
 Actually: using a dedicated test-only model is cleaner than polluting `app/models/`. But Rails doesn't easily support models that exist only in test env without complicated setup. Simpler approach: use an existing model (`Article` exists in the template) or create a `SearchableThing` model in `app/models/` with a comment marking it as a demo / test fixture.
 
-- [ ] **Step 1: Create the migration**
+- [x] **Step 1: Create the migration**
 
 ```ruby
 class CreateSearchableThingsForTests < ActiveRecord::Migration[8.1]
@@ -100,7 +100,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 2: Create the model**
+- [x] **Step 2: Create the model**
 
 Create `app/models/searchable_thing.rb`:
 
@@ -115,7 +115,7 @@ end
 
 The `include Searchable` line will fail until Task 3 lands. That's expected — the test will drive Task 3.
 
-- [ ] **Step 3: Commit migration only**
+- [x] **Step 3: Commit migration only**
 
 ```bash
 git add db/migrate/*searchable_things* db/schema.rb
