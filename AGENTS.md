@@ -587,6 +587,52 @@ config/initializers/
 
 Do not wrap `Notifier.with(...).deliver(recipient)` in a service method. The Notifier class *is* the service — calling it from a controller action or model callback is the pattern. If you find yourself wanting a `NotificationService`, that's a sign the Notifier class itself should absorb the logic.
 
+## Conversations
+
+Team-scoped person-to-person messaging at `/t/:slug/conversations/:id`. Distinct from RubyLLM AI chat (`/chats`), which is user-to-LLM.
+
+### Models
+
+- `Conversation` — belongs to `Team`, optional polymorphic `subject` (e.g. a `Deal`, `Request`, or `nil` for a team-general thread)
+- `ConversationParticipant` — join model with `last_read_at` / `last_notified_at` for read/notified tracking
+- `ConversationMessage` — `content` (nullable, allows attachment-only), `body_translations` JSON, `flagged_at`, `flag_reason`, Active Storage `attachments`
+
+### Creating a conversation
+
+```ruby
+conversation = Conversation.find_or_create_for(
+  team: team,
+  subject: deal,
+  participants: [agency_user, employer_user]
+)
+```
+
+### Opt-in concerns
+
+```ruby
+class ConversationMessage < ApplicationRecord
+  include TranslatableMessage   # auto-translate content to each participant's locale
+  include ModeratableMessage    # regex + LLM moderation for contact-leak detection
+end
+```
+
+Both concerns are opt-in because they require configured models (`Setting.translation_model`, `Setting.moderation_model` — both editable at `/madmin/ai_models`). Apps that don't need them simply don't include the concerns.
+
+### Live updates
+
+`<%= turbo_stream_from @conversation %>` in the view enables live updates. Every new `ConversationMessage` is appended to `#conversation_messages` automatically via `after_create_commit :broadcast_append_to_conversation`.
+
+### Read tracking
+
+`ConversationParticipant#mark_as_read!` updates `last_read_at`. The controller calls it in `#show` so visiting the conversation marks it read. `ConversationDigestNotificationJob` throttles email digests to at most one per participant every 5 minutes.
+
+### Notification jobs
+
+- `ConversationNotificationJob` — immediate per-message email to each non-sender participant
+- `ConversationDigestNotificationJob` — debounced digest (runs 2 minutes after a message is posted, skips recipients notified in the last 5 minutes)
+
+The `ConversationMessage` model uses the digest job by default; swap to the immediate job where single-message alerts are desired.
+
 ## Testing
 
 Minitest + fixtures only (no RSpec, no FactoryBot):

@@ -1910,7 +1910,7 @@ git commit -m "docs: README Conversations section"
 **Files:**
 - Modify: `AGENTS.md`
 
-- [ ] **Step 1: Add Conversations top-level section**
+- [x] **Step 1: Add Conversations top-level section**
 
 Insert after the "## Notifications" section from Plan 01:
 
@@ -1955,7 +1955,7 @@ Both concerns are opt-in because they require configured models (`Setting.transl
 `ConversationParticipant#mark_as_read!` updates `last_read_at`. Read by `Conversation#unread_for(user)` to render an unread-count badge.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add AGENTS.md
