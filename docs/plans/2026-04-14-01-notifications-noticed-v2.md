@@ -440,13 +440,13 @@ class NotifiableTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/models/concerns/notifiable_test.rb`
 
 Expected: FAIL with `uninitialized constant Notifiable`.
 
-- [ ] **Step 3: Create the concern**
+- [x] **Step 3: Create the concern**
 
 Create `app/models/concerns/notifiable.rb`:
 
@@ -467,7 +467,7 @@ module Notifiable
 end
 ```
 
-- [ ] **Step 4: Include the concern in User**
+- [x] **Step 4: Include the concern in User**
 
 Open `app/models/user.rb`. Add `include Notifiable` right after `include Costable` at line 2:
 
@@ -480,19 +480,19 @@ class User < ApplicationRecord
   # ... rest unchanged
 ```
 
-- [ ] **Step 5: Run the concern test**
+- [x] **Step 5: Run the concern test**
 
 Run: `rails test test/models/concerns/notifiable_test.rb`
 
 Expected: PASS (all six tests).
 
-- [ ] **Step 6: Run the full test suite**
+- [x] **Step 6: Run the full test suite**
 
 Run: `rails test`
 
 Expected: PASS. Existing user tests should still pass because `Notifiable` only adds methods; it doesn't change existing ones.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/models/concerns/notifiable.rb app/models/user.rb test/models/concerns/notifiable_test.rb
@@ -514,7 +514,7 @@ until they explicitly opt out."
 
 Noticed v2 notifiers inherit from `Noticed::Event`. The template adds an `ApplicationNotifier` base class so consuming apps have a single place to add shared behavior (e.g. default URL helpers, shared `notification_methods`).
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/notifiers/application_notifier_test.rb`:
 
@@ -528,13 +528,13 @@ class ApplicationNotifierTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/notifiers/application_notifier_test.rb`
 
 Expected: FAIL with `NameError: uninitialized constant ApplicationNotifier`.
 
-- [ ] **Step 3: Create the base class**
+- [x] **Step 3: Create the base class**
 
 Create `app/notifiers/application_notifier.rb`:
 
@@ -547,19 +547,19 @@ class ApplicationNotifier < Noticed::Event
 end
 ```
 
-- [ ] **Step 4: Run the test to verify it passes**
+- [x] **Step 4: Run the test to verify it passes**
 
 Run: `rails test test/notifiers/application_notifier_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 5: Run the full suite**
+- [x] **Step 5: Run the full suite**
 
 Run: `rails test`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/notifiers/application_notifier.rb test/notifiers/application_notifier_test.rb
@@ -582,7 +582,7 @@ so shared behavior lands in one place."
 - Create: `config/locales/en/notifiers.yml`
 - Create: `config/locales/ru/notifiers.yml`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/notifiers/welcome_notifier_test.rb`:
 
@@ -632,13 +632,13 @@ Add this to `test/test_helper.rb` if not already there, inside the `ActiveSuppor
     include ActionMailer::TestHelper
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/notifiers/welcome_notifier_test.rb`
 
 Expected: FAIL — `WelcomeNotifier` does not exist.
 
-- [ ] **Step 3: Create the notifier**
+- [x] **Step 3: Create the notifier**
 
 Create `app/notifiers/welcome_notifier.rb`:
 
@@ -675,7 +675,7 @@ class WelcomeNotifier < ApplicationNotifier
 end
 ```
 
-- [ ] **Step 4: Create the mailer**
+- [x] **Step 4: Create the mailer**
 
 Create `app/mailers/notification_mailer.rb`:
 
@@ -689,7 +689,7 @@ class NotificationMailer < ApplicationMailer
 end
 ```
 
-- [ ] **Step 5: Create the mailer templates**
+- [x] **Step 5: Create the mailer templates**
 
 Create `app/views/notification_mailer/welcome.html.erb`:
 
@@ -715,7 +715,7 @@ Create `app/views/notification_mailer/welcome.text.erb`:
 <%= t("notifiers.welcome_notifier.email.cta") %>: <%= notifications_url %>
 ```
 
-- [ ] **Step 6: Create the i18n files**
+- [x] **Step 6: Create the i18n files**
 
 Create `config/locales/en/notifiers.yml`:
 
@@ -747,7 +747,7 @@ ru:
         cta: "Перейти во входящие"
 ```
 
-- [ ] **Step 7: Run the notifier test**
+- [x] **Step 7: Run the notifier test**
 
 Run: `rails test test/notifiers/welcome_notifier_test.rb`
 
@@ -758,13 +758,13 @@ If any fail:
 - Ensure `assert_emails` is available (requires `ActionMailer::TestHelper`).
 - If the i18n keys aren't found, run `bundle exec i18n-tasks missing` to verify the file paths are correct.
 
-- [ ] **Step 8: Run the full suite**
+- [x] **Step 8: Run the full suite**
 
 Run: `rails test`
 
 Expected: PASS.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add app/notifiers/welcome_notifier.rb \
@@ -798,7 +798,7 @@ English and Russian locale files added per the template's i18n rules."
 - Create: `test/controllers/notifications_controller_test.rb`
 - Modify: `config/routes.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/controllers/notifications_controller_test.rb`:
 
@@ -839,13 +839,13 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/controllers/notifications_controller_test.rb`
 
 Expected: FAIL with `NoMethodError: undefined method 'notifications_path'` or `NameError: uninitialized constant NotificationsController`.
 
-- [ ] **Step 3: Add the route**
+- [x] **Step 3: Add the route**
 
 Open `config/routes.rb`. After the `resource :onboarding` line (line 17), add:
 
@@ -862,7 +862,7 @@ Open `config/routes.rb`. After the `resource :onboarding` line (line 17), add:
   end
 ```
 
-- [ ] **Step 4: Create the controller**
+- [x] **Step 4: Create the controller**
 
 Create `app/controllers/notifications_controller.rb`:
 
@@ -899,7 +899,7 @@ class NotificationsController < ApplicationController
 end
 ```
 
-- [ ] **Step 5: Create the index view**
+- [x] **Step 5: Create the index view**
 
 Create `app/views/notifications/index.html.erb`:
 
@@ -934,7 +934,7 @@ Create `app/views/notifications/index.html.erb`:
 </div>
 ```
 
-- [ ] **Step 6: Create the notification row partial**
+- [x] **Step 6: Create the notification row partial**
 
 Create `app/views/notifications/_notification.html.erb`:
 
@@ -965,7 +965,7 @@ Create `app/views/notifications/_notification.html.erb`:
 </li>
 ```
 
-- [ ] **Step 7: Create the welcome kind partial**
+- [x] **Step 7: Create the welcome kind partial**
 
 Create `app/views/notifications/kinds/_welcome.html.erb`:
 
@@ -983,7 +983,7 @@ Create `app/views/notifications/kinds/_welcome.html.erb`:
 </div>
 ```
 
-- [ ] **Step 8: Create the locale files**
+- [x] **Step 8: Create the locale files**
 
 Create `config/locales/en/views/notifications.yml`:
 
@@ -1011,7 +1011,7 @@ ru:
       marked_all_read: "Все уведомления отмечены как прочитанные."
 ```
 
-- [ ] **Step 9: Add icons if not present**
+- [x] **Step 9: Add icons if not present**
 
 Check that `app/assets/images/icons/bell-off.svg` and `app/assets/images/icons/sparkle.svg` exist. If not, create minimal placeholders:
 
@@ -1027,19 +1027,19 @@ If `sparkle.svg` is missing, create it with:
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.39 7.36H22l-6.19 4.5 2.39 7.36L12 16.72l-6.19 4.5 2.39-7.36L2 9.36h7.61z"/></svg>
 ```
 
-- [ ] **Step 10: Run the controller test**
+- [x] **Step 10: Run the controller test**
 
 Run: `rails test test/controllers/notifications_controller_test.rb`
 
 Expected: PASS (all four tests).
 
-- [ ] **Step 11: Run the full suite**
+- [x] **Step 11: Run the full suite**
 
 Run: `rails test`
 
 Expected: PASS.
 
-- [ ] **Step 12: Commit**
+- [x] **Step 12: Commit**
 
 ```bash
 git add app/controllers/notifications_controller.rb \
@@ -1070,7 +1070,7 @@ Noticed v2 doesn't broadcast via Turbo Streams automatically. We add it via an a
 
 The simplest approach that works with Turbo's streams-from helper: create a module that Noticed notifications include, which calls `broadcast_append_to` after create.
 
-- [ ] **Step 1: Write the failing system test**
+- [x] **Step 1: Write the failing system test**
 
 Create `test/system/notifications_test.rb`:
 
@@ -1106,13 +1106,13 @@ class NotificationsTest < ApplicationSystemTestCase
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test:system test/system/notifications_test.rb`
 
 Expected: FAIL because nothing broadcasts the new notification.
 
-- [ ] **Step 3: Configure ActionCable delivery in `ApplicationNotifier`**
+- [x] **Step 3: Configure ActionCable delivery in `ApplicationNotifier`**
 
 Replace the contents of `app/notifiers/application_notifier.rb`:
 
@@ -1163,7 +1163,7 @@ end
 
 If using this alternative, delete the `deliver_by :action_cable` block from `application_notifier.rb` and keep only the comment.
 
-- [ ] **Step 4: Run the system test**
+- [x] **Step 4: Run the system test**
 
 Run: `rails test:system test/system/notifications_test.rb`
 
@@ -1174,13 +1174,13 @@ If it fails:
 - Verify `turbo_stream_from` is in `index.html.erb` (it was added in Task 7 step 5).
 - Check the test log for any broadcast errors.
 
-- [ ] **Step 5: Run the full suite**
+- [x] **Step 5: Run the full suite**
 
 Run: `rails test && rails test:system`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/notifiers/application_notifier.rb \
@@ -1206,7 +1206,7 @@ methods the notifier uses."
 - Modify: `app/javascript/controllers/index.js` (if using manual registration)
 - Modify: `test/system/notifications_test.rb` (add an interaction test)
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Append to `test/system/notifications_test.rb` before the final `end`:
 
@@ -1229,13 +1229,13 @@ Append to `test/system/notifications_test.rb` before the final `end`:
   end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test:system test/system/notifications_test.rb -n /mark_as_read/`
 
 Expected: FAIL — clicking does nothing because there's no Stimulus controller yet.
 
-- [ ] **Step 3: Create the Stimulus controller**
+- [x] **Step 3: Create the Stimulus controller**
 
 Create `app/javascript/controllers/notifications_controller.js`:
 
@@ -1273,7 +1273,7 @@ export default class extends Controller {
 }
 ```
 
-- [ ] **Step 4: Register the controller**
+- [x] **Step 4: Register the controller**
 
 If the template uses `stimulus-loading` with eager loading (default in Rails 8), the file is auto-registered by name. Verify with:
 
@@ -1286,7 +1286,7 @@ import NotificationsController from "./notifications_controller"
 application.register("notifications", NotificationsController)
 ```
 
-- [ ] **Step 5: Add a mark_read Turbo Stream response**
+- [x] **Step 5: Add a mark_read Turbo Stream response**
 
 Create `app/views/notifications/mark_read.turbo_stream.erb`:
 
@@ -1294,7 +1294,7 @@ Create `app/views/notifications/mark_read.turbo_stream.erb`:
 <%= turbo_stream.replace dom_id(@notification), partial: "notifications/notification", locals: { notification: @notification } %>
 ```
 
-- [ ] **Step 6: Update the notification partial to use `dom_id`**
+- [x] **Step 6: Update the notification partial to use `dom_id`**
 
 Open `app/views/notifications/_notification.html.erb`. Change the `<li data-notification-id="...">` to also include `id="<%= dom_id(notification) %>"` so the turbo_stream.replace has a target:
 
@@ -1311,19 +1311,19 @@ Open `app/views/notifications/_notification.html.erb`. Change the `<li data-noti
     ) %>">
 ```
 
-- [ ] **Step 7: Run the system test**
+- [x] **Step 7: Run the system test**
 
 Run: `rails test:system test/system/notifications_test.rb`
 
 Expected: PASS (both system tests).
 
-- [ ] **Step 8: Run the full suite**
+- [x] **Step 8: Run the full suite**
 
 Run: `rails test && rails test:system`
 
 Expected: PASS.
 
-- [ ] **Step 9: Commit**
+- [x] **Step 9: Commit**
 
 ```bash
 git add app/javascript/controllers/notifications_controller.js \
@@ -1348,7 +1348,7 @@ intercepted so normal navigation still works."
 - Modify: `app/controllers/application_controller.rb` (helper method)
 - Modify: `test/controllers/notifications_controller_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Append to `test/controllers/notifications_controller_test.rb` before the final `end`:
 
@@ -1369,13 +1369,13 @@ Append to `test/controllers/notifications_controller_test.rb` before the final `
   end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/controllers/notifications_controller_test.rb -n /badge/`
 
 Expected: FAIL — no badge element exists.
 
-- [ ] **Step 3: Create the badge partial**
+- [x] **Step 3: Create the badge partial**
 
 Create `app/views/shared/_notifications_badge.html.erb`:
 
@@ -1391,7 +1391,7 @@ Create `app/views/shared/_notifications_badge.html.erb`:
 <% end %>
 ```
 
-- [ ] **Step 4: Add the badge and a link to the layout**
+- [x] **Step 4: Add the badge and a link to the layout**
 
 Open `app/views/layouts/application.html.erb`. Locate the navbar section (look for user avatar or logout link). Add a notifications link that includes the badge partial:
 
@@ -1410,19 +1410,19 @@ If `bell.svg` doesn't exist, create `app/assets/images/icons/bell.svg`:
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
 ```
 
-- [ ] **Step 5: Run the test**
+- [x] **Step 5: Run the test**
 
 Run: `rails test test/controllers/notifications_controller_test.rb -n /badge/`
 
 Expected: PASS.
 
-- [ ] **Step 6: Run the full suite**
+- [x] **Step 6: Run the full suite**
 
 Run: `rails test && rails test:system`
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/views/shared/_notifications_badge.html.erb \
@@ -1445,7 +1445,7 @@ three digits."
 - Modify: `config/routes/madmin.rb`
 - Create: `test/controllers/madmin/noticed_events_controller_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/controllers/madmin/noticed_events_controller_test.rb`:
 
@@ -1485,13 +1485,13 @@ module Madmin
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/controllers/madmin/noticed_events_controller_test.rb`
 
 Expected: FAIL — `madmin_noticed_events_path` is not defined.
 
-- [ ] **Step 3: Add the Madmin routes**
+- [x] **Step 3: Add the Madmin routes**
 
 Open `config/routes/madmin.rb`. Inside the `namespace :madmin do` block, add before the `root` line:
 
@@ -1500,7 +1500,7 @@ Open `config/routes/madmin.rb`. Inside the `namespace :madmin do` block, add bef
   resources :noticed_notifications, only: [ :index, :show ]
 ```
 
-- [ ] **Step 4: Create the Madmin resource**
+- [x] **Step 4: Create the Madmin resource**
 
 Create `app/madmin/resources/noticed_event_resource.rb`:
 
@@ -1533,7 +1533,7 @@ class NoticedEventResource < Madmin::Resource
 end
 ```
 
-- [ ] **Step 5: Run the test**
+- [x] **Step 5: Run the test**
 
 Run: `rails test test/controllers/madmin/noticed_events_controller_test.rb`
 
@@ -1541,13 +1541,13 @@ Expected: PASS.
 
 If the Madmin controllers don't exist (`Madmin::NoticedEventsController`), Madmin generates them via its dynamic resource system — check the Madmin docs. If explicit controllers are needed, create them in `app/controllers/madmin/noticed_events_controller.rb` inheriting from `Madmin::ResourceController` or the project's existing Madmin base controller.
 
-- [ ] **Step 6: Run the full suite**
+- [x] **Step 6: Run the full suite**
 
 Run: `rails test`
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/madmin/resources/noticed_event_resource.rb \
@@ -1568,7 +1568,7 @@ recipients received a given event."
 - Create: `app/madmin/resources/noticed_notification_resource.rb`
 - Create: `test/controllers/madmin/noticed_notifications_controller_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/controllers/madmin/noticed_notifications_controller_test.rb`:
 
@@ -1608,13 +1608,13 @@ module Madmin
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/controllers/madmin/noticed_notifications_controller_test.rb`
 
 Expected: FAIL — routes exist from Task 11 but the resource class is missing.
 
-- [ ] **Step 3: Create the Madmin resource**
+- [x] **Step 3: Create the Madmin resource**
 
 Create `app/madmin/resources/noticed_notification_resource.rb`:
 
@@ -1647,19 +1647,19 @@ class NoticedNotificationResource < Madmin::Resource
 end
 ```
 
-- [ ] **Step 4: Run the test**
+- [x] **Step 4: Run the test**
 
 Run: `rails test test/controllers/madmin/noticed_notifications_controller_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 5: Run the full suite**
+- [x] **Step 5: Run the full suite**
 
 Run: `rails test`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/madmin/resources/noticed_notification_resource.rb \
@@ -1678,13 +1678,13 @@ notification audit trail: Event → Notification → Recipient."
 - Modify: `app/controllers/sessions_controller.rb` (or the magic-link verify action — wherever a user's first session is created)
 - Modify: `test/controllers/sessions_controller_test.rb`
 
-- [ ] **Step 1: Find where users are first created**
+- [x] **Step 1: Find where users are first created**
 
 Run: `grep -rn "User.find_or_create_by\|User.create" app/controllers/`
 
 Locate the magic-link `verify` action (likely in `app/controllers/sessions_controller.rb`). Note the exact line where a user is persisted for the first time.
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 Open `test/controllers/sessions_controller_test.rb`. Add:
 
@@ -1710,13 +1710,13 @@ Open `test/controllers/sessions_controller_test.rb`. Add:
   end
 ```
 
-- [ ] **Step 3: Run the test to verify it fails**
+- [x] **Step 3: Run the test to verify it fails**
 
 Run: `rails test test/controllers/sessions_controller_test.rb -n /WelcomeNotifier/`
 
 Expected: FAIL — no notifier is being triggered.
 
-- [ ] **Step 4: Trigger `WelcomeNotifier` on first-time user creation**
+- [x] **Step 4: Trigger `WelcomeNotifier` on first-time user creation**
 
 Open `app/controllers/sessions_controller.rb`. Find the line where a new user is created (likely in `create` or `verify`). After the user is persisted for the first time, add:
 
@@ -1726,19 +1726,19 @@ WelcomeNotifier.with(record: user).deliver(user) if user.previously_new_record?
 
 The exact placement depends on the controller structure. The key is to call it *only* when the user is new (not on every login).
 
-- [ ] **Step 5: Run the test**
+- [x] **Step 5: Run the test**
 
 Run: `rails test test/controllers/sessions_controller_test.rb -n /WelcomeNotifier/`
 
 Expected: PASS (both tests).
 
-- [ ] **Step 6: Run the full suite**
+- [x] **Step 6: Run the full suite**
 
 Run: `rails test && rails test:system`
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/controllers/sessions_controller.rb test/controllers/sessions_controller_test.rb
@@ -1758,7 +1758,7 @@ the Notifier pattern."
 - Create: `test/fixtures/noticed_events.yml`
 - Create: `test/fixtures/noticed_notifications.yml`
 
-- [ ] **Step 1: Create `noticed_events` fixture**
+- [x] **Step 1: Create `noticed_events` fixture**
 
 Create `test/fixtures/noticed_events.yml`:
 
@@ -1776,7 +1776,7 @@ welcome_for_user_one:
   updated_at: <%= 1.day.ago %>
 ```
 
-- [ ] **Step 2: Create `noticed_notifications` fixture**
+- [x] **Step 2: Create `noticed_notifications` fixture**
 
 Create `test/fixtures/noticed_notifications.yml`:
 
@@ -1795,13 +1795,13 @@ welcome_user_one:
 
 Note: `User` fixtures already use `01961a2a-c0de-7000-8000-000000000001` for `users(:one)` — verify by running `cat test/fixtures/users.yml | head -20` and adjust the recipient_id above to match the actual id of `users(:one)` in your fixtures.
 
-- [ ] **Step 3: Run the test suite to verify fixtures load**
+- [x] **Step 3: Run the test suite to verify fixtures load**
 
 Run: `rails test test/models/user_test.rb`
 
 Expected: PASS. Fixtures load without referential integrity errors.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add test/fixtures/noticed_events.yml test/fixtures/noticed_notifications.yml
@@ -1819,7 +1819,7 @@ UUIDv7 strings for referential integrity per template convention."
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Add a Features bullet**
+- [x] **Step 1: Add a Features bullet**
 
 Open `README.md`. Find the "## Features" heading. Under the "### Platform" subsection, add after the last existing bullet:
 
@@ -1832,7 +1832,7 @@ Open `README.md`. Find the "## Features" heading. Under the "### Platform" subse
   - Full audit trail in Madmin at `/madmin/noticed_events`
 ```
 
-- [ ] **Step 2: Add a Tech Stack line**
+- [x] **Step 2: Add a Tech Stack line**
 
 Find the "## Tech Stack" section. Add after the "Error Tracking" line:
 
@@ -1840,7 +1840,7 @@ Find the "## Tech Stack" section. Add after the "Error Tracking" line:
 - **Notifications**: [Noticed v2](https://github.com/excid3/noticed)
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add README.md
@@ -1854,7 +1854,7 @@ git commit -m "docs: README Notifications section + Tech Stack entry"
 **Files:**
 - Modify: `AGENTS.md`
 
-- [ ] **Step 1: Add a new top-level section to AGENTS.md**
+- [x] **Step 1: Add a new top-level section to AGENTS.md**
 
 Open `AGENTS.md`. After the "## Multilingual Content" section and before the "## Testing" section, insert a new section:
 
@@ -1955,13 +1955,13 @@ app/
 Do not wrap `Notifier.with(...).deliver(recipient)` in a service method. The Notifier class *is* the service — calling it from a controller action or model callback is the pattern. If you find yourself wanting a `NotificationService`, that's a sign the Notifier class itself should absorb the logic.
 ```
 
-- [ ] **Step 2: Run the test suite one more time**
+- [x] **Step 2: Run the test suite one more time**
 
 Run: `bin/ci`
 
 Expected: PASS — this is all docs, no code change.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add AGENTS.md
@@ -1980,13 +1980,13 @@ wrappers' rule so contributors don't reinvent it."
 **Files:**
 - (none — verification only)
 
-- [ ] **Step 1: Run full CI**
+- [x] **Step 1: Run full CI**
 
 Run: `bin/ci`
 
 Expected: PASS. All rubocop, all tests, all brakeman.
 
-- [ ] **Step 2: Manual smoke test in dev**
+- [x] **Step 2: Manual smoke test in dev**
 
 ```bash
 bin/dev
@@ -2002,13 +2002,13 @@ In the browser:
 7. Visit `/madmin/noticed_events` as an admin — you should see one event row of type `WelcomeNotifier`.
 8. Visit `/madmin/noticed_notifications` — you should see one notification row.
 
-- [ ] **Step 3: Verify i18n completeness**
+- [x] **Step 3: Verify i18n completeness**
 
 Run: `bundle exec i18n-tasks health`
 
 Expected: no missing or unused keys. If there are missing keys, add them to the relevant locale file. If there are unused keys (template fixtures), that's acceptable — document why.
 
-- [ ] **Step 4: Final commit if anything was adjusted during smoke test**
+- [x] **Step 4: Final commit if anything was adjusted during smoke test**
 
 ```bash
 git add -u
@@ -2017,7 +2017,7 @@ git commit -m "chore: smoke-test fixes for notifications primitive"
 
 Only needed if Step 2 or Step 3 surfaced anything. Otherwise, skip.
 
-- [ ] **Step 5: Push and open PR (or merge to main)**
+- [x] **Step 5: Push and open PR (or merge to main)**
 
 If working in a worktree / feature branch:
 
