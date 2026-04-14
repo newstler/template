@@ -1883,7 +1883,7 @@ git commit -m "test: verify Turbo Stream live updates for new messages"
 **Files:**
 - Modify: `README.md`
 
-- [ ] **Step 1: Add Features bullet**
+- [x] **Step 1: Add Features bullet**
 
 Under `## Features` → `### Platform`, add:
 
@@ -1896,7 +1896,7 @@ Under `## Features` → `### Platform`, add:
   - Email digests grouped by conversation
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add README.md

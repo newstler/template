@@ -57,6 +57,13 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Per-kind, per-channel user preferences
   - Ready for Slack, SMS, web/mobile push as opt-in adapters
   - Full audit trail in Madmin at `/madmin/noticed_events`
+- **Team Messaging** (Conversations)
+  - Team-scoped person-to-person chat with attachments
+  - Polymorphic `subject` — attach conversations to any record
+  - Live updates via Turbo Streams
+  - Opt-in message translation (`TranslatableMessage` concern)
+  - Opt-in contact-leak moderation (`ModeratableMessage` concern)
+  - Email digests grouped by conversation with anti-spam throttling
 - **Vanilla Rails** approach — no unnecessary abstractions
 
 ## Getting Started
