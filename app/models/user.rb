@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include Costable
+  include Notifiable
 
   has_one_attached :avatar
 

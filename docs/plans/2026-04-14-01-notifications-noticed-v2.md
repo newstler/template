@@ -397,7 +397,7 @@ an empty hash meaning 'all channels on' — the Notifiable concern
 - Create: `test/models/concerns/notifiable_test.rb`
 - Modify: `app/models/user.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/models/concerns/notifiable_test.rb`:
 
