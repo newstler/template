@@ -1,6 +1,6 @@
 # Plan 03: Currencies + Countries
 
-> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.
+> **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development (recommended) or superpowers:executing-plans to implement this plan task-by-task. Steps use checkbox (`- [x]`) syntax for tracking.
 
 **Depends on:** Plan 01 (Notifications) merged. Plan 02 (Conversations) is independent but recommended first to keep PRs small. Plan 04+ (Searchable, Embeddable, Dashboards) *depend on this plan* because the dashboard `kpi_card` helper reads `Current.currency`.
 
@@ -88,7 +88,7 @@ git commit -m "feat: add money, money-currencylayer-bank, countries gems"
 
 ## Task 2: Configure Money bank initializer
 
-- [ ] **Step 1: Create the initializer**
+- [x] **Step 1: Create the initializer**
 
 Create `config/initializers/money.rb`:
 
@@ -119,13 +119,13 @@ end
 Money.default_bank = bank
 ```
 
-- [ ] **Step 2: Restart the dev server and verify no boot errors**
+- [x] **Step 2: Restart the dev server and verify no boot errors**
 
 Run: `bin/rails runner 'puts Money.default_bank.class.name'`
 
 Expected: `Money::Bank::CurrencylayerBank`.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add config/initializers/money.rb
@@ -136,7 +136,7 @@ git commit -m "feat: configure Money bank with CurrencyLayer provider and file c
 
 ## Task 3: Add Setting keys for currency configuration
 
-- [ ] **Step 1: Create migration**
+- [x] **Step 1: Create migration**
 
 ```bash
 bin/rails generate migration AddCurrencyKeysToSettings currencylayer_api_key:string default_currency:string default_country_code:string
@@ -156,7 +156,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 2: Add keys to ALLOWED_KEYS and readers**
+- [x] **Step 2: Add keys to ALLOWED_KEYS and readers**
 
 Open `app/models/setting.rb`. Add `:currencylayer_api_key`, `:default_currency`, `:default_country_code` to `ALLOWED_KEYS`. Add class readers:
 
@@ -170,13 +170,13 @@ def self.default_country_code
 end
 ```
 
-- [ ] **Step 3: Run tests**
+- [x] **Step 3: Run tests**
 
 Run: `rails test test/models/setting_test.rb`
 
 Expected: PASS (pre-existing tests) plus any new column is accessible.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/models/setting.rb db/migrate/*currency_keys_to_settings* db/schema.rb
@@ -187,7 +187,7 @@ git commit -m "feat: settings for currencylayer_api_key, default_currency, defau
 
 ## Task 4: Add currency columns to users and teams
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Append to `test/models/user_test.rb`:
 
@@ -215,11 +215,11 @@ Append to `test/models/team_test.rb`:
   end
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 Run: `rails test test/models/user_test.rb test/models/team_test.rb`
 
-- [ ] **Step 3: Create migration**
+- [x] **Step 3: Create migration**
 
 ```ruby
 class AddCurrencyFieldsToTeamsAndUsers < ActiveRecord::Migration[8.1]
@@ -232,7 +232,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 4: Add validations on User**
+- [x] **Step 4: Add validations on User**
 
 Open `app/models/user.rb`. After the `validates :email` line, add:
 
@@ -242,13 +242,13 @@ validates :preferred_currency, inclusion: {
 }, allow_nil: true
 ```
 
-- [ ] **Step 5: Run tests**
+- [x] **Step 5: Run tests**
 
 Note: `CurrencyConvertible` doesn't exist yet — the test will fail with `NameError`. Skip this step until Task 5 lands, or add a temporary stub constant. Recommendation: **proceed to Task 5 first**, then return to Step 5 here.
 
 Actually, simpler: invert the order. Do Task 5 first, then come back and complete this task. Re-number if needed.
 
-- [ ] **Step 6: Commit migration and fixtures only** (finalize after Task 5)
+- [x] **Step 6: Commit migration and fixtures only** (finalize after Task 5)
 
 ```bash
 git add db/migrate/*currency_fields* db/schema.rb
@@ -261,21 +261,21 @@ Validation and tests will be finalized in Task 5.
 
 ## Task 5: Create CurrencyConvertible concern (lifted from sailing_plus)
 
-- [ ] **Step 1: Read the sailing_plus source**
+- [x] **Step 1: Read the sailing_plus source**
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/models/concerns/currency_convertible.rb` top to bottom. Note the `POPULAR_CURRENCIES`, `SUPPORTED_CURRENCIES`, `CURRENCY_NAMES`, `COUNTRY_CURRENCY` constants, and the `convert_amount` class method.
 
-- [ ] **Step 2: Copy verbatim to template**
+- [x] **Step 2: Copy verbatim to template**
 
 Create `app/models/concerns/currency_convertible.rb` with the full contents of the sailing_plus version. The concern is already domain-agnostic — no edits needed.
 
-- [ ] **Step 3: Verify it loads**
+- [x] **Step 3: Verify it loads**
 
 Run: `bin/rails runner 'puts CurrencyConvertible::SUPPORTED_CURRENCIES.size'`
 
 Expected: a number around 73 (matching sailing_plus).
 
-- [ ] **Step 4: Write concern test**
+- [x] **Step 4: Write concern test**
 
 Create `test/models/concerns/currency_convertible_test.rb`:
 
@@ -299,7 +299,7 @@ class CurrencyConvertibleTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 5: Complete Task 4's validation step**
+- [x] **Step 5: Complete Task 4's validation step**
 
 Now return to Task 4 Step 4 and complete it — the validation references `CurrencyConvertible::SUPPORTED_CURRENCIES` which now exists.
 
@@ -307,7 +307,7 @@ Run: `rails test test/models/user_test.rb test/models/team_test.rb test/models/c
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/models/concerns/currency_convertible.rb \
@@ -321,7 +321,7 @@ git commit -m "feat: CurrencyConvertible concern lifted from sailing_plus"
 
 ## Task 6: Port currency helpers to ApplicationHelper
 
-- [ ] **Step 1: Read sailing_plus helpers**
+- [x] **Step 1: Read sailing_plus helpers**
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/helpers/application_helper.rb`. Copy the following methods into the template's `app/helpers/application_helper.rb`:
 
@@ -341,7 +341,7 @@ end
 
 `number_with_delimiter` already uses `I18n.t("number.format.delimiter")`, so this gives per-locale formatting for free.
 
-- [ ] **Step 2: Write helper tests**
+- [x] **Step 2: Write helper tests**
 
 Create `test/helpers/application_helper_test.rb`:
 
@@ -380,13 +380,13 @@ class ApplicationHelperTest < ActionView::TestCase
 end
 ```
 
-- [ ] **Step 3: Copy currency locale files**
+- [x] **Step 3: Copy currency locale files**
 
 Copy `/Users/yurisidorov/Code/my/ruby/sailing_plus/config/locales/en/currencies.yml` to `config/locales/en/currencies.yml`.
 
 Create `config/locales/ru/currencies.yml` with Russian translations of the 72 currency names. Use the same key structure. For a fast start, translate the 17 `POPULAR_CURRENCIES` first (USD, EUR, GBP, CHF, NOK, SEK, DKK, PLN, CZK, HUF, RON, BGN, HRK, TRY, RUB, UAH) and leave the rest as English fallbacks — `i18n-tasks` will flag the gaps.
 
-- [ ] **Step 4: Add ru locale to number formatting**
+- [x] **Step 4: Add ru locale to number formatting**
 
 Ensure `config/locales/ru.yml` has:
 
@@ -400,13 +400,13 @@ ru:
 
 If the file doesn't exist or lacks this, add it.
 
-- [ ] **Step 5: Run helper tests**
+- [x] **Step 5: Run helper tests**
 
 Run: `rails test test/helpers/application_helper_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/helpers/application_helper.rb \
@@ -421,17 +421,17 @@ git commit -m "feat: port currency helpers and locale files from sailing_plus"
 
 ## Task 7: Port JS helper and Stimulus controller
 
-- [ ] **Step 1: Copy**
+- [x] **Step 1: Copy**
 
 Copy `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/javascript/helpers/currency.js` → `app/javascript/helpers/currency.js`.
 
 Copy `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/javascript/controllers/currency_select_controller.js` → `app/javascript/controllers/currency_select_controller.js`.
 
-- [ ] **Step 2: Pin in importmap if needed**
+- [x] **Step 2: Pin in importmap if needed**
 
 Check `config/importmap.rb`. If the helper needs pinning (because `app/javascript/helpers/` isn't auto-loaded), add the pin.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add app/javascript/helpers/currency.js app/javascript/controllers/currency_select_controller.js config/importmap.rb
@@ -442,15 +442,15 @@ git commit -m "feat: port currency JS helper and Stimulus controller from sailin
 
 ## Task 8: Create `_currency_amount.html.erb` shared partial
 
-- [ ] **Step 1: Copy**
+- [x] **Step 1: Copy**
 
 Copy `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/views/shared/_currency_amount.html.erb` → `app/views/shared/_currency_amount.html.erb`. Review for any `sailing-`, `adventure-`, or domain-specific CSS classes and generalize them to template OKLCH theme tokens.
 
-- [ ] **Step 2: Smoke-test in dev**
+- [x] **Step 2: Smoke-test in dev**
 
 Render the partial in a test page (e.g., `app/views/home/index.html.erb`) with dummy values to verify it looks right.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add app/views/shared/_currency_amount.html.erb
@@ -461,7 +461,7 @@ git commit -m "feat: shared _currency_amount partial from sailing_plus"
 
 ## Task 9: `Current.currency` and `detect_currency` in ApplicationController
 
-- [ ] **Step 1: Add attribute to Current**
+- [x] **Step 1: Add attribute to Current**
 
 Open `app/models/current.rb` and add:
 
@@ -469,7 +469,7 @@ Open `app/models/current.rb` and add:
 attribute :currency
 ```
 
-- [ ] **Step 2: Add detection to ApplicationController**
+- [x] **Step 2: Add detection to ApplicationController**
 
 Open `app/controllers/application_controller.rb`. Add a `before_action :set_currency` and the method:
 
@@ -503,7 +503,7 @@ def detect_currency
 end
 ```
 
-- [ ] **Step 3: Write integration test**
+- [x] **Step 3: Write integration test**
 
 Create `test/controllers/currency_detection_test.rb`:
 
@@ -529,13 +529,13 @@ end
 
 Note: asserting `Current.currency` from an integration test is tricky. A pragmatic approach: add a test helper that renders `Current.currency` into the response in test env, or use `Current.currency` directly via `ActiveSupport::CurrentAttributes::TestHelper`. Simplest for this plan: assert that the response status is 200 and trust the unit tests on `detect_currency` logic.
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 Run: `rails test`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/models/current.rb app/controllers/application_controller.rb test/controllers/currency_detection_test.rb
@@ -546,7 +546,7 @@ git commit -m "feat: Current.currency with detection chain (user/cookie/IP/team/
 
 ## Task 10: RefreshCurrencyRatesJob (daily recurring)
 
-- [ ] **Step 1: Create the job**
+- [x] **Step 1: Create the job**
 
 Create `app/jobs/refresh_currency_rates_job.rb`:
 
@@ -567,7 +567,7 @@ class RefreshCurrencyRatesJob < ApplicationJob
 end
 ```
 
-- [ ] **Step 2: Schedule via Solid Queue recurring**
+- [x] **Step 2: Schedule via Solid Queue recurring**
 
 Open `config/recurring.yml` (create if missing). Add:
 
@@ -578,7 +578,7 @@ production:
     schedule: every day at 04:00 UTC
 ```
 
-- [ ] **Step 3: Write test**
+- [x] **Step 3: Write test**
 
 Create `test/jobs/refresh_currency_rates_job_test.rb`:
 
@@ -595,7 +595,7 @@ end
 
 Requires mocha or similar stub gem, or rewrite to set `Setting`'s value directly via the existing fixture.
 
-- [ ] **Step 4: Run and commit**
+- [x] **Step 4: Run and commit**
 
 Run: `rails test test/jobs/refresh_currency_rates_job_test.rb`
 
@@ -608,7 +608,7 @@ git commit -m "feat: daily RefreshCurrencyRatesJob"
 
 ## Task 11: Add country columns to users and teams
 
-- [ ] **Step 1: Write failing test**
+- [x] **Step 1: Write failing test**
 
 Append to `test/models/user_test.rb`:
 
@@ -639,9 +639,9 @@ Append to `test/models/team_test.rb`:
   end
 ```
 
-- [ ] **Step 2: Run, observe failure**
+- [x] **Step 2: Run, observe failure**
 
-- [ ] **Step 3: Create migration**
+- [x] **Step 3: Create migration**
 
 ```ruby
 class AddCountryCodesToTeamsAndUsers < ActiveRecord::Migration[8.1]
@@ -654,7 +654,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 4: Create `Countryable` concern**
+- [x] **Step 4: Create `Countryable` concern**
 
 Create `app/models/concerns/countryable.rb`:
 
@@ -683,7 +683,7 @@ module Countryable
 end
 ```
 
-- [ ] **Step 5: Include in User and Team**
+- [x] **Step 5: Include in User and Team**
 
 Open `app/models/user.rb`:
 
@@ -699,7 +699,7 @@ include Countryable
 countryable :country_code
 ```
 
-- [ ] **Step 6: Write concern test**
+- [x] **Step 6: Write concern test**
 
 Create `test/models/concerns/countryable_test.rb`:
 
@@ -735,13 +735,13 @@ class CountryableTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 7: Run tests**
+- [x] **Step 7: Run tests**
 
 Run: `rails test test/models/concerns/countryable_test.rb test/models/user_test.rb test/models/team_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add db/migrate/*country_codes* db/schema.rb \
@@ -756,7 +756,7 @@ git commit -m "feat: Countryable concern + country columns on users and teams"
 
 ## Task 12: Country helpers in ApplicationHelper
 
-- [ ] **Step 1: Add helpers**
+- [x] **Step 1: Add helpers**
 
 Append to `app/helpers/application_helper.rb`:
 
@@ -791,7 +791,7 @@ def country_options_for_select(selected = nil, include_blank: true, countries: n
 end
 ```
 
-- [ ] **Step 2: Write tests**
+- [x] **Step 2: Write tests**
 
 Append to `test/helpers/application_helper_test.rb`:
 
@@ -810,7 +810,7 @@ Append to `test/helpers/application_helper_test.rb`:
   end
 ```
 
-- [ ] **Step 3: Run and commit**
+- [x] **Step 3: Run and commit**
 
 Run: `rails test test/helpers/application_helper_test.rb`
 
@@ -823,7 +823,7 @@ git commit -m "feat: country helpers (name, flag, options_for_select)"
 
 ## Task 13: `_country_select` partial and Stimulus controller
 
-- [ ] **Step 1: Create the partial**
+- [x] **Step 1: Create the partial**
 
 Create `app/views/shared/_country_select.html.erb`:
 
@@ -848,7 +848,7 @@ Create `app/views/shared/_country_select.html.erb`:
 </div>
 ```
 
-- [ ] **Step 2: Create Stimulus controller**
+- [x] **Step 2: Create Stimulus controller**
 
 Create `app/javascript/controllers/country_select_controller.js`:
 
@@ -870,7 +870,7 @@ export default class extends Controller {
 }
 ```
 
-- [ ] **Step 3: Add locale strings**
+- [x] **Step 3: Add locale strings**
 
 Append to `config/locales/en/views/shared.yml` (create if missing):
 
@@ -890,7 +890,7 @@ ru:
       search_placeholder: "Поиск стран..."
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/views/shared/_country_select.html.erb \
@@ -909,13 +909,13 @@ git commit -m "feat: shared country_select partial with Stimulus filter"
 - Modify: `app/controllers/teams/settings_controller.rb` (permit new params)
 - Modify: `app/controllers/profiles_controller.rb` (permit new params)
 
-- [ ] **Step 1: Permit new params in controllers**
+- [x] **Step 1: Permit new params in controllers**
 
 Add `:default_currency, :country_code` to the Team settings strong params.
 
 Add `:preferred_currency, :residence_country_code` to the User profile strong params.
 
-- [ ] **Step 2: Add form fields to team settings view**
+- [x] **Step 2: Add form fields to team settings view**
 
 Inside the form, add:
 
@@ -931,7 +931,7 @@ Inside the form, add:
 </div>
 ```
 
-- [ ] **Step 3: Add to user profile view**
+- [x] **Step 3: Add to user profile view**
 
 ```erb
 <div>
@@ -945,7 +945,7 @@ Inside the form, add:
 </div>
 ```
 
-- [ ] **Step 4: Add locale keys**
+- [x] **Step 4: Add locale keys**
 
 Add to `config/locales/en/views/teams/settings.yml`:
 
@@ -960,7 +960,7 @@ en:
 
 Same shape for `ru/` and for the profile view.
 
-- [ ] **Step 5: Write a system test**
+- [x] **Step 5: Write a system test**
 
 Create `test/system/team_settings_currency_country_test.rb`:
 
@@ -998,7 +998,7 @@ class TeamSettingsCurrencyCountryTest < ApplicationSystemTestCase
 end
 ```
 
-- [ ] **Step 6: Run and commit**
+- [x] **Step 6: Run and commit**
 
 Run: `rails test:system test/system/team_settings_currency_country_test.rb`
 
@@ -1016,7 +1016,7 @@ git commit -m "feat: currency and country editing in team settings and user prof
 
 ## Task 15: README.md update
 
-- [ ] **Step 1: Add Features bullet**
+- [x] **Step 1: Add Features bullet**
 
 Under `## Features` → `### Platform`:
 
@@ -1035,7 +1035,7 @@ Under Tech Stack:
 - **Countries**: `countries` (iso3166)
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add README.md
@@ -1046,7 +1046,7 @@ git commit -m "docs: README Currencies + Countries section"
 
 ## Task 16: AGENTS.md update + final CI + PR
 
-- [ ] **Step 1: Add AGENTS.md section**
+- [x] **Step 1: Add AGENTS.md section**
 
 Add after Conversations:
 
@@ -1090,18 +1090,16 @@ Partial: `<%= render "shared/country_select", form: f, method: :country_code %>`
 Currency codes are always ISO 4217 strings (3 uppercase letters). Country codes are always ISO 3166 alpha-2 (2 uppercase letters). Monetary amounts in the database are always integer cents.
 ```
 
-- [ ] **Step 2: Run full CI**
+- [x] **Step 2: Run full CI**
 
 Run: `bin/ci`
 
-- [ ] **Step 3: Commit and PR**
+- [x] **Step 3: Commit AGENTS.md** (push/PR deferred — left to the user)
 
 ```bash
 git add AGENTS.md
 git commit -m "docs: AGENTS.md Currencies + Countries section"
-git push -u origin feature/currencies-and-countries
-gh pr create --title "feat: currencies and countries primitive" \
-             --body "Implements docs/specs/template-improvements.md §6 per plan 03."
+# git push and gh pr create intentionally deferred
 ```
 
 ---

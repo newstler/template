@@ -82,6 +82,7 @@ npx @anthropic-ai/mcp-inspector
 |------|-------------|---------------|
 | `list_teams` | List user's teams | Team + User |
 | `show_team` | Get team details with members | Team + User |
+| `update_team` | Update team name/currency/country | Team + User (admin) |
 | `invite_member` | Invite user to team | Team + User (admin) |
 | `list_chats` | List user's chats in team | Team + User |
 | `show_chat` | Get chat with messages | Team + User |
@@ -94,7 +95,7 @@ npx @anthropic-ai/mcp-inspector
 | `show_model` | Get model details | None |
 | `refresh_models` | Sync models from providers | Admin |
 | `show_current_user` | Get current user info | Team + User |
-| `update_current_user` | Update profile | Team + User |
+| `update_current_user` | Update profile (name, locale, preferred_currency, residence_country_code) | Team + User |
 | `show_subscription` | Get team subscription status | Team + User (admin) |
 | `list_prices` | List available subscription prices | None |
 | `create_checkout` | Create Stripe Checkout session URL | Team + User (admin) |
@@ -641,6 +642,49 @@ Both concerns are opt-in because they require configured models (`Setting.transl
 - `ConversationDigestNotificationJob` — debounced digest (runs 2 minutes after a message is posted, skips recipients notified in the last 5 minutes)
 
 The `ConversationMessage` model uses the digest job by default; swap to the immediate job where single-message alerts are desired.
+
+## Currencies + Countries
+
+Every team-scoped app uses the same primitives.
+
+### Money
+
+- `CurrencyConvertible` concern holds constants (`SUPPORTED_CURRENCIES`, `POPULAR_CURRENCIES`, `CURRENCY_NAMES`, `COUNTRY_CURRENCY`) and a `convert_amount(cents, from, to)` helper backed by Money's CurrencyLayer bank.
+- `Current.currency` is set on every request via the detection chain:
+  1. `current_user.preferred_currency`
+  2. Signed cookie `tmpl_currency`
+  3. IP → country → currency mapping via `CurrencyConvertible::COUNTRY_CURRENCY`
+  4. `current_team.default_currency`
+  5. `Setting.default_currency` (platform default)
+- Daily `RefreshCurrencyRatesJob` (recurring, 04:00 UTC) warms `Money.default_bank`'s file cache so no request blocks on a CurrencyLayer API call.
+- `format_amount(value)` uses the current locale's delimiter (English `1,000,000`, Russian `1 000 000`).
+- Settings editable in Madmin at `/madmin/ai_models`: `currencylayer_api_key`, `default_currency`, `default_country_code`.
+
+### Country
+
+```ruby
+class Team < ApplicationRecord
+  include Countryable
+  countryable :country_code
+end
+
+team.country        # => ISO3166::Country instance or nil
+team.country_name   # => localized name
+team.country_flag   # => emoji flag ("🇩🇪")
+```
+
+Helpers: `country_name(code)`, `country_flag(code)`, `country_options_for_select(selected, include_blank:, countries:)`.
+
+Partial: `<%= render "shared/country_select", form: f, method: :country_code %>` for a searchable dropdown with flag emojis.
+
+### MCP tools
+
+- `update_current_user_tool` accepts `preferred_currency` and `residence_country_code`.
+- `update_team_tool` (admin only) accepts `name`, `default_currency`, `country_code`.
+
+### Rule
+
+Currency codes are always ISO 4217 strings (3 uppercase letters). Country codes are always ISO 3166 alpha-2 (2 uppercase letters). Monetary amounts in the database are always integer cents.
 
 ## Testing
 
