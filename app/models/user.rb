@@ -7,6 +7,8 @@ class User < ApplicationRecord
   has_many :chats, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :teams, through: :memberships
+  has_many :conversation_participants, dependent: :destroy
+  has_many :conversations, through: :conversation_participants
 
   attribute :remove_avatar, :boolean, default: false
   after_save :purge_avatar, if: :remove_avatar

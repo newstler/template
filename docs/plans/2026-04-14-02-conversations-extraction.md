@@ -252,7 +252,7 @@ git commit -m "feat: Conversation model with team scoping and polymorphic subjec
 - Create: `test/models/conversation_participant_test.rb`
 - Modify: `app/models/user.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/models/conversation_participant_test.rb`:
 
@@ -300,13 +300,13 @@ class ConversationParticipantTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/models/conversation_participant_test.rb`
 
 Expected: FAIL.
 
-- [ ] **Step 3: Create the migration**
+- [x] **Step 3: Create the migration**
 
 Run: `bin/rails generate migration CreateConversationParticipants`
 
@@ -327,11 +327,11 @@ class CreateConversationParticipants < ActiveRecord::Migration[8.1]
 end
 ```
 
-- [ ] **Step 4: Run the migration**
+- [x] **Step 4: Run the migration**
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 5: Create the model**
+- [x] **Step 5: Create the model**
 
 Create `app/models/conversation_participant.rb`:
 
@@ -356,7 +356,7 @@ class ConversationParticipant < ApplicationRecord
 end
 ```
 
-- [ ] **Step 6: Add `has_many :conversation_participants` to `User`**
+- [x] **Step 6: Add `has_many :conversation_participants` to `User`**
 
 Open `app/models/user.rb`. Add:
 
@@ -365,13 +365,13 @@ has_many :conversation_participants, dependent: :destroy
 has_many :conversations, through: :conversation_participants
 ```
 
-- [ ] **Step 7: Run the test**
+- [x] **Step 7: Run the test**
 
 Run: `rails test test/models/conversation_participant_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add db/migrate/*conversation_participants* db/schema.rb \
