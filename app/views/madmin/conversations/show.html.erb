@@ -1,0 +1,128 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= resource.display_name(@record) %>
+  </h1>
+</header>
+
+<% participants = @record.conversation_participants %>
+<% messages = @record.conversation_messages %>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-6">
+    <div class="w-16 h-16 rounded-2xl bg-dark-700 flex items-center justify-center">
+      <%= inline_svg "icons/chat.svg", class: "w-8 h-8 text-dark-300" %>
+    </div>
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.title.presence || "Conversation #{@record.id[0, 8]}..." %></h2>
+      <p class="text-dark-500 text-sm mt-1">
+        in <%= link_to @record.team.name, "/madmin/teams/#{@record.team_id}", class: "text-accent-400 hover:text-accent-300" %>
+        <% if @record.subject_type.present? %>
+          &middot; re: <span class="text-dark-300"><%= @record.subject_type %> #<%= @record.subject_id.to_s[0, 8] %></span>
+        <% end %>
+      </p>
+      <p class="text-dark-500 text-sm mt-1">Created <%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Participants</div>
+    <div class="text-3xl font-bold text-dark-100"><%= participants.size %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Messages</div>
+    <div class="text-3xl font-bold text-dark-100"><%= messages.size %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Last Activity</div>
+    <div class="text-lg font-bold text-dark-100"><%= @record.updated_at.strftime("%-d %b %Y %H:%M") %></div>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Participants (<%= participants.size %>)</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Last Read</th>
+          <th>Last Notified</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% participants.each do |cp| %>
+          <tr>
+            <td>
+              <%= link_to "/madmin/users/#{cp.user_id}", class: "flex items-center gap-3" do %>
+                <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(cp.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
+                <div>
+                  <div class="font-medium"><%= cp.user.name.presence || "Unnamed" %></div>
+                  <div class="text-xs text-dark-500"><%= cp.user.email %></div>
+                </div>
+              <% end %>
+            </td>
+            <td class="text-sm">
+              <% if cp.last_read_at %>
+                <%= cp.last_read_at.strftime("%-d %b %Y %H:%M") %>
+              <% else %>
+                <span class="text-dark-500">Never</span>
+              <% end %>
+            </td>
+            <td class="text-sm">
+              <% if cp.last_notified_at %>
+                <%= cp.last_notified_at.strftime("%-d %b %Y %H:%M") %>
+              <% else %>
+                <span class="text-dark-500">Never</span>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card-bg">
+  <div class="p-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Messages (<%= messages.size %>)</h2>
+  </div>
+  <div class="p-6 max-h-[600px] overflow-y-auto">
+    <div class="max-w-3xl mx-auto space-y-4">
+      <% messages.sort_by(&:created_at).each do |message| %>
+        <div class="flex gap-3">
+          <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(message.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full flex-shrink-0 mt-1" alt="">
+          <div class="flex-1 min-w-0">
+            <div class="flex items-baseline gap-2">
+              <%= link_to "/madmin/users/#{message.user_id}", class: "font-medium text-dark-200 hover:text-dark-100 text-sm" do %>
+                <%= message.user.name.presence || message.user.email %>
+              <% end %>
+              <span class="text-xs text-dark-500"><%= message.created_at.strftime("%-d %b %Y %H:%M") %></span>
+              <% if message.flagged_at.present? %>
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/15 text-red-400">Flagged</span>
+              <% end %>
+            </div>
+            <div class="mt-1 text-dark-300 text-sm whitespace-pre-wrap"><%= message.content %></div>
+            <% if message.attachments.any? %>
+              <div class="mt-2 flex flex-wrap gap-2">
+                <% message.attachments.each do |attachment| %>
+                  <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-dark-700 text-xs text-dark-300">
+                    <%= inline_svg "icons/paperclip.svg", class: "w-3 h-3" %>
+                    <%= attachment.filename %>
+                  </span>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

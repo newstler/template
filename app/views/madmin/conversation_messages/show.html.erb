@@ -1,0 +1,159 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to "Conversation Messages", resource.index_path %>
+    /
+    <%= resource.display_name(@record) %>
+  </h1>
+</header>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-4">
+    <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.user.email.downcase.strip) %>?s=48&d=mp" class="w-12 h-12 rounded-full" alt="">
+    <div class="flex-1">
+      <div class="flex items-center gap-3">
+        <%= link_to "/madmin/users/#{@record.user_id}", class: "text-lg font-bold text-dark-100 hover:text-dark-50" do %>
+          <%= @record.user.name.presence || @record.user.email %>
+        <% end %>
+        <% if @record.flagged_at.present? %>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/15 text-red-400">
+            Flagged
+          </span>
+        <% end %>
+      </div>
+      <p class="text-dark-500 text-sm mt-1">
+        in <%= link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...", "/madmin/conversations/#{@record.conversation_id}", class: "text-accent-400 hover:text-accent-300") %>
+        &middot; <%= @record.conversation.team.name %>
+      </p>
+      <p class="text-dark-500 text-sm"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Author</div>
+    <div class="text-lg font-bold text-dark-100"><%= @record.user.name.presence || @record.user.email %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Conversation</div>
+    <%= link_to "/madmin/conversations/#{@record.conversation_id}", class: "text-lg font-bold text-accent-400 hover:text-accent-300" do %>
+      <%= @record.conversation.title.presence || "Conv #{@record.conversation_id[0, 8]}..." %>
+    <% end %>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Attachments</div>
+    <div class="text-3xl font-bold text-dark-100"><%= @record.attachments.size %></div>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Content</h2>
+  </div>
+  <div class="p-5">
+    <% if @record.content.present? %>
+      <div class="text-dark-200 whitespace-pre-wrap"><%= @record.content %></div>
+    <% else %>
+      <p class="text-dark-500 italic">No text content (attachment-only message)</p>
+    <% end %>
+  </div>
+</div>
+
+<% if @record.flagged_at.present? %>
+<div class="card-bg overflow-hidden mb-6 ring-1 ring-red-500/30">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-red-400">Moderation Flag</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">Flagged At</th>
+          <td><%= @record.flagged_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Reason</th>
+          <td><%= @record.flag_reason.presence || "No reason provided" %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
+<% if @record.body_translations.present? && @record.body_translations.any? %>
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Translations</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Locale</th>
+          <th>Translation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @record.body_translations.each do |locale, translation| %>
+          <tr>
+            <td>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-600 text-dark-300">
+                <%= locale.upcase %>
+              </span>
+            </td>
+            <td class="text-dark-200"><%= translation %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
+<% if @record.attachments.any? %>
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Attachments (<%= @record.attachments.size %>)</h2>
+  </div>
+  <div class="p-5">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+      <% @record.attachments.each do |attachment| %>
+        <div class="flex items-center gap-3 p-3 bg-dark-700/50 rounded-lg">
+          <%= inline_svg "icons/paperclip.svg", class: "w-5 h-5 text-dark-400 flex-shrink-0" %>
+          <div class="min-w-0 flex-1">
+            <div class="font-medium text-dark-200 text-sm truncate"><%= attachment.filename %></div>
+            <div class="text-xs text-dark-500"><%= attachment.content_type %> &middot; <%= number_to_human_size(attachment.byte_size) %></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+<% end %>
+
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">ID</th>
+          <td class="font-mono text-sm"><%= @record.id %></td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Updated</th>
+          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

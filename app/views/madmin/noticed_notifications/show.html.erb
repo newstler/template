@@ -1,0 +1,139 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to "Notifications", resource.index_path %>
+    /
+    <%= @record.type.to_s.sub("Notifier::Notification", "").presence || @record.type.to_s %>
+  </h1>
+</header>
+
+<% type_label = @record.type.to_s.sub("Notifier::Notification", "").presence || @record.type.to_s %>
+<% recipient = @record.recipient %>
+<% event = @record.event %>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-6">
+    <div class="w-16 h-16 rounded-2xl <%= @record.read_at ? 'bg-emerald-500/15' : 'bg-amber-500/15' %> flex items-center justify-center">
+      <%= inline_svg "icons/bell.svg", class: "w-8 h-8 #{@record.read_at ? 'text-emerald-400' : 'text-amber-400'}" %>
+    </div>
+    <div class="flex-1">
+      <div class="flex items-center gap-3">
+        <h2 class="text-2xl font-bold text-dark-100"><%= type_label %></h2>
+        <% if @record.read_at %>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Read</span>
+        <% else %>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/15 text-amber-400">Unread</span>
+        <% end %>
+      </div>
+      <p class="text-dark-500 text-sm mt-1">
+        Delivered to
+        <% if recipient.is_a?(User) %>
+          <%= link_to(recipient.name.presence || recipient.email, "/madmin/users/#{recipient.id}", class: "text-accent-400 hover:text-accent-300") %>
+        <% else %>
+          <span class="text-dark-300"><%= @record.recipient_type %> #<%= @record.recipient_id.to_s[0, 8] %></span>
+        <% end %>
+      </p>
+      <p class="text-dark-500 text-sm"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Recipient</div>
+    <% if recipient.is_a?(User) %>
+      <div class="flex items-center gap-2 mt-1">
+        <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(recipient.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
+        <%= link_to(recipient.name.presence || recipient.email, "/madmin/users/#{recipient.id}", class: "font-bold text-dark-100 hover:text-dark-50 truncate") %>
+      </div>
+    <% else %>
+      <div class="text-lg font-bold text-dark-100"><%= @record.recipient_type %></div>
+    <% end %>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Status</div>
+    <div class="text-lg font-bold <%= @record.read_at ? 'text-emerald-400' : 'text-amber-400' %>">
+      <%= @record.read_at ? "Read" : "Unread" %>
+    </div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Read At</div>
+    <div class="text-lg font-bold text-dark-100"><%= @record.read_at&.strftime("%-d %b %H:%M") || "-" %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Seen At</div>
+    <div class="text-lg font-bold text-dark-100"><%= @record.seen_at&.strftime("%-d %b %H:%M") || "-" %></div>
+  </div>
+</div>
+
+<% if event %>
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Source Event</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">Event</th>
+          <td>
+            <%= link_to "/madmin/noticed_events/#{event.id}", class: "text-accent-400 hover:text-accent-300" do %>
+              <%= event.type.to_s.sub("Notifier", "") %>
+            <% end %>
+          </td>
+        </tr>
+        <% if event.record_type.present? %>
+        <tr>
+          <th class="label">Record</th>
+          <td>
+            <span class="text-dark-300"><%= event.record_type %></span>
+            <span class="font-mono text-dark-500 text-sm ml-1"><%= event.record_id %></span>
+          </td>
+        </tr>
+        <% end %>
+        <tr>
+          <th class="label">Event Created</th>
+          <td><%= event.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <% if event.params.present? && event.params.any? %>
+        <tr>
+          <th class="label">Params</th>
+          <td>
+            <pre class="text-sm text-dark-300 bg-dark-900 rounded-lg p-3 overflow-x-auto mt-1"><%= JSON.pretty_generate(event.params) %></pre>
+          </td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>
+
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">ID</th>
+          <td class="font-mono text-sm"><%= @record.id %></td>
+        </tr>
+        <tr>
+          <th class="label">Type</th>
+          <td><%= @record.type %></td>
+        </tr>
+        <tr>
+          <th class="label">Recipient</th>
+          <td><%= @record.recipient_type %> <span class="font-mono text-sm text-dark-500"><%= @record.recipient_id %></span></td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

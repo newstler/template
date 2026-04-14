@@ -1,0 +1,184 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to "Notification Events", resource.index_path %>
+    /
+    <%= @record.type.to_s.sub("Notifier", "") %>
+  </h1>
+</header>
+
+<% type_label = @record.type.to_s.sub("Notifier", "") %>
+<% notifications = @record.notifications %>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-6">
+    <div class="w-16 h-16 rounded-2xl bg-purple-500/15 flex items-center justify-center">
+      <%= inline_svg "icons/bell.svg", class: "w-8 h-8 text-purple-400" %>
+    </div>
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100"><%= type_label %></h2>
+      <% if @record.record_type.present? && @record.record %>
+        <p class="text-dark-400 text-sm mt-1">
+          Triggered by
+          <% madmin_path = "/madmin/#{@record.record_type.underscore.pluralize}/#{@record.record_id}" %>
+          <% if @record.record_type == "User" %>
+            <%= link_to madmin_path, class: "inline-flex items-center gap-1.5 text-accent-400 hover:text-accent-300" do %>
+              <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.record.email.downcase.strip) %>?s=20&d=mp" class="w-5 h-5 rounded-full" alt="">
+              <%= @record.record.name.presence || @record.record.email %>
+            <% end %>
+          <% else %>
+            <%= link_to(@record.record.try(:name) || @record.record.try(:title) || "#{@record.record_type} ##{@record.record_id.to_s[0, 8]}", madmin_path, class: "text-accent-400 hover:text-accent-300") %>
+          <% end %>
+        </p>
+      <% end %>
+      <p class="text-dark-500 text-sm mt-1"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Event Type</div>
+    <div class="text-lg font-bold text-purple-400"><%= type_label %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Deliveries</div>
+    <div class="text-3xl font-bold text-dark-100"><%= @record.notifications_count.to_i %></div>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Record</div>
+    <% if @record.record_type.present? && @record.record %>
+      <% madmin_record_path = "/madmin/#{@record.record_type.underscore.pluralize}/#{@record.record_id}" %>
+      <% if @record.record_type == "User" %>
+        <div class="flex items-center gap-2 mt-1">
+          <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.record.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
+          <%= link_to(@record.record.name.presence || @record.record.email, madmin_record_path, class: "font-bold text-dark-100 hover:text-dark-50 truncate") %>
+        </div>
+      <% else %>
+        <%= link_to(@record.record.try(:name) || @record.record.try(:title) || @record.record_type, madmin_record_path, class: "text-lg font-bold text-dark-100 hover:text-dark-50") %>
+      <% end %>
+    <% else %>
+      <div class="text-lg font-bold text-dark-100">None</div>
+    <% end %>
+  </div>
+</div>
+
+<% if @record.params.present? && @record.params.any? %>
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Event Params</h2>
+  </div>
+  <div class="p-5">
+    <pre class="text-sm text-dark-300 bg-dark-900 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.params) %></pre>
+  </div>
+</div>
+<% end %>
+
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Deliveries (<%= notifications.size %>)</h2>
+  </div>
+  <% if notifications.any? %>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Recipient</th>
+            <th>Type</th>
+            <th>Read</th>
+            <th>Seen</th>
+            <th>Created</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% notifications.each do |notification| %>
+            <tr>
+              <td>
+                <% if notification.recipient_type == "User" %>
+                  <% recipient = notification.recipient %>
+                  <% if recipient %>
+                    <%= link_to "/madmin/users/#{recipient.id}", class: "flex items-center gap-2" do %>
+                      <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(recipient.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
+                      <span class="text-sm"><%= recipient.name.presence || recipient.email %></span>
+                    <% end %>
+                  <% else %>
+                    <span class="text-dark-500 text-sm">Deleted user</span>
+                  <% end %>
+                <% else %>
+                  <span class="text-dark-300 text-sm"><%= notification.recipient_type %> #<%= notification.recipient_id.to_s[0, 8] %></span>
+                <% end %>
+              </td>
+              <td>
+                <%= link_to "/madmin/noticed_notifications/#{notification.id}", class: "hover:underline" do %>
+                  <span class="text-sm text-dark-300"><%= notification.type.to_s.sub("Notifier::Notification", "").presence || notification.type %></span>
+                <% end %>
+              </td>
+              <td>
+                <% if notification.read_at %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">
+                    Read
+                  </span>
+                  <div class="text-[10px] text-dark-500 mt-0.5"><%= notification.read_at.strftime("%-d %b %H:%M") %></div>
+                <% else %>
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/15 text-amber-400">
+                    Unread
+                  </span>
+                <% end %>
+              </td>
+              <td>
+                <% if notification.seen_at %>
+                  <span class="text-sm text-dark-300"><%= notification.seen_at.strftime("%-d %b %H:%M") %></span>
+                <% else %>
+                  <span class="text-dark-500">-</span>
+                <% end %>
+              </td>
+              <td class="text-sm"><%= notification.created_at.strftime("%-d %b %Y %H:%M") %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <div class="p-5 text-dark-500 text-center">No deliveries yet</div>
+  <% end %>
+</div>
+
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">ID</th>
+          <td class="font-mono text-sm"><%= @record.id %></td>
+        </tr>
+        <tr>
+          <th class="label">Type</th>
+          <td><%= @record.type %></td>
+        </tr>
+        <tr>
+          <th class="label">Record</th>
+          <td>
+            <% if @record.record_type.present? %>
+              <span class="text-dark-300"><%= @record.record_type %></span>
+              <span class="font-mono text-dark-500 text-sm ml-1"><%= @record.record_id %></span>
+            <% else %>
+              <span class="text-dark-500">None</span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Updated</th>
+          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>

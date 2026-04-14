@@ -1,0 +1,98 @@
+<%= content_for :title, "Conversation Messages" %>
+
+<header class="header">
+  <h1>Conversation Messages</h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: "Search message content...", class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :flagged, class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.select :flagged,
+          options_for_select([["All", ""], ["Flagged", "true"], ["Not flagged", "false"]], params[:flagged]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:q].present? || params[:flagged].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :content, "Message" %></th>
+        <th>Author</th>
+        <th><%= sortable :conversation_id, "Conversation" %></th>
+        <th>Team</th>
+        <th>Status</th>
+        <th><%= sortable :created_at, "Created" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <td class="max-w-xs">
+            <%= link_to resource.show_path(record), class: "block truncate" do %>
+              <%= record.content&.truncate(80) || "[Attachment only]" %>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "/madmin/users/#{record.user_id}", class: "flex items-center gap-2 hover:underline" do %>
+              <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(record.user.email.downcase.strip) %>?s=20&d=mp" class="w-5 h-5 rounded-full" alt="">
+              <span class="text-sm"><%= record.user.name.presence || record.user.email %></span>
+            <% end %>
+          </td>
+          <td>
+            <%= link_to "/madmin/conversations/#{record.conversation_id}", class: "hover:underline text-sm" do %>
+              <%= record.conversation.title.presence || "Conv #{record.conversation_id[0, 8]}..." %>
+            <% end %>
+          </td>
+          <td class="text-sm"><%= record.conversation.team.name %></td>
+          <td>
+            <% if record.flagged_at.present? %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/15 text-red-400">
+                Flagged
+              </span>
+            <% else %>
+              <span class="text-dark-500">-</span>
+            <% end %>
+          </td>
+          <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y %H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

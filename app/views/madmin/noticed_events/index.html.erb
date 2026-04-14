@@ -1,0 +1,110 @@
+<%= content_for :title, "Notification Events" %>
+
+<header class="header">
+  <h1>Notification Events</h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :type, class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <% types = Noticed::Event.distinct.order(:type).pluck(:type).compact %>
+      <%= f.select :type,
+          options_for_select([["All types", ""]] + types.map { |t| [t.sub("Notifier", ""), t] }, params[:type]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div>
+      <%= f.label :record_type, class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <% record_types = Noticed::Event.distinct.order(:record_type).pluck(:record_type).compact %>
+      <%= f.select :record_type,
+          options_for_select([["All record types", ""]] + record_types.map { |t| [t, t] }, params[:record_type]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
+    </div>
+
+    <div>
+      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:type].present? || params[:record_type].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="table-scroll">
+  <table>
+    <thead>
+      <tr>
+        <th><%= sortable :type, "Event Type" %></th>
+        <th><%= sortable :record_type, "Record" %></th>
+        <th><%= sortable :notifications_count, "Deliveries" %></th>
+        <th><%= sortable :created_at, "Created" %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @records.each do |record| %>
+        <tr>
+          <td>
+            <%= link_to resource.show_path(record), class: "block" do %>
+              <% type_label = record.type.to_s.sub("Notifier", "") %>
+              <span class="inline-flex items-center px-2.5 py-1 rounded-lg text-sm font-medium bg-purple-500/15 text-purple-400">
+                <%= inline_svg "icons/bell.svg", class: "w-4 h-4 mr-1.5" %>
+                <%= type_label %>
+              </span>
+            <% end %>
+          </td>
+          <td>
+            <% if record.record_type.present? && record.record %>
+              <% madmin_path = "/madmin/#{record.record_type.underscore.pluralize}/#{record.record_id}" %>
+              <% if record.record_type == "User" %>
+                <%= link_to madmin_path, class: "flex items-center gap-2" do %>
+                  <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(record.record.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
+                  <span class="text-sm"><%= record.record.name.presence || record.record.email %></span>
+                <% end %>
+              <% else %>
+                <%= link_to madmin_path, class: "flex items-center gap-2 hover:underline" do %>
+                  <%= inline_svg "icons/#{record.record_type.underscore}.svg", class: "w-5 h-5 text-dark-400", fallback: false rescue nil %>
+                  <span class="text-sm text-dark-300"><%= record.record.try(:name) || record.record.try(:title) || "#{record.record_type} ##{record.record_id.to_s[0, 8]}" %></span>
+                <% end %>
+              <% end %>
+            <% elsif record.record_type.present? %>
+              <span class="text-dark-500 text-sm"><%= record.record_type %> #<%= record.record_id.to_s[0, 8] %> (deleted)</span>
+            <% else %>
+              <span class="text-dark-500">-</span>
+            <% end %>
+          </td>
+          <td>
+            <% count = record.notifications_count.to_i %>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= count > 0 ? 'bg-emerald-500/15 text-emerald-400' : 'bg-dark-600 text-dark-400' %>">
+              <%= count %>
+            </span>
+          </td>
+          <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y %H:%M") %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>
