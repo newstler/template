@@ -42,7 +42,7 @@ AGENTS.md
 
 ## Task 1: Add `:search_tokenizer` setting
 
-- [ ] **Step 1: Migration**
+- [x] **Step 1: Migration**
 
 ```ruby
 class AddSearchTokenizerToSettings < ActiveRecord::Migration[8.1]
@@ -54,7 +54,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 2: Add to ALLOWED_KEYS**
+- [x] **Step 2: Add to ALLOWED_KEYS**
 
 Append `:search_tokenizer` to `Setting::ALLOWED_KEYS` and add a class reader:
 
@@ -64,7 +64,7 @@ def self.search_tokenizer
 end
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add app/models/setting.rb db/migrate/*search_tokenizer* db/schema.rb
