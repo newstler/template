@@ -55,6 +55,44 @@ module ApplicationHelper
     end
   end
 
+  # ── Currency ──
+
+  CURRENCY_SYMBOLS = {
+    "USD" => "$", "EUR" => "€", "GBP" => "£", "CHF" => "CHF", "JPY" => "¥",
+    "CNY" => "¥", "KRW" => "₩", "INR" => "₹", "RUB" => "₽", "UAH" => "₴",
+    "TRY" => "₺", "PLN" => "zł", "SEK" => "kr", "NOK" => "kr", "DKK" => "kr",
+    "CZK" => "Kč", "HUF" => "Ft", "RON" => "lei", "BRL" => "R$", "THB" => "฿",
+    "ILS" => "₪", "PHP" => "₱", "MXN" => "$", "AUD" => "A$", "CAD" => "C$",
+    "NZD" => "NZ$", "SGD" => "S$", "HKD" => "HK$", "ZAR" => "R"
+  }.freeze
+
+  def currency_symbol(code)
+    CURRENCY_SYMBOLS.fetch(code.to_s.upcase, code.to_s.upcase)
+  end
+
+  def currency_name(code)
+    I18n.t("currencies.#{code.to_s.upcase}", default: code.to_s.upcase)
+  end
+
+  def currency_options_for_select(selected = nil, include_auto: false, auto_label: nil)
+    popular = CurrencyConvertible::POPULAR_CURRENCIES.map { |c| [ currency_name(c), c ] }
+    rest = (CurrencyConvertible::SUPPORTED_CURRENCIES - CurrencyConvertible::POPULAR_CURRENCIES).sort.map { |c| [ currency_name(c), c ] }
+
+    safe_join([
+      (options_for_select([ [ auto_label || t("helpers.currency.auto"), "" ] ], selected.to_s) if include_auto),
+      options_for_select(popular, selected.to_s),
+      content_tag(:option, "───", disabled: true),
+      options_for_select(rest, selected.to_s)
+    ].compact)
+  end
+
+  def format_amount(value)
+    return nil if value.nil?
+    number_with_delimiter(value.to_i)
+  end
+
+  # ── Markdown ──
+
   def markdown(text)
     return "" if text.blank?
 

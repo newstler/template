@@ -9,6 +9,9 @@ en:
     loading: Loading...
     sign_out: Sign Out
     untitled: Untitled
+  helpers:
+    currency:
+      auto: Auto
   language_name: English
   languages:
     de: German

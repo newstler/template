@@ -18,6 +18,10 @@ ru:
     untitled: Без названия
   messages:
     count: Сообщения
+  number:
+    format:
+      delimiter: "\u00a0"
+      separator: ","
   og_image:
     description: "Быстрая разработка на Rails 8, Hotwire, SQLite и AI-чат."
     tagline: "AI-шаблон на Rails 8"
