@@ -91,6 +91,36 @@ module ApplicationHelper
     number_with_delimiter(value.to_i)
   end
 
+  # ── Country ──
+
+  def country_name(code)
+    return nil if code.blank?
+    country = ISO3166::Country.new(code)
+    return code unless country
+    country.translations[I18n.locale.to_s] || country.common_name
+  end
+
+  def country_flag(code)
+    return "" if code.blank?
+    ISO3166::Country.new(code)&.emoji_flag || ""
+  end
+
+  def country_options_for_select(selected = nil, include_blank: true, countries: nil)
+    list = if countries
+      countries.map { |c| ISO3166::Country.new(c) }.compact
+    else
+      ISO3166::Country.all
+    end
+
+    pairs = list.map do |country|
+      name = country.translations[I18n.locale.to_s] || country.common_name
+      [ "#{country.emoji_flag} #{name}", country.alpha2 ]
+    end.sort_by { |pair| pair[0] }
+
+    blank = include_blank ? tag.option("", value: "") : "".html_safe
+    blank + options_for_select(pairs, selected)
+  end
+
   # ── Markdown ──
 
   def markdown(text)

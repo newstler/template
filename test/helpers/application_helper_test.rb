@@ -38,4 +38,35 @@ class ApplicationHelperTest < ActionView::TestCase
     options = currency_options_for_select(nil, include_auto: true)
     assert_match(/Auto/, options.to_s)
   end
+
+  test "country_name returns localized name" do
+    I18n.with_locale(:en) { assert_equal "United States", country_name("US") }
+  end
+
+  test "country_name returns nil for blank code" do
+    assert_nil country_name("")
+    assert_nil country_name(nil)
+  end
+
+  test "country_flag returns emoji" do
+    assert_equal "🇩🇪", country_flag("DE")
+  end
+
+  test "country_flag returns empty string for blank code" do
+    assert_equal "", country_flag(nil)
+    assert_equal "", country_flag("")
+  end
+
+  test "country_options_for_select returns a sorted list with flags" do
+    html = country_options_for_select
+    assert_match "🇺🇸", html.to_s
+    assert_match "🇩🇪", html.to_s
+  end
+
+  test "country_options_for_select honors countries whitelist" do
+    html = country_options_for_select(nil, countries: %w[US DE]).to_s
+    assert_match "🇺🇸", html
+    assert_match "🇩🇪", html
+    assert_no_match(/🇯🇵/, html)
+  end
 end
