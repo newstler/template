@@ -7,6 +7,7 @@ class ApplicationController < ActionController::Base
   before_action :set_locale
   before_action :require_onboarding!
   before_action :set_current_team, if: :team_scoped_request?
+  before_action :set_currency
 
   private
 
@@ -42,6 +43,41 @@ class ApplicationController < ActionController::Base
     I18n.locale
   end
   helper_method :detected_locale
+
+  def set_currency
+    Current.currency = detect_currency
+  end
+
+  def detect_currency
+    # 1. Logged-in user preference
+    return current_user.preferred_currency if current_user&.preferred_currency.present?
+
+    # 2. Signed cookie
+    cookie_val = cookies.signed[:tmpl_currency]
+    if cookie_val.present? && CurrencyConvertible::SUPPORTED_CURRENCIES.include?(cookie_val)
+      return cookie_val
+    end
+
+    # 3. IP → country → currency
+    if request.remote_ip.present?
+      begin
+        result = Geocoder.search(request.remote_ip).first
+        if result&.country_code.present?
+          mapped = CurrencyConvertible::COUNTRY_CURRENCY[result.country_code.to_s.upcase]
+          return mapped if mapped
+        end
+      rescue StandardError => e
+        Rails.logger.debug "[detect_currency] Geocoder lookup failed: #{e.message}"
+      end
+    end
+
+    # 4. Current team default
+    return current_team.default_currency if current_team
+
+    # 5. Platform default
+    Setting.default_currency
+  end
+  helper_method :detect_currency
 
   def set_current_team
     @current_team = current_user&.teams&.find_by(slug: params[:team_slug])
