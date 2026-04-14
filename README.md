@@ -15,6 +15,8 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Authentication**: Magic Links (passwordless)
 - **Multitenancy**: Team-based with roles (owner/admin/member)
 - **Multilingual**: Mobility gem with RubyLLM auto-translation
+- **Currencies**: `money` + `money-currencylayer-bank` (daily rate refresh)
+- **Countries**: `countries` (iso3166) with emoji flags
 - **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation (optional)
 - **Admin Panel**: Madmin
 - **Error Tracking**: Rails Error Dashboard (RED) at `/red`
@@ -57,6 +59,12 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Per-kind, per-channel user preferences
   - Ready for Slack, SMS, web/mobile push as opt-in adapters
   - Full audit trail in Madmin at `/madmin/noticed_events`
+- **Currencies + Countries**
+  - Money gem with daily rate refresh from CurrencyLayer
+  - Per-team default currency, per-user preferred currency
+  - Per-team and per-user country (ISO 3166) with emoji flag picker
+  - Locale-aware amount formatting (Russian: `1 000 000`; English: `1,000,000`)
+  - `Current.currency` set on every request via a 5-step detection chain
 - **Team Messaging** (Conversations)
   - Team-scoped person-to-person chat with attachments
   - Polymorphic `subject` — attach conversations to any record
