@@ -18,3 +18,9 @@ two:
 not_onboarded:
   id: 01961a2a-c0de-7000-8000-000000000003
   email: unonboarded@example.com
+
+three:
+  id: 01961a2a-c0de-7000-8000-000000000004
+  email: user3@example.com
+  name: User Three
+  locale: en

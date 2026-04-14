@@ -26,3 +26,9 @@ not_onboarded_team_one:
   user_id: 01961a2a-c0de-7000-8000-000000000003
   team_id: 01961a2a-c0de-7000-8000-000000000501
   role: owner
+
+user_three_team_one:
+  id: 01961a2a-c0de-7000-8000-000000000605
+  user_id: 01961a2a-c0de-7000-8000-000000000004
+  team_id: 01961a2a-c0de-7000-8000-000000000501
+  role: member

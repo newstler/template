@@ -1,0 +1,9 @@
+<div class="flex flex-col h-full">
+  <h1><%= @conversation.title %></h1>
+  <div id="conversation_messages">
+    <%= render partial: "teams/conversations/conversation_message",
+               collection: @messages,
+               as: :message %>
+  </div>
+  <%= turbo_stream_from @conversation %>
+</div>

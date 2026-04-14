@@ -983,7 +983,7 @@ git commit -m "feat: conversation notification jobs (single + digest)"
 - Create: `app/controllers/teams/conversations_controller.rb`
 - Create: `test/controllers/teams/conversations_controller_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/controllers/teams/conversations_controller_test.rb`:
 
@@ -1024,11 +1024,11 @@ class Teams::ConversationsControllerTest < ActionDispatch::IntegrationTest
 end
 ```
 
-- [ ] **Step 2: Run test, observe failure**
+- [x] **Step 2: Run test, observe failure**
 
 Run: `rails test test/controllers/teams/conversations_controller_test.rb`
 
-- [ ] **Step 3: Add routes**
+- [x] **Step 3: Add routes**
 
 Open `config/routes.rb`. Inside the `scope "/t/:team_slug"` block, add:
 
@@ -1038,7 +1038,7 @@ Open `config/routes.rb`. Inside the `scope "/t/:team_slug"` block, add:
     end
 ```
 
-- [ ] **Step 4: Create the controller**
+- [x] **Step 4: Create the controller**
 
 Create `app/controllers/teams/conversations_controller.rb`:
 
@@ -1099,7 +1099,7 @@ class Teams::ConversationsController < ApplicationController
 end
 ```
 
-- [ ] **Step 5: Create a stub show view (populated in Task 10)**
+- [x] **Step 5: Create a stub show view (populated in Task 10)**
 
 Create `app/views/teams/conversations/show.html.erb`:
 
@@ -1124,13 +1124,13 @@ Create minimal partial `app/views/teams/conversations/_conversation_message.html
 </div>
 ```
 
-- [ ] **Step 6: Run test**
+- [x] **Step 6: Run test**
 
 Run: `rails test test/controllers/teams/conversations_controller_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add config/routes.rb app/controllers/teams/conversations_controller.rb \
