@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_14_222456) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_14_224142) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -420,6 +420,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_14_222456) do
     t.string "mail_from"
     t.string "moderation_model"
     t.boolean "public_chats", default: true, null: false
+    t.string "search_tokenizer", default: "porter unicode61 remove_diacritics 2"
     t.string "smtp_address"
     t.string "smtp_password"
     t.string "smtp_username"

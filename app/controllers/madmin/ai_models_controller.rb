@@ -30,7 +30,8 @@ module Madmin
         :moderation_model,
         :currencylayer_api_key,
         :default_currency,
-        :default_country_code
+        :default_country_code,
+        :search_tokenizer
       )
     end
   end

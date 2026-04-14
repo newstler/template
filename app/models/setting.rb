@@ -8,6 +8,7 @@ class Setting < ApplicationRecord
     mail_from
     moderation_model
     public_chats
+    search_tokenizer
     smtp_address smtp_password smtp_username
     stripe_publishable_key stripe_secret_key stripe_webhook_secret
     translation_model
@@ -49,6 +50,10 @@ class Setting < ApplicationRecord
 
   def self.default_country_code
     get(:default_country_code).presence
+  end
+
+  def self.search_tokenizer
+    get(:search_tokenizer).presence || "porter unicode61 remove_diacritics 2"
   end
 
   def self.chats_enabled?
