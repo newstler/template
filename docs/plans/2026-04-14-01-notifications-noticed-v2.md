@@ -316,7 +316,7 @@ and the event foreign key."
 - Modify: `test/fixtures/users.yml`
 - Modify: `test/models/user_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Open `test/models/user_test.rb`. Add these tests at the end of the class, before the final `end`:
 
@@ -334,19 +334,19 @@ Open `test/models/user_test.rb`. Add these tests at the end of the class, before
   end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/models/user_test.rb -n /notification_preferences/`
 
 Expected: FAIL with `NoMethodError: undefined method 'notification_preferences'` or similar missing-column error.
 
-- [ ] **Step 3: Generate the migration**
+- [x] **Step 3: Generate the migration**
 
 Run: `bin/rails generate migration AddNotificationPreferencesToUsers notification_preferences:json`
 
 This creates a file like `db/migrate/YYYYMMDDHHMMSS_add_notification_preferences_to_users.rb`.
 
-- [ ] **Step 4: Edit the migration to add a default**
+- [x] **Step 4: Edit the migration to add a default**
 
 Open the generated migration. Replace its contents with:
 
@@ -358,25 +358,25 @@ class AddNotificationPreferencesToUsers < ActiveRecord::Migration[8.1]
 end
 ```
 
-- [ ] **Step 5: Run the migration**
+- [x] **Step 5: Run the migration**
 
 Run: `bin/rails db:migrate`
 
 Expected: migration runs. `db/schema.rb` shows the new column.
 
-- [ ] **Step 6: Run the test to verify it passes**
+- [x] **Step 6: Run the test to verify it passes**
 
 Run: `rails test test/models/user_test.rb -n /notification_preferences/`
 
 Expected: PASS (both tests).
 
-- [ ] **Step 7: Run the full test suite**
+- [x] **Step 7: Run the full test suite**
 
 Run: `rails test`
 
 Expected: PASS.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add db/migrate/*notification_preferences* db/schema.rb test/models/user_test.rb

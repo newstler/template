@@ -51,4 +51,16 @@ class UserTest < ActiveSupport::TestCase
     assert_equal :en, user.effective_locale
     assert_equal :fr, user.effective_locale(fallback: :fr)
   end
+
+  test "notification_preferences defaults to an empty hash" do
+    user = User.create!(email: "prefs@example.com")
+    assert_equal({}, user.notification_preferences)
+  end
+
+  test "notification_preferences can store per-kind per-channel toggles" do
+    user = users(:one)
+    user.update!(notification_preferences: { "welcome" => { "email" => false } })
+    user.reload
+    assert_equal false, user.notification_preferences.dig("welcome", "email")
+  end
 end
