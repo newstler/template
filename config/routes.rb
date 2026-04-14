@@ -15,6 +15,17 @@ Rails.application.routes.draw do
   # Onboarding (first-time user setup, before team context)
   resource :onboarding, only: [ :show, :update ]
 
+  # User notifications inbox (global — not team-scoped because a user may
+  # receive notifications across multiple teams)
+  resources :notifications, only: [ :index, :show ] do
+    member do
+      patch :mark_read
+    end
+    collection do
+      patch :mark_all_read
+    end
+  end
+
   # Team management (multi-tenant only routes for listing/creating teams)
   resources :teams, only: [ :index, :new, :create ], param: :slug
 
