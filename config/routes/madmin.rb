@@ -51,5 +51,7 @@ namespace :madmin do
   resource :mail, only: [ :show, :edit, :update ], controller: "mail"
   resources :noticed_events, only: [ :index, :show ]
   resources :noticed_notifications, only: [ :index, :show ]
+  resources :conversations
+  resources :conversation_messages
   root to: "dashboard#show"
 end

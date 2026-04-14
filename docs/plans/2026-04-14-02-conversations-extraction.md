@@ -1717,7 +1717,7 @@ git commit -m "feat: ModeratableMessage opt-in concern with regex + LLM moderati
 - Create: `app/madmin/resources/conversation_message_resource.rb`
 - Modify: `config/routes/madmin.rb`
 
-- [ ] **Step 1: Add routes**
+- [x] **Step 1: Add routes**
 
 Open `config/routes/madmin.rb`. Inside the `namespace :madmin do` block, add:
 
@@ -1726,7 +1726,7 @@ resources :conversations
 resources :conversation_messages
 ```
 
-- [ ] **Step 2: Create the Conversation resource**
+- [x] **Step 2: Create the Conversation resource**
 
 Create `app/madmin/resources/conversation_resource.rb`:
 
@@ -1750,7 +1750,7 @@ class ConversationResource < Madmin::Resource
 end
 ```
 
-- [ ] **Step 3: Create the ConversationMessage resource**
+- [x] **Step 3: Create the ConversationMessage resource**
 
 Create `app/madmin/resources/conversation_message_resource.rb`:
 
@@ -1774,7 +1774,7 @@ class ConversationMessageResource < Madmin::Resource
 end
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/madmin/resources/conversation_resource.rb \
