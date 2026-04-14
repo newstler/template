@@ -110,6 +110,11 @@ npx @anthropic-ai/mcp-inspector
 | `create_article` | Create new article | Team + User |
 | `update_article` | Update article | Team + User |
 | `delete_article` | Delete article | Team + User |
+| `list_conversations` | List conversations the user participates in | Team + User |
+| `show_conversation` | Get a conversation with recent messages | Team + User |
+| `create_conversation` | Create a conversation with participants | Team + User |
+| `list_conversation_messages` | List messages in a conversation | Team + User |
+| `create_conversation_message` | Post a message to a conversation | Team + User |
 
 **Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required.
 
@@ -126,6 +131,7 @@ npx @anthropic-ai/mcp-inspector
 | Available Languages | `app:///languages` | Enabled translation languages |
 | Team Languages | `app:///team/languages` | Team's active languages (directs to tool) |
 | Articles | `app:///articles` | Team's articles (directs to tool) |
+| User Conversations | `app:///conversations` | User's conversations (directs to tool) |
 
 ### File Structure
 
@@ -136,9 +142,12 @@ app/
 │   ├── articles/                # Article CRUD tools
 │   ├── billing/                 # Billing & subscription tools
 │   ├── chats/                   # Chat CRUD tools
+│   ├── conversations/           # Conversation tools (list/show/create)
+│   ├── conversation_messages/   # Conversation message tools
 │   ├── languages/               # Language management tools
 │   ├── messages/                # Message tools
 │   ├── models/                  # Model tools
+│   ├── notifications/           # Notification inbox tools
 │   ├── teams/                   # Team management tools
 │   └── users/                   # User tools
 └── resources/
