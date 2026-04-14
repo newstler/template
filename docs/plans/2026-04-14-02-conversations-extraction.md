@@ -120,7 +120,7 @@ test/jobs/conversation_digest_notification_job_test.rb
 **Files:**
 - Create: `db/migrate/YYYYMMDDHHMMSS_create_conversations.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/models/conversation_test.rb`:
 
@@ -146,13 +146,13 @@ class ConversationTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/models/conversation_test.rb`
 
 Expected: FAIL — `NameError: uninitialized constant Conversation`.
 
-- [ ] **Step 3: Create the migration**
+- [x] **Step 3: Create the migration**
 
 Run: `bin/rails generate migration CreateConversations`
 
@@ -175,13 +175,13 @@ Note the differences from sailing_plus's migration:
 - `adventure_id` → `subject_type` + `subject_id` (polymorphic, nullable)
 - `subject` column (sailing_plus's free-text) → `title` (renamed to avoid collision with the polymorphic association name)
 
-- [ ] **Step 4: Run the migration**
+- [x] **Step 4: Run the migration**
 
 Run: `bin/rails db:migrate`
 
 Expected: PASS. Verify `db/schema.rb` contains the `conversations` table.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add db/migrate/*create_conversations* db/schema.rb test/models/conversation_test.rb
