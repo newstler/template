@@ -1,0 +1,45 @@
+<%#
+  Locals:
+    currency_field_name:      name attribute for the <select>
+    currency_selected:        ISO 4217 code to mark selected
+    amount_name:              name attribute for the <input type="number">
+    amount_value:             (optional) current numeric value
+    amount_placeholder:       (optional) placeholder text, defaults to "0"
+    amount_min:               (optional) min attribute, defaults to 0
+    amount_step:              (optional) step attribute, defaults to 1
+    amount_class:             (optional) extra classes on the amount input
+    currency_target_controller: (optional) adds data-<c>-target on the <select>
+    currency_target_name:     (optional) target name for the above
+    amount_target_controller: (optional) adds data-<c>-target on the <input>
+    amount_target_name:       (optional) target name for the above
+%>
+<% amount_placeholder = "0" unless local_assigns.key?(:amount_placeholder) %>
+<% amount_min = 0 unless local_assigns.key?(:amount_min) %>
+<% amount_step = 1 unless local_assigns.key?(:amount_step) %>
+<% amount_class = "w-24" unless local_assigns.key?(:amount_class) %>
+<div class="flex">
+  <div class="relative">
+    <select name="<%= currency_field_name %>"
+            data-controller="currency-select"
+            data-action="change->currency-select#change"
+            <% if local_assigns.key?(:currency_target_controller) %>data-<%= currency_target_controller %>-target="<%= currency_target_name %>"<% end %>
+            style="background-image: none;"
+            class="appearance-none w-[38px] h-[38px] pl-[11px] pr-0 bg-dark-600 border border-dark-600 rounded-l-lg text-dark-300 text-sm cursor-pointer focus:ring-2 focus:ring-accent-500 focus:border-transparent">
+      <% CurrencyConvertible::POPULAR_CURRENCIES.each do |code| %>
+        <% sym = Money::Currency.find(code)&.symbol || code %>
+        <option value="<%= code %>" data-symbol="<%= sym %>" data-full="<%= currency_name(code) %>" <%= "selected" if code == currency_selected %>><%= currency_name(code) %></option>
+      <% end %>
+      <option disabled>───</option>
+      <% (CurrencyConvertible::SUPPORTED_CURRENCIES - CurrencyConvertible::POPULAR_CURRENCIES).sort.each do |code| %>
+        <% sym = Money::Currency.find(code)&.symbol || code %>
+        <option value="<%= code %>" data-symbol="<%= sym %>" data-full="<%= currency_name(code) %>" <%= "selected" if code == currency_selected %>><%= currency_name(code) %></option>
+      <% end %>
+    </select>
+    <span class="absolute bottom-[2px] right-[3px] text-dark-500 pointer-events-none text-[16px] leading-none">&#9662;</span>
+  </div>
+  <input type="number" step="<%= amount_step %>" min="<%= amount_min %>" name="<%= amount_name %>"
+         <% if local_assigns.key?(:amount_target_controller) %>data-<%= amount_target_controller %>-target="<%= amount_target_name %>"<% end %>
+         <%= "value=#{amount_value}" if local_assigns.key?(:amount_value) && amount_value %>
+         placeholder="<%= amount_placeholder %>"
+         class="<%= amount_class %> px-3 py-2 bg-dark-700 border border-dark-600 border-l-0 rounded-r-lg text-dark-100 text-sm focus:ring-2 focus:ring-accent-500 focus:border-transparent" />
+</div>
