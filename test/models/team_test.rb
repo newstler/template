@@ -106,4 +106,9 @@ class TeamTest < ActiveSupport::TestCase
     assert_not_equal original_key, team.api_key
     assert_equal 64, team.api_key.length
   end
+
+  test "default_currency defaults to USD" do
+    team = Team.create!(name: "Currency Default Team")
+    assert_equal "USD", team.default_currency
+  end
 end
