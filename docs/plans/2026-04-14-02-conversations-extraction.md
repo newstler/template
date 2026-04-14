@@ -196,7 +196,7 @@ git commit -m "feat: create conversations table with polymorphic subject"
 - Create: `app/models/conversation.rb`
 - Modify: `app/models/team.rb`
 
-- [ ] **Step 1: Create the model**
+- [x] **Step 1: Create the model**
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/models/conversation.rb` for reference, then create `app/models/conversation.rb`:
 
@@ -221,7 +221,7 @@ class Conversation < ApplicationRecord
 end
 ```
 
-- [ ] **Step 2: Add `has_many :conversations` to `Team`**
+- [x] **Step 2: Add `has_many :conversations` to `Team`**
 
 Open `app/models/team.rb`. Add inside the class:
 
@@ -229,13 +229,13 @@ Open `app/models/team.rb`. Add inside the class:
 has_many :conversations, dependent: :destroy
 ```
 
-- [ ] **Step 3: Run the test**
+- [x] **Step 3: Run the test**
 
 Run: `rails test test/models/conversation_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add app/models/conversation.rb app/models/team.rb
