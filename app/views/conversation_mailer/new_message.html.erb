@@ -1,0 +1,4 @@
+<h1><%= t(".heading") %></h1>
+<p><%= t(".intro", sender: @message.user.name.presence || @message.user.email) %></p>
+<blockquote><%= @message.content %></blockquote>
+<p><%= link_to t(".cta"), "#" %></p>

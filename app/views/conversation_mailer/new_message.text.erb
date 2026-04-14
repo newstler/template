@@ -1,0 +1,7 @@
+<%= t(".heading") %>
+
+<%= t(".intro", sender: @message.user.name.presence || @message.user.email) %>
+
+<%= @message.content %>
+
+<%= t(".cta") %>: #

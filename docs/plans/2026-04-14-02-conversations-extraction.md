@@ -690,11 +690,11 @@ git commit -m "test: fixtures for conversations primitive"
 - Create: `config/locales/ru/mailers/conversation_mailer.yml`
 - Create: `test/mailers/conversation_mailer_test.rb`
 
-- [ ] **Step 1: Read the sailing_plus mailer templates for reference**
+- [x] **Step 1: Read the sailing_plus mailer templates for reference**
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/views/user_mailer/new_conversation_message.html.erb` and `new_messages_digest.html.erb`. Note structure and i18n key usage. Use them as a starting template for the rewritten versions below.
 
-- [ ] **Step 2: Write the failing test**
+- [x] **Step 2: Write the failing test**
 
 Create `test/mailers/conversation_mailer_test.rb`:
 
@@ -723,11 +723,11 @@ class ConversationMailerTest < ActionMailer::TestCase
 end
 ```
 
-- [ ] **Step 3: Run to verify failure**
+- [x] **Step 3: Run to verify failure**
 
 Run: `rails test test/mailers/conversation_mailer_test.rb`
 
-- [ ] **Step 4: Create the mailer**
+- [x] **Step 4: Create the mailer**
 
 Create `app/mailers/conversation_mailer.rb`:
 
@@ -751,7 +751,7 @@ class ConversationMailer < ApplicationMailer
 end
 ```
 
-- [ ] **Step 5: Create the templates**
+- [x] **Step 5: Create the templates**
 
 Create `app/views/conversation_mailer/new_message.html.erb`:
 
@@ -805,7 +805,7 @@ Create `app/views/conversation_mailer/messages_digest.text.erb`:
 <% end %>
 ```
 
-- [ ] **Step 6: Create i18n files**
+- [x] **Step 6: Create i18n files**
 
 Create `config/locales/en/mailers/conversation_mailer.yml`:
 
@@ -841,13 +841,13 @@ ru:
         cta: "Открыть переписку"
 ```
 
-- [ ] **Step 7: Run the mailer test**
+- [x] **Step 7: Run the mailer test**
 
 Run: `rails test test/mailers/conversation_mailer_test.rb`
 
 Expected: PASS. Note the test references `team_conversation_url` which requires routes to be defined first — temporarily stub the link with a plain path or defer this test step until Task 9.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add app/mailers/conversation_mailer.rb app/views/conversation_mailer/ \

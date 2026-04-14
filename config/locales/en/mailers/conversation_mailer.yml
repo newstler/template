@@ -1,0 +1,12 @@
+---
+en:
+  conversation_mailer:
+    messages_digest:
+      cta: Open conversation
+      heading: New messages in your conversations
+      subject: Your conversation digest
+    new_message:
+      cta: Reply
+      heading: New message
+      intro: "%{sender} sent you a message:"
+      subject: New message in your conversation
