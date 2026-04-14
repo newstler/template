@@ -1790,7 +1790,7 @@ git commit -m "feat: Madmin resources for Conversation and ConversationMessage"
 **Files:**
 - Create: `test/system/conversations_test.rb`
 
-- [ ] **Step 1: Create the system test**
+- [x] **Step 1: Create the system test**
 
 ```ruby
 require "application_system_test_case"
@@ -1826,13 +1826,13 @@ class ConversationsTest < ApplicationSystemTestCase
 end
 ```
 
-- [ ] **Step 2: Run the test**
+- [x] **Step 2: Run the test**
 
 Run: `rails test:system test/system/conversations_test.rb`
 
 Expected: PASS. Adjust selectors and button text if the actual view differs.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add test/system/conversations_test.rb
@@ -1845,7 +1845,7 @@ git commit -m "test: system test for conversation show + post"
 
 The `broadcast_append_to` hook was added in Task 4 and the `<%= turbo_stream_from @conversation %>` tag was added in Task 11. Verify the full path works.
 
-- [ ] **Step 1: Extend the system test**
+- [x] **Step 1: Extend the system test**
 
 Append to `test/system/conversations_test.rb`:
 
@@ -1863,13 +1863,13 @@ Append to `test/system/conversations_test.rb`:
   end
 ```
 
-- [ ] **Step 2: Run**
+- [x] **Step 2: Run**
 
 Run: `rails test:system test/system/conversations_test.rb`
 
 Expected: PASS. If the test hangs, verify `turbo_stream_from` is in the view and Solid Cable is configured.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add test/system/conversations_test.rb
