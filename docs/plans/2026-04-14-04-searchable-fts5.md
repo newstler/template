@@ -130,7 +130,7 @@ git commit -m "feat: add searchable_things table for Searchable concern tests"
 - Create: `app/models/concerns/searchable.rb`
 - Create: `test/models/concerns/searchable_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/models/concerns/searchable_test.rb`:
 
@@ -153,13 +153,13 @@ class SearchableTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 2: Run test, observe failure**
+- [x] **Step 2: Run test, observe failure**
 
 Run: `rails test test/models/concerns/searchable_test.rb`
 
 Expected: FAIL — `Searchable` doesn't exist.
 
-- [ ] **Step 3: Create the concern**
+- [x] **Step 3: Create the concern**
 
 Create `app/models/concerns/searchable.rb`:
 
@@ -231,13 +231,13 @@ end
 
 **Note:** the `search` class method above is deliberately simple — it does a two-query lookup (FTS rowids, then IDs, then ActiveRecord). A more sophisticated version would do a single SQL JOIN, but the two-query version is clearer to test and reason about, and the performance cost is negligible for the scale of template-consuming apps. If this proves slow, upgrade to a JOIN later.
 
-- [ ] **Step 4: Run the test**
+- [x] **Step 4: Run the test**
 
 Run: `rails test test/models/concerns/searchable_test.rb`
 
 Expected: PASS (the two class-method tests).
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/models/concerns/searchable.rb test/models/concerns/searchable_test.rb

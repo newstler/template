@@ -48,7 +48,7 @@ module Searchable
       fts = searchable_table_name
       ids = connection.select_values(
         connection.sanitize_sql_array(
-          ["SELECT id FROM #{fts} WHERE #{fts} MATCH ? ORDER BY bm25(#{fts})", sanitized]
+          [ "SELECT id FROM #{fts} WHERE #{fts} MATCH ? ORDER BY bm25(#{fts})", sanitized ]
         )
       )
 
@@ -74,12 +74,12 @@ module Searchable
     return if fields.empty?
 
     fts = self.class.searchable_table_name
-    columns = (["id"] + fields.map(&:to_s)).join(", ")
-    placeholders = (["?"] * (fields.length + 1)).join(", ")
-    values = [id] + fields.map { |f| public_send(f).to_s }
+    columns = ([ "id" ] + fields.map(&:to_s)).join(", ")
+    placeholders = ([ "?" ] * (fields.length + 1)).join(", ")
+    values = [ id ] + fields.map { |f| public_send(f).to_s }
 
     sql = self.class.connection.sanitize_sql_array(
-      ["INSERT OR REPLACE INTO #{fts} (#{columns}) VALUES (#{placeholders})"] + values
+      [ "INSERT OR REPLACE INTO #{fts} (#{columns}) VALUES (#{placeholders})" ] + values
     )
     self.class.connection.execute(sql)
   rescue ActiveRecord::StatementInvalid => e
@@ -89,7 +89,7 @@ module Searchable
   def remove_from_search_index
     fts = self.class.searchable_table_name
     sql = self.class.connection.sanitize_sql_array(
-      ["DELETE FROM #{fts} WHERE id = ?", id]
+      [ "DELETE FROM #{fts} WHERE id = ?", id ]
     )
     self.class.connection.execute(sql)
   rescue ActiveRecord::StatementInvalid => e

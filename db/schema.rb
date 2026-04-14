@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_14_224442) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_14_225005) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -523,4 +523,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_14_224442) do
   add_foreign_key "team_languages", "languages"
   add_foreign_key "team_languages", "teams"
   add_foreign_key "tool_calls", "messages"
+
+  # Virtual tables defined in this database.
+  # Note that virtual tables may not work with other database engines. Be careful if changing database.
+  create_virtual_table "searchable_things_fts", "fts5", ["id UNINDEXED", "name", "description", "tags", "tokenize='porter unicode61 remove_diacritics 2'"]
 end
