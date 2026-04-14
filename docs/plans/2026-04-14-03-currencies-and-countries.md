@@ -57,7 +57,7 @@ AGENTS.md
 
 ## Task 1: Add gems to Gemfile
 
-- [ ] **Step 1: Add gems**
+- [x] **Step 1: Add gems**
 
 Append to `Gemfile` after `gem "friendly_id"`:
 
@@ -67,17 +67,17 @@ gem "money-currencylayer-bank", "~> 1.5"
 gem "countries", "~> 7.1"
 ```
 
-- [ ] **Step 2: Bundle install**
+- [x] **Step 2: Bundle install**
 
 Run: `bundle install`
 
-- [ ] **Step 3: Verify**
+- [x] **Step 3: Verify**
 
 Run: `bundle exec ruby -e 'require "money"; require "money/bank/currencylayer_bank"; require "countries"; puts "OK"'`
 
 Expected: `OK`.
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add Gemfile Gemfile.lock

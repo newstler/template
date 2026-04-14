@@ -24,7 +24,14 @@ module Madmin
     private
 
     def ai_model_params
-      params.require(:setting).permit(:default_model, :translation_model, :moderation_model)
+      params.require(:setting).permit(
+        :default_model,
+        :translation_model,
+        :moderation_model,
+        :currencylayer_api_key,
+        :default_currency,
+        :default_country_code
+      )
     end
   end
 end

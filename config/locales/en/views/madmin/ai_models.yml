@@ -7,6 +7,18 @@ en:
         chat_description: The model used for new chat conversations when no specific
           model is selected.
         chat_heading: Chat Model
+        currency_country_description: Platform-wide fallbacks when no user or team
+          preference is set.
+        currency_country_heading: Currency & Country
+        currencylayer_api_key: CurrencyLayer API key
+        currencylayer_api_key_hint: Optional. Used by the daily RefreshCurrencyRatesJob
+          to refresh exchange rates.
+        default_country_code: Default country
+        default_country_code_hint: ISO 3166 alpha-2 code (e.g. US, DE). Used when
+          IP-based detection fails.
+        default_currency: Default currency
+        default_currency_hint: ISO 4217 code (e.g. USD, EUR). Used as the platform-wide
+          fallback.
         default_model: Default Model
         default_model_hint: The AI model used for new chat conversations.
         heading: Edit AI Models
@@ -29,6 +41,12 @@ en:
         chat_description: The model used for new chat conversations when no specific
           model is selected.
         chat_heading: Chat Model
+        currency_country_description: Platform-wide fallbacks when no user or team
+          preference is set.
+        currency_country_heading: Currency & Country
+        currencylayer_api_key: CurrencyLayer API key
+        default_country_code: Default country
+        default_currency: Default currency
         default_model: Default Model
         edit_button: Edit Settings
         heading: AI Models
@@ -39,6 +57,7 @@ en:
         no_models: No models available
         no_models_hint: Configure AI providers and sync models first.
         not_configured: Not configured — chats and translations are disabled
+        secret_set: Set
         sync_models: Go to Models
         translation_description: The model used for automatic content translation
           between languages.

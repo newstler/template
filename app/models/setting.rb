@@ -1,5 +1,8 @@
 class Setting < ApplicationRecord
   ALLOWED_KEYS = %i[
+    currencylayer_api_key
+    default_country_code
+    default_currency
     default_model
     litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
     mail_from
@@ -38,6 +41,14 @@ class Setting < ApplicationRecord
 
   def self.moderation_model
     get(:moderation_model).presence
+  end
+
+  def self.default_currency
+    get(:default_currency).presence || "USD"
+  end
+
+  def self.default_country_code
+    get(:default_country_code).presence
   end
 
   def self.chats_enabled?

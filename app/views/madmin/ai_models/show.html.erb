@@ -51,7 +51,7 @@
       </dl>
     </div>
 
-    <div class="card-bg p-6">
+    <div class="card-bg p-6 mb-6">
       <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".moderation_heading") %></h2>
       <p class="text-sm text-dark-500 mb-4"><%= t(".moderation_description") %></p>
       <dl class="space-y-4">
@@ -64,6 +64,49 @@
             <% else %>
               <span class="w-2 h-2 bg-red-400 rounded-full"></span>
               <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".currency_country_heading") %></h2>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".currency_country_description") %></p>
+      <dl class="space-y-4">
+        <div class="flex items-center justify-between">
+          <dt class="text-sm font-medium text-dark-400"><%= t(".default_currency") %></dt>
+          <dd class="flex items-center gap-2">
+            <% if @setting.default_currency.present? %>
+              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+              <code class="text-sm text-dark-200 font-mono"><%= @setting.default_currency %></code>
+            <% else %>
+              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
+              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
+            <% end %>
+          </dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-sm font-medium text-dark-400"><%= t(".default_country_code") %></dt>
+          <dd class="flex items-center gap-2">
+            <% if @setting.default_country_code.present? %>
+              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+              <code class="text-sm text-dark-200 font-mono"><%= @setting.default_country_code %></code>
+            <% else %>
+              <span class="w-2 h-2 bg-dark-600 rounded-full"></span>
+              <span class="text-sm text-dark-500">—</span>
+            <% end %>
+          </dd>
+        </div>
+        <div class="flex items-center justify-between">
+          <dt class="text-sm font-medium text-dark-400"><%= t(".currencylayer_api_key") %></dt>
+          <dd class="flex items-center gap-2">
+            <% if @setting.currencylayer_api_key.present? %>
+              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+              <span class="text-sm text-dark-200"><%= t(".secret_set") %></span>
+            <% else %>
+              <span class="w-2 h-2 bg-dark-600 rounded-full"></span>
+              <span class="text-sm text-dark-500">—</span>
             <% end %>
           </dd>
         </div>

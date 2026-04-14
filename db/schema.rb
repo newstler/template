@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_14_211015) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_14_220511) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -410,6 +410,9 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_14_211015) do
 
   create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "currencylayer_api_key"
+    t.string "default_country_code"
+    t.string "default_currency", default: "USD"
     t.string "default_model"
     t.string "litestream_replica_access_key"
     t.string "litestream_replica_bucket"
