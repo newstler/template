@@ -111,4 +111,13 @@ class TeamTest < ActiveSupport::TestCase
     team = Team.create!(name: "Currency Default Team")
     assert_equal "USD", team.default_currency
   end
+
+  test "country_code is nullable but valid when set" do
+    team = teams(:one)
+    team.country_code = "DE"
+    assert team.valid?
+    team.country_code = "ZZ"
+    assert_not team.valid?
+    assert team.errors[:country_code].any?
+  end
 end

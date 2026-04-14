@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   include Costable
+  include Countryable
   include Notifiable
 
   has_one_attached :avatar
@@ -17,6 +18,8 @@ class User < ApplicationRecord
   validates :name, presence: true, on: :update
   validates :locale, inclusion: { in: ->(_) { Language.enabled_codes } }, allow_nil: true
   validates :preferred_currency, inclusion: { in: ->(_) { CurrencyConvertible::SUPPORTED_CURRENCIES } }, allow_nil: true
+
+  countryable :residence_country_code
 
   before_validation :nilify_blank_locale
 

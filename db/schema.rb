@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_14_220949) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_14_222456) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -445,6 +445,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_14_220949) do
   create_table "teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "api_key", null: false
     t.boolean "cancel_at_period_end", default: false, null: false
+    t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "current_period_ends_at"
     t.string "default_currency", default: "USD", null: false
@@ -480,6 +481,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_14_220949) do
     t.string "name"
     t.json "notification_preferences", default: {}, null: false
     t.string "preferred_currency"
+    t.string "residence_country_code"
     t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true

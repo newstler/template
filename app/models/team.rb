@@ -1,5 +1,6 @@
 class Team < ApplicationRecord
   extend FriendlyId
+  include Countryable
   include Subscribable
 
   friendly_id :name, use: :slugged
@@ -19,6 +20,8 @@ class Team < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
+
+  countryable :country_code
 
   before_create :generate_api_key
   before_create :start_trial

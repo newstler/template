@@ -77,4 +77,19 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert user.errors[:preferred_currency].any?
   end
+
+  test "residence_country_code is nullable" do
+    user = users(:one)
+    assert_nil user.residence_country_code
+    assert user.valid?
+  end
+
+  test "residence_country_code must be a valid ISO 3166 alpha-2 when set" do
+    user = users(:one)
+    user.residence_country_code = "US"
+    assert user.valid?
+    user.residence_country_code = "ZZ"
+    assert_not user.valid?
+    assert user.errors[:residence_country_code].any?
+  end
 end
