@@ -63,4 +63,18 @@ class UserTest < ActiveSupport::TestCase
     user.reload
     assert_equal false, user.notification_preferences.dig("welcome", "email")
   end
+
+  test "preferred_currency is nullable" do
+    user = users(:one)
+    assert_nil user.preferred_currency
+  end
+
+  test "preferred_currency must be a supported code if set" do
+    user = users(:one)
+    user.preferred_currency = "USD"
+    assert user.valid?
+    user.preferred_currency = "XXX"
+    assert_not user.valid?
+    assert user.errors[:preferred_currency].any?
+  end
 end
