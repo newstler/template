@@ -32,4 +32,18 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     get notifications_path
     assert_redirected_to new_session_path
   end
+
+  test "PATCH /notifications/:id/mark_read marks a notification as read" do
+    WelcomeNotifier.with(record: @user).deliver(@user)
+    perform_enqueued_jobs
+    perform_enqueued_jobs
+
+    notification = @user.notifications.last
+    assert_nil notification.read_at
+
+    patch mark_read_notification_path(notification), headers: { "Accept" => "text/vnd.turbo-stream.html" }
+    assert_response :success
+
+    assert notification.reload.read_at.present?
+  end
 end
