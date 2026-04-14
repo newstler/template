@@ -49,5 +49,7 @@ namespace :madmin do
     post :sync, on: :member
   end
   resource :mail, only: [ :show, :edit, :update ], controller: "mail"
+  resources :noticed_events, only: [ :index, :show ]
+  resources :noticed_notifications, only: [ :index, :show ]
   root to: "dashboard#show"
 end
