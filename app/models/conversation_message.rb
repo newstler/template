@@ -4,6 +4,8 @@ class ConversationMessage < ApplicationRecord
 
   has_many_attached :attachments
 
+  scope :chronologically, -> { order(created_at: :asc) }
+
   validate :content_or_attachments_present
 
   after_create_commit :broadcast_append_to_conversation

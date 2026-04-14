@@ -562,7 +562,7 @@ git commit -m "feat: ConversationMessage with Turbo broadcast + translation hook
 **Files:**
 - Modify: `app/models/conversation.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Append to `test/models/conversation_test.rb`:
 
@@ -579,13 +579,13 @@ Append to `test/models/conversation_test.rb`:
   end
 ```
 
-- [ ] **Step 2: Run test, observe failure**
+- [x] **Step 2: Run test, observe failure**
 
 Run: `rails test test/models/conversation_test.rb -n /chronologically/`
 
 Expected: FAIL — `.chronologically` scope missing on conversation_messages.
 
-- [ ] **Step 3: Add the scope**
+- [x] **Step 3: Add the scope**
 
 Append to `app/models/conversation_message.rb` (inside the class):
 
@@ -593,13 +593,13 @@ Append to `app/models/conversation_message.rb` (inside the class):
   scope :chronologically, -> { order(created_at: :asc) }
 ```
 
-- [ ] **Step 4: Run test**
+- [x] **Step 4: Run test**
 
 Run: `rails test test/models/conversation_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add app/models/conversation_message.rb test/models/conversation_test.rb
