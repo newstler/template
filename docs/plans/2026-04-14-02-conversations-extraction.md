@@ -2088,7 +2088,7 @@ gh pr create --title "Adopt shared conversations primitive from template" --body
 
 ## Task 21: Final verification and PR (in template repo)
 
-- [ ] **Step 1: Run full CI in template**
+- [x] **Step 1: Run full CI in template**
 
 Run: `bin/ci`
 
