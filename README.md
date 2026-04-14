@@ -18,6 +18,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation (optional)
 - **Admin Panel**: Madmin
 - **Error Tracking**: Rails Error Dashboard (RED) at `/red`
+- **Notifications**: [Noticed v2](https://github.com/excid3/noticed)
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
@@ -50,6 +51,12 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Continuous backup of all databases (main, cache, queue, cable)
 - **UUIDv7 Primary Keys** for better distributed system support
 - **Solid Stack** for production-ready background jobs, caching, and cable
+- **Notifications** (via Noticed v2)
+  - Database + email delivery out of the box
+  - Live-updating inbox via Turbo Streams
+  - Per-kind, per-channel user preferences
+  - Ready for Slack, SMS, web/mobile push as opt-in adapters
+  - Full audit trail in Madmin at `/madmin/noticed_events`
 - **Vanilla Rails** approach — no unnecessary abstractions
 
 ## Getting Started
