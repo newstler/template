@@ -40,6 +40,8 @@ en:
     settings:
       edit:
         back: "← Back to settings"
+        country: Country
+        default_currency: Default currency
         heading: Edit Team Settings
         logo_label: Logo
         name_available: Name is available
