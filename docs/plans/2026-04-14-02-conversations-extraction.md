@@ -1403,7 +1403,7 @@ git commit -m "feat: port conversation views and Stimulus controllers from saili
 - Create: `test/models/concerns/translatable_message_test.rb`
 - Create: `test/jobs/translate_message_job_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/models/concerns/translatable_message_test.rb`:
 
@@ -1425,11 +1425,11 @@ class TranslatableMessageTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 2: Run test, observe failure**
+- [x] **Step 2: Run test, observe failure**
 
 Run: `rails test test/models/concerns/translatable_message_test.rb`
 
-- [ ] **Step 3: Create the concern**
+- [x] **Step 3: Create the concern**
 
 Create `app/models/concerns/translatable_message.rb`:
 
@@ -1449,7 +1449,7 @@ module TranslatableMessage
 end
 ```
 
-- [ ] **Step 4: Create the job**
+- [x] **Step 4: Create the job**
 
 Create `app/jobs/translate_message_job.rb`:
 
@@ -1485,7 +1485,7 @@ class TranslateMessageJob < ApplicationJob
 end
 ```
 
-- [ ] **Step 5: Create job test**
+- [x] **Step 5: Create job test**
 
 Create `test/jobs/translate_message_job_test.rb`:
 
@@ -1511,13 +1511,13 @@ end
 
 Note: these tests avoid the LLM call entirely. A full integration test would stub RubyLLM; that's out of scope for this plan.
 
-- [ ] **Step 6: Run tests**
+- [x] **Step 6: Run tests**
 
 Run: `rails test test/models/concerns/translatable_message_test.rb test/jobs/translate_message_job_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 7: Commit**
+- [x] **Step 7: Commit**
 
 ```bash
 git add app/models/concerns/translatable_message.rb \
