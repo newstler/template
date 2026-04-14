@@ -1,0 +1,8 @@
+first:
+  id: 01961a2a-c0de-7000-8000-c20000000001
+  conversation_id: 01961a2a-c0de-7000-8000-c00000000001
+  user_id: 01961a2a-c0de-7000-8000-000000000001
+  content: "Hello team"
+  body_translations: {}
+  created_at: <%= 2.hours.ago %>
+  updated_at: <%= 2.hours.ago %>

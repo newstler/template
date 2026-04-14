@@ -615,7 +615,7 @@ git commit -m "feat: chronological scope on conversation_messages"
 - Create: `test/fixtures/conversation_participants.yml`
 - Create: `test/fixtures/conversation_messages.yml`
 
-- [ ] **Step 1: Create fixtures**
+- [x] **Step 1: Create fixtures**
 
 Create `test/fixtures/conversations.yml`:
 
@@ -663,13 +663,13 @@ first:
   updated_at: <%= 2.hours.ago %>
 ```
 
-- [ ] **Step 2: Run full suite to verify fixtures load**
+- [x] **Step 2: Run full suite to verify fixtures load**
 
 Run: `rails test`
 
 Expected: PASS. If fixtures fail to load because of missing `users(:two)`, either add that fixture or remove the `one_two` participant.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add test/fixtures/conversations.yml test/fixtures/conversation_participants.yml test/fixtures/conversation_messages.yml
