@@ -390,7 +390,7 @@ git commit -m "feat: ConversationParticipant with read/notified tracking"
 - Create: `app/models/conversation_message.rb`
 - Create: `test/models/conversation_message_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/models/conversation_message_test.rb`:
 
@@ -454,13 +454,13 @@ end
 
 Create a tiny test fixture file: `test/fixtures/files/test.txt` with contents `hello\n`.
 
-- [ ] **Step 2: Run the test to verify it fails**
+- [x] **Step 2: Run the test to verify it fails**
 
 Run: `rails test test/models/conversation_message_test.rb`
 
 Expected: FAIL.
 
-- [ ] **Step 3: Create the migration**
+- [x] **Step 3: Create the migration**
 
 ```ruby
 class CreateConversationMessages < ActiveRecord::Migration[8.1]
@@ -480,7 +480,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 4: Create the model**
+- [x] **Step 4: Create the model**
 
 Create `app/models/conversation_message.rb`:
 
@@ -522,7 +522,7 @@ class ConversationMessage < ApplicationRecord
 end
 ```
 
-- [ ] **Step 5: Run the test**
+- [x] **Step 5: Run the test**
 
 Run: `rails test test/models/conversation_message_test.rb`
 
@@ -544,7 +544,7 @@ end
 
 Re-run the test.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add db/migrate/*conversation_messages* db/schema.rb \

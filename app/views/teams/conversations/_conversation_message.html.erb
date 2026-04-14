@@ -1,0 +1,4 @@
+<div id="<%= dom_id(message) %>" class="py-2">
+  <strong><%= message.user.name.presence || message.user.email %>:</strong>
+  <%= message.content %>
+</div>
