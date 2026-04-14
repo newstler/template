@@ -2,6 +2,7 @@
 en:
   app_name: Template
   common:
+    ago: ago
     back: Back
     created: Created
     default: Default

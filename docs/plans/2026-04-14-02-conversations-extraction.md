@@ -1277,24 +1277,24 @@ git commit -m "feat: Teams::Conversations::MessagesController#create"
 - Create: `config/locales/en/views/conversations.yml`
 - Create: `config/locales/ru/views/conversations.yml`
 
-- [ ] **Step 1: Port Stimulus controllers verbatim**
+- [x] **Step 1: Port Stimulus controllers verbatim**
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/javascript/controllers/chat_scroll_controller.js`, copy to `app/javascript/controllers/chat_scroll_controller.js`. Review for any sailing-specific comments or class names, remove them, keep the logic.
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/javascript/controllers/chat_input_controller.js`, copy to `app/javascript/controllers/chat_input_controller.js`. Same review.
 
-- [ ] **Step 2: Port attachments partial**
+- [x] **Step 2: Port attachments partial**
 
 Read `/Users/yurisidorov/Code/my/ruby/sailing_plus/app/views/teams/adventures/join_requests/_message_attachments.html.erb`. Copy to `app/views/teams/conversations/_message_attachments.html.erb`, replacing any "crew" or "adventure" references with generic language (the partial itself should be mostly domain-neutral).
 
-- [ ] **Step 3: Port and flesh out conversation_message partial**
+- [x] **Step 3: Port and flesh out conversation_message partial**
 
 Replace `app/views/teams/conversations/_conversation_message.html.erb` with the full version from sailing_plus (`_conversation_message.html.erb`), updating:
 - `m.user.name.presence` references stay the same
 - Any Adventure-specific avatar logic → use `@user.avatar` or a generic fallback
 - Keep left/right alignment by sender
 
-- [ ] **Step 4: Create composer partial**
+- [x] **Step 4: Create composer partial**
 
 Create `app/views/teams/conversations/_composer.html.erb`:
 
@@ -1318,7 +1318,7 @@ Create `app/views/teams/conversations/_composer.html.erb`:
 <% end %>
 ```
 
-- [ ] **Step 5: Rewrite the show view properly**
+- [x] **Step 5: Rewrite the show view properly**
 
 Replace `app/views/teams/conversations/show.html.erb`:
 
@@ -1348,7 +1348,7 @@ Replace `app/views/teams/conversations/show.html.erb`:
 </div>
 ```
 
-- [ ] **Step 6: Create i18n files**
+- [x] **Step 6: Create i18n files**
 
 Create `config/locales/en/views/conversations.yml`:
 
@@ -1376,13 +1376,13 @@ ru:
         send: "Отправить"
 ```
 
-- [ ] **Step 7: Run all tests**
+- [x] **Step 7: Run all tests**
 
 Run: `rails test`
 
 Expected: PASS. If the controller tests fail due to missing view references, adjust the views to match.
 
-- [ ] **Step 8: Commit**
+- [x] **Step 8: Commit**
 
 ```bash
 git add app/views/teams/conversations/ \

@@ -1,4 +1,18 @@
-<div id="<%= dom_id(message) %>" class="py-2">
-  <strong><%= message.user.name.presence || message.user.email %>:</strong>
-  <%= message.content %>
+<%#
+  Rendered from both the show action (has current_user) and after_create_commit
+  broadcast (no current_user). The partial must work in both contexts.
+%>
+<div id="<%= dom_id(message) %>" class="mb-4" data-user-id="<%= message.user_id %>">
+  <div class="flex justify-start">
+    <div class="max-w-[85%]">
+      <div class="bg-accent-600 text-white rounded-2xl rounded-tl-md px-4 py-3 shadow-lg shadow-black/20">
+        <div class="text-xs opacity-75 mb-1"><%= message.user.name.presence || message.user.email %></div>
+        <%= render "teams/conversations/message_attachments", message: message, doc_bg_class: "bg-accent-700 hover:bg-accent-800" %>
+        <% if message.content.present? %>
+          <div class="text-sm whitespace-pre-wrap"><%= message.content %></div>
+        <% end %>
+      </div>
+      <div class="text-xs text-dark-500 mt-1"><%= time_ago_in_words(message.created_at) %> <%= t("common.ago") %></div>
+    </div>
+  </div>
 </div>

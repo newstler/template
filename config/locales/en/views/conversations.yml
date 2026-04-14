@@ -1,0 +1,9 @@
+---
+en:
+  teams:
+    conversations:
+      composer:
+        placeholder: Write a message...
+        send: Send
+      show:
+        title: Conversation
