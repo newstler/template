@@ -1,0 +1,3 @@
+<h1><%= t("notifiers.welcome_notifier.email.heading") %></h1>
+
+<p><%= t("notifiers.welcome_notifier.email.body_html", name: @user.name.presence || @user.email).html_safe %></p>

@@ -1,0 +1,10 @@
+---
+en:
+  notifiers:
+    welcome_notifier:
+      email:
+        body_html: Hi <strong>%{name}</strong>, welcome! Your account is ready.
+        body_text: Hi %{name}, welcome! Your account is ready.
+        heading: Welcome aboard
+        subject: Welcome to the team
+      message: Welcome aboard, %{name}!
