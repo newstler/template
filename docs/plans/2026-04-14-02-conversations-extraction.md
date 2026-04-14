@@ -1539,7 +1539,7 @@ git commit -m "feat: TranslatableMessage opt-in concern with LLM translation job
 - Create: `test/models/concerns/moderatable_message_test.rb`
 - Create: `test/jobs/moderate_message_job_test.rb`
 
-- [ ] **Step 1: Add moderation_model column to settings**
+- [x] **Step 1: Add moderation_model column to settings**
 
 ```ruby
 class AddModerationModelToSettings < ActiveRecord::Migration[8.1]
@@ -1567,7 +1567,7 @@ def self.moderation_model
 end
 ```
 
-- [ ] **Step 2: Create the concern**
+- [x] **Step 2: Create the concern**
 
 Create `app/models/concerns/moderatable_message.rb`:
 
@@ -1602,7 +1602,7 @@ module ModeratableMessage
 end
 ```
 
-- [ ] **Step 3: Create the job**
+- [x] **Step 3: Create the job**
 
 Create `app/jobs/moderate_message_job.rb`:
 
@@ -1642,7 +1642,7 @@ class ModerateMessageJob < ApplicationJob
 end
 ```
 
-- [ ] **Step 4: Write tests**
+- [x] **Step 4: Write tests**
 
 Create `test/models/concerns/moderatable_message_test.rb`:
 
@@ -1692,13 +1692,13 @@ class ModerateMessageJobTest < ActiveJob::TestCase
 end
 ```
 
-- [ ] **Step 5: Run tests**
+- [x] **Step 5: Run tests**
 
 Run: `rails test test/models/concerns/moderatable_message_test.rb test/jobs/moderate_message_job_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add app/models/concerns/moderatable_message.rb app/jobs/moderate_message_job.rb \

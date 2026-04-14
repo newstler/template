@@ -24,7 +24,7 @@ module Madmin
     private
 
     def ai_model_params
-      params.require(:setting).permit(:default_model, :translation_model)
+      params.require(:setting).permit(:default_model, :translation_model, :moderation_model)
     end
   end
 end

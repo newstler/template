@@ -10,6 +10,12 @@ en:
         default_model: Default Model
         default_model_hint: The AI model used for new chat conversations.
         heading: Edit AI Models
+        moderation_description: The model used to check conversation messages for
+          off-platform contact leaks.
+        moderation_heading: Moderation Model
+        moderation_model: Moderation Model
+        moderation_model_hint: A small, cheap model is sufficient; only invoked when
+          regex patterns miss.
         no_models: No models available
         no_models_hint: Sync models from AI providers first.
         save: Save Settings
@@ -26,6 +32,10 @@ en:
         default_model: Default Model
         edit_button: Edit Settings
         heading: AI Models
+        moderation_description: The model used to check conversation messages for
+          off-platform contact leaks.
+        moderation_heading: Moderation Model
+        moderation_model: Moderation Model
         no_models: No models available
         no_models_hint: Configure AI providers and sync models first.
         not_configured: Not configured — chats and translations are disabled

@@ -32,7 +32,7 @@
       </dl>
     </div>
 
-    <div class="card-bg p-6">
+    <div class="card-bg p-6 mb-6">
       <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".translation_heading") %></h2>
       <p class="text-sm text-dark-500 mb-4"><%= t(".translation_description") %></p>
       <dl class="space-y-4">
@@ -42,6 +42,25 @@
             <% if @setting.translation_model.present? %>
               <span class="w-2 h-2 bg-green-400 rounded-full"></span>
               <code class="text-sm text-dark-200 font-mono"><%= @setting.translation_model %></code>
+            <% else %>
+              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
+              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
+            <% end %>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".moderation_heading") %></h2>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".moderation_description") %></p>
+      <dl class="space-y-4">
+        <div class="flex items-center justify-between">
+          <dt class="text-sm font-medium text-dark-400"><%= t(".moderation_model") %></dt>
+          <dd class="flex items-center gap-2">
+            <% if @setting.moderation_model.present? %>
+              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+              <code class="text-sm text-dark-200 font-mono"><%= @setting.moderation_model %></code>
             <% else %>
               <span class="w-2 h-2 bg-red-400 rounded-full"></span>
               <span class="text-sm text-red-400"><%= t(".not_configured") %></span>

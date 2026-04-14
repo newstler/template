@@ -3,6 +3,7 @@ class Setting < ApplicationRecord
     default_model
     litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
     mail_from
+    moderation_model
     public_chats
     smtp_address smtp_password smtp_username
     stripe_publishable_key stripe_secret_key stripe_webhook_secret
@@ -33,6 +34,10 @@ class Setting < ApplicationRecord
 
   def self.translation_model
     get(:translation_model).presence
+  end
+
+  def self.moderation_model
+    get(:moderation_model).presence
   end
 
   def self.chats_enabled?
