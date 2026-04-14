@@ -476,7 +476,7 @@ Automatic translation of user-generated content via LLM. Uses the Mobility gem (
 Language → code, name, native_name, enabled
 TeamLanguage → team, language, active (join model)
 Translatable → concern for auto-translation
-TranslateContentJob → LLM translation via gpt-4.1-nano
+TranslateContentJob → LLM translation via the model configured in Madmin at Setting.translation_model
 BackfillTranslationsJob → translate existing content when language added
 ```
 
@@ -652,3 +652,19 @@ Quick reference for working in this codebase:
 - Stimulus for JS sprinkles
 - `inline_svg` for icons
 - No npm/yarn packages
+
+## Nothing hardcoded: all LLM models are Madmin-configurable
+
+**Rule:** No code in `app/` may reference a specific LLM model name as a string literal. Every LLM model name must come from a `Setting` key, editable in Madmin at `/madmin/ai_models`.
+
+Allowed:
+- `Setting.translation_model`
+- `Setting.default_model`
+- `Setting.embedding_model` (added by Embeddable primitive)
+- `Setting.moderation_model` (added by Conversations primitive)
+
+Not allowed:
+- `RubyLLM.chat(model: "gpt-4.1-nano")` ← replace with `Setting.translation_model`
+- Hardcoded model fallbacks in rescue blocks ← use `Setting` everywhere, fail loudly if unset
+
+Fixture defaults (`test/fixtures/settings.yml`) may contain concrete model names — those are development defaults, not production constants.

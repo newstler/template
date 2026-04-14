@@ -84,7 +84,7 @@ article-multilingual.md                                      # housekeeping foot
 
 This is the §7 docs-cleanup item from the template spec, folded into this plan as prep work because it's tiny, zero-risk, and unblocks all subsequent per-primitive doc updates.
 
-- [ ] **Step 1: Fix `AGENTS.md:479` misleading model reference**
+- [x] **Step 1: Fix `AGENTS.md:479` misleading model reference**
 
 Open `AGENTS.md`, locate line 479 (the `TranslateContentJob` reference under the Multilingual Content section). Current text:
 
@@ -98,7 +98,7 @@ Replace with:
 TranslateContentJob → LLM translation via the model configured in Madmin at Setting.translation_model
 ```
 
-- [ ] **Step 2: Fix `.claude/rules/multilingual.md:39` hardcoded-model reference**
+- [x] **Step 2: Fix `.claude/rules/multilingual.md:39` hardcoded-model reference**
 
 Open `.claude/rules/multilingual.md`, locate line 39. Current text:
 
@@ -112,7 +112,7 @@ Replace with:
 5. Job calls `RubyLLM.chat(model: Setting.translation_model)` with JSON prompt
 ```
 
-- [ ] **Step 3: Add footnote to `article-multilingual.md:47`**
+- [x] **Step 3: Add footnote to `article-multilingual.md:47`**
 
 Open `article-multilingual.md`. Leave the prose paragraph intact, but add a footnote after the `gpt-4.1-nano` mention:
 
@@ -120,7 +120,7 @@ Open `article-multilingual.md`. Leave the prose paragraph intact, but add a foot
 > **Note (added later):** the model is now configured in Madmin via `Setting.translation_model`; `gpt-4.1-nano` is the current default, not a hardcoded constant.
 ```
 
-- [ ] **Step 4: Add "Nothing hardcoded" rule to `AGENTS.md`**
+- [x] **Step 4: Add "Nothing hardcoded" rule to `AGENTS.md`**
 
 At the end of `AGENTS.md`, before the final line, add:
 
@@ -142,13 +142,13 @@ Not allowed:
 Fixture defaults (`test/fixtures/settings.yml`) may contain concrete model names — those are development defaults, not production constants.
 ```
 
-- [ ] **Step 5: Run test suite to confirm nothing broke**
+- [x] **Step 5: Run test suite to confirm nothing broke**
 
 Run: `bin/ci`
 
 Expected: PASS. These are pure doc changes so tests should be unaffected.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add AGENTS.md .claude/rules/multilingual.md article-multilingual.md
