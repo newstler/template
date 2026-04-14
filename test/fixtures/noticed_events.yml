@@ -1,0 +1,10 @@
+# Hardcoded UUIDv7 strings for referential integrity.
+welcome_for_user_one:
+  id: 01961a2a-c0de-7000-8000-a00000000001
+  type: WelcomeNotifier
+  record_type: User
+  record_id: 01961a2a-c0de-7000-8000-000000000001
+  params: "{}"
+  notifications_count: 1
+  created_at: <%= 1.day.ago %>
+  updated_at: <%= 1.day.ago %>

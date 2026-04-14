@@ -3,6 +3,8 @@ require "test_helper"
 class NotificationsControllerTest < ActionDispatch::IntegrationTest
   setup do
     @user = users(:one)
+    # Clear fixture notifications so counts start from a clean slate
+    @user.notifications.destroy_all
     sign_in @user
   end
 
@@ -54,7 +56,8 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
     perform_enqueued_jobs
     perform_enqueued_jobs
 
-    notification = @user.notifications.last
+    notification = @user.notifications.reload.last
+    assert_not_nil notification
     assert_nil notification.read_at
 
     patch mark_read_notification_path(notification), headers: { "Accept" => "text/vnd.turbo-stream.html" }
