@@ -116,6 +116,8 @@ npx @anthropic-ai/mcp-inspector
 | `create_conversation` | Create a conversation with participants | Team + User |
 | `list_conversation_messages` | List messages in a conversation | Team + User |
 | `create_conversation_message` | Post a message to a conversation | Team + User |
+| `show_team_dashboard` | Team dashboard KPIs + chats time-series | Team + User |
+| `show_admin_dashboard` | Platform-wide admin KPIs + time-series | Admin |
 
 **Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required.
 
@@ -145,6 +147,7 @@ app/
 │   ├── chats/                   # Chat CRUD tools
 │   ├── conversations/           # Conversation tools (list/show/create)
 │   ├── conversation_messages/   # Conversation message tools
+│   ├── dashboards/              # Team + admin dashboard aggregate tools
 │   ├── languages/               # Language management tools
 │   ├── messages/                # Message tools
 │   ├── models/                  # Model tools
@@ -880,6 +883,73 @@ When deploying a consuming app with sqlite-vec, ensure `vendor/sqlite-vec/` is c
 - Query expansion (HyDE, multi-query)
 
 The public API (`similar_to`, `hybrid_search`, `include Embeddable`) is stable enough to swap the concern's implementation without touching call sites.
+
+## Dashboards
+
+Chartkick + Groupdate with a shared `DashboardHelper` module and reusable partials. The reference team dashboard is the root of every team (`/t/:slug/`); the admin dashboard is the Madmin root (`/madmin`).
+
+### Basic pattern
+
+```erb
+<%= kpi_card label: t(".users"), value: @user_count, trend: pct_change(@recent, @prev) %>
+
+<%= render "shared/chart_card", title: t(".growth") do %>
+  <%= line_chart @users_timeline %>
+<% end %>
+
+<%= attention_items_strip(@attention_items) %>
+```
+
+### Time-range selector
+
+```erb
+<select data-controller="time-range" data-action="change->time-range#update">
+  <option value="7d">Last 7 days</option>
+  <option value="30d" selected>Last 30 days</option>
+  <option value="90d">Last 90 days</option>
+</select>
+```
+
+In the controller: `@range = time_range_from(params[:range])` → use `@range` in `.where(created_at: @range)` queries and `.group_by_day(:created_at, range: @range)` for time-series.
+
+### Caching
+
+```ruby
+@top_users = cached_dashboard(:top_users, expires_in: 10.minutes) do
+  current_team.users.joins(:chats).group("users.id")
+              .order(Arel.sql("SUM(chats.total_cost) DESC")).limit(10).to_a
+end
+```
+
+Cache key includes team id + key + range begin, so invalidation is automatic on range change.
+
+### Partials
+
+- `shared/kpi_card` — label, value, optional trend, optional icon, optional link
+- `shared/chart_card` — wraps a Chartkick chart with title + `chart-theme` Stimulus controller
+- `shared/attention_items_strip` — color-coded action badges
+- `shared/progress_ring` — SVG circular progress indicator
+
+### Helpers (`DashboardHelper`)
+
+- `kpi_card(label:, value:, trend:, icon:, href:)`
+- `pct_change(current, previous)` — nil-safe
+- `trend_arrow(delta)` — returns ↑ ↓ →
+- `sparkline(series, width:, height:)` — tiny inline SVG line chart
+- `progress_ring(value:, max:, size:, label:)`
+- `attention_items_strip(items)`
+- `cached_dashboard(key, expires_in:, &block)`
+- `time_range_from(param)` — returns a `Range`
+
+### Stimulus controllers
+
+- `chart_theme` — OKLCH-aware themer for Chartkick/Chart.js canvases
+- `sparkline` — hover tooltips on the inline SVG sparklines
+- `time_range` — posts `?range=` back via `Turbo.visit` when the selector changes
+
+### Rules (enforced)
+
+See `.claude/rules/performance.md` § Dashboards.
 
 ## Testing
 
