@@ -1,36 +1,67 @@
-<%= content_for :title, resource.display_name(@record) %>
+<%= content_for :title, @record.email %>
 
 <header class="header">
   <h1>
     <%= link_to resource.friendly_name.pluralize, resource.index_path %>
     /
-    <%= resource.display_name(@record) %>
+    <%= @record.email %>
   </h1>
 
   <div class="actions">
     <% resource.member_actions.each do |action| %>
       <%= instance_exec(@record, &action) %>
     <% end %>
+    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
   </div>
 </header>
 
-<div class="table-scroll">
-  <table>
-    <tbody>
-    <% resource.attributes.values.each do |attribute| %>
-      <% next if attribute.field.nil? %>
-      <% next unless attribute.field.visible?(action_name) %>
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-6">
+    <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.email.downcase.strip) %>?s=120&d=mp" class="w-24 h-24 rounded-full" alt="">
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.email %></h2>
+      <p class="text-dark-500 text-sm mt-2">
+        Admin since <%= @record.created_at.strftime("%-d %B %Y") %>
+        <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> ago)</span>
+      </p>
+    </div>
+    <div>
+      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-500/15 text-purple-400">
+        <%= inline_svg "icons/shield.svg", class: "w-4 h-4 mr-1.5" %>
+        Administrator
+      </span>
+    </div>
+  </div>
+</div>
 
-      <tr>
-        <th class="label">
-          <%= attribute.field.options.label || attribute.name.to_s.titleize %>
-        </th>
-
-        <td>
-          <%= render partial: attribute.field.to_partial_path("show"), locals: { field: attribute.field, record: @record, resource: resource } %>
-        </td>
-      </tr>
-    <% end %>
-    </tbody>
-  </table>
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">Email</th>
+          <td><%= @record.email %></td>
+        </tr>
+        <tr>
+          <th class="label">Role</th>
+          <td>
+            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/15 text-purple-400">
+              Administrator
+            </span>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Created</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Updated</th>
+          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 </div>
