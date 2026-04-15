@@ -22,6 +22,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Error Tracking**: Rails Error Dashboard (RED) at `/red`
 - **Notifications**: [Noticed v2](https://github.com/excid3/noticed)
 - **Search**: SQLite FTS5 via the `Searchable` concern (Unicode61, bm25)
+- **Vector Search**: sqlite-vec (loadable extension) via `Embeddable`, `Chunkable`, `HybridSearchable`
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
@@ -71,6 +72,13 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Unicode61 tokenizer handles Cyrillic, Turkish, and Latin diacritics out of the box
   - Composable `Model.search(query)` returns a relevance-ordered `ActiveRecord::Relation`
   - Zero external services — SQLite ships with FTS5 built in
+- **Vector Search + RAG kit** (`Embeddable`, `Chunkable`, `HybridSearchable`)
+  - sqlite-vec backed vec0 virtual tables, zero external dependencies
+  - Ordered KNN results with per-record confidence (`record.similarity_distance`)
+  - Metadata pre-filtering for WHERE-aware KNN
+  - Chunking for long documents via the polymorphic `Chunk` model
+  - Hybrid keyword + semantic retrieval via Reciprocal Rank Fusion
+  - Cosine (default), L2, L1, Hamming distance metrics
 - **Team Messaging** (Conversations)
   - Team-scoped person-to-person chat with attachments
   - Polymorphic `subject` — attach conversations to any record

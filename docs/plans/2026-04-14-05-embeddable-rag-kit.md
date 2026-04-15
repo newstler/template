@@ -1000,7 +1000,7 @@ end
 
 ## Task 10: README.md update
 
-- [ ] **Step 1: Add**
+- [x] **Step 1: Add**
 
 ```markdown
 - **Vector Search + RAG kit** (`Embeddable`, `Chunkable`, `HybridSearchable`)
@@ -1018,12 +1018,7 @@ Tech stack:
 - **Vector Search**: sqlite-vec (loadable extension)
 ```
 
-- [ ] **Step 2: Commit**
-
-```bash
-git add README.md
-git commit -m "docs: README Embeddable + RAG kit section"
-```
+- [x] **Step 2: Commit**
 
 ---
 
