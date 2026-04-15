@@ -23,7 +23,7 @@
                           data-lightbox-type-value="document"
                           data-lightbox-content-type-value="<%= attachment.content_type %>">
                     <span><%= attachment.content_type == "application/pdf" ? "📕" : "📄" %></span>
-                    <span class="truncate max-w-[150px]"><%= attachment.filename %></span>
+                    <span class="break-all"><%= attachment.filename %></span>
                   </button>
                 <% end %>
               <% end %>
