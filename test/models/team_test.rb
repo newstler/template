@@ -28,6 +28,25 @@ class TeamTest < ActiveSupport::TestCase
     assert_includes team.errors[:name], "has already been taken"
   end
 
+  test "rejects unsupported default_currency" do
+    team = teams(:one)
+    team.default_currency = "XYZ"
+    assert_not team.valid?
+    assert_includes team.errors[:default_currency], "is not included in the list"
+  end
+
+  test "accepts nil default_currency" do
+    team = teams(:one)
+    team.default_currency = nil
+    assert team.valid?
+  end
+
+  test "accepts any supported currency" do
+    team = teams(:one)
+    team.default_currency = "EUR"
+    assert team.valid?
+  end
+
   test "regenerates slug when name changes" do
     team = teams(:one)
     original_slug = team.slug

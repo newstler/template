@@ -20,6 +20,9 @@ class Team < ApplicationRecord
 
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
+  validates :default_currency,
+            inclusion: { in: CurrencyConvertible::SUPPORTED_CURRENCIES },
+            allow_nil: true
 
   countryable :country_code
 

@@ -28,5 +28,15 @@ module Teams
       @team.reload
       assert_not_equal "ZZ", @team.country_code
     end
+
+    test "invalid default_currency is rejected with a 422" do
+      patch team_settings_path(@team.slug), params: {
+        team: { default_currency: "XXX" }
+      }
+      assert_response :unprocessable_entity
+
+      @team.reload
+      assert_not_equal "XXX", @team.default_currency
+    end
   end
 end
