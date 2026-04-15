@@ -1,0 +1,12 @@
+<%# Locals: title:, subtitle: (optional). Pass chart markup via a block. %>
+<div class="p-4 bg-dark-800 rounded-lg">
+  <div class="mb-4">
+    <h2 class="text-lg font-semibold text-white"><%= title %></h2>
+    <% if local_assigns[:subtitle].present? %>
+      <p class="text-sm text-dark-300"><%= subtitle %></p>
+    <% end %>
+  </div>
+  <div data-controller="chart-theme">
+    <%= yield %>
+  </div>
+</div>

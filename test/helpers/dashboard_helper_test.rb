@@ -82,6 +82,15 @@ class DashboardHelperTest < ActionView::TestCase
     assert_match "12", html
   end
 
+  test "chart_card partial renders title and yields body" do
+    html = render(inline: <<~ERB)
+      <%= render "shared/chart_card", title: "Growth" do %>CHART_BODY<% end %>
+    ERB
+    assert_match "Growth", html
+    assert_match "CHART_BODY", html
+    assert_match "data-controller=\"chart-theme\"", html
+  end
+
   test "kpi_card without trend omits trend row" do
     html = render partial: "shared/kpi_card",
                   locals: { label: "Chats", value: 42, trend: nil, icon: nil, href: nil }
