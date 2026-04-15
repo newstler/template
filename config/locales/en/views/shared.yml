@@ -24,3 +24,6 @@ en:
       settings: Settings
       switch_context: Switch
       user: User
+    user_profile_card:
+      joined: Joined %{date}
+      view_team: View team

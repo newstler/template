@@ -4,44 +4,95 @@
 %>
 <% visible = !defined?(current_user) || current_user.nil? ? true : message.visible_to?(current_user) %>
 <% is_mine = defined?(current_user) && current_user.present? && message.user_id == current_user.id %>
+<% sender = message.user %>
+<%
+  sender_team = nil
+  is_own_team = false
+  if defined?(@user_memberships) && @user_memberships
+    memberships = @user_memberships[sender.id] || []
+    primary = memberships.find { |m| m.team_id != current_team&.id } || memberships.first
+    if primary
+      sender_team = primary.team
+      is_own_team = primary.team_id == current_team&.id
+    end
+  end
+  conversation = message.conversation
+  profile_path = defined?(current_team) && current_team ? team_conversation_participant_path(current_team, conversation, sender) : nil
+%>
 
-<div id="<%= dom_id(message) %>" class="mb-6" data-user-id="<%= message.user_id %>">
+<div id="<%= dom_id(message) %>" class="mb-5" data-user-id="<%= sender.id %>">
   <% if is_mine %>
-    <div class="flex justify-end">
-      <div class="max-w-[85%]">
+    <%# Current user — right-aligned, no name needed %>
+    <div class="flex justify-end items-end gap-2">
+      <div class="max-w-[80%]">
         <% if visible %>
-          <div class="bg-dark-700 text-white rounded-2xl rounded-br-md px-4 py-3 shadow-lg shadow-black/20">
+          <div class="bg-dark-700 text-dark-50 rounded-2xl rounded-br-sm px-4 py-2.5 shadow-md shadow-black/15">
             <%= render "teams/conversations/message_attachments", message: message, doc_bg_class: "bg-dark-600 hover:bg-dark-500" %>
             <% if message.content.present? %>
-              <div class="whitespace-pre-wrap"><%= message.body_for(current_user) %></div>
+              <div class="text-[0.9375rem] leading-relaxed whitespace-pre-wrap"><%= message.body_for(current_user) %></div>
             <% end %>
           </div>
         <% else %>
-          <div class="bg-dark-700 text-dark-300 italic rounded-2xl rounded-br-md px-4 py-3">
+          <div class="bg-dark-700/60 text-dark-400 italic rounded-2xl rounded-br-sm px-4 py-2.5">
             <div class="text-sm"><%= t(".hidden_by_moderation") %></div>
           </div>
         <% end %>
-        <div class="text-xs text-dark-500 text-right mt-1"><%= time_ago_in_words(message.created_at) %> <%= t("common.ago") %></div>
+        <time class="block text-[11px] text-dark-500 text-right mt-1 mr-1"
+              data-controller="time-ago"
+              data-time-ago-locale-value="<%= I18n.locale %>"
+              datetime="<%= message.created_at.iso8601 %>">
+          <%= time_ago_in_words(message.created_at) %> <%= t("common.ago") %>
+        </time>
       </div>
+      <%= render "teams/conversations/message_avatar", user: sender, path: profile_path, mine: true %>
     </div>
   <% else %>
-    <div class="flex justify-start">
-      <div class="max-w-[85%]">
+    <%# Other user — left-aligned with name + optional team badge %>
+    <div class="flex items-start gap-2">
+      <%= render "teams/conversations/message_avatar", user: sender, path: profile_path, mine: false %>
+      <div class="max-w-[80%]">
         <% if visible %>
-          <div class="bg-accent-600 text-white rounded-2xl rounded-tl-md px-4 py-3 shadow-lg shadow-black/20">
-            <div class="text-xs opacity-75 mb-1"><%= message.user.name.presence || message.user.email %></div>
-            <%= render "teams/conversations/message_attachments", message: message, doc_bg_class: "bg-accent-700 hover:bg-accent-800" %>
+          <div class="flex items-baseline gap-2 mb-0.5 ml-1">
+            <% if profile_path %>
+              <%= link_to sender.name.presence || sender.email, profile_path, class: "text-xs font-semibold text-accent-400 hover:text-accent-300 transition-colors" %>
+            <% else %>
+              <span class="text-xs font-semibold text-accent-400"><%= sender.name.presence || sender.email %></span>
+            <% end %>
+            <% if sender_team %>
+              <%
+                badge_classes = if is_own_team
+                  "bg-dark-600 text-dark-400 hover:text-dark-300 hover:bg-dark-500"
+                else
+                  "bg-accent-500/15 text-accent-400 hover:text-accent-300 hover:bg-accent-500/25"
+                end
+              %>
+              <% if profile_path %>
+                <%= link_to profile_path, class: "text-[10px] px-1.5 py-0.5 rounded-full #{badge_classes} font-medium leading-none transition-colors" do %><%= sender_team.name %><% end %>
+              <% else %>
+                <span class="text-[10px] px-1.5 py-0.5 rounded-full <%= badge_classes %> font-medium leading-none"><%= sender_team.name %></span>
+              <% end %>
+            <% end %>
+          </div>
+          <div class="bg-dark-650 text-dark-50 rounded-2xl rounded-tl-sm px-4 py-2.5 shadow-md shadow-black/15">
+            <%= render "teams/conversations/message_attachments", message: message, doc_bg_class: "bg-dark-600 hover:bg-dark-500" %>
             <% if message.content.present? %>
-              <div class="whitespace-pre-wrap"><%= message.body_for(current_user) %></div>
+              <div class="text-[0.9375rem] leading-relaxed whitespace-pre-wrap"><%= message.body_for(current_user) %></div>
             <% end %>
           </div>
         <% else %>
-          <div class="bg-dark-700 text-dark-300 italic rounded-2xl rounded-tl-md px-4 py-3">
-            <div class="text-xs opacity-75 mb-1"><%= message.user.name.presence || message.user.email %></div>
+          <div class="flex items-baseline gap-2 mb-0.5 ml-1">
+            <span class="text-xs font-semibold text-dark-400"><%= sender.name.presence || sender.email %></span>
+          </div>
+          <div class="bg-dark-700/60 text-dark-400 italic rounded-2xl rounded-tl-sm px-4 py-2.5">
             <div class="text-sm"><%= t(".hidden_by_moderation") %></div>
           </div>
         <% end %>
-        <div class="text-xs text-dark-500 mt-1"><%= time_ago_in_words(message.created_at) %> <%= t("common.ago") %></div>
+        <time class="block text-[11px] text-dark-500 mt-1 ml-1"
+              data-controller="time-ago"
+              data-time-ago-locale-value="<%= I18n.locale %>"
+              datetime="<%= message.created_at.iso8601 %>">
+          <%= time_ago_in_words(message.created_at) %> <%= t("common.ago") %>
+        </time>
       </div>
     </div>
   <% end %>

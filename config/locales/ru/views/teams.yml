@@ -21,16 +21,7 @@ ru:
         heading: Пригласить участника
         submit: Отправить приглашение
       show:
-        admin: Администратор
         back: Назад к участникам
-        email: Почта
-        heading: Профиль участника
-        invited_by: Приглашён
-        joined: Присоединился
-        member: Участник
-        name: Имя
-        owner: Владелец
-        role: Роль
         title: "%{name}"
     new:
       heading: Создать новую команду

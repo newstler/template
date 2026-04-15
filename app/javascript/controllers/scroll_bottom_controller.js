@@ -12,9 +12,14 @@ export default class extends Controller {
   }
 
   observeNewMessages() {
-    this.observer = new MutationObserver(() => {
-      this.scrollToBottom()
-      this.observeImageLoads()
+    this.observer = new MutationObserver((mutations) => {
+      const hasNewElements = mutations.some(m =>
+        m.type === "childList" && [...m.addedNodes].some(n => n.nodeType === Node.ELEMENT_NODE)
+      )
+      if (hasNewElements) {
+        this.scrollToBottom()
+        this.observeImageLoads()
+      }
     })
 
     this.observer.observe(this.element, {

@@ -1,0 +1,4 @@
+<div id="sidebar_conversation_<%= conversation.id %>">
+  <% conv_label = conversation.title.presence || conversation.participants.reject { |p| p.id == current_user.id }.map { |p| p.name.presence || p.email }.join(", ") %>
+  <%= render "shared/sidebar_link", path: team_conversation_path(current_team, conversation), icon: "chat", label: conv_label.presence || t("common.untitled"), nested: true, truncate: true, badge: local_assigns[:unread].to_i %>
+</div>

@@ -44,6 +44,8 @@ class Teams::ConversationsController < ApplicationController
 
     @messages = scope_for_messages
     @has_older = scope_for_older_messages.any?
+    @conversation_teams = @conversation.teams.to_a
+    preload_message_users(@messages)
 
     response.set_header("X-Has-Older", @has_older.to_s)
     response.set_header("X-Oldest-Id", @messages.first&.id.to_s)
@@ -68,6 +70,12 @@ class Teams::ConversationsController < ApplicationController
       scope = scope.where("created_at < ?", anchor.created_at)
     end
     scope.last(PAGE_SIZE)
+  end
+
+  def preload_message_users(messages)
+    user_ids = messages.map(&:user_id).uniq
+    memberships = Membership.where(user_id: user_ids, team_id: @conversation_teams.map(&:id)).includes(:team)
+    @user_memberships = memberships.group_by(&:user_id)
   end
 
   def scope_for_older_messages

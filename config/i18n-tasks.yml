@@ -26,6 +26,7 @@ ignore_missing:
   - 'helpers.select.*'
   - 'number.*'
   - 'date.*'
+  - 'datetime.*'
   - 'time.*'
   - 'support.*'
   - 'helpers.submit.*'
@@ -39,6 +40,7 @@ ignore_missing:
 ignore_unused:
   - 'activerecord.*'
   - 'date.*'
+  - 'datetime.*'
   - 'time.*'
   - 'number.*'
   - 'support.*'

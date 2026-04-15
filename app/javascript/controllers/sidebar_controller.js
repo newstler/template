@@ -170,8 +170,11 @@ export default class extends Controller {
       const saved = localStorage.getItem("sidebar-collapsed-groups")
       if (saved) {
         this.collapsedValue = JSON.parse(saved)
-        this.applyCollapsedState()
+      } else {
+        const allGroupIds = [...document.querySelectorAll("[data-group-id]")].map(el => el.dataset.groupId)
+        this.collapsedValue = allGroupIds
       }
+      this.applyCollapsedState()
     } catch (e) {
       console.warn("Could not load sidebar state:", e)
     }

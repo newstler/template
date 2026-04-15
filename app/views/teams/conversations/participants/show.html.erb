@@ -1,0 +1,9 @@
+<% content_for :title, @participant_user.name.presence || @participant_user.email %>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="mb-8">
+    <%= link_to t(".back"), team_conversation_path(current_team, @conversation), class: "text-dark-400 hover:text-dark-300 transition-colors text-sm" %>
+  </div>
+
+  <%= render "shared/user_profile_card", user: @participant_user, memberships: @participant_memberships %>
+</div>

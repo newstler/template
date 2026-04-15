@@ -24,3 +24,6 @@ ru:
       settings: Настройки
       switch_context: Переключить
       user: Пользователь
+    user_profile_card:
+      joined: С %{date}
+      view_team: Перейти в команду

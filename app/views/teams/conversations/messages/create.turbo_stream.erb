@@ -5,3 +5,12 @@
 <%= turbo_stream.replace "conversation_message_form" do %>
   <%= render "teams/conversations/composer" %>
 <% end %>
+
+<%# Trigger FLIP reorder animation to move conversation to top of sidebar %>
+<%= turbo_stream.replace "sidebar_reorder_trigger" do %>
+  <div id="sidebar_reorder_trigger" class="hidden"
+       data-controller="sidebar-reorder"
+       data-sidebar-reorder-list-value="sidebar_conversations_list"
+       data-sidebar-reorder-promote-value="<%= @conversation.id %>">
+  </div>
+<% end %>

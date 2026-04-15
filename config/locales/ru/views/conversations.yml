@@ -18,5 +18,8 @@ ru:
         subheading: Начните переписку с участниками команды.
         title_label: Название
         title_placeholder: Необязательное название переписки
+      participants:
+        show:
+          back: Назад к переписке
       show:
         title: Переписка

@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     resources :languages, only: [ :index, :create, :destroy ], controller: "teams/languages"
     resources :conversations, controller: "teams/conversations", only: [ :index, :new, :create, :show ] do
       resources :messages, controller: "teams/conversations/messages", only: [ :create ]
+      resources :participants, controller: "teams/conversations/participants", only: [ :show ]
     end
 
     # Billing

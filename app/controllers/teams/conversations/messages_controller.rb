@@ -23,7 +23,7 @@ class Teams::Conversations::MessagesController < ApplicationController
   private
 
   def set_conversation
-    @conversation = current_team.conversations.find(params[:conversation_id])
+    @conversation = current_team.conversations.includes(:participants).find(params[:conversation_id])
   end
 
   def ensure_participant!
