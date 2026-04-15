@@ -74,6 +74,18 @@ class DashboardHelperTest < ActionView::TestCase
     assert_equal "", attention_items_strip(nil)
   end
 
+  test "attention_items_strip renders each item with severity color" do
+    html = attention_items_strip([
+      { severity: :critical, label: "Fix billing", path: "/billing" },
+      { severity: :warning, label: "Pending invites", count: 3 }
+    ])
+    assert_match "Fix billing", html
+    assert_match "Pending invites", html
+    assert_match "bg-red-500", html
+    assert_match "bg-amber-500", html
+    assert_match ">3<", html
+  end
+
   test "kpi_card renders label and value" do
     html = render partial: "shared/kpi_card",
                   locals: { label: "Users", value: "1,234", trend: 12 }

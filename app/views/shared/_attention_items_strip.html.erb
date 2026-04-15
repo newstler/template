@@ -1,0 +1,19 @@
+<%# Locals: items: [ { severity:, label:, path: (optional), count: (optional) } ] %>
+<div class="flex flex-wrap gap-2 mb-4">
+  <% items.each do |item| %>
+    <% color = case item[:severity]
+               when :critical then "bg-red-500"
+               when :warning  then "bg-amber-500"
+               when :info     then "bg-sky-500"
+               else                "bg-dark-600"
+               end %>
+    <% tag = item[:path] ? :a : :div %>
+    <%= content_tag(tag, href: item[:path],
+                    class: "#{color} text-white px-3 py-1.5 rounded-full text-xs font-medium inline-flex items-center gap-1") do %>
+      <%= item[:label] %>
+      <% if item[:count] %>
+        <span class="bg-white/20 px-1.5 py-0.5 rounded-full"><%= item[:count] %></span>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>
