@@ -13,7 +13,7 @@ class ConversationResource < Madmin::Resource
   attribute :updated_at, form: false
 
   # Associations
-  attribute :team
+  attribute :teams
   attribute :conversation_messages
   attribute :conversation_participants
 

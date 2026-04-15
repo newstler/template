@@ -14,7 +14,7 @@ class ConversationsTest < ApplicationSystemTestCase
     assert_selector "#conversation_messages"
 
     fill_in "conversation_message[content]", with: "Hello system test"
-    click_on I18n.t("teams.conversations.composer.send")
+    find("#conversation_message_form button[type='submit']").click
 
     assert_selector "div", text: "Hello system test", wait: 5
   end

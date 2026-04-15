@@ -16,10 +16,14 @@ module TranslatableMessage
 
   def enqueue_message_translations
     return if content.blank?
-    team = conversation&.team
-    return unless team
+    teams = conversation&.teams.to_a
+    return if teams.empty?
 
-    target_codes = team.translation_target_codes(exclude: source_locale.to_s)
+    # Union target codes across every team on the conversation so members
+    # of each team can read the message in their preferred language.
+    target_codes = teams
+      .flat_map { |team| team.translation_target_codes(exclude: source_locale.to_s) }
+      .uniq
     return if target_codes.empty?
 
     jobs = target_codes.map do |target_locale|

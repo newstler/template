@@ -4,14 +4,14 @@ module Madmin
 
     def set_record
       @record = resource.model
-        .includes(:user, :attachments_attachments, conversation: :team)
+        .includes(:user, :attachments_attachments, conversation: :teams)
         .find(params[:id])
     end
 
     def scoped_resources
       resources = resource.model.send(valid_scope)
       resources = Madmin::Search.new(resources, resource, search_term).run
-      resources = resources.includes(:user, conversation: :team)
+      resources = resources.includes(:user, conversation: :teams)
       if params[:flagged] == "true"
         resources = resources.where.not(flagged_at: nil)
       elsif params[:flagged] == "false"

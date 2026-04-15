@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_15_160000) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_170000) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -109,15 +109,23 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_160000) do
     t.index ["user_id"], name: "index_conversation_participants_on_user_id"
   end
 
+  create_table "conversation_teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.string "team_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "team_id"], name: "index_conversation_teams_on_conversation_id_and_team_id", unique: true
+    t.index ["conversation_id"], name: "index_conversation_teams_on_conversation_id"
+    t.index ["team_id"], name: "index_conversation_teams_on_team_id"
+  end
+
   create_table "conversations", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "subject_id"
     t.string "subject_type"
-    t.string "team_id", null: false
     t.string "title"
     t.datetime "updated_at", null: false
     t.index ["subject_type", "subject_id"], name: "index_conversations_on_subject"
-    t.index ["team_id"], name: "index_conversations_on_team_id"
   end
 
   create_table "languages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -526,7 +534,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_160000) do
   add_foreign_key "conversation_messages", "users"
   add_foreign_key "conversation_participants", "conversations"
   add_foreign_key "conversation_participants", "users"
-  add_foreign_key "conversations", "teams"
+  add_foreign_key "conversation_teams", "conversations"
+  add_foreign_key "conversation_teams", "teams"
   add_foreign_key "memberships", "teams"
   add_foreign_key "memberships", "users"
   add_foreign_key "memberships", "users", column: "invited_by_id"

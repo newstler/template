@@ -21,9 +21,7 @@
               "/madmin/conversations/#{@record.conversation_id}",
               class: "text-accent-400 hover:text-accent-300" %>
         &middot;
-        <%= link_to @record.conversation.team.name,
-              "/madmin/teams/#{@record.conversation.team.slug}",
-              class: "text-dark-300 hover:text-dark-100" %>
+        <%= @record.conversation.teams.map { |t| link_to(t.name, "/madmin/teams/#{t.slug}", class: "text-dark-300 hover:text-dark-100") }.join(" · ").html_safe %>
       </p>
       <p class="text-dark-500 text-sm mt-1">Joined <%= @record.created_at.strftime("%-d %B %Y") %> <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> ago)</span></p>
     </div>
@@ -78,14 +76,18 @@
           </td>
         </tr>
         <tr>
-          <th class="label">Team</th>
+          <th class="label">Teams</th>
           <td>
-            <%= link_to "/madmin/teams/#{@record.conversation.team.slug}", class: "flex items-center gap-2 hover:underline" do %>
-              <div class="w-6 h-6 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
-                <%= @record.conversation.team.name.first(2).upcase %>
-              </div>
-              <span><%= @record.conversation.team.name %></span>
-            <% end %>
+            <div class="flex flex-wrap items-center gap-2">
+              <% @record.conversation.teams.each do |team| %>
+                <%= link_to "/madmin/teams/#{team.slug}", class: "inline-flex items-center gap-2 hover:underline" do %>
+                  <div class="w-6 h-6 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
+                    <%= team.name.first(2).upcase %>
+                  </div>
+                  <span><%= team.name %></span>
+                <% end %>
+              <% end %>
+            </div>
           </td>
         </tr>
         <% if @record.conversation.subject_type.present? %>

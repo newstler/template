@@ -6,6 +6,6 @@
 - <%= m.user.name.presence || m.user.email %>: <%= m.content %>
 <% end -%>
 
-<%= t(".cta") %>: <%= team_conversation_url(conversation.team.slug, conversation) %>
+<%= t(".cta") %>: <%= team_conversation_url(conversation.team_for(@recipient).slug, conversation) %>
 
 <% end %>

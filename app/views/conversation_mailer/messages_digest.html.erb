@@ -6,5 +6,5 @@
       <li><strong><%= m.user.name.presence || m.user.email %>:</strong> <%= m.content %></li>
     <% end %>
   </ul>
-  <p><%= link_to t(".cta"), team_conversation_url(conversation.team.slug, conversation) %></p>
+  <p><%= link_to t(".cta"), team_conversation_url(conversation.team_for(@recipient).slug, conversation) %></p>
 <% end %>

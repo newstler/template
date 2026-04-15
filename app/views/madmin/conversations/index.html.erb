@@ -40,7 +40,7 @@
     <thead>
       <tr>
         <th><%= sortable :title, "Conversation" %></th>
-        <th><%= sortable :team_id, "Team" %></th>
+        <th>Teams</th>
         <th>Participants</th>
         <th>Messages</th>
         <th>Subject</th>
@@ -58,12 +58,16 @@
             <% end %>
           </td>
           <td>
-            <%= link_to "/madmin/teams/#{record.team.slug}", class: "flex items-center gap-1.5 hover:underline" do %>
-              <div class="w-5 h-5 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
-                <%= record.team.name.first(2).upcase %>
-              </div>
-              <span class="font-medium text-sm"><%= record.team.name %></span>
-            <% end %>
+            <div class="flex flex-wrap items-center gap-1.5">
+              <% record.teams.each do |team| %>
+                <%= link_to "/madmin/teams/#{team.slug}", class: "inline-flex items-center gap-1.5 hover:underline" do %>
+                  <div class="w-5 h-5 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
+                    <%= team.name.first(2).upcase %>
+                  </div>
+                  <span class="font-medium text-sm"><%= team.name %></span>
+                <% end %>
+              <% end %>
+            </div>
           </td>
           <td>
             <div class="flex -space-x-2">

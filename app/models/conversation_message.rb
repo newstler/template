@@ -21,12 +21,12 @@ class ConversationMessage < ApplicationRecord
 
   # Flagged messages are hidden from non-sender, non-admin recipients.
   # Returns true if: message is not flagged, OR recipient is the sender,
-  # OR recipient is a team admin in the conversation's team.
+  # OR recipient is a team admin in ANY of the conversation's teams.
   def visible_to?(recipient)
     return true if flagged_at.blank?
     return true if recipient == user
     return false unless recipient.is_a?(User)
-    recipient.admin_of?(conversation.team)
+    conversation.teams.any? { |team| recipient.admin_of?(team) }
   end
 
   private

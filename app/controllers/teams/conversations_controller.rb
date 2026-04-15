@@ -29,7 +29,8 @@ class Teams::ConversationsController < ApplicationController
     participants = current_team.users.where(id: participant_ids).to_a
     participants = ([ current_user ] + participants).uniq
 
-    @conversation = current_team.conversations.create!(title: params.dig(:conversation, :title))
+    @conversation = Conversation.create!(title: params.dig(:conversation, :title))
+    @conversation.conversation_teams.find_or_create_by!(team: current_team)
     participants.each do |user|
       @conversation.conversation_participants.find_or_create_by!(user: user)
     end

@@ -14,7 +14,8 @@ class Team < ApplicationRecord
   has_many :team_languages, dependent: :destroy
   has_many :languages, through: :team_languages
   has_many :articles, dependent: :destroy
-  has_many :conversations, dependent: :destroy
+  has_many :conversation_teams, dependent: :destroy
+  has_many :conversations, through: :conversation_teams
 
   attribute :remove_logo, :boolean, default: false
   after_save :purge_logo, if: :remove_logo

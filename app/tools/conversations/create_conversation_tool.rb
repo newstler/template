@@ -23,7 +23,8 @@ module Conversations
         users = users.joins(:memberships).where(memberships: { team_id: current_team.id }).distinct
         participants = ([ current_user ] + users.to_a).uniq
 
-        conversation = current_team.conversations.create!(title: title)
+        conversation = Conversation.create!(title: title)
+        conversation.conversation_teams.find_or_create_by!(team: current_team)
         participants.each do |user|
           conversation.conversation_participants.find_or_create_by!(user: user)
         end

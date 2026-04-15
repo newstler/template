@@ -2,7 +2,8 @@ require "test_helper"
 
 class ConversationParticipantTest < ActiveSupport::TestCase
   setup do
-    @conversation = Conversation.create!(team: teams(:one), title: "Test")
+    @conversation = Conversation.create!(title: "Test")
+    @conversation.conversation_teams.create!(team: teams(:one))
     @user = users(:one)
   end
 

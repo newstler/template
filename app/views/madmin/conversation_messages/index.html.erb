@@ -70,7 +70,7 @@
               <%= record.conversation.title.presence || "Conv #{record.conversation_id[0, 8]}..." %>
             <% end %>
           </td>
-          <td class="text-sm"><%= record.conversation.team.name %></td>
+          <td class="text-sm"><%= record.conversation.teams.map(&:name).join(" · ") %></td>
           <td>
             <% if record.flagged_at.present? %>
               <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/15 text-red-400">

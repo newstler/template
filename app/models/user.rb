@@ -39,7 +39,7 @@ class User < ApplicationRecord
   end
 
   def conversations_in(team)
-    conversations.where(team: team)
+    conversations.joins(:conversation_teams).where(conversation_teams: { team_id: team.id })
   end
 
   # Returns every Noticed::Notification visible to this user:

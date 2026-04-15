@@ -24,7 +24,7 @@
       </div>
       <p class="text-dark-500 text-sm mt-1">
         in <%= link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...", "/madmin/conversations/#{@record.conversation_id}", class: "text-accent-400 hover:text-accent-300") %>
-        &middot; <%= @record.conversation.team.name %>
+        &middot; <%= @record.conversation.teams.map(&:name).join(" · ") %>
       </p>
       <p class="text-dark-500 text-sm"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
     </div>

@@ -4,4 +4,4 @@
 
 <%= @message.content %>
 
-<%= t(".cta") %>: <%= team_conversation_url(@conversation.team.slug, @conversation) %>
+<%= t(".cta") %>: <%= team_conversation_url(@conversation.team_for(@recipient).slug, @conversation) %>
