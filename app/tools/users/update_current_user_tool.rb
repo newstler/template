@@ -14,7 +14,7 @@ module Users
       optional(:name).filled(:string).description("The user's display name")
       optional(:locale).filled(:string).description('Language code (e.g. "en", "es") or "auto" to clear')
       optional(:preferred_currency).filled(:string).description('ISO 4217 currency code (e.g. "USD", "EUR") or "auto" to clear')
-      optional(:residence_country_code).filled(:string).description('ISO 3166 alpha-2 country code (e.g. "US", "DE") or empty to clear')
+      optional(:residence_country_code).filled(:string).description('ISO 3166 alpha-2 country code (e.g. "US", "DE")')
     end
 
     def call(name: nil, locale: nil, preferred_currency: nil, residence_country_code: nil)
@@ -24,7 +24,7 @@ module Users
       updates[:name] = name if name.present?
       updates[:locale] = locale == "auto" ? nil : locale if locale.present?
       updates[:preferred_currency] = preferred_currency == "auto" ? nil : preferred_currency if preferred_currency.present?
-      updates[:residence_country_code] = residence_country_code == "" ? nil : residence_country_code if residence_country_code.present?
+      updates[:residence_country_code] = residence_country_code if residence_country_code.present?
 
       if updates.empty?
         return error_response("No updates provided", code: "no_updates")

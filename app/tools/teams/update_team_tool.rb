@@ -13,7 +13,7 @@ module Teams
     arguments do
       optional(:name).filled(:string).description("The team's display name")
       optional(:default_currency).filled(:string).description('ISO 4217 currency code (e.g. "USD", "EUR")')
-      optional(:country_code).filled(:string).description('ISO 3166 alpha-2 country code (e.g. "US", "DE") or empty to clear')
+      optional(:country_code).filled(:string).description('ISO 3166 alpha-2 country code (e.g. "US", "DE")')
     end
 
     def call(name: nil, default_currency: nil, country_code: nil)
@@ -27,7 +27,7 @@ module Teams
       updates = {}
       updates[:name] = name if name.present?
       updates[:default_currency] = default_currency if default_currency.present?
-      updates[:country_code] = country_code == "" ? nil : country_code if country_code.present?
+      updates[:country_code] = country_code if country_code.present?
 
       if updates.empty?
         return error_response("No updates provided", code: "no_updates")
