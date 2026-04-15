@@ -4,11 +4,13 @@ require "test_helper"
 require "tools/mcp_test_helper"
 
 class AvailableModelsResourceTest < McpResourceTestCase
-  test "returns models without authentication" do
+  test "returns models payload without authentication" do
     result = parse_resource(call_resource(Mcp::AvailableModelsResource))
 
-    assert result[:models_count].present? || result[:models_count] == 0
+    assert_kind_of Integer, result[:models_count]
     assert_kind_of Array, result[:models]
+    assert_equal result[:models_count], result[:models].length
+    assert_kind_of Array, result[:providers]
   end
 
   test "includes model details when models exist" do
@@ -21,12 +23,5 @@ class AvailableModelsResourceTest < McpResourceTestCase
     assert model[:model_id].present?
     assert model[:name].present?
     assert model[:provider].present?
-  end
-
-  test "includes configured providers" do
-    result = parse_resource(call_resource(Mcp::AvailableModelsResource))
-
-    assert result.key?(:providers)
-    assert_kind_of Array, result[:providers]
   end
 end

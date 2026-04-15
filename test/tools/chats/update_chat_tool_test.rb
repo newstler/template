@@ -39,16 +39,7 @@ module Chats
       end
     end
 
-    test "returns error when new model is not enabled" do
-      mock_mcp_request(team: @team, user: @user)
-
-      result = call_tool(Chats::UpdateChatTool, id: @chat.id, model_id: "nonexistent")
-
-      assert_not result[:success]
-      assert_equal "invalid_model", result[:code]
-    end
-
-    test "returns error for non-existent chat" do
+    test "returns not_found for non-existent chat" do
       mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::UpdateChatTool, id: "nonexistent", model_id: @new_model.id)
@@ -57,7 +48,7 @@ module Chats
       assert_equal "not_found", result[:code]
     end
 
-    test "returns error for invalid model" do
+    test "returns invalid_model when model is not enabled" do
       mock_mcp_request(team: @team, user: @user)
 
       result = call_tool(Chats::UpdateChatTool, id: @chat.id, model_id: "nonexistent")
