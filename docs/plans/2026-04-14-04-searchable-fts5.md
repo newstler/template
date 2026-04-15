@@ -417,7 +417,7 @@ git commit -m "test: end-to-end Searchable tests including Cyrillic and Turkish"
 
 ## Task 6: Rake task for reindexing
 
-- [ ] **Step 1: Create the rake task**
+- [x] **Step 1: Create the rake task**
 
 Create `lib/tasks/searchable.rake`:
 
@@ -447,7 +447,7 @@ namespace :fts do
 end
 ```
 
-- [ ] **Step 2: Smoke-test**
+- [x] **Step 2: Smoke-test**
 
 Create a few `SearchableThing` rows in a console, delete a row from the FTS table directly, run:
 
@@ -457,7 +457,7 @@ bin/rails 'fts:rebuild[SearchableThing]'
 
 Expected: FTS table is repopulated.
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add lib/tasks/searchable.rake

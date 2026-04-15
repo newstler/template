@@ -168,3 +168,24 @@ end
 ```
 
 Only optimize this way for truly small, high-frequency partials. Normal-sized partials are fine.
+
+## Full-Text Search
+
+Any model that needs user-facing search must `include Searchable` with explicit `searchable_fields`. Do not implement one-off `LIKE`/`ILIKE` scopes on string columns for user search — they don't scale, don't respect diacritics, and don't rank by relevance.
+
+```ruby
+# ❌ BAD: linear scan, no diacritic folding, no ranking
+scope :matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+
+# ✅ GOOD: FTS5-backed, bm25 relevance, Unicode61 diacritic folding
+class Candidate < ApplicationRecord
+  include Searchable
+  searchable_fields :profession, :skills, :languages, :notes
+end
+
+Candidate.search("welder russian speaker")
+```
+
+The `searchable:install` generator emits the FTS5 virtual table migration. Use `bin/rails 'fts:rebuild[ModelName]'` after changing the tokenizer or backfilling data.
+
+For semantic (non-keyword) search, combine with `Embeddable` (see Plan 05).
