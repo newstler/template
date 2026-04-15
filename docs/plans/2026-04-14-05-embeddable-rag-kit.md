@@ -301,7 +301,7 @@ list) so both `embedding_model` and `rrf_k` are editable at
 - Create: `app/jobs/embed_record_job.rb`
 - Create: `test/models/concerns/embeddable_test.rb`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Create `test/models/concerns/embeddable_test.rb`:
 
@@ -329,7 +329,12 @@ end
 
 Most of the logic will come together in Task 6 when `SearchableThing` gets `include Embeddable`. This test file skeleton is committed first and filled in later.
 
-- [ ] **Step 2: Create the concern**
+- [x] **Step 2: Create the concern**
+
+`similar_to` returns an `ActiveRecord::Relation` (not an Array) so
+`HybridSearchable` can compose it with `Searchable#search`. Distance
+metadata is attached via a module extension that decorates loaded
+records with a `#similarity_distance` singleton method.
 
 Create `app/models/concerns/embeddable.rb`:
 
@@ -463,7 +468,7 @@ module Embeddable
 end
 ```
 
-- [ ] **Step 3: Create the job**
+- [x] **Step 3: Create the job**
 
 Create `app/jobs/embed_record_job.rb`:
 
@@ -507,12 +512,7 @@ class EmbedRecordJob < ApplicationJob
 end
 ```
 
-- [ ] **Step 4: Commit**
-
-```bash
-git add app/models/concerns/embeddable.rb app/jobs/embed_record_job.rb test/models/concerns/embeddable_test.rb
-git commit -m "feat: Embeddable concern + EmbedRecordJob (ordered KNN, metadata filtering)"
-```
+- [x] **Step 4: Commit**
 
 ---
 
