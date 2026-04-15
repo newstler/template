@@ -50,6 +50,13 @@ module Searchable
 
     # Returns an ActiveRecord::Relation of records matching the FTS5 query,
     # ordered by bm25 relevance. Composable with .where / .limit / .includes.
+    #
+    # When called on an outer scope (e.g. Thing.where(team_id: x).search("foo")),
+    # the outer ids are pushed into the FTS query so we don't scan every
+    # tenant. For very large outer scopes we fall back to post-hoc filtering
+    # to stay under SQLite's parameter limit.
+    OUTER_SCOPE_PUSHDOWN_LIMIT = 5_000
+
     def search(query)
       return none if query.blank?
 
@@ -57,14 +64,25 @@ module Searchable
       return none if sanitized.empty?
 
       fts = searchable_table_name
-      ids = connection.select_values(
-        send(:sanitize_sql_array,
-          [ "SELECT id FROM #{fts} WHERE #{fts} MATCH ? ORDER BY bm25(#{fts})", sanitized ])
-      )
+      scope = current_scope
+      outer_ids = if scope && scope.where_clause.any?
+        scope.unscope(:order, :limit, :offset).pluck(:id)
+      end
 
-      return none if ids.empty?
+      if outer_ids && outer_ids.size <= OUTER_SCOPE_PUSHDOWN_LIMIT
+        return none if outer_ids.empty?
+        placeholders = (%w[?] * outer_ids.size).join(", ")
+        sql = "SELECT id FROM #{fts} WHERE #{fts} MATCH ? AND id IN (#{placeholders}) ORDER BY bm25(#{fts})"
+        bindings = [ sanitized ] + outer_ids
+      else
+        sql = "SELECT id FROM #{fts} WHERE #{fts} MATCH ? ORDER BY bm25(#{fts})"
+        bindings = [ sanitized ]
+      end
 
-      where(id: ids).in_order_of(:id, ids)
+      matched_ids = connection.select_values(send(:sanitize_sql_array, [ sql ] + bindings))
+      return none if matched_ids.empty?
+
+      where(id: matched_ids).in_order_of(:id, matched_ids)
     end
 
     # Rewrites a user query into something FTS5 can parse. Strips quotes,

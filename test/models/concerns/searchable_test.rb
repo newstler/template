@@ -63,4 +63,24 @@ class SearchableTest < ActiveSupport::TestCase
     assert_kind_of ActiveRecord::Relation, relation
     assert_equal 1, relation.where("name LIKE ?", "%Alpha%").count
   end
+
+  test "composes with an outer where scope and only returns matching rows" do
+    tenant_a = SearchableThing.create!(name: "Welder Alpha", tags: "tenant_a")
+    _tenant_b = SearchableThing.create!(name: "Welder Beta", tags: "tenant_b")
+
+    relation = SearchableThing.where(tags: "tenant_a").search("welder")
+
+    assert_includes relation, tenant_a
+    assert_equal 1, relation.count
+    assert(relation.all? { |thing| thing.tags == "tenant_a" })
+  end
+
+  test "handles FTS5 operator-looking payloads without raising" do
+    thing = SearchableThing.create!(name: "Operator Widget", description: "NEAR FOO BAR")
+    assert_nothing_raised do
+      SearchableThing.search('operator* NEAR "bar"')
+    end
+    result = SearchableThing.search('operator NEAR bar')
+    assert_includes result, thing
+  end
 end
