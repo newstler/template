@@ -27,7 +27,7 @@
       <button type="button" class="p-1.5 hover:bg-white/5 rounded-lg transition-colors" data-chat-input-target="attachButton" data-action="click->chat-input#triggerFileInput">
         <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>
       </button>
-      <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" }, accept: "image/png,image/jpeg,image/gif,image/webp,.pdf" %>
+      <%= form.file_field :attachments, multiple: true, class: "hidden", data: { chat_input_target: "fileInput", action: "change->chat-input#handleFileSelect" } %>
     </div>
     <div class="flex items-center gap-3">
       <% if extra_info.present? %>

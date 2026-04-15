@@ -10,9 +10,15 @@
           <%= image_tag url_for(attachment), class: "rounded-lg max-w-[200px] max-h-[200px]" %>
         </button>
       <% else %>
-        <button type="button" class="flex items-center gap-2 <%= doc_bg_class %> rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= url_for(attachment) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="document">
+        <button type="button" class="flex items-center gap-2 <%= doc_bg_class %> rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer"
+                data-controller="lightbox"
+                data-action="click->lightbox#open"
+                data-lightbox-url-value="<%= url_for(attachment) %>"
+                data-lightbox-filename-value="<%= attachment.filename %>"
+                data-lightbox-type-value="document"
+                data-lightbox-content-type-value="<%= attachment.content_type %>">
           <span><%= attachment.content_type == "application/pdf" ? "\u{1F4D5}" : "\u{1F4C4}" %></span>
-          <span class="max-w-[150px]"><%= attachment.filename %></span>
+          <span class="truncate max-w-[150px]"><%= attachment.filename %></span>
         </button>
       <% end %>
     <% end %>
