@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Chartkick::Helper
+
   # ── Open Graph helpers ──
   # Views set per-page values via content_for:
   #   content_for :og_title, @post.title
