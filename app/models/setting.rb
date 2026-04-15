@@ -4,10 +4,12 @@ class Setting < ApplicationRecord
     default_country_code
     default_currency
     default_model
+    embedding_model
     litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
     mail_from
     moderation_model
     public_chats
+    rrf_k
     search_tokenizer
     smtp_address smtp_password smtp_username
     stripe_publishable_key stripe_secret_key stripe_webhook_secret
@@ -54,6 +56,14 @@ class Setting < ApplicationRecord
 
   def self.search_tokenizer
     get(:search_tokenizer).presence || "porter unicode61 remove_diacritics 2"
+  end
+
+  def self.embedding_model
+    get(:embedding_model).presence
+  end
+
+  def self.rrf_k
+    (get(:rrf_k) || 60).to_i
   end
 
   def self.chats_enabled?

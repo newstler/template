@@ -259,7 +259,7 @@ git commit -m "feat: load sqlite-vec extension on every SQLite connection"
 
 ## Task 3: Add embedding settings
 
-- [ ] **Step 1: Migration**
+- [x] **Step 1: Migration**
 
 ```ruby
 class AddEmbeddingSettings < ActiveRecord::Migration[8.1]
@@ -272,7 +272,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 2: Update Setting model**
+- [x] **Step 2: Update Setting model**
 
 Add `:embedding_model` and `:rrf_k` to `ALLOWED_KEYS`. Add readers:
 
@@ -286,12 +286,11 @@ def self.rrf_k
 end
 ```
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
-```bash
-git add app/models/setting.rb db/migrate/*embedding_settings* db/schema.rb
-git commit -m "feat: add embedding_model and rrf_k settings"
-```
+Also extended the Madmin AI Models UI (edit + show + controller permit
+list) so both `embedding_model` and `rrf_k` are editable at
+`/madmin/ai_models`, per the plan's non-negotiable settings rule.
 
 ---
 

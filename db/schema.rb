@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_14_225005) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_015226) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -422,12 +422,14 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_14_225005) do
     t.string "default_country_code"
     t.string "default_currency", default: "USD"
     t.string "default_model"
+    t.string "embedding_model", default: "text-embedding-3-small"
     t.string "litestream_replica_access_key"
     t.string "litestream_replica_bucket"
     t.string "litestream_replica_key_id"
     t.string "mail_from"
     t.string "moderation_model"
     t.boolean "public_chats", default: true, null: false
+    t.integer "rrf_k", default: 60
     t.string "search_tokenizer", default: "porter unicode61 remove_diacritics 2"
     t.string "smtp_address"
     t.string "smtp_password"

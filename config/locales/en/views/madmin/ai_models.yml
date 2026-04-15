@@ -21,6 +21,12 @@ en:
           fallback.
         default_model: Default Model
         default_model_hint: The AI model used for new chat conversations.
+        embedding_description: Model and ranking knobs for vector similarity search
+          and RAG retrieval via sqlite-vec.
+        embedding_heading: Embeddings & RAG
+        embedding_model: Embedding model
+        embedding_model_hint: 'Model used by RubyLLM.embed for Embeddable records.
+          Default: text-embedding-3-small (1536 dimensions).'
         heading: Edit AI Models
         moderation_description: The model used to check conversation messages for
           off-platform contact leaks.
@@ -30,6 +36,9 @@ en:
           regex patterns miss.
         no_models: No models available
         no_models_hint: Sync models from AI providers first.
+        rrf_k: Reciprocal Rank Fusion (k)
+        rrf_k_hint: 'RRF smoothing constant for HybridSearchable. Higher = less sensitive
+          to top-ranked results. Default: 60 (Cormack et al. standard).'
         save: Save Settings
         search_description: Configuration for SQLite FTS5-backed full-text search.
           Changes apply to new indexes; run fts:rebuild to re-apply to existing.
@@ -55,6 +64,10 @@ en:
         default_currency: Default currency
         default_model: Default Model
         edit_button: Edit Settings
+        embedding_description: Model and ranking knobs for vector similarity search
+          and RAG retrieval via sqlite-vec.
+        embedding_heading: Embeddings & RAG
+        embedding_model: Embedding model
         heading: AI Models
         moderation_description: The model used to check conversation messages for
           off-platform contact leaks.
@@ -63,6 +76,7 @@ en:
         no_models: No models available
         no_models_hint: Configure AI providers and sync models first.
         not_configured: Not configured — chats and translations are disabled
+        rrf_k: Reciprocal Rank Fusion (k)
         search_description: Configuration for SQLite FTS5-backed full-text search.
         search_heading: Search
         search_tokenizer: Search tokenizer

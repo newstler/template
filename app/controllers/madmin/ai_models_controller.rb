@@ -28,6 +28,8 @@ module Madmin
         :default_model,
         :translation_model,
         :moderation_model,
+        :embedding_model,
+        :rrf_k,
         :currencylayer_api_key,
         :default_currency,
         :default_country_code,
