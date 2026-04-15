@@ -92,4 +92,17 @@ class UserTest < ActiveSupport::TestCase
     assert_not user.valid?
     assert user.errors[:residence_country_code].any?
   end
+
+  test "owner? is true when user owns at least one team" do
+    assert users(:one).owner?
+  end
+
+  test "owner? is false when user is only a member" do
+    assert_not users(:three).owner?
+  end
+
+  test "owner? is false when user has no memberships" do
+    user = User.create!(email: "loner@example.com")
+    assert_not user.owner?
+  end
 end

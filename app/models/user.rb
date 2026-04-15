@@ -54,6 +54,10 @@ class User < ApplicationRecord
     memberships.exists?(team: team, role: "owner")
   end
 
+  def owner?
+    memberships.exists?(role: "owner")
+  end
+
   private
 
   def purge_avatar

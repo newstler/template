@@ -404,17 +404,23 @@ Helpers: `current_user`, `current_admin`, `current_team`, `current_membership`, 
 
 ## Multitenancy
 
-Users belong to teams. All user-facing routes are team-scoped under `/t/:team_slug/...`.
+Users belong to teams. Team-scoped routes live under `/t/:team_slug/...`. Authenticated users outside any team context land on the **personal** context at `/home`, which lists their teams and offers a create-team CTA (hidden once they own one). The sidebar's context switcher moves between the personal context and each team the user belongs to.
+
+### Contexts
+
+- **Team context** (`/t/:team_slug/...`): `current_team`, `current_membership`, team-scoped queries.
+- **Personal context** (`/home`): `current_user` only, `current_team` is `nil`. Use `personal_context?` helper to branch. Stripe-dependent features hide in this context since there's no team to bill.
 
 ### URL Structure
 
 ```
+/home                    → Personal dashboard (authenticated, no team)
 /t/:team_slug/           → Team home
 /t/:team_slug/chats      → Team's chats
 /t/:team_slug/members    → Team members (admin only for invite/remove)
 /t/:team_slug/settings   → Team settings (admin only)
-/t/:team_slug/pricing    → Subscription pricing (admin only)
-/t/:team_slug/billing    → Billing management (admin only)
+/t/:team_slug/pricing    → Subscription pricing (admin only, Stripe-gated)
+/t/:team_slug/billing    → Billing management (admin only, Stripe-gated)
 /teams                   → Team selection
 ```
 

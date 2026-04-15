@@ -101,6 +101,16 @@ class ApplicationController < ActionController::Base
     params[:team_slug].present?
   end
 
+  def personal_context?
+    current_user.present? && !team_scoped_request?
+  end
+  helper_method :personal_context?
+
+  def current_user_teams_for_switcher
+    @current_user_teams_for_switcher ||= current_user&.teams&.includes(logo_attachment: :blob)&.order(:name) || []
+  end
+  helper_method :current_user_teams_for_switcher
+
   def current_user
     @current_user ||= User.find_by(id: session[:user_id]) if session[:user_id]
   end

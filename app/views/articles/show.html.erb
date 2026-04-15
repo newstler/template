@@ -1,6 +1,6 @@
 <% content_for :title, @article.title %>
 
-<div class="max-w-3xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 py-8">
   <div class="mb-6">
     <%= link_to t("common.back"), team_articles_path(current_team), class: "text-sm text-dark-400 hover:text-dark-200 transition-colors" %>
   </div>
@@ -8,7 +8,7 @@
   <article class="card-bg p-8">
     <div class="flex items-center justify-between mb-6">
       <div>
-        <h1 class="text-3xl font-bold text-dark-50"><%= @article.title %></h1>
+        <h1 class="text-3xl font-bold text-white"><%= @article.title %></h1>
         <p class="text-sm text-dark-400 mt-2">
           <%= @article.user.name %> &middot; <%= l(@article.created_at, format: :short) %>
         </p>

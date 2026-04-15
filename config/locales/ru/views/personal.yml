@@ -1,0 +1,15 @@
+---
+ru:
+  personal:
+    home:
+      show:
+        title: Главная
+        welcome: "Добро пожаловать, %{name}"
+        subtitle: Ваша личная панель
+        your_teams: Ваши команды
+        members_count:
+          one: "%{count} участник"
+          few: "%{count} участника"
+          many: "%{count} участников"
+          other: "%{count} участников"
+        create_team: Создать команду

@@ -5,14 +5,15 @@
     icon: Icon name (without .svg extension)
     label: Group header text
     path: Path used for active state highlighting (optional)
+    image: Active Storage attachment or image URL to show instead of icon (optional)
+    badge: Integer count to display as red notification badge (optional)
   Block: Content (nested links) to show when expanded
 %>
 <%
   group_path = local_assigns[:path]
-  # Check if this group is active (exact match only, not child pages)
   is_active = group_path && current_page?(group_path)
+  has_badge = local_assigns[:badge].to_i > 0
 
-  # Use same base classes as sidebar_link for consistency
   base_classes = "flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 hover:bg-white/5"
   active_classes = "text-white"
   inactive_classes = "text-dark-400 hover:text-dark-100"
@@ -23,11 +24,11 @@
   <button type="button"
           data-action="click->sidebar#toggleGroup"
           data-group-id="<%= id %>"
-          class="<%= base_classes %> <%= is_active ? active_classes : inactive_classes %> w-full justify-between cursor-pointer sidebar-group-header"
+          class="<%= base_classes %> <%= is_active ? active_classes : inactive_classes %> w-full justify-between cursor-pointer sidebar-group-header relative"
           title="<%= label %>">
     <span class="flex items-center gap-3 min-w-0">
       <% if local_assigns[:image] %>
-        <%= image_tag image, class: "w-5 h-5 flex-shrink-0 rounded-full object-cover" %>
+        <%= image_tag image, alt: label, class: "w-5 h-5 flex-shrink-0 rounded-full object-cover" %>
       <% else %>
         <%= inline_svg "icons/#{icon}.svg", class: "w-5 h-5 flex-shrink-0" %>
       <% end %>
@@ -36,6 +37,9 @@
     <span data-sidebar-target="label" class="p-1 flex-shrink-0 sidebar-chevron">
       <%= inline_svg "icons/chevron-right.svg", class: "w-4 h-4 transition-transform duration-200 rotate-90", data: { chevron: true } %>
     </span>
+    <% if has_badge %>
+      <span class="absolute right-1.5 top-1.5 inline-flex items-center justify-center min-w-[0.875rem] h-3.5 px-1 text-[10px] font-bold leading-none text-white bg-red-500 rounded-full"><%= badge %></span>
+    <% end %>
   </button>
 
   <%# Collapsible content %>

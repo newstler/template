@@ -8,6 +8,7 @@ en:
     default: Default
     loading: Loading...
     sign_out: Sign Out
+    sign_out_confirm: Are you sure you want to sign out?
     untitled: Untitled
   helpers:
     currency:

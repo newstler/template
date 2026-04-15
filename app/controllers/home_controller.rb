@@ -38,7 +38,7 @@ class HomeController < ApplicationController
   def build_attention_items
     items = []
 
-    unless current_team.subscription_active?
+    if Setting.stripe_configured? && !current_team.subscription_active?
       items << {
         severity: :info,
         label: t("home.index.attention.no_subscription"),

@@ -6,7 +6,7 @@
   </div>
 
   <div class="bg-dark-900 py-8 px-6 rounded-xl border border-dark-700">
-    <%= form_with model: @user, url: team_profile_path(current_team), method: :patch, class: "space-y-6" do |form| %>
+    <%= form_with model: @user, url: personal_profile_path, method: :patch, class: "space-y-6" do |form| %>
       <% if @user.errors.any? %>
         <div class="bg-red-500/10 border border-red-500/20 rounded-lg p-4">
           <ul class="list-disc list-inside text-sm text-red-400">
@@ -60,11 +60,6 @@
       </div>
 
       <div>
-        <span class="block text-sm font-medium text-dark-200 mb-2"><%= t(".residence_country") %></span>
-        <%= render "shared/country_select", form: form, method: :residence_country_code %>
-      </div>
-
-      <div>
         <%= form.submit t(".submit"),
           class: "w-full bg-gradient-to-r from-blue-600 to-blue-700 hover:from-blue-700 hover:to-blue-800 text-white py-3 px-4 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500/50 font-medium transition-all cursor-pointer shadow-lg shadow-blue-500/25" %>
       </div>
@@ -72,6 +67,6 @@
   </div>
 
   <div class="mt-6 text-center">
-    <%= link_to t("common.back", default: "← Back"), team_profile_path(current_team), class: "text-dark-400 hover:text-dark-300 transition-colors" %>
+    <%= link_to t("common.back", default: "← Back"), personal_home_path, class: "text-dark-400 hover:text-dark-300 transition-colors" %>
   </div>
 </div>

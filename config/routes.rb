@@ -26,6 +26,10 @@ Rails.application.routes.draw do
     end
   end
 
+  # Personal context (authenticated user, no team scope)
+  get "home", to: "personal/home#show", as: :personal_home
+  resource :profile, only: [ :edit, :update ], controller: "personal/profiles", as: :personal_profile
+
   # Team management (multi-tenant only routes for listing/creating teams)
   resources :teams, only: [ :index, :new, :create ], param: :slug
 

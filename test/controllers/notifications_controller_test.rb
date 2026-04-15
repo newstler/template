@@ -42,13 +42,13 @@ class NotificationsControllerTest < ActionDispatch::IntegrationTest
 
     get notifications_path
     assert_response :success
-    assert_select "[data-notifications-badge]", text: "1"
+    assert_select "a[href='#{notifications_path}'] .bg-red-500", text: "1"
   end
 
   test "layout hides badge when user has no unread notifications" do
     get notifications_path
     assert_response :success
-    assert_select "[data-notifications-badge]", count: 0
+    assert_select "a[href='#{notifications_path}'] .bg-red-500", count: 0
   end
 
   test "PATCH /notifications/:id/mark_read marks a notification as read" do

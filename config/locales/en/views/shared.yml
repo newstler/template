@@ -11,10 +11,13 @@ en:
       billing: Billing
       chats: Chats
       collapse: Collapse sidebar
+      create_team: Create Team
       home: Home
       languages: Languages
       members: Members
       new_chat: New Chat
       notifications: Notifications
+      personal: Personal
       settings: Settings
+      switch_context: Switch
       user: User
