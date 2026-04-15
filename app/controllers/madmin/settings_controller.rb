@@ -22,7 +22,7 @@ module Madmin
 
     def setting_params
       params.require(:setting).permit(
-        :public_chats,
+        :ai_chats_enabled,
         :stripe_secret_key,
         :stripe_publishable_key,
         :stripe_webhook_secret,

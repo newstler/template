@@ -1,7 +1,9 @@
 class Setting < ApplicationRecord
   ALLOWED_KEYS = %i[
+    articles_enabled
     conversation_digest_window_minutes
     conversation_moderation_enabled
+    conversations_enabled
     currencylayer_api_key
     default_country_code
     default_currency
@@ -10,7 +12,7 @@ class Setting < ApplicationRecord
     litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
     mail_from
     moderation_model
-    public_chats
+    ai_chats_enabled
     rrf_k
     search_tokenizer
     smtp_address smtp_password smtp_username
@@ -72,8 +74,16 @@ class Setting < ApplicationRecord
     (get(:conversation_digest_window_minutes) || 5).to_i
   end
 
-  def self.chats_enabled?
-    default_model.present? && get(:public_chats) != false && Model.configured_providers.any?
+  def self.ai_chats_enabled?
+    default_model.present? && get(:ai_chats_enabled) != false && Model.configured_providers.any?
+  end
+
+  def self.conversations_enabled?
+    get(:conversations_enabled) != false
+  end
+
+  def self.articles_enabled?
+    get(:articles_enabled) != false
   end
 
   def self.conversation_moderation_enabled?

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_15_170000) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_172824) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -440,8 +440,11 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_170000) do
   end
 
   create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.boolean "ai_chats_enabled", default: true, null: false
+    t.boolean "articles_enabled", default: true, null: false
     t.integer "conversation_digest_window_minutes", default: 5, null: false
     t.boolean "conversation_moderation_enabled", default: true, null: false
+    t.boolean "conversations_enabled", default: true, null: false
     t.datetime "created_at", null: false
     t.string "currencylayer_api_key"
     t.string "default_country_code"
@@ -453,7 +456,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_170000) do
     t.string "litestream_replica_key_id"
     t.string "mail_from"
     t.string "moderation_model"
-    t.boolean "public_chats", default: true, null: false
     t.integer "rrf_k", default: 60
     t.string "search_tokenizer", default: "porter unicode61 remove_diacritics 2"
     t.string "smtp_address"

@@ -179,7 +179,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_chats_enabled!
-    return if Setting.chats_enabled?
+    return if Setting.ai_chats_enabled?
 
     redirect_to team_root_path(current_team), alert: t("controllers.application.chats_disabled")
   end

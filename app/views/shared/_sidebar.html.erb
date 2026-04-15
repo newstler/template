@@ -29,6 +29,7 @@
       <%= render "shared/sidebar_link", path: team_root_path(current_team), icon: "home", label: t("shared.sidebar.home") %>
 
       <%# Conversations Section (collapsible with pagination) %>
+      <% if Setting.conversations_enabled? %>
       <% sidebar_conversations = current_user&.conversations_in(current_team)&.includes(:participants, :conversation_messages, :conversation_participants)&.order(updated_at: :desc)&.limit(11)&.to_a || [] %>
       <% has_more_conversations = sidebar_conversations.size > 10 %>
       <% sidebar_conversations = sidebar_conversations.first(10) %>
@@ -48,9 +49,10 @@
         </div>
         <div id="sidebar_reorder_trigger" class="hidden"></div>
       <% end %>
+      <% end %>
 
       <%# AI Chats Section (collapsible with pagination) - only shown when chats are enabled %>
-      <% if Setting.chats_enabled? %>
+      <% if Setting.ai_chats_enabled? %>
         <% sidebar_chats = current_user&.chats&.where(team: current_team)&.order(updated_at: :desc)&.limit(11)&.to_a || [] %>
         <% has_more_chats = sidebar_chats.size > 10 %>
         <% sidebar_chats = sidebar_chats.first(10) %>
@@ -68,7 +70,9 @@
         <% end %>
       <% end %>
 
-      <%= render "shared/sidebar_link", path: team_articles_path(current_team), icon: "file", label: t("shared.sidebar.articles") %>
+      <% if Setting.articles_enabled? %>
+        <%= render "shared/sidebar_link", path: team_articles_path(current_team), icon: "file", label: t("shared.sidebar.articles") %>
+      <% end %>
     <% else %>
       <%= render "shared/sidebar_link", path: personal_home_path, icon: "home", label: t("shared.sidebar.home") %>
     <% end %>

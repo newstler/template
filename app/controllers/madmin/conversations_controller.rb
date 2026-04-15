@@ -1,6 +1,12 @@
 module Madmin
   class ConversationsController < Madmin::ResourceController
-    skip_before_action :set_record, only: :toggle_moderation
+    skip_before_action :set_record, only: [ :toggle_moderation, :toggle_conversations ]
+
+    def toggle_conversations
+      setting = Setting.instance
+      setting.update!(conversations_enabled: !setting.conversations_enabled?)
+      redirect_to main_app.madmin_conversations_path, notice: "Conversations #{setting.conversations_enabled? ? 'enabled' : 'disabled'}"
+    end
 
     def toggle_moderation
       setting = Setting.instance

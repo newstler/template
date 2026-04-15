@@ -1,5 +1,13 @@
 module Madmin
   class ArticlesController < Madmin::ResourceController
+    skip_before_action :set_record, only: :toggle_articles
+
+    def toggle_articles
+      setting = Setting.instance
+      setting.update!(articles_enabled: !setting.articles_enabled?)
+      redirect_to main_app.madmin_articles_path, notice: "Articles #{setting.articles_enabled? ? 'enabled' : 'disabled'}"
+    end
+
     private
 
     def set_record

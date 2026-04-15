@@ -16,7 +16,7 @@ namespace :madmin do
   end
   resources :chats do
     collection do
-      patch :toggle_public_chats
+      patch :toggle_ai_chats
     end
   end
   resources :messages
@@ -28,7 +28,6 @@ namespace :madmin do
   resources :tool_calls
   resources :users
   resources :teams
-  resources :articles
   resources :memberships
   resources :languages do
     collection do
@@ -54,6 +53,12 @@ namespace :madmin do
   resources :conversations do
     collection do
       patch :toggle_moderation
+      patch :toggle_conversations
+    end
+  end
+  resources :articles do
+    collection do
+      patch :toggle_articles
     end
   end
   resources :conversation_messages
