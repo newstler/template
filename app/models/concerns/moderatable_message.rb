@@ -29,6 +29,7 @@ module ModeratableMessage
   private
 
   def apply_regex_moderation
+    return unless Setting.conversation_moderation_enabled?
     return if content.blank?
     return if flagged_at.present?
 
@@ -41,6 +42,7 @@ module ModeratableMessage
   end
 
   def enqueue_llm_moderation
+    return unless Setting.conversation_moderation_enabled?
     return if flagged_at.present?
     ModerateMessageJob.perform_later(id)
   end

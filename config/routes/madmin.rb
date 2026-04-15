@@ -51,7 +51,11 @@ namespace :madmin do
   resource :mail, only: [ :show, :edit, :update ], controller: "mail"
   resources :noticed_events, only: [ :index, :show ]
   resources :noticed_notifications, only: [ :index, :show ]
-  resources :conversations
+  resources :conversations do
+    collection do
+      patch :toggle_moderation
+    end
+  end
   resources :conversation_messages
   resources :conversation_participants, only: [ :index, :show ]
   resources :team_languages, only: [ :index, :show ]

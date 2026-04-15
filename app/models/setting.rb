@@ -1,6 +1,7 @@
 class Setting < ApplicationRecord
   ALLOWED_KEYS = %i[
     conversation_digest_window_minutes
+    conversation_moderation_enabled
     currencylayer_api_key
     default_country_code
     default_currency
@@ -73,6 +74,10 @@ class Setting < ApplicationRecord
 
   def self.chats_enabled?
     default_model.present? && get(:public_chats) != false && Model.configured_providers.any?
+  end
+
+  def self.conversation_moderation_enabled?
+    get(:conversation_moderation_enabled) != false
   end
 
   def self.stripe_configured?
