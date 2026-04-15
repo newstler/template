@@ -13,8 +13,8 @@
 # each chunk has its own vec0 row. Combine with +include Embeddable+
 # on the parent record if you also want a single aggregate vector.
 #
-# Rechunking runs in an +after_save_commit+ when the source digest
-# changes. Move to a background job for very large documents.
+# Rechunking runs via RechunkRecordJob in a background job, and chunks
+# are bulk-inserted via +insert_all+.
 module Chunkable
   extend ActiveSupport::Concern
 
@@ -43,7 +43,7 @@ module Chunkable
 
   included do
     has_many :chunks, as: :chunkable, dependent: :destroy
-    after_save_commit :rechunk_if_source_changed
+    after_save_commit :enqueue_rechunk_if_source_changed
   end
 
   def current_chunk_source
@@ -53,35 +53,58 @@ module Chunkable
     proc.call(self).to_s
   end
 
-  def rechunk_if_source_changed
+  # Hash the current source text directly. Does not touch the +chunks+
+  # association — inexpensive to call on every save.
+  def chunks_source_digest
     source = current_chunk_source
-    return if source.blank?
+    return nil if source.blank?
 
-    digest = Digest::SHA256.hexdigest(source)
-    return if chunks_source_digest == digest
-
-    rechunk(source)
+    Digest::SHA256.hexdigest(source)
   end
 
-  def rechunk(source = current_chunk_source)
-    chunks.destroy_all
+  def enqueue_rechunk_if_source_changed
+    return unless chunks_source_changed?
+    RechunkRecordJob.perform_later(self)
+  end
+
+  def rechunk
+    source = current_chunk_source
+    chunks.delete_all
     return if source.blank?
 
     size = self.class.chunk_size
     overlap = self.class.chunk_overlap
+    now = Time.current
 
-    new_chunks = build_chunks(source, size: size, overlap: overlap)
-    new_chunks.each_with_index do |content, position|
-      chunks.create!(position: position, content: content)
+    rows = build_chunks(source, size: size, overlap: overlap).each_with_index.map do |content, position|
+      {
+        chunkable_type: self.class.base_class.name,
+        chunkable_id: id,
+        position: position,
+        content: content,
+        created_at: now,
+        updated_at: now
+      }
     end
+
+    Chunk.insert_all(rows) if rows.any?
+    persist_chunks_source_digest
   end
 
   private
 
-  def chunks_source_digest
-    return nil if chunks.empty?
+  def chunks_source_changed?
+    digest = chunks_source_digest
+    return false if digest.nil?
+    return true unless has_attribute?(:chunks_source_digest)
 
-    Digest::SHA256.hexdigest(chunks.ordered.pluck(:content).join(" "))
+    read_attribute(:chunks_source_digest) != digest
+  end
+
+  def persist_chunks_source_digest
+    return unless has_attribute?(:chunks_source_digest)
+    digest = chunks_source_digest
+    update_columns(chunks_source_digest: digest) if digest
   end
 
   def build_chunks(source, size:, overlap:)
