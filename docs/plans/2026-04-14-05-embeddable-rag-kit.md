@@ -723,7 +723,7 @@ Expected: PASS. Tests that depend on embeddings being populated are gated behind
 - Create: `db/migrate/YYYYMMDDHHMMSS_create_chunks.rb`
 - Create: `test/models/concerns/chunkable_test.rb`
 
-- [ ] **Step 1: Create chunks table**
+- [x] **Step 1: Create chunks table**
 
 ```ruby
 class CreateChunks < ActiveRecord::Migration[8.1]
@@ -741,7 +741,7 @@ end
 
 Run: `bin/rails db:migrate`
 
-- [ ] **Step 2: Create Chunk model**
+- [x] **Step 2: Create Chunk model**
 
 Create `app/models/chunk.rb`:
 
@@ -763,7 +763,7 @@ bin/rails generate embeddable:install Chunk 1536
 bin/rails db:migrate
 ```
 
-- [ ] **Step 3: Create Chunkable concern**
+- [x] **Step 3: Create Chunkable concern**
 
 Create `app/models/concerns/chunkable.rb`:
 
@@ -836,7 +836,7 @@ module Chunkable
 end
 ```
 
-- [ ] **Step 4: Write test**
+- [x] **Step 4: Write test**
 
 Create `test/models/concerns/chunkable_test.rb`:
 
@@ -864,20 +864,13 @@ class ChunkableTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 5: Run tests**
+- [x] **Step 5: Run tests**
 
 Run: `rails test test/models/concerns/chunkable_test.rb`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
-
-```bash
-git add db/migrate/*create_chunks* db/migrate/*chunks_embeddings* db/schema.rb \
-        app/models/chunk.rb app/models/concerns/chunkable.rb \
-        test/models/concerns/chunkable_test.rb
-git commit -m "feat: Chunkable concern + polymorphic Chunk model"
-```
+- [x] **Step 6: Commit**
 
 ---
 

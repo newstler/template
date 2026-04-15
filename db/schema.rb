@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_15_020001) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_020851) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -68,6 +68,17 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_020001) do
     t.index ["model_id"], name: "index_chats_on_model_id"
     t.index ["team_id"], name: "index_chats_on_team_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "chunks", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "chunkable_id", null: false
+    t.string "chunkable_type", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.integer "position", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chunkable_type", "chunkable_id", "position"], name: "index_chunks_on_chunkable_and_position", unique: true
+    t.index ["chunkable_type", "chunkable_id"], name: "index_chunks_on_chunkable"
   end
 
   create_table "conversation_messages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -528,6 +539,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_020001) do
 
   # Virtual tables defined in this database.
   # Note that virtual tables may not work with other database engines. Be careful if changing database.
+  create_virtual_table "chunks_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
   create_virtual_table "searchable_things_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
   create_virtual_table "searchable_things_fts", "fts5", ["id UNINDEXED", "name", "description", "tags", "tokenize='porter unicode61 remove_diacritics 2'"]
 end
