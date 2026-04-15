@@ -6,6 +6,10 @@ require "rails/all"
 # you've limited to :test, :development, or :production.
 Bundler.require(*Rails.groups)
 
+# Load sqlite-vec path helper before database.yml is evaluated so the
+# extension can be loaded on every SQLite connection.
+require_relative "../lib/sqlite_vec"
+
 module Template
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.

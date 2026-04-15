@@ -10,6 +10,7 @@ default: &default
   timeout: 5000
   extensions:
     - <%= SQLean::UUID.to_path %>
+    - <%= SqliteVec.to_path %>
 
 development:
   <<: *default

@@ -127,7 +127,17 @@ git commit -m "chore: vendor sqlite-vec extension binaries (linux-x86_64, linux-
 **Files:**
 - Create: `config/initializers/sqlite_vec.rb`
 
-- [ ] **Step 1: Create the initializer**
+- [x] **Step 1: Create the initializer**
+
+**Implementation note:** neither plan approach was used. The cleanest
+idiom in this template is the `SQLean::UUID.to_path` pattern already
+wired into `config/database.yml`'s `extensions:` array. We added
+`lib/sqlite_vec.rb` defining `SqliteVec.to_path` (required from
+`config/application.rb` right after `Bundler.require`, so it's
+available before `database.yml` is parsed for `db:migrate` etc.) and
+appended `<%= SqliteVec.to_path %>` to the extensions array. This
+loads the extension automatically on every new SQLite connection via
+the sqlite3 gem's built-in support, no adapter monkey-patching needed.
 
 ```ruby
 # Loads the sqlite-vec extension on every SQLite connection so vec0
@@ -219,7 +229,7 @@ end
 
 Use whichever of the two approaches works with the current Rails 8 main — verify by smoke-testing in Step 3.
 
-- [ ] **Step 3: Smoke-test**
+- [x] **Step 3: Smoke-test**
 
 Run: `bin/rails runner 'puts ActiveRecord::Base.connection.execute("SELECT vec_version()").first'`
 
@@ -227,7 +237,10 @@ Expected: a version string like `["v0.1.6"]`.
 
 If this fails with `no such function: vec_version`, the extension isn't loading — debug by checking `Rails.configuration.x.sqlite_vec_path` exists and is readable, then verify the `SQLite3::Exception` message in the logs.
 
-- [ ] **Step 4: Update Dockerfile**
+- [x] **Step 4: Update Dockerfile**
+
+`.dockerignore` does not exclude `vendor/`, and `COPY . .` already
+includes `vendor/sqlite-vec/`. No changes needed.
 
 Open the template's `Dockerfile`. Find the `COPY . .` or equivalent line and ensure `vendor/sqlite-vec/` is included. If there's a `.dockerignore` that excludes `vendor/`, add an exception:
 
@@ -235,7 +248,7 @@ Open the template's `Dockerfile`. Find the `COPY . .` or equivalent line and ens
 !vendor/sqlite-vec/
 ```
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add config/initializers/sqlite_vec.rb Dockerfile .dockerignore
