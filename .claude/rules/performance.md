@@ -197,3 +197,30 @@ Candidate.search("welder russian speaker")
 The `searchable:install` generator emits the FTS5 virtual table migration. Use `bin/rails 'fts:rebuild[ModelName]'` after changing the tokenizer or backfilling data.
 
 For semantic (non-keyword) search, combine with `Embeddable` (see Plan 05).
+
+## Dashboards
+
+Dashboards fetch and compute aggregate data that's accessed on every team or admin page load. Apply these rules strictly:
+
+1. **Scope first, then aggregate.** Always chain `.where(created_at: @range)` and a `current_team` scope before calling `.count`, `.sum`, or `group_by_*`. Never aggregate the whole table.
+2. **Use `groupdate`, not Ruby bucketing.** Time-series series belong in SQL: `current_team.chats.group_by_day(:created_at, range: @range).count`. Do not load records and bucket them in Ruby.
+3. **Wrap expensive aggregations in `cached_dashboard`.** The helper's cache key includes `team_id` and the `@range` beginning date, so invalidation on range change is automatic.
+   ```ruby
+   @top_users = cached_dashboard(:top_users, expires_in: 10.minutes) do
+     current_team.users.joins(:chats).group("users.id")
+                 .order(Arel.sql("SUM(chats.total_cost) DESC")).limit(10).to_a
+   end
+   ```
+4. **Always `includes`** associations the dashboard view will touch (`Chat.includes(:user, :model, :messages)`).
+5. **Counter caches over `.count`.** Use `chat.messages_count`, `team.memberships_count`, etc.
+6. **Collection rendering** for repeated partials (`render partial: "row", collection: @rows`).
+7. **Ruby methods on preloaded data** (`messages.min_by(&:created_at)`, not `messages.order(:created_at).first`).
+
+Dashboard controller tests should assert the query count is bounded, e.g.:
+
+```ruby
+test "team dashboard runs a bounded number of queries" do
+  sign_in users(:one)
+  assert_queries(20) { get team_root_path(teams(:one).slug) }
+end
+```
