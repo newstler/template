@@ -6,7 +6,7 @@ class Conversation < ApplicationRecord
   has_many :participants, through: :conversation_participants, source: :user
   has_many :conversation_messages, dependent: :destroy
 
-  scope :chronologically, -> { order(updated_at: :desc) }
+  scope :chronologically, -> { order(updated_at: :asc) }
 
   def self.find_or_create_for(team:, subject: nil, participants: [])
     conversation = where(team: team, subject: subject).first_or_create!

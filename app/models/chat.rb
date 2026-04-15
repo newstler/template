@@ -6,7 +6,7 @@ class Chat < ApplicationRecord
   belongs_to :model, optional: true
   acts_as_chat messages_foreign_key: :chat_id
 
-  scope :chronologically, -> { order(created_at: :asc) }
+  scope :chronologically, -> { order(updated_at: :asc) }
   scope :recent, -> { order(created_at: :desc) }
 
   after_destroy :update_costs_on_destroy

@@ -7,7 +7,7 @@ class ConversationMessage < ApplicationRecord
 
   has_many_attached :attachments
 
-  scope :chronologically, -> { order(created_at: :asc) }
+  scope :chronologically, -> { order(updated_at: :asc) }
 
   validate :content_or_attachments_present
 
