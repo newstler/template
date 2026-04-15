@@ -32,4 +32,17 @@ class SettingTest < ActiveSupport::TestCase
     Setting.reconfigure!
     assert_equal "sk_test_stripe_1234", Stripe.api_key
   end
+
+  test "stripe_configured? is true when secret key is set" do
+    Setting.instance.update!(stripe_secret_key: "sk_test_123")
+    assert Setting.stripe_configured?
+  end
+
+  test "stripe_configured? is false when secret key is blank" do
+    Setting.instance.update!(stripe_secret_key: nil)
+    assert_not Setting.stripe_configured?
+
+    Setting.instance.update!(stripe_secret_key: "")
+    assert_not Setting.stripe_configured?
+  end
 end

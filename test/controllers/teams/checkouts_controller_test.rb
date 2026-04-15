@@ -13,6 +13,14 @@ class Teams::CheckoutsControllerTest < ActionDispatch::IntegrationTest
     assert_redirected_to team_root_path(teams(:two))
   end
 
+  test "redirects to team root when Stripe is not configured" do
+    sign_in(users(:one))
+    Setting.instance.update!(stripe_secret_key: nil)
+    post team_checkout_path(teams(:one)), params: { price_id: "price_123" }
+    assert_redirected_to team_root_path(teams(:one))
+    assert_equal I18n.t("controllers.application.stripe_not_configured"), flash[:alert]
+  end
+
   private
 
   def sign_in(user)
