@@ -960,7 +960,10 @@ end
 
 ## Task 9: Rake task for reindexing
 
-- [ ] **Step 1: Create**
+- [x] **Step 1: Create**
+
+Uses `ActiveJob.perform_all_later` (bulk enqueue) instead of a loop
+of `perform_later` calls — ~3.5x faster per the performance rules.
 
 Create `lib/tasks/embeddable.rake`:
 
@@ -991,12 +994,7 @@ namespace :embeddings do
 end
 ```
 
-- [ ] **Step 2: Commit**
-
-```bash
-git add lib/tasks/embeddable.rake
-git commit -m "feat: embeddings:rebuild rake task"
-```
+- [x] **Step 2: Commit**
 
 ---
 
