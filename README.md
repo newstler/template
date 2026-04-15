@@ -23,6 +23,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Notifications**: [Noticed v2](https://github.com/excid3/noticed)
 - **Search**: SQLite FTS5 via the `Searchable` concern (Unicode61, bm25)
 - **Vector Search**: sqlite-vec (loadable extension) via `Embeddable`, `Chunkable`, `HybridSearchable`
+- **Charts**: Chartkick + Groupdate
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
@@ -86,6 +87,12 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Opt-in message translation (`TranslatableMessage` concern)
   - Opt-in contact-leak moderation (`ModeratableMessage` concern)
   - Email digests grouped by conversation with anti-spam throttling
+- **Dashboards** (Chartkick + Groupdate)
+  - Reference team dashboard at `/t/:slug/` with KPI cards, a chartkick line chart, attention-items strip, and a 7d/30d/90d time-range selector
+  - Admin dashboard at `/madmin` with platform-wide KPIs, cost + signup time-series, top teams and users by AI cost
+  - Reusable partials: `_kpi_card`, `_chart_card`, `_attention_items_strip`, `_progress_ring`
+  - `DashboardHelper` with `cached_dashboard(key, expires_in:)` for team- and range-aware aggregation caching
+  - OKLCH-aware Stimulus controllers for chart theming, sparklines, and the time-range selector
 - **Vanilla Rails** approach — no unnecessary abstractions
 
 ## Getting Started
