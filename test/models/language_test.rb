@@ -83,4 +83,24 @@ class LanguageTest < ActiveSupport::TestCase
     assert_not lang.valid?
     assert_includes lang.errors[:code], "has no matching i18n yml file"
   end
+
+  test "English locale file includes stubs for tg, uz, ky, tr, sr" do
+    I18n.with_locale(:en) do
+      assert_equal "Tajik",      I18n.t("languages.tg")
+      assert_equal "Uzbek",      I18n.t("languages.uz")
+      assert_equal "Kyrgyz",     I18n.t("languages.ky")
+      assert_equal "Turkish",    I18n.t("languages.tr")
+      assert_equal "Serbian",    I18n.t("languages.sr")
+    end
+  end
+
+  test "Russian locale file includes stubs for tg, uz, ky, tr, sr" do
+    I18n.with_locale(:ru) do
+      assert_equal "Таджикский", I18n.t("languages.tg")
+      assert_equal "Узбекский",  I18n.t("languages.uz")
+      assert_equal "Киргизский", I18n.t("languages.ky")
+      assert_equal "Турецкий",   I18n.t("languages.tr")
+      assert_equal "Сербский",   I18n.t("languages.sr")
+    end
+  end
 end

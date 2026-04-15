@@ -18,7 +18,12 @@ en:
     en: English
     es: Spanish
     fr: French
+    ky: Kyrgyz
     ru: Russian
+    sr: Serbian
+    tg: Tajik
+    tr: Turkish
+    uz: Uzbek
   messages:
     count: Messages
   native_name: English
