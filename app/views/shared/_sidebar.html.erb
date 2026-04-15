@@ -1,5 +1,5 @@
 <%# Modern dark sidebar navigation - inspired by Anthropic/OpenAI/Lovable %>
-<% unread_count = current_user&.notifications&.unread&.count || 0 %>
+<% unread_count = current_user_unread_notifications_count %>
 
 <%# Sidebar %>
 <aside data-sidebar-target="sidebar"

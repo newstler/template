@@ -136,6 +136,17 @@ class ApplicationController < ActionController::Base
   end
   helper_method :current_membership
 
+  # Request-memoized unread notification count. Both the sidebar and
+  # the notifications badge partial call this; memoizing here ensures
+  # a single COUNT query per request regardless of how many partials
+  # render it. We don't rely on a counter cache because Noticed v2
+  # persists via insert_all! and bypasses Noticed::Notification callbacks.
+  def current_user_unread_notifications_count
+    return 0 unless current_user
+    @current_user_unread_notifications_count ||= current_user.notifications.unread.count
+  end
+  helper_method :current_user_unread_notifications_count
+
   def current_admin
     @current_admin ||= Admin.find_by(id: session[:admin_id]) if session[:admin_id]
   end
