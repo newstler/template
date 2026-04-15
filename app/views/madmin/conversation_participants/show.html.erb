@@ -1,0 +1,152 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to "Conversation Participants", resource.index_path %>
+    /
+    <%= resource.display_name(@record) %>
+  </h1>
+</header>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-5">
+    <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.user.email.downcase.strip) %>?s=96&d=mp" class="w-20 h-20 rounded-full" alt="">
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100">
+        <%= link_to @record.user.name.presence || @record.user.email, "/madmin/users/#{@record.user_id}", class: "hover:underline" %>
+      </h2>
+      <p class="text-dark-500 text-sm mt-1">
+        in
+        <%= link_to @record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...",
+              "/madmin/conversations/#{@record.conversation_id}",
+              class: "text-accent-400 hover:text-accent-300" %>
+        &middot;
+        <%= link_to @record.conversation.team.name,
+              "/madmin/teams/#{@record.conversation.team.slug}",
+              class: "text-dark-300 hover:text-dark-100" %>
+      </p>
+      <p class="text-dark-500 text-sm mt-1">Joined <%= @record.created_at.strftime("%-d %B %Y") %> <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> ago)</span></p>
+    </div>
+  </div>
+</div>
+
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Last Read</div>
+    <% if @record.last_read_at %>
+      <div class="text-lg font-bold text-dark-100"><%= time_ago_in_words(@record.last_read_at) %> ago</div>
+      <div class="text-xs text-dark-500 mt-1"><%= @record.last_read_at.strftime("%-d %b %Y %H:%M") %></div>
+    <% else %>
+      <div class="text-lg font-bold text-dark-400">Never</div>
+    <% end %>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Last Notified</div>
+    <% if @record.last_notified_at %>
+      <div class="text-lg font-bold text-dark-100"><%= time_ago_in_words(@record.last_notified_at) %> ago</div>
+      <div class="text-xs text-dark-500 mt-1"><%= @record.last_notified_at.strftime("%-d %b %Y %H:%M") %></div>
+    <% else %>
+      <div class="text-lg font-bold text-dark-400">-</div>
+    <% end %>
+  </div>
+  <div class="card-bg p-5">
+    <div class="text-dark-500 text-sm mb-1">Unread Status</div>
+    <% unread_cutoff = @record.unread_since %>
+    <% recent_messages = @record.conversation.conversation_messages.select { |m| m.user_id != @record.user_id && (unread_cutoff.nil? || m.created_at > unread_cutoff) } %>
+    <% if recent_messages.any? %>
+      <div class="text-2xl font-bold text-amber-400"><%= recent_messages.size %></div>
+      <div class="text-xs text-dark-500 mt-1">unread <%= "message".pluralize(recent_messages.size) %></div>
+    <% else %>
+      <div class="text-2xl font-bold text-emerald-400">Caught up</div>
+    <% end %>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Conversation</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">Title</th>
+          <td>
+            <%= link_to @record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...",
+                  "/madmin/conversations/#{@record.conversation_id}",
+                  class: "hover:underline text-accent-400" %>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Team</th>
+          <td>
+            <%= link_to "/madmin/teams/#{@record.conversation.team.slug}", class: "flex items-center gap-2 hover:underline" do %>
+              <div class="w-6 h-6 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
+                <%= @record.conversation.team.name.first(2).upcase %>
+              </div>
+              <span><%= @record.conversation.team.name %></span>
+            <% end %>
+          </td>
+        </tr>
+        <% if @record.conversation.subject_type.present? %>
+          <tr>
+            <th class="label">Subject</th>
+            <td class="text-dark-300"><%= @record.conversation.subject_type %> <span class="font-mono text-xs text-dark-500">#<%= @record.conversation.subject_id.to_s[0, 8] %></span></td>
+          </tr>
+        <% end %>
+        <tr>
+          <th class="label">Started</th>
+          <td><%= @record.conversation.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Joined</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+        <tr>
+          <th class="label">Updated</th>
+          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% other_participants = @record.conversation.conversation_participants.includes(:user).where.not(id: @record.id) %>
+<% if other_participants.any? %>
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Other Participants (<%= other_participants.size %>)</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>User</th>
+          <th>Last Read</th>
+          <th>Joined</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% other_participants.each do |cp| %>
+          <tr>
+            <td>
+              <%= link_to resource.show_path(cp), class: "flex items-center gap-2 hover:underline" do %>
+                <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(cp.user.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
+                <span class="text-sm"><%= cp.user.name.presence || cp.user.email %></span>
+              <% end %>
+            </td>
+            <td class="text-sm text-dark-400">
+              <% if cp.last_read_at %>
+                <%= time_ago_in_words(cp.last_read_at) %> ago
+              <% else %>
+                Never
+              <% end %>
+            </td>
+            <td class="text-sm text-dark-400"><%= cp.created_at.strftime("%-d %b %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>

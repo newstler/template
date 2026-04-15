@@ -1,0 +1,130 @@
+<%= content_for :title, resource.display_name(@record) %>
+
+<header class="header">
+  <h1>
+    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    /
+    <%= resource.display_name(@record) %>
+  </h1>
+</header>
+
+<div class="card-bg p-6 mb-6">
+  <div class="flex items-start gap-5">
+    <div class="w-14 h-14 rounded-2xl bg-gradient-to-br from-sky-500 to-indigo-600 flex items-center justify-center shadow-lg shadow-sky-500/20">
+      <%= inline_svg "icons/globe.svg", class: "w-7 h-7 text-white" %>
+    </div>
+    <div class="flex-1">
+      <h2 class="text-2xl font-bold text-dark-100">
+        <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "hover:underline" %>
+        <span class="text-dark-500 font-normal mx-1">·</span>
+        <%= @record.language.name %>
+      </h2>
+      <div class="flex items-center gap-3 mt-2 text-sm text-dark-400">
+        <span class="inline-flex items-center justify-center w-8 h-5 rounded bg-dark-700 text-[10px] font-mono uppercase text-dark-300">
+          <%= @record.language.code %>
+        </span>
+        <span><%= @record.language.native_name %></span>
+        <span>&middot;</span>
+        <% if @record.active? %>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Active</span>
+        <% else %>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card-bg overflow-hidden mb-6">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <tbody>
+        <tr>
+          <th class="label">Team</th>
+          <td>
+            <%= link_to "/madmin/teams/#{@record.team.slug}", class: "flex items-center gap-2 hover:underline" do %>
+              <div class="w-6 h-6 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
+                <%= @record.team.name.first(2).upcase %>
+              </div>
+              <span><%= @record.team.name %></span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Language</th>
+          <td>
+            <%= link_to "/madmin/languages/#{@record.language_id}", class: "inline-flex items-center gap-2 hover:underline" do %>
+              <span class="inline-flex items-center justify-center w-8 h-5 rounded bg-dark-700 text-[10px] font-mono uppercase text-dark-300">
+                <%= @record.language.code %>
+              </span>
+              <span><%= @record.language.name %></span>
+              <span class="text-xs text-dark-500">(<%= @record.language.native_name %>)</span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Status</th>
+          <td>
+            <% if @record.active? %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Active</span>
+            <% else %>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <th class="label">Added</th>
+          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %> <span class="text-dark-500 text-xs ml-1">(<%= time_ago_in_words(@record.created_at) %> ago)</span></td>
+        </tr>
+        <tr>
+          <th class="label">Last Updated</th>
+          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<% sibling_langs = @record.team.team_languages.includes(:language).where.not(id: @record.id) %>
+<% if sibling_langs.any? %>
+<div class="card-bg overflow-hidden">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Other Languages in <%= @record.team.name %></h2>
+  </div>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th>Language</th>
+          <th>Code</th>
+          <th>Status</th>
+          <th>Added</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% sibling_langs.each do |tl| %>
+          <tr>
+            <td>
+              <%= link_to resource.show_path(tl), class: "hover:underline font-medium" do %>
+                <%= tl.language.name %> <span class="text-dark-500 text-xs">(<%= tl.language.native_name %>)</span>
+              <% end %>
+            </td>
+            <td class="font-mono text-xs text-dark-400 uppercase"><%= tl.language.code %></td>
+            <td>
+              <% if tl.active? %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Active</span>
+              <% else %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+              <% end %>
+            </td>
+            <td class="text-sm text-dark-400"><%= tl.created_at.strftime("%-d %b %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>
+<% end %>

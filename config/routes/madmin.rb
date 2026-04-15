@@ -53,5 +53,7 @@ namespace :madmin do
   resources :noticed_notifications, only: [ :index, :show ]
   resources :conversations
   resources :conversation_messages
+  resources :conversation_participants, only: [ :index, :show ]
+  resources :team_languages, only: [ :index, :show ]
   root to: "dashboard#show"
 end

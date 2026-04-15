@@ -1,0 +1,111 @@
+<%= content_for :title, resource.friendly_name.pluralize %>
+
+<header class="header">
+  <h1><%= resource.friendly_name.pluralize %></h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :team_id, "Team", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <% teams = Team.order(:name).pluck(:name, :id) %>
+      <%= f.select :team_id,
+          options_for_select([["All teams", ""]] + teams, params[:team_id]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div>
+      <%= f.label :language_id, "Language", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <% languages = Language.order(:name).pluck(:name, :id) %>
+      <%= f.select :language_id,
+          options_for_select([["All languages", ""]] + languages, params[:language_id]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div>
+      <%= f.label :active, "Status", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.select :active,
+          options_for_select([["All", ""], ["Active", "true"], ["Disabled", "false"]], params[:active]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:team_id].present? || params[:language_id].present? || params[:active].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<% if @records.any? %>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th><%= sortable :team_name, "Team" %></th>
+          <th><%= sortable :language_name, "Language" %></th>
+          <th><%= sortable :active, "Status" %></th>
+          <th><%= sortable :created_at, "Added" %></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @records.each do |record| %>
+          <tr>
+            <td>
+              <%= link_to resource.show_path(record), class: "flex items-center gap-2 hover:underline" do %>
+                <div class="w-7 h-7 rounded bg-dark-600 flex items-center justify-center text-xs font-bold text-dark-300">
+                  <%= record.team.name.first(2).upcase %>
+                </div>
+                <span class="font-medium"><%= record.team.name %></span>
+              <% end %>
+            </td>
+            <td>
+              <%= link_to "/madmin/languages/#{record.language_id}", class: "inline-flex items-center gap-2 hover:underline" do %>
+                <span class="inline-flex items-center justify-center w-8 h-5 rounded bg-dark-700 text-[10px] font-mono uppercase text-dark-300">
+                  <%= record.language.code %>
+                </span>
+                <span><%= record.language.name %></span>
+                <span class="text-xs text-dark-500"><%= record.language.native_name %></span>
+              <% end %>
+            </td>
+            <td>
+              <% if record.active? %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">
+                  <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5"></span>Active
+                </span>
+              <% else %>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">
+                  <span class="w-1.5 h-1.5 bg-dark-500 rounded-full mr-1.5"></span>Disabled
+                </span>
+              <% end %>
+            </td>
+            <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="card-bg p-10 text-center">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-dark-700 flex items-center justify-center mb-4">
+      <%= inline_svg "icons/globe.svg", class: "w-7 h-7 text-dark-400" %>
+    </div>
+    <h2 class="text-lg font-semibold text-dark-100 mb-1">No team languages yet</h2>
+    <p class="text-sm text-dark-400 max-w-md mx-auto">Teams pick languages from their settings page. Once a team enables a language it appears here.</p>
+  </div>
+<% end %>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>
