@@ -22,7 +22,8 @@
       conversation_participants: ConversationParticipant.count,
       blobs: ActiveStorage::Blob.count,
       attachments: ActiveStorage::Attachment.count,
-      variants: ActiveStorage::VariantRecord.count
+      variants: ActiveStorage::VariantRecord.count,
+      ai_costs: AiCost.count
     }
   end
 %>
@@ -86,6 +87,7 @@
       <%= render "shared/sidebar_link", path: "/madmin/chats", icon: "sparkles", label: "Chats", nested: true, counter: sidebar_counts[:chats] %>
       <%= render "shared/sidebar_link", path: "/madmin/messages", icon: "sparkles", label: "Messages", nested: true, counter: sidebar_counts[:messages] %>
       <%= render "shared/sidebar_link", path: "/madmin/tool_calls", icon: "wrench", label: "Tool Calls", nested: true, counter: sidebar_counts[:tool_calls] %>
+      <%= render "shared/sidebar_link", path: "/madmin/ai_costs", icon: "dollar", label: "AI Costs", nested: true, counter: sidebar_counts[:ai_costs] %>
     <% end %>
 
     <div class="space-y-1">

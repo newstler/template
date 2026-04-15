@@ -22,6 +22,7 @@ class ModerateMessageJob < ApplicationJob
     PROMPT
 
     response = RubyLLM.chat(model: model).ask(prompt)
+    record_cost(message, model, response)
     parsed = begin
       JSON.parse(response.content)
     rescue StandardError
@@ -30,5 +31,19 @@ class ModerateMessageJob < ApplicationJob
     return unless parsed.is_a?(Hash) && parsed["flagged"] == true
 
     message.update_columns(flagged_at: Time.current, flag_reason: "llm:#{parsed['reason']}")
+  end
+
+  private
+
+  def record_cost(message, model, response)
+    AiCost.record!(
+      cost_type: "moderation",
+      model_id: model,
+      input_tokens: response.input_tokens.to_i,
+      output_tokens: response.output_tokens.to_i,
+      team: message.conversation&.teams&.first,
+      user: message.user,
+      trackable: message,
+    )
   end
 end

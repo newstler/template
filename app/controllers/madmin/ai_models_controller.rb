@@ -3,6 +3,7 @@ module Madmin
     def show
       @setting = Setting.instance
       @available_models = Model.enabled.order(:provider, :name).pluck(:name, :model_id)
+      @embedding_models = Model.enabled.embedding.order(:provider, :name).pluck(:model_id)
       load_models_table
     end
 
@@ -19,6 +20,7 @@ module Madmin
           format.json { head :unprocessable_entity }
           format.html do
             @available_models = Model.enabled.order(:provider, :name).pluck(:name, :model_id)
+            @embedding_models = Model.enabled.embedding.order(:provider, :name).pluck(:model_id)
             render :edit, status: :unprocessable_entity
           end
         end

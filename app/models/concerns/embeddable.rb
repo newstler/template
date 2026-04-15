@@ -86,6 +86,11 @@ module Embeddable
       return nil if model.blank?
 
       response = RubyLLM.embed(text, model: model)
+      AiCost.record!(
+        cost_type: "embedding",
+        model_id: model,
+        input_tokens: response.input_tokens.to_i,
+      )
       response.vectors
     rescue StandardError => e
       Rails.logger.warn("[Embeddable] query embed failed: #{e.message}")

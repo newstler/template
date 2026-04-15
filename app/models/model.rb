@@ -5,6 +5,7 @@ class Model < ApplicationRecord
   has_many :chats, foreign_key: :model_id
 
   scope :enabled, -> { where(provider: configured_providers) }
+  scope :embedding, -> { where("json_extract(modalities, '$.output') LIKE '%embedding%'") }
 
   # Recalculate total cost from all chats
   def recalculate_total_cost!

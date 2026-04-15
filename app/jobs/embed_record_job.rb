@@ -17,9 +17,21 @@ class EmbedRecordJob < ApplicationJob
     return if vector.blank?
 
     write_embedding(klass, record, vector, source)
+    record_cost(record, model, response)
   end
 
   private
+
+  def record_cost(record, model, response)
+    AiCost.record!(
+      cost_type: "embedding",
+      model_id: model,
+      input_tokens: response.input_tokens.to_i,
+      team: record.try(:team),
+      user: record.try(:user),
+      trackable: record,
+    )
+  end
 
   def write_embedding(klass, record, vector, source)
     conn = klass.connection

@@ -74,6 +74,22 @@ class Message < ApplicationRecord
     chat.recalculate_total_cost!
     chat.user&.recalculate_total_cost!
     chat.model&.recalculate_total_cost!
+
+    record_ai_cost
+  end
+
+  def record_ai_cost
+    return unless assistant? && cost.to_f > 0
+
+    AiCost.record!(
+      cost_type: "chat",
+      model_id: chat.model&.model_id || "unknown",
+      input_tokens: input_tokens.to_i,
+      output_tokens: output_tokens.to_i,
+      team: chat.team,
+      user: chat.user,
+      trackable: self,
+    )
   end
 
   def model_pricing

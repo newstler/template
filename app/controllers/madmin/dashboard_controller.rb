@@ -10,7 +10,7 @@ module Madmin
         total_chats: Chat.count,
         total_messages: Message.count,
         total_tokens: calculate_total_tokens,
-        total_cost: Message.sum(:cost),
+        total_cost: AiCost.sum(:cost),
         total_tool_calls: ToolCall.count,
         recent_chats: Chat.where("created_at >= ?", 7.days.ago).count,
         recent_messages: Message.where("created_at >= ?", 7.days.ago).count,
@@ -45,9 +45,14 @@ module Madmin
         .order(Arel.sql("SUM(chats.total_cost) DESC"))
         .limit(5)
 
-      @cost_timeline = Message.where(created_at: @range)
-        .group_by_day(:created_at, range: @range)
-        .sum(:cost)
+      @cost_timeline = AiCost::COST_TYPES.map do |type|
+        {
+          name: type.titleize,
+          data: AiCost.where(cost_type: type, created_at: @range)
+                  .group_by_day(:created_at, range: @range)
+                  .sum(:cost),
+        }
+      end
 
       @signup_timeline = User.where(created_at: @range)
         .group_by_day(:created_at, range: @range)

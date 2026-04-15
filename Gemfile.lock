@@ -577,6 +577,7 @@ DEPENDENCIES
   propshaft
   puma (>= 5.0)
   rails!
+  rails-i18n
   rails_error_dashboard
   redcarpet
   rouge

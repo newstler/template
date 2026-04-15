@@ -18,7 +18,7 @@
 
   <%# KPI grid %>
   <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
-    <div class="p-4 bg-gradient-to-br from-emerald-600/80 to-green-700/80 rounded-xl shadow-lg shadow-emerald-500/20">
+    <%= link_to "/madmin/ai_costs", class: "block p-4 bg-gradient-to-br from-emerald-600/80 to-green-700/80 rounded-xl shadow-lg shadow-emerald-500/20 hover:shadow-emerald-500/30 transition-shadow" do %>
       <div class="flex items-center justify-between mb-3">
         <div class="p-2 bg-white/20 rounded-lg">
           <%= inline_svg "icons/dollar.svg", class: "w-5 h-5 text-white" %>
@@ -26,7 +26,7 @@
       </div>
       <p class="text-2xl font-bold text-white">$<%= number_with_precision(@metrics[:total_cost], precision: 2) %></p>
       <p class="text-xs text-white/80 mt-1"><%= t(".kpi.total_cost") %></p>
-    </div>
+    <% end %>
 
     <%= kpi_card label: t(".kpi.total_users"), value: number_with_delimiter(@metrics[:total_users]), trend: nil, icon: "users", href: "/madmin/users" %>
     <%= kpi_card label: t(".kpi.total_teams"), value: number_with_delimiter(@metrics[:total_teams]), icon: "users", href: "/madmin/teams" %>
@@ -40,7 +40,7 @@
     <div class="lg:col-span-2">
       <%= render "shared/chart_card", title: t(".cost_over_time"), subtitle: t(".cost_over_time_subtitle") do %>
         <%= line_chart @cost_timeline,
-              colors: [ "oklch(65% 0.19 150)" ],
+              colors: [ "oklch(65% 0.19 260)", "oklch(65% 0.19 150)", "oklch(65% 0.19 80)", "oklch(65% 0.19 340)" ],
               library: { maintainAspectRatio: false },
               height: "260px",
               prefix: "$",

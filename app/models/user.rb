@@ -6,6 +6,7 @@ class User < ApplicationRecord
   has_one_attached :avatar
 
   has_many :chats, dependent: :destroy
+  has_many :ai_costs, dependent: :destroy
   has_many :memberships, dependent: :destroy
   has_many :teams, through: :memberships
   has_many :conversation_participants, dependent: :destroy

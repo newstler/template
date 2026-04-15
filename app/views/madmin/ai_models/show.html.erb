@@ -70,13 +70,16 @@
           </div>
 
           <%# Embedding Model %>
+          <% embedding_options = [["— Select model —", ""]] + @embedding_models.map { |model_id| [model_id, model_id] } %>
           <div class="card-bg p-6">
             <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".embedding_heading") %></h2>
             <p class="text-sm text-dark-500 mb-4"><%= t(".embedding_description") %></p>
             <div>
-              <%= form.text_field :embedding_model,
+              <%= form.select :embedding_model,
+                options_for_select(embedding_options, @setting.embedding_model),
+                {},
                 data: { action: "change->autosave#save" },
-                class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm font-mono" %>
+                class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
             </div>
           </div>
         <% end %>
