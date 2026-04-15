@@ -1,0 +1,46 @@
+---
+en:
+  madmin:
+    dashboard:
+      show:
+        ago: ago
+        chats: chats
+        cost_over_time: Cost over time
+        cost_over_time_subtitle: Daily AI cost in the selected range
+        default_model: Default
+        empty_chat: Empty chat
+        heading: Admin dashboard
+        kpi:
+          total_chats: Total chats
+          total_cost: Total AI cost
+          total_messages: Total messages
+          total_teams: Total teams
+          total_tokens: AI tokens
+          total_users: Total users
+        msgs: msgs
+        no_chats: No chats yet
+        no_usage: No AI usage yet
+        ranges:
+          30d: Last 30 days
+          7d: Last 7 days
+          90d: Last 90 days
+        recent_chats: Recent chats
+        signups_over_time: Signups over time
+        signups_over_time_subtitle: Daily new user signups
+        subscriptions:
+          active: Active
+          canceled: Canceled
+          configure_stripe: Configure Stripe
+          heading: Subscriptions
+          mrr: Monthly revenue
+          none: None
+          past_due: Past due
+          total_revenue: Total revenue
+          trialing: Trialing
+        subtitle: Platform-wide overview
+        title: Dashboard
+        top_teams: Top teams by AI cost
+        top_users: Top users by AI cost
+        unknown: Unknown
+        unnamed: Unnamed
+        view_all: View all

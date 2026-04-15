@@ -1,6 +1,8 @@
 module Madmin
   class DashboardController < Madmin::ApplicationController
     def show
+      @range = time_range_from(params[:range])
+
       @metrics = {
         total_users: User.count,
         total_admins: Admin.count,
@@ -31,10 +33,36 @@ module Madmin
       @recent_users = User.includes(:memberships).order(created_at: :desc).limit(5)
       @recent_teams = Team.includes(:memberships, :chats).order(created_at: :desc).limit(5)
 
-      @activity_chart_data = build_activity_chart_data
+      @top_teams = Team.joins(:chats)
+        .select("teams.*, COUNT(DISTINCT chats.id) AS ai_chats_count, SUM(chats.messages_count) AS ai_messages_count, SUM(chats.total_cost) AS ai_total_cost")
+        .group("teams.id")
+        .order(Arel.sql("SUM(chats.total_cost) DESC"))
+        .limit(5)
+
+      @top_users = User.joins(:chats)
+        .select("users.*, COUNT(DISTINCT chats.id) AS ai_chats_count, SUM(chats.messages_count) AS ai_messages_count, SUM(chats.total_cost) AS ai_total_cost")
+        .group("users.id")
+        .order(Arel.sql("SUM(chats.total_cost) DESC"))
+        .limit(5)
+
+      @cost_timeline = Message.where(created_at: @range)
+        .group_by_day(:created_at, range: @range)
+        .sum(:cost)
+
+      @signup_timeline = User.where(created_at: @range)
+        .group_by_day(:created_at, range: @range)
+        .count
     end
 
     private
+
+    def time_range_from(param)
+      case param.to_s
+      when "7d"  then 7.days.ago..Time.current
+      when "90d" then 90.days.ago..Time.current
+      else 30.days.ago..Time.current
+      end
+    end
 
     def calculate_total_tokens
       Message.sum("COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0) + COALESCE(cached_tokens, 0) + COALESCE(cache_creation_tokens, 0)")
@@ -64,18 +92,6 @@ module Madmin
     rescue => e
       Rails.logger.warn("Failed to fetch Stripe revenue: #{e.message}")
       { mrr: 0, total: 0, available: false }
-    end
-
-    def build_activity_chart_data
-      dates = (6.days.ago.to_date..Date.current).to_a
-
-      cost_sums = Message.where(created_at: dates.first.all_day.first..dates.last.end_of_day)
-                         .group("date(created_at)").sum(:cost)
-
-      {
-        labels: dates.map { |d| d.strftime("%b %d") },
-        cost: dates.map { |d| (cost_sums[d.to_s] || 0).to_f }
-      }
     end
   end
 end
