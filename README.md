@@ -14,7 +14,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Deployment**: Kamal 2
 - **Authentication**: Magic Links (passwordless)
 - **Multitenancy**: Team-based with roles (owner/admin/member)
-- **Multilingual**: Mobility gem with RubyLLM auto-translation
+- **Multilingual**: Mobility gem with RubyLLM auto-translation; full UI locales for `en, de, es, fr, ru` plus language-name stubs for `tg, uz, ky, tr, sr` (add content per consuming project)
 - **Currencies**: `money` + `money-currencylayer-bank` (daily rate refresh)
 - **Countries**: `countries` (iso3166) with emoji flags
 - **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation (optional)

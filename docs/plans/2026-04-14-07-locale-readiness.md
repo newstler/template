@@ -213,7 +213,7 @@ git commit -m "docs: document how to add a new language + pluralization rule"
 
 ## Task 4: README.md update + verification + PR
 
-- [ ] **Step 1: Update README.md**
+- [x] **Step 1: Update README.md**
 
 Open `README.md`. Find the Tech Stack or Features section mentioning Multilingual support. Update the supported-language list to:
 
@@ -221,7 +221,7 @@ Open `README.md`. Find the Tech Stack or Features section mentioning Multilingua
 - **Multilingual**: auto-translation via LLM, locale-name stubs for `en, de, es, fr, ru` (full UI) and `tg, uz, ky, tr, sr` (stubs — add content per consuming project)
 ```
 
-- [ ] **Step 2: Run i18n-tasks health**
+- [x] **Step 2: Run i18n-tasks health**
 
 ```bash
 bundle exec i18n-tasks health
@@ -229,7 +229,7 @@ bundle exec i18n-tasks health
 
 Expected: no missing/unused keys. The new stubs should appear as valid entries.
 
-- [ ] **Step 3: Run full CI**
+- [x] **Step 3: Run full CI**
 
 Run: `bin/ci`
 
