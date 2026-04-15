@@ -12,6 +12,7 @@ class SearchableThing < ApplicationRecord
   embeddable_source ->(record) { "#{record.name} #{record.description} #{record.tags}".strip }
   embeddable_model  -> { Setting.embedding_model }
   embeddable_distance :cosine
+  embeddable_metadata ->(record) { { tags: record.tags.to_s } }
 
   chunk_source ->(record) { record.description.to_s }
   chunk_size 10

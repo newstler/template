@@ -126,4 +126,16 @@ class EmbeddableTest < ActiveSupport::TestCase
     assert_empty SearchableThing.similar_to("")
     assert_empty SearchableThing.similar_to(nil)
   end
+
+  test "similar_to filter_by pre-filters on a metadata column" do
+    with_fake_embed do
+      marine = SearchableThing.create!(name: "Welder", description: "marine experience", tags: "marine")
+      _industrial = SearchableThing.create!(name: "Welder", description: "industrial site", tags: "industrial")
+      perform_enqueued_jobs
+
+      results = SearchableThing.similar_to("Welder", filter_by: { tags: "marine" })
+
+      assert_equal [ marine.id ], results.pluck(:id)
+    end
+  end
 end
