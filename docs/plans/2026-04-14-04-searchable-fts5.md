@@ -471,7 +471,7 @@ git commit -m "feat: fts:rebuild rake task"
 **Files:**
 - Modify: `.claude/rules/performance.md`
 
-- [ ] **Step 1: Append a rule**
+- [x] **Step 1: Append a rule**
 
 Add a new section at the end of `.claude/rules/performance.md`:
 
@@ -493,7 +493,7 @@ Candidate.search("welder russian speaker")
 For semantic search (non-keyword), combine with `Embeddable` (see Plan 05).
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add .claude/rules/performance.md

@@ -21,6 +21,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Admin Panel**: Madmin
 - **Error Tracking**: Rails Error Dashboard (RED) at `/red`
 - **Notifications**: [Noticed v2](https://github.com/excid3/noticed)
+- **Search**: SQLite FTS5 via the `Searchable` concern (Unicode61, bm25)
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
@@ -65,6 +66,11 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Per-team and per-user country (ISO 3166) with emoji flag picker
   - Locale-aware amount formatting (Russian: `1 000 000`; English: `1,000,000`)
   - `Current.currency` set on every request via a 5-step detection chain
+- **Full-Text Search** via SQLite FTS5
+  - `include Searchable` on any model, declare `searchable_fields`
+  - Unicode61 tokenizer handles Cyrillic, Turkish, and Latin diacritics out of the box
+  - Composable `Model.search(query)` returns a relevance-ordered `ActiveRecord::Relation`
+  - Zero external services — SQLite ships with FTS5 built in
 - **Team Messaging** (Conversations)
   - Team-scoped person-to-person chat with attachments
   - Polymorphic `subject` — attach conversations to any record
