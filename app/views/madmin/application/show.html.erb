@@ -17,13 +17,14 @@
       <% resource.member_actions.each do |action| %>
         <%= instance_exec(@record, &action) %>
       <% end %>
-      <% if resource.actions.include?(:edit) %>
+      <% resource_actions = resource.respond_to?(:actions) ? resource.actions : %i[index show new create edit update destroy] %>
+      <% if resource_actions.include?(:edit) %>
         <%= link_to resource.edit_path(@record), class: "btn btn-secondary" do %>
           <%= inline_svg "icons/pencil.svg", class: "w-4 h-4" %>
           <span>Edit</span>
         <% end %>
       <% end %>
-      <% if resource.actions.include?(:destroy) || resource.actions.include?(:delete) %>
+      <% if resource_actions.include?(:destroy) || resource_actions.include?(:delete) %>
         <%= button_to resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure you want to delete this #{resource.friendly_name.downcase}?" }, class: "btn btn-danger" do %>
           <%= inline_svg "icons/trash.svg", class: "w-4 h-4" %>
           <span>Delete</span>

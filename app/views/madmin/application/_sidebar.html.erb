@@ -18,6 +18,8 @@
       noticed_notifications: Noticed::Notification.count,
       admins: Admin.count,
       languages: Language.count,
+      team_languages: TeamLanguage.count,
+      conversation_participants: ConversationParticipant.count,
       blobs: ActiveStorage::Blob.count,
       attachments: ActiveStorage::Attachment.count,
       variants: ActiveStorage::VariantRecord.count
@@ -86,6 +88,7 @@
       <%= render "shared/sidebar_link", path: "/madmin/articles", icon: "file", label: "Articles", counter: sidebar_counts[:articles] %>
       <%= render "shared/sidebar_link", path: "/madmin/conversations", icon: "chat", label: "Conversations", counter: sidebar_counts[:conversations] %>
       <%= render "shared/sidebar_link", path: "/madmin/conversation_messages", icon: "messages", label: "Conv. Messages", counter: sidebar_counts[:conversation_messages] %>
+      <%= render "shared/sidebar_link", path: "/madmin/conversation_participants", icon: "users", label: "Conv. Participants", counter: sidebar_counts[:conversation_participants] %>
       <%= render "shared/sidebar_link", path: "/madmin/chats", icon: "chat", label: "Chats", counter: sidebar_counts[:chats] %>
       <%= render "shared/sidebar_link", path: "/madmin/messages", icon: "messages", label: "Messages", counter: sidebar_counts[:messages] %>
       <%= render "shared/sidebar_link", path: "/madmin/tool_calls", icon: "wrench", label: "Tool Calls", counter: sidebar_counts[:tool_calls] %>
@@ -134,6 +137,7 @@
         <%= render "shared/sidebar_link", path: "/madmin/admins", icon: "shield", label: "Admins", nested: true, counter: sidebar_counts[:admins] %>
         <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "key", label: "API Keys", nested: true %>
         <%= render "shared/sidebar_link", path: "/madmin/languages", icon: "globe", label: "Languages", nested: true, counter: sidebar_counts[:languages] %>
+        <%= render "shared/sidebar_link", path: "/madmin/team_languages", icon: "globe", label: "Team Languages", nested: true, counter: sidebar_counts[:team_languages] %>
         <%= render "shared/sidebar_link", path: "/madmin/mail", icon: "mail", label: "Mail", nested: true %>
       <% end %>
     </div>

@@ -11,8 +11,6 @@
     <% resource.member_actions.each do |action| %>
       <%= instance_exec(@record, &action) %>
     <% end %>
-    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
-    <%= button_to "Delete", resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
   </div>
 </header>
 
