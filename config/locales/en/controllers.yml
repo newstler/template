@@ -50,6 +50,10 @@ en:
       refreshes:
         create:
           notice: Models refreshed successfully
+    notifications:
+      preferences:
+        update:
+          notice: Notification preferences updated
     onboardings:
       update:
         notice: Welcome, %{name}!

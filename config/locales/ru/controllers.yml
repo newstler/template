@@ -47,6 +47,10 @@ ru:
       refreshes:
         create:
           notice: Модели обновлены
+    notifications:
+      preferences:
+        update:
+          notice: Настройки уведомлений обновлены
     onboardings:
       update:
         notice: Добро пожаловать, %{name}!

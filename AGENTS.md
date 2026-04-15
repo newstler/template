@@ -95,6 +95,7 @@ npx @anthropic-ai/mcp-inspector
 | `show_model` | Get model details | None |
 | `show_current_user` | Get current user info | Team + User |
 | `update_current_user` | Update profile (name, locale, preferred_currency, residence_country_code) | Team + User |
+| `update_notification_preferences` | Update per-kind / per-channel notification preferences | Team + User |
 | `show_subscription` | Get team subscription status | Team + User (admin) |
 | `list_prices` | List available subscription prices | None |
 | `create_checkout` | Create Stripe Checkout session URL | Team + User (admin) |

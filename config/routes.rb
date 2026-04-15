@@ -25,6 +25,8 @@ Rails.application.routes.draw do
       patch :mark_all_read
     end
   end
+  resource :notification_preferences, only: [ :edit, :update ],
+           controller: "notifications/preferences"
 
   # Personal context (authenticated user, no team scope)
   get "home", to: "personal/home#show", as: :personal_home
