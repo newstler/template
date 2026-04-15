@@ -32,13 +32,13 @@ README.md                                  # tiny update — list supported lang
 
 Before touching anything, confirm the template's `Language` model reads language names from `config/locales/*.yml`.
 
-- [ ] **Step 1: Read the Language model**
+- [x] **Step 1: Read the Language model**
 
 Run: `cat app/models/language.rb`
 
 Look for any method like `sync_from_locale_files!`, `seed_from_i18n!`, or similar. Note how it discovers languages — whether it iterates `I18n.available_locales`, whether it reads a specific YAML key, and where it expects language names to live.
 
-- [ ] **Step 2: Check existing locale files**
+- [x] **Step 2: Check existing locale files**
 
 Run: `grep -r "languages:" config/locales/en.yml config/locales/ru.yml`
 
@@ -54,13 +54,13 @@ en:
     ru: "Russian"
 ```
 
-- [ ] **Step 3: Smoke-test the sync**
+- [x] **Step 3: Smoke-test the sync**
 
 Run: `bin/rails runner 'Language.sync_from_locale_files! rescue puts "no sync method"; puts Language.all.pluck(:code, :name).to_h'`
 
 Expected: prints the five existing codes with their names. If the output is different, adjust the approach in Task 2 to match the actual sync mechanism.
 
-- [ ] **Step 4: No commit yet**
+- [x] **Step 4: No commit yet**
 
 This is verification only. Proceed to Task 2 with the findings.
 
@@ -72,7 +72,7 @@ This is verification only. Proceed to Task 2 with the findings.
 - Modify: `config/locales/en.yml`
 - Modify: `config/locales/ru.yml`
 
-- [ ] **Step 1: Write the failing test**
+- [x] **Step 1: Write the failing test**
 
 Append to `test/models/language_test.rb`:
 
@@ -98,13 +98,13 @@ Append to `test/models/language_test.rb`:
   end
 ```
 
-- [ ] **Step 2: Run to verify failure**
+- [x] **Step 2: Run to verify failure**
 
 Run: `rails test test/models/language_test.rb -n /stubs/`
 
 Expected: FAIL — `I18n::MissingTranslationData` for `languages.tg` (etc).
 
-- [ ] **Step 3: Add the stubs to `config/locales/en.yml`**
+- [x] **Step 3: Add the stubs to `config/locales/en.yml`**
 
 Open `config/locales/en.yml`. Find the `languages:` key (likely nested under `en:`). Add the five new codes:
 
@@ -119,7 +119,7 @@ en:
     sr: "Serbian"
 ```
 
-- [ ] **Step 4: Add the stubs to `config/locales/ru.yml`**
+- [x] **Step 4: Add the stubs to `config/locales/ru.yml`**
 
 Open `config/locales/ru.yml`. Add the equivalent entries:
 
@@ -134,13 +134,13 @@ ru:
     sr: "Сербский"
 ```
 
-- [ ] **Step 5: Run the test**
+- [x] **Step 5: Run the test**
 
 Run: `rails test test/models/language_test.rb -n /stubs/`
 
 Expected: PASS.
 
-- [ ] **Step 6: Commit**
+- [x] **Step 6: Commit**
 
 ```bash
 git add config/locales/en.yml config/locales/ru.yml test/models/language_test.rb
@@ -159,7 +159,7 @@ No code changes — the existing Language sync mechanism picks them up."
 **Files:**
 - Modify: `AGENTS.md` (add to existing Multilingual Content section)
 
-- [ ] **Step 1: Add a subsection**
+- [x] **Step 1: Add a subsection**
 
 Open `AGENTS.md`. Find the "## Multilingual Content" section. After the existing content, add:
 
@@ -202,7 +202,7 @@ ru:
 Always use `t("key", count: n)` (not string interpolation) for any countable noun.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add AGENTS.md

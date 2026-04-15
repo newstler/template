@@ -503,6 +503,43 @@ end
 
 See `.claude/rules/multilingual.md` for full conventions.
 
+### Adding a New Language
+
+To add support for a language that isn't already in `config/locales/`:
+
+1. **Add language-name stubs** to `config/locales/en.yml` and `config/locales/ru.yml` under the `languages:` key, using the ISO 639-1 code and the localized name:
+   ```yaml
+   en:
+     languages:
+       xx: "Example Language"
+   ru:
+     languages:
+       xx: "Пример языка"
+   ```
+2. **Create the full locale file** at `config/locales/xx.yml` and per-view/mailer files under `config/locales/xx/`. Follow the existing structure of `config/locales/en/` as the canonical layout. The top-level `xx.yml` must define `language_name` and `native_name` so `Language.sync_from_locale_files!` can create the record.
+3. **Run the language sync** to populate the `Language` model:
+   ```bash
+   bin/rails runner 'Language.sync_from_locale_files!'
+   ```
+4. **Enable the language** via Madmin at `/madmin/languages` (admin action) or per-team at `/t/:slug/languages`.
+5. **Verify pluralization rules** — Russian and several Slavic languages have the `one/few/many/other` rule; Arabic has `zero/one/two/few/many/other`. Rails i18n handles these natively if the YAML file defines all the forms.
+
+The template ships language-name stubs for `en, de, es, fr, ru` (full content) and `tg, uz, ky, tr, sr` (stubs only — add content when a consuming project needs them).
+
+### Pluralization Example (Russian)
+
+```yaml
+ru:
+  candidates:
+    count:
+      one:   "%{count} кандидат"
+      few:   "%{count} кандидата"
+      many:  "%{count} кандидатов"
+      other: "%{count} кандидата"
+```
+
+Always use `t("key", count: n)` (not string interpolation) for any countable noun.
+
 ## Notifications
 
 User-facing notifications via [Noticed v2](https://github.com/excid3/noticed). Database + email delivery shipped; Slack, Twilio, Vonage, web/mobile push available as opt-in adapters when a consuming app needs them.
