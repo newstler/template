@@ -684,10 +684,7 @@ Both concerns are opt-in because they require configured models (`Setting.transl
 
 ### Notification jobs
 
-- `ConversationNotificationJob` — immediate per-message email to each non-sender participant
 - `ConversationDigestNotificationJob` — debounced digest (runs 2 minutes after a message is posted, skips recipients notified in the last 5 minutes)
-
-The `ConversationMessage` model uses the digest job by default; swap to the immediate job where single-message alerts are desired.
 
 ## Currencies + Countries
 
