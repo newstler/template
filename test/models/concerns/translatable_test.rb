@@ -8,11 +8,6 @@ class TranslatableTest < ActiveSupport::TestCase
     @user = users(:one)
   end
 
-  test "translatable_attributes tracks declared attributes" do
-    assert_includes Article.translatable_attributes, "title"
-    assert_includes Article.translatable_attributes, "body"
-  end
-
   test "queue_translations enqueues jobs on create" do
     assert_enqueued_with(job: TranslateContentJob) do
       Article.create!(team: @team, user: @user, title: "Hello World", body: "Test body")

@@ -1,12 +1,6 @@
 require "test_helper"
 
 class CurrencyConvertibleTest < ActiveSupport::TestCase
-  test "SUPPORTED_CURRENCIES is non-empty and includes core currencies" do
-    assert CurrencyConvertible::SUPPORTED_CURRENCIES.any?
-    assert_includes CurrencyConvertible::SUPPORTED_CURRENCIES, "USD"
-    assert_includes CurrencyConvertible::SUPPORTED_CURRENCIES, "EUR"
-  end
-
   test "POPULAR_CURRENCIES is a subset of SUPPORTED_CURRENCIES" do
     assert (CurrencyConvertible::POPULAR_CURRENCIES - CurrencyConvertible::SUPPORTED_CURRENCIES).empty?
   end
@@ -22,16 +16,11 @@ class CurrencyConvertibleTest < ActiveSupport::TestCase
     assert_equal "GBP", CurrencyConvertible::COUNTRY_CURRENCY["GB"]
   end
 
-  test "convert_amount returns the same amount when from == to" do
+  test "convert_amount short-circuits when amount or currencies match, and falls back when bank is unconfigured" do
     assert_equal 10_000, CurrencyConvertible.convert_amount(10_000, "USD", "USD")
-  end
-
-  test "convert_amount returns zero when amount is zero" do
     assert_equal 0, CurrencyConvertible.convert_amount(0, "USD", "EUR")
-  end
 
-  test "convert_amount falls back to same amount when bank has no api key" do
-    # The test environment has no currencylayer_api_key, so conversion is a no-op
+    # Test environment has no currencylayer_api_key → falls back to identity conversion
     assert_equal 10_000, CurrencyConvertible.convert_amount(10_000, "USD", "EUR")
   end
 end

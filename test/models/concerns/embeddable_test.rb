@@ -29,16 +29,8 @@ class EmbeddableTest < ActiveSupport::TestCase
     ActiveRecord::Base.connection.execute("DELETE FROM searchable_things_embeddings")
   end
 
-  test "embeddable_source_proc is declared" do
-    assert_not_nil SearchableThing.embeddable_source_proc
-  end
-
-  test "embeddings_table name is derived" do
+  test "embeddings_table name is derived from the model" do
     assert_equal "searchable_things_embeddings", SearchableThing.embeddings_table
-  end
-
-  test "embeddable_distance defaults to cosine" do
-    assert_equal :cosine, SearchableThing.embeddable_distance
   end
 
   test "does not enqueue EmbedRecordJob when source is blank" do

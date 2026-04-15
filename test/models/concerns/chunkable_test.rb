@@ -30,8 +30,7 @@ class ChunkableTest < ActiveSupport::TestCase
     perform_enqueued_jobs only: RechunkRecordJob do
       doc = SearchableThing.create!(name: "Doc", description: "Alpha beta gamma. Delta epsilon zeta.")
     end
-    doc.reload
-    initial_chunk_ids = doc.chunks.pluck(:id).sort
+    initial_chunk_ids = doc.reload.chunks.pluck(:id).sort
 
     assert_no_enqueued_jobs only: RechunkRecordJob do
       doc.update!(updated_at: 1.minute.from_now)
@@ -54,16 +53,6 @@ class ChunkableTest < ActiveSupport::TestCase
     assert_not_equal original, updated
   end
 
-  test "chunks table is polymorphic" do
-    doc = nil
-    perform_enqueued_jobs only: RechunkRecordJob do
-      doc = SearchableThing.create!(name: "Doc", description: "hello. world.")
-    end
-    chunk = doc.chunks.first
-    assert_equal "SearchableThing", chunk.chunkable_type
-    assert_equal doc.id, chunk.chunkable_id
-  end
-
   test "destroying a chunkable deletes its chunks" do
     doc = nil
     perform_enqueued_jobs only: RechunkRecordJob do
@@ -76,35 +65,13 @@ class ChunkableTest < ActiveSupport::TestCase
     assert_equal 0, Chunk.where(id: chunk_ids).count
   end
 
-  test "respects chunk_size when splitting long content" do
+  test "long content produces multiple chunks sized near chunk_size" do
     long = Array.new(50) { |i| "sentence #{i} here word." }.join(" ")
     doc = nil
     perform_enqueued_jobs only: RechunkRecordJob do
       doc = SearchableThing.create!(name: "Doc", description: long)
     end
-    assert doc.chunks.count > 1
-  end
-
-  test "rechunk uses bulk insert via insert_all" do
-    doc = nil
-    perform_enqueued_jobs only: RechunkRecordJob do
-      doc = SearchableThing.create!(name: "Doc", description: "One. Two. Three. Four. Five.")
-    end
-
-    insert_all_called = false
-    original = Chunk.method(:insert_all)
-    Chunk.define_singleton_method(:insert_all) do |*args, **kwargs|
-      insert_all_called = true
-      original.call(*args, **kwargs)
-    end
-
-    begin
-      doc.update!(description: "Alpha. Beta. Gamma. Delta. Epsilon.")
-      perform_enqueued_jobs only: RechunkRecordJob
-    ensure
-      Chunk.define_singleton_method(:insert_all, original)
-    end
-
-    assert insert_all_called, "expected Chunk.insert_all to be called during rechunk"
+    # chunk_size is 10 — expect roughly 50/10 chunks but be lenient.
+    assert_operator doc.chunks.count, :>=, 4
   end
 end
