@@ -21,6 +21,7 @@ Rails.application.config.to_prepare do
   begin
     if (key = Setting.get(:currencylayer_api_key).presence)
       bank.access_key = key
+      bank.currencylayer = true
       bank.ttl_in_seconds = 86_400 # 24 hours
     end
   rescue ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError, ArgumentError

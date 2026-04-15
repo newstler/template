@@ -24,7 +24,7 @@
           <%= inline_svg "icons/dollar.svg", class: "w-5 h-5 text-white" %>
         </div>
       </div>
-      <p class="text-2xl font-bold text-white">$<%= number_with_precision(@metrics[:total_cost], precision: 2) %></p>
+      <p class="text-2xl font-bold text-white"><%= format_cost(@metrics[:total_cost]) %></p>
       <p class="text-xs text-white/80 mt-1"><%= t(".kpi.total_cost") %></p>
     <% end %>
 
@@ -39,11 +39,11 @@
   <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
     <div class="lg:col-span-2">
       <%= render "shared/chart_card", title: t(".cost_over_time"), subtitle: t(".cost_over_time_subtitle") do %>
-        <%= line_chart @cost_timeline,
+        <%= line_chart format_cost_timeline(@cost_timeline),
               colors: [ "oklch(65% 0.19 260)", "oklch(65% 0.19 150)", "oklch(65% 0.19 80)", "oklch(65% 0.19 340)" ],
               library: { maintainAspectRatio: false },
               height: "260px",
-              prefix: "$",
+              prefix: currency_symbol(Setting.default_currency),
               round: 4 %>
       <% end %>
     </div>
@@ -79,7 +79,7 @@
           <div>
             <p class="text-xs text-dark-400 mb-1"><%= t(".subscriptions.mrr") %></p>
             <% if @subscription_revenue[:available] %>
-              <p class="text-lg font-bold text-emerald-400">$<%= number_with_precision(@subscription_revenue[:mrr], precision: 2) %></p>
+              <p class="text-lg font-bold text-emerald-400"><%= format_cost(@subscription_revenue[:mrr]) %></p>
             <% else %>
               <p class="text-xs text-dark-500"><%= t(".subscriptions.configure_stripe") %></p>
             <% end %>
@@ -87,7 +87,7 @@
           <div>
             <p class="text-xs text-dark-400 mb-1"><%= t(".subscriptions.total_revenue") %></p>
             <% if @subscription_revenue[:available] %>
-              <p class="text-lg font-bold text-dark-50">$<%= number_with_precision(@subscription_revenue[:total], precision: 2) %></p>
+              <p class="text-lg font-bold text-dark-50"><%= format_cost(@subscription_revenue[:total]) %></p>
             <% else %>
               <p class="text-xs text-dark-500"><%= t(".subscriptions.configure_stripe") %></p>
             <% end %>
@@ -121,7 +121,7 @@
               <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-dark-100 truncate"><%= team.name %></span>
                 <span class="text-sm font-medium <%= team.ai_total_cost.to_f >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
-                  $<%= number_with_precision(team.ai_total_cost || 0, precision: 4) %>
+                  <%= format_cost(team.ai_total_cost || 0, precision: 4) %>
                 </span>
               </div>
               <div class="flex items-center gap-2 text-xs text-dark-500">
@@ -149,7 +149,7 @@
               <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-dark-100 truncate"><%= user.name.presence || t(".unnamed") %></span>
                 <span class="text-sm font-medium <%= user.ai_total_cost.to_f >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
-                  $<%= number_with_precision(user.ai_total_cost || 0, precision: 4) %>
+                  <%= format_cost(user.ai_total_cost || 0, precision: 4) %>
                 </span>
               </div>
               <div class="flex items-center gap-2 text-xs text-dark-500">
@@ -177,7 +177,7 @@
               <div class="flex items-center justify-between mb-1">
                 <span class="text-sm font-medium text-dark-200 truncate"><%= chat.user&.name || chat.user&.email || t(".unknown") %></span>
                 <span class="text-sm font-medium shrink-0 ml-2 <%= (chat.total_cost || 0) >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
-                  $<%= number_with_precision(chat.total_cost || 0, precision: 2) %>
+                  <%= format_cost(chat.total_cost || 0) %>
                 </span>
               </div>
               <div class="text-sm text-dark-400 truncate mb-1"><%= chat.messages.min_by(&:created_at)&.content&.truncate(70) || t(".empty_chat") %></div>

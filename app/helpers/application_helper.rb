@@ -61,7 +61,8 @@ module ApplicationHelper
   }.freeze
 
   def currency_symbol(code)
-    CURRENCY_SYMBOLS.fetch(code.to_s.upcase, code.to_s.upcase)
+    upper = code.to_s.upcase
+    CURRENCY_SYMBOLS.fetch(upper) { Money::Currency.find(upper)&.symbol || upper }
   end
 
   def currency_name(code)

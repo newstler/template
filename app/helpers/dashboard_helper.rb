@@ -4,6 +4,31 @@ module DashboardHelper
     render "shared/kpi_card", label: label, value: value, trend: trend, icon: icon, href: href, gradient: gradient
   end
 
+  def convert_usd(usd_amount, target)
+    return usd_amount.to_f if target == "USD"
+
+    rate = Money.default_bank.get_rate("USD", target)
+    rate ? usd_amount.to_f * rate : usd_amount.to_f
+  end
+
+  def format_cost(usd_amount, precision: 2)
+    target = Setting.default_currency
+    amount = convert_usd(usd_amount, target)
+    "#{currency_symbol(target)}#{number_with_precision(amount, precision: precision)}"
+  end
+
+  def format_cost_timeline(timeline_data)
+    target = Setting.default_currency
+    return timeline_data if target == "USD"
+
+    timeline_data.map do |series|
+      {
+        name: series[:name],
+        data: series[:data].transform_values { |v| convert_usd(v, target) }
+      }
+    end
+  end
+
   # Returns the percent change between current and previous values.
   # Returns nil if previous is zero or nil.
   def pct_change(current, previous)
