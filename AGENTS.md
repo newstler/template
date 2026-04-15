@@ -686,6 +686,71 @@ Partial: `<%= render "shared/country_select", form: f, method: :country_code %>`
 
 Currency codes are always ISO 4217 strings (3 uppercase letters). Country codes are always ISO 3166 alpha-2 (2 uppercase letters). Monetary amounts in the database are always integer cents.
 
+## Searchable (Full-Text Search)
+
+SQLite FTS5 via a concern. Zero external dependencies.
+
+### Declaring
+
+```ruby
+class Candidate < ApplicationRecord
+  include Searchable
+  searchable_fields :profession, :specialization, :skills, :languages, :notes
+end
+```
+
+Each declared field is synced into a sibling FTS5 virtual table (`<table>_fts`) on every `after_save_commit` and scrubbed on `after_destroy_commit`.
+
+### Installing the FTS virtual table
+
+```bash
+bin/rails generate searchable:install Candidate profession specialization skills languages notes
+bin/rails db:migrate
+```
+
+The generator emits a `create_virtual_table` migration using the tokenizer from `Setting.search_tokenizer` (default `"porter unicode61 remove_diacritics 2"`).
+
+### Querying
+
+```ruby
+Candidate.search("welder russian speaker")
+# => relevance-ordered ActiveRecord::Relation (bm25)
+# => handles Cyrillic and Turkish diacritics via unicode61
+```
+
+Composable with other scopes:
+
+```ruby
+Candidate.search("welder").where(status: :active).limit(20)
+```
+
+`.search` returns a true `ActiveRecord::Relation`, so `.where`, `.includes`, `.limit`, `.order`, and pagination all compose naturally. Blank or nil queries return `.none`.
+
+### Reindexing
+
+```bash
+bin/rails 'fts:rebuild[Candidate]'
+```
+
+Use this after changing the tokenizer setting or backfilling existing data.
+
+### Tokenizer
+
+Controlled by `Setting.search_tokenizer`, editable in Madmin at `/madmin/ai_models`. Default `"porter unicode61 remove_diacritics 2"`:
+
+- `porter` — stemming (welder → weld)
+- `unicode61` — Unicode word segmentation
+- `remove_diacritics 2` — fold Latin diacritics (Çilingir → cilingir)
+
+Tokenizer changes only affect new rows. Run `fts:rebuild` to re-index existing rows.
+
+### Limitations (acceptable at template scale)
+
+- Two-step query (FTS id lookup → records) rather than a single JOIN, so string PKs stay supported.
+- No phrase queries unless the user escapes quotes (the concern sanitizes stray quotes into whitespace).
+- No facets — compose with `.where` scopes instead.
+- Public API is stable enough to swap to Meilisearch/Typesense under the hood without touching callers.
+
 ## Testing
 
 Minitest + fixtures only (no RSpec, no FactoryBot):

@@ -504,7 +504,7 @@ git commit -m "docs: performance rule — use Searchable, not LIKE, for user sea
 
 ## Task 8: README.md update
 
-- [ ] **Step 1: Add Features bullet**
+- [x] **Step 1: Add Features bullet**
 
 Under `## Features` → `### Platform`:
 
@@ -521,7 +521,7 @@ Tech stack entry:
 - **Search**: SQLite FTS5 via `Searchable` concern
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add README.md
