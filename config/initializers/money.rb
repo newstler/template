@@ -14,8 +14,9 @@ Rails.application.config.to_prepare do
   Money.rounding_mode = BigDecimal::ROUND_HALF_UP
 
   bank = Money::Bank::CurrencylayerBank.new
-  bank.cache = Rails.root.join("tmp/cache/money").to_s
-  FileUtils.mkdir_p(bank.cache)
+  cache_dir = Rails.root.join("tmp/cache")
+  FileUtils.mkdir_p(cache_dir)
+  bank.cache = cache_dir.join("money_rates.json").to_s
 
   begin
     if (key = Setting.get(:currencylayer_api_key).presence)

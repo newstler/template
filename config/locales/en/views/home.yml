@@ -2,27 +2,23 @@
 en:
   home:
     index:
-      authentication:
-        description: You're signed in using magic link authentication. No passwords
-          needed!
-        heading: Authentication
-        secure_description: Every time you sign in, you'll receive a fresh magic link
-          via email.
-        secure_title: Secure & Passwordless
-      getting_started:
-        description: This is a template application. You can customize this dashboard
-          or add your own features.
-        heading: Getting Started
-        tip_claude: See
-        tip_claude_suffix: for architecture guidelines
-        tip_controllers: Check out the code in
-        tip_models: Add your own models, controllers, and views
-        tip_views: Modify this view in
-      profile:
-        email: Email
-        heading: Your Profile
-        member_since: Member Since
-        name: Name
-      signed_in: You're successfully signed in
-      title: Home
-      welcome: Welcome, %{name}!
+      attention:
+        add_language: Add another language
+        no_subscription: No active subscription
+      chats_over_time: Chats over time
+      chats_over_time_subtitle: Activity in the selected range
+      email: Email
+      member_since: Member since
+      new_chats: New chats
+      new_members: New members
+      ranges:
+        30d: Last 30 days
+        7d: Last 7 days
+        90d: Last 90 days
+      subtitle: Team overview
+      total_articles: Articles
+      total_chats: Total chats
+      total_members: Total members
+      welcome_body: Here is a snapshot of your team. Use the time range selector above
+        to focus on the last 7, 30, or 90 days.
+      welcome_heading: Welcome, %{name}!

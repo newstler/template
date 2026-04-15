@@ -2,24 +2,22 @@
 ru:
   home:
     index:
-      authentication:
-        description: Вы вошли с помощью магической ссылки. Никаких паролей!
-        heading: Аутентификация
-        secure_description: При каждом входе вы будете получать новую ссылку на почту.
-        secure_title: Безопасно и без паролей
-      getting_started:
-        description: Это шаблонное приложение. Вы можете настроить эту панель или добавить свои функции.
-        heading: Начало работы
-        tip_claude: Смотрите
-        tip_claude_suffix: для архитектурных рекомендаций
-        tip_controllers: Изучите код в
-        tip_models: Добавьте свои модели, контроллеры и представления
-        tip_views: Измените это представление в
-      profile:
-        email: Почта
-        heading: Ваш профиль
-        member_since: Участник с
-        name: Имя
-      signed_in: Вы успешно вошли в систему
-      title: Главная
-      welcome: "Добро пожаловать, %{name}!"
+      subtitle: Обзор команды
+      total_members: Всего участников
+      new_members: Новые участники
+      total_chats: Всего чатов
+      new_chats: Новые чаты
+      total_articles: Статьи
+      chats_over_time: Чаты во времени
+      chats_over_time_subtitle: Активность за выбранный период
+      welcome_heading: "Добро пожаловать, %{name}!"
+      welcome_body: Краткая сводка по вашей команде. Используйте селектор выше, чтобы посмотреть последние 7, 30 или 90 дней.
+      email: Почта
+      member_since: Участник с
+      ranges:
+        7d: За 7 дней
+        30d: За 30 дней
+        90d: За 90 дней
+      attention:
+        no_subscription: Нет активной подписки
+        add_language: Добавьте ещё один язык
