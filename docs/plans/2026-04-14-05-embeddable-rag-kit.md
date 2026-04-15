@@ -1115,11 +1115,21 @@ If you need any of these, swap the concern's implementation; the public API (`si
 
 ## Task 12: Final CI and PR
 
-- [ ] **Step 1: Full CI**
+- [x] **Step 1: Full CI**
 
 Run: `bin/ci`
 
-- [ ] **Step 2: Smoke-test the extension in console**
+- [x] **Step 2: Smoke-test the extension in console**
+
+Output:
+```
+{"vec_version()" => "v0.1.9"}
+embeddings_table: searchable_things_embeddings
+embedding_model setting: "text-embedding-3-small"
+rrf_k setting: 60
+Chunk embeddings_table: chunks_embeddings
+SearchableThing includes: Searchable=true, Embeddable=true, HybridSearchable=true, Chunkable=true
+```
 
 ```bash
 bin/rails runner '
@@ -1131,14 +1141,11 @@ bin/rails runner '
 
 Expected: version string + `searchable_things_embeddings` + embedding model name.
 
-- [ ] **Step 3: Commit any fixes and PR**
+- [x] **Step 3: Commit any fixes and PR**
 
-```bash
-git add -u && git commit -m "chore: smoke-test fixes for embeddable"
-git push -u origin feature/embeddable-rag-kit
-gh pr create --title "feat: Embeddable + RAG kit (sqlite-vec)" \
-             --body "Implements docs/specs/template-improvements.md §4 per plan 05."
-```
+Push and PR creation **deferred** per execution instructions. No
+smoke-test fixes were needed — the `bin/ci` pipeline is green and
+the runner output matched expectations.
 
 ---
 
@@ -1146,11 +1153,13 @@ gh pr create --title "feat: Embeddable + RAG kit (sqlite-vec)" \
 
 ### Task 13: Document Kamal/Dockerfile step for consuming apps
 
-- [ ] Add a section to `AGENTS.md` under Embeddable: "When deploying a consuming app with sqlite-vec, ensure `vendor/sqlite-vec/` is copied into the container. Template's Dockerfile already does this; if a consuming app has its own Dockerfile, replicate the `COPY` line."
+- [x] Add a section to `AGENTS.md` under Embeddable: "When deploying a consuming app with sqlite-vec, ensure `vendor/sqlite-vec/` is copied into the container. Template's Dockerfile already does this; if a consuming app has its own Dockerfile, replicate the `COPY` line."
+
+Added in Task 11 as part of the AGENTS.md Embeddable section.
 
 ### Task 14: Performance rule
 
-- [ ] Append to `.claude/rules/performance.md`:
+- [x] Append to `.claude/rules/performance.md`:
 
 ```markdown
 ## Vector Search
@@ -1163,12 +1172,10 @@ gh pr create --title "feat: Embeddable + RAG kit (sqlite-vec)" \
 
 ### Task 15: Verify the Dockerfile
 
-- [ ] Open `Dockerfile`. Ensure `vendor/sqlite-vec/` is copied. If `.dockerignore` excludes `vendor/`, add an exception as noted in Task 2.
+- [x] Open `Dockerfile`. Ensure `vendor/sqlite-vec/` is copied. If `.dockerignore` excludes `vendor/`, add an exception as noted in Task 2.
 
-```bash
-git add Dockerfile .dockerignore .claude/rules/performance.md AGENTS.md
-git commit -m "docs: Kamal/Docker notes for sqlite-vec deployment"
-```
+Verified — `Dockerfile` does `COPY . .` and `.dockerignore` doesn't
+exclude `vendor/`. No edits needed.
 
 ---
 

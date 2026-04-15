@@ -169,6 +169,14 @@ end
 
 Only optimize this way for truly small, high-frequency partials. Normal-sized partials are fine.
 
+## Vector Search
+
+- Re-embedding on save is automatic via `Embeddable`. To avoid wasted API calls, the source string is hashed (SHA256) and compared against the stored hash before enqueuing `EmbedRecordJob` — unchanged records are skipped.
+- Metadata pre-filtering via `filter_by:` is always cheaper than post-filtering. Declare metadata columns on the vec0 table for any field you'll filter on at query time.
+- `similar_to` performs a two-query lookup (vec0 IDs → main table) which is fine at template scale. For hot paths, consider caching the result IDs.
+- `Chunkable` enqueues rechunking synchronously in an `after_save_commit`. If chunking is slow for your documents, move `#rechunk` into a background job.
+- Prefer `HybridSearchable` over `Embeddable` alone when you have an FTS5 index — Reciprocal Rank Fusion combines lexical and semantic signals cheaply and fixes the "exact keyword miss" failure mode of pure vector search.
+
 ## Full-Text Search
 
 Any model that needs user-facing search must `include Searchable` with explicit `searchable_fields`. Do not implement one-off `LIKE`/`ILIKE` scopes on string columns for user search — they don't scale, don't respect diacritics, and don't rank by relevance.
