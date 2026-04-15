@@ -1,7 +1,16 @@
 ---
 ru:
+  app_name: Template
+  common:
+    ago: назад
+    back: Назад
+    created: Создано
+    default: По умолчанию
+    loading: Загрузка...
+    sign_out: Выйти
+    sign_out_confirm: Вы уверены, что хотите выйти?
+    untitled: Без названия
   language_name: Russian
-  native_name: "Русский"
   languages:
     de: Немецкий
     en: Английский
@@ -13,20 +22,13 @@ ru:
     tg: Таджикский
     tr: Турецкий
     uz: Узбекский
-  app_name: Template
-  common:
-    back: Назад
-    created: Создано
-    default: По умолчанию
-    loading: "Загрузка..."
-    sign_out: Выйти
-    untitled: Без названия
   messages:
     count: Сообщения
+  native_name: Русский
   number:
     format:
-      delimiter: "\u00a0"
+      delimiter: " "
       separator: ","
   og_image:
-    description: "Быстрая разработка на Rails 8, Hotwire, SQLite и AI-чат."
-    tagline: "AI-шаблон на Rails 8"
+    description: Быстрая разработка на Rails 8, Hotwire, SQLite и AI-чат.
+    tagline: AI-шаблон на Rails 8

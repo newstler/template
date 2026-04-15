@@ -40,6 +40,8 @@ ru:
     settings:
       edit:
         back: "← Назад к настройкам"
+        country: Страна
+        default_currency: Валюта по умолчанию
         heading: Редактировать настройки команды
         logo_label: Логотип
         name_available: Название доступно
@@ -48,7 +50,8 @@ ru:
         name_taken: Название уже занято
         submit: Сохранить
       show:
-        api_key_description: Используйте этот API-ключ для аутентификации MCP-запросов этой команды.
+        api_key_description: Используйте этот API-ключ для аутентификации MCP-запросов
+          этой команды.
         api_key_heading: API-ключ
         edit_button: Редактировать
         heading: Настройки команды

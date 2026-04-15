@@ -1,6 +1,8 @@
 ---
 ru:
   shared:
+    country_select:
+      search_placeholder: Поиск стран...
     image_upload:
       drop_image: Перетащите изображение
       uploading: Загрузка…
@@ -9,10 +11,13 @@ ru:
       billing: Оплата
       chats: Чаты
       collapse: Свернуть боковую панель
+      create_team: Создать команду
       home: Главная
       languages: Языки
       members: Участники
       new_chat: Новый чат
       notifications: Уведомления
+      personal: Личное
       settings: Настройки
+      switch_context: Переключить
       user: Пользователь

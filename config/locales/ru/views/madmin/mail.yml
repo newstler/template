@@ -6,7 +6,7 @@ ru:
         cancel: Отмена
         general: Основные
         heading: Редактировать настройки почты
-        key_placeholder: "Введите ключ..."
+        key_placeholder: Введите ключ...
         mail_from: Адрес отправителя
         save: Сохранить настройки
         smtp: SMTP

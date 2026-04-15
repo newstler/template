@@ -1,8 +1,9 @@
+---
 ru:
   teams:
     conversations:
-      show:
-        title: "Переписка"
       composer:
-        placeholder: "Напишите сообщение..."
-        send: "Отправить"
+        placeholder: Напишите сообщение...
+        send: Отправить
+      show:
+        title: Переписка

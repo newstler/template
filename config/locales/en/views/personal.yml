@@ -5,7 +5,7 @@ en:
       show:
         create_team: Create a Team
         members_count:
-          one: 1 member
+          one: "%{count} member"
           other: "%{count} members"
         subtitle: Your personal dashboard
         title: Home

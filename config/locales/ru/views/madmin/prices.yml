@@ -10,5 +10,6 @@ ru:
         price_interval: Интервал
         price_product: Продукт
         stripe_not_configured: Stripe не настроен
-        stripe_not_configured_hint: Добавьте API-ключи Stripe в настройках для управления ценами.
+        stripe_not_configured_hint: Добавьте API-ключи Stripe в настройках для управления
+          ценами.
         sync_prices: Синхронизировать цены
