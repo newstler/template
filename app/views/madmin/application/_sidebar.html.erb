@@ -79,6 +79,13 @@
       <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Content</span>
     </div>
 
+    <%# Active Storage Section (collapsible) %>
+    <%= render "shared/sidebar_group", id: "storage", icon: "folder", label: "Active Storage" do %>
+      <%= render "shared/sidebar_link", path: "/madmin/active_storage/blobs", icon: "file", label: "Blobs", nested: true, counter: sidebar_counts[:blobs] %>
+      <%= render "shared/sidebar_link", path: "/madmin/active_storage/attachments", icon: "paperclip", label: "Attachments", nested: true, counter: sidebar_counts[:attachments] %>
+      <%= render "shared/sidebar_link", path: "/madmin/active_storage/variant_records", icon: "image", label: "Variants", nested: true, counter: sidebar_counts[:variants] %>
+    <% end %>
+
     <%# Conversations (collapsible) %>
     <%= render "shared/sidebar_group", id: "madmin-conversations", icon: "chat", label: "Conversations" do %>
       <%= render "shared/sidebar_link", path: "/madmin/conversations", icon: "chat", label: "Conversations", nested: true, counter: sidebar_counts[:conversations] %>
@@ -109,26 +116,16 @@
       <%= render "shared/sidebar_link", path: "/madmin/noticed_notifications", icon: "mail", label: "Notifications", counter: sidebar_counts[:noticed_notifications] %>
     </div>
 
-    <%# Spacer to push Config to bottom %>
+    <%# Spacer to push admin section to bottom %>
     <div class="flex-1"></div>
 
-    <%# Config %>
-    <div class="border-t border-dark-700 pt-2 mb-1 px-3">
-      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Configuration</span>
-    </div>
+  </nav>
 
-    <%# Active Storage Section (collapsible) %>
-    <div class="mt-1">
-      <%= render "shared/sidebar_group", id: "storage", icon: "folder", label: "Active Storage" do %>
-        <%= render "shared/sidebar_link", path: "/madmin/active_storage/blobs", icon: "file", label: "Blobs", nested: true, counter: sidebar_counts[:blobs] %>
-        <%= render "shared/sidebar_link", path: "/madmin/active_storage/attachments", icon: "paperclip", label: "Attachments", nested: true, counter: sidebar_counts[:attachments] %>
-        <%= render "shared/sidebar_link", path: "/madmin/active_storage/variant_records", icon: "image", label: "Variants", nested: true, counter: sidebar_counts[:variants] %>
-      <% end %>
-    </div>
-
-    <%# Settings Section (collapsible) %>
-    <div class="mt-1">
-      <%= render "shared/sidebar_group", id: "settings", icon: "cog", label: "Settings" do %>
+  <%# Admin section %>
+  <div class="px-3 pb-4">
+    <div class="border-t border-dark-700 pt-3 space-y-1">
+      <%# Settings Section (collapsible) %>
+      <%= render "shared/sidebar_group", id: "settings", icon: "cog", label: "Settings", compact: true do %>
         <%= render "shared/sidebar_link", path: "/madmin/admins", icon: "shield", label: "Admins", nested: true, counter: sidebar_counts[:admins] %>
         <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "key", label: "API Keys", nested: true %>
         <%= render "shared/sidebar_link", path: "/madmin/ai_models", icon: "sparkles", label: "AI Models", nested: true %>
@@ -137,13 +134,6 @@
         <%= render "shared/sidebar_link", path: "/madmin/languages", icon: "globe", label: "Localization", nested: true %>
         <%= render "shared/sidebar_link", path: "/madmin/mail", icon: "mail", label: "Mail", nested: true %>
       <% end %>
-    </div>
-
-  </nav>
-
-  <%# Admin section %>
-  <div class="px-3 pb-4">
-    <div class="border-t border-dark-700 pt-3 space-y-1">
       <% if defined?(current_admin) && current_admin %>
         <%= link_to "/madmin/admins/#{current_admin.id}", class: "flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors" do %>
           <%= inline_svg "icons/shield.svg", class: "w-5 h-5 flex-shrink-0" %>
