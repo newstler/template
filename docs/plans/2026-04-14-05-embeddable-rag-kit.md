@@ -522,7 +522,7 @@ end
 - Create: `lib/generators/embeddable/install/install_generator.rb`
 - Create: `lib/generators/embeddable/install/templates/migration.rb.tt`
 
-- [ ] **Step 1: Generator**
+- [x] **Step 1: Generator**
 
 ```ruby
 module Embeddable
@@ -558,7 +558,20 @@ module Embeddable
 end
 ```
 
-- [ ] **Step 2: Template**
+- [x] **Step 2: Template**
+
+Used Rails' `create_virtual_table` helper (like Searchable's FTS5
+migration). Rails' SQLite3 schema dumper's `VIRTUAL_TABLE_REGEX` is
+single-line — `create_virtual_table` joins args with ", " so the
+generated SQL round-trips cleanly through `db:schema:dump`.
+
+**Schema dumper fix:** vec0 creates several shadow tables
+(`_chunks`, `_rowids`, `_info`, `_vector_chunks00`, etc.) with
+untyped columns that crash `db:schema:dump`. Added
+`config/initializers/sqlite_vec_schema_dumper.rb` which registers a
+regex via `ActiveRecord::SchemaDumper.ignore_tables` to skip them —
+they're recreated automatically when the parent vec0 table is
+rebuilt.
 
 ```ruby
 class Create<%= name.camelize %>Embeddings < ActiveRecord::Migration[8.1]
@@ -586,25 +599,20 @@ end
 
 **Note:** sqlite-vec metadata columns should be typed according to what you filter on — `text`, `integer`, or `float`. The template above hardcodes `text` for simplicity; upgrade to per-column typing when a consuming app needs integer range filters.
 
-- [ ] **Step 3: Run the generator for SearchableThing**
+- [x] **Step 3: Run the generator for SearchableThing**
 
 ```bash
 bin/rails generate embeddable:install SearchableThing 1536
 bin/rails db:migrate
 ```
 
-- [ ] **Step 4: Verify table exists**
+- [x] **Step 4: Verify table exists**
 
 ```bash
 bin/rails runner 'puts ActiveRecord::Base.connection.execute("SELECT name FROM sqlite_master WHERE name = \"searchable_things_embeddings\"").to_a'
 ```
 
-- [ ] **Step 5: Commit**
-
-```bash
-git add lib/generators/embeddable/ db/migrate/*embeddings* db/schema.rb
-git commit -m "feat: embeddable:install generator + searchable_things_embeddings vec0 table"
-```
+- [x] **Step 5: Commit**
 
 ---
 

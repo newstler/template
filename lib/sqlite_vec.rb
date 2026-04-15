@@ -8,6 +8,24 @@
 # This file is required from +config/application.rb+ so the constant
 # is defined before Rails evaluates +database.yml+.
 module SqliteVec
+  # vec0 virtual tables create several "shadow" tables to hold the
+  # actual vector chunks, rowid map, and metadata. These are internal
+  # to the virtual table and recreated automatically on CREATE, so the
+  # schema dumper should ignore them. Some of them also have columns
+  # without a type (e.g. +rowid PRIMARY KEY+) which Rails 8 can't
+  # parse, so we must exclude them or the dumper crashes.
+  SHADOW_TABLE_SUFFIXES = %w[
+    _chunks
+    _rowids
+    _info
+    _vector_chunks\d+
+    _metadatachunks\d+
+    _metadatatext\d+
+    _auxiliary
+  ].freeze
+
+  SHADOW_TABLE_REGEX = /(#{SHADOW_TABLE_SUFFIXES.join('|')})\z/.freeze
+
   class << self
     def to_path
       @to_path ||= compute_path
