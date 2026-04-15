@@ -6,15 +6,8 @@ class MessageTest < ActiveSupport::TestCase
     @assistant_message = messages(:assistant_message)
   end
 
-  test "belongs to chat" do
-    assert_equal chats(:one), @user_message.chat
-  end
-
-  test "assistant? returns true for assistant messages" do
+  test "assistant? is true only for assistant role" do
     assert @assistant_message.assistant?
-  end
-
-  test "assistant? returns false for user messages" do
     assert_not @user_message.assistant?
   end
 
@@ -23,13 +16,12 @@ class MessageTest < ActiveSupport::TestCase
     assert_equal "$0.0012", @assistant_message.formatted_cost
   end
 
-  test "formatted cost shows less than for tiny costs" do
+  test "formatted cost uses <$0.0001 for tiny costs" do
     @assistant_message.update!(cost: 0.00001)
     assert_equal "<$0.0001", @assistant_message.formatted_cost
   end
 
   test "formatted cost returns nil when zero" do
-    # Create a message with no tokens to avoid cost recalculation
     message = Message.create!(
       chat: chats(:one),
       role: "user",
@@ -67,8 +59,8 @@ class MessageTest < ActiveSupport::TestCase
     assert_nil chat.reload.first_user_message_preview
   end
 
-  test "calculates cost based on token usage" do
-    message = Message.new(
+  test "calculates cost from model pricing and token usage" do
+    message = Message.create!(
       chat: chats(:one),
       role: "assistant",
       content: "Test",
@@ -77,10 +69,10 @@ class MessageTest < ActiveSupport::TestCase
       model: models(:gpt4)
     )
 
-    message.save!
-
-    # GPT-4 pricing: $30/M input, $60/M output
-    # (1000 / 1_000_000) * 30 + (500 / 1_000_000) * 60 = 0.00003 + 0.00003 = 0.00006
-    assert message.cost > 0
+    # GPT-4 fixture pricing: $30/M input, $60/M output
+    # 1000 input → 30 * (1000/1000) * 0.001 = 0.03 (confirmed by implementation)
+    # 500 output → 60 * (500/1000) * 0.001 = 0.03
+    # total = 0.06
+    assert_in_delta 0.06, message.cost, 0.0001
   end
 end

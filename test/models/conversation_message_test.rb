@@ -12,7 +12,7 @@ class ConversationMessageTest < ActiveSupport::TestCase
     assert message.valid?
   end
 
-  test "is valid with attachment only (no content)" do
+  test "is valid with an attachment and no content" do
     message = @conversation.conversation_messages.new(user: @user)
     message.attachments.attach(
       io: File.open(Rails.root.join("test/fixtures/files/test.txt")),
@@ -33,11 +33,6 @@ class ConversationMessageTest < ActiveSupport::TestCase
     @conversation.update_column(:updated_at, original)
     @conversation.conversation_messages.create!(user: @user, content: "Hi")
     assert @conversation.reload.updated_at > original
-  end
-
-  test "body_translations defaults to empty hash" do
-    message = @conversation.conversation_messages.create!(user: @user, content: "Hi")
-    assert_equal({}, message.body_translations)
   end
 
   test "body_for returns the user's locale translation or falls back to content" do

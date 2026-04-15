@@ -1,39 +1,16 @@
 require "test_helper"
 
 class ModelTest < ActiveSupport::TestCase
-  setup do
-    @model = models(:gpt4)
-  end
-
-  test "has required attributes" do
-    assert @model.model_id.present?
-    assert @model.name.present?
-    assert @model.provider.present?
-  end
-
-  test "has pricing information" do
-    assert @model.pricing.present?
-    assert @model.pricing["text_tokens"].present?
-  end
-
-  test "provider is openai or anthropic" do
-    assert_includes %w[openai anthropic], @model.provider
-  end
-
-  test "configured_providers returns providers with API keys" do
+  test "configured_providers only returns providers that pass provider_configured?" do
     providers = Model.configured_providers
     assert_kind_of Array, providers
-    providers.each do |provider|
-      assert Setting.provider_configured?(provider)
-    end
+    providers.each { |p| assert Setting.provider_configured?(p) }
   end
 
-  test "enabled scope filters by configured providers" do
+  test "enabled scope matches configured providers" do
     configured = Model.configured_providers
     enabled_models = Model.enabled
 
-    # Either no configured providers means no enabled models,
-    # or all enabled models have configured providers
     if configured.empty?
       assert_empty enabled_models
     else

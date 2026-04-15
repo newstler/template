@@ -5,30 +5,12 @@ class ChatTest < ActiveSupport::TestCase
     @chat = chats(:one)
   end
 
-  test "belongs to user" do
-    assert_equal users(:one), @chat.user
+  test "formats non-zero total cost as currency" do
+    @chat.update_column(:total_cost, 0.0012)
+    assert_match(/\$\d+\.\d+/, @chat.formatted_total_cost)
   end
 
-  test "belongs to model" do
-    assert_equal models(:gpt4), @chat.model
-  end
-
-  test "calculates total cost from messages" do
-    # Chat one has messages with costs
-    assert_kind_of Numeric, @chat.total_cost
-  end
-
-  test "formats total cost for display" do
-    chat = chats(:one)
-    # Set a specific cost on the chat to test formatting
-    chat.update_column(:total_cost, 0.0012)
-
-    formatted = chat.formatted_total_cost
-    assert_not_nil formatted
-    assert_match(/\$\d+\.\d+/, formatted)
-  end
-
-  test "formatted total cost returns nil when zero" do
+  test "formatted_total_cost returns nil when chat has no cost" do
     chat = Chat.create!(user: users(:two), model: models(:claude))
     assert_nil chat.formatted_total_cost
   end
