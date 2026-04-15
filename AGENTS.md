@@ -93,7 +93,6 @@ npx @anthropic-ai/mcp-inspector
 | `create_message` | Send message, get response | Team + User |
 | `list_models` | List available AI models | None |
 | `show_model` | Get model details | None |
-| `refresh_models` | Sync models from providers | Admin |
 | `show_current_user` | Get current user info | Team + User |
 | `update_current_user` | Update profile (name, locale, preferred_currency, residence_country_code) | Team + User |
 | `show_subscription` | Get team subscription status | Team + User (admin) |
@@ -117,9 +116,8 @@ npx @anthropic-ai/mcp-inspector
 | `list_conversation_messages` | List messages in a conversation | Team + User |
 | `create_conversation_message` | Post a message to a conversation | Team + User |
 | `show_team_dashboard` | Team dashboard KPIs + chats time-series | Team + User |
-| `show_admin_dashboard` | Platform-wide admin KPIs + time-series | Admin |
 
-**Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required.
+**Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required. MCP tools are never admin-only — admin actions live in Madmin at `/madmin`.
 
 ### Available Resources
 

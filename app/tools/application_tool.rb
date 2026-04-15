@@ -10,17 +10,9 @@ class ApplicationTool < ActionTool::Base
   #
   # Tools that only need team context use require_team!
   # Tools that need user context use require_user! or with_current_user
-
-  class << self
-    # Mark a tool as requiring admin privileges
-    def admin_only!
-      @admin_only = true
-    end
-
-    def admin_only?
-      @admin_only == true
-    end
-  end
+  #
+  # There is no admin tier: MCP tools are never admin-only. Admin actions
+  # belong in Madmin at /madmin, not on the MCP surface.
 
   private
 
@@ -43,16 +35,6 @@ class ApplicationTool < ActionTool::Base
       @current_user = user if user&.member_of?(current_team)
     end
     @current_user
-  end
-
-  # Get current admin from session (for browser-based requests)
-  # Note: Session-based admin auth may not work via MCP - use API keys instead
-  def current_admin
-    return @current_admin if defined?(@current_admin)
-
-    # Admin auth via MCP would need a separate mechanism
-    # For now, this is a placeholder
-    @current_admin = nil
   end
 
   # Execute block with Current.user and Current.team set for model callbacks
@@ -78,11 +60,6 @@ class ApplicationTool < ActionTool::Base
     current_user.present?
   end
 
-  # Check if admin is authenticated
-  def admin_authenticated?
-    current_admin.present?
-  end
-
   # Require team authentication - raise if no valid API key
   def require_team!
     unless team_authenticated?
@@ -101,11 +78,6 @@ class ApplicationTool < ActionTool::Base
   # Legacy alias for backwards compatibility
   def require_authentication!
     require_user!
-  end
-
-  # Require admin authentication - raise if not authenticated
-  def require_admin!
-    raise FastMcp::Tool::InvalidArgumentsError, "Admin authentication required." unless admin_authenticated?
   end
 
   # Standard success response format
