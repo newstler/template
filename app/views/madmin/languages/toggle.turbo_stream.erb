@@ -1,0 +1,9 @@
+<%= turbo_stream.replace "language_toggle_#{@language.id}" do %>
+  <%= turbo_frame_tag "language_toggle_#{@language.id}" do %>
+    <%= button_to main_app.toggle_madmin_language_path(@language), method: :patch, class: "inline-flex" do %>
+      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity <%= @language.enabled? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' %>">
+        <%= @language.enabled? ? "Enabled" : "Disabled" %>
+      </span>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,175 +1,160 @@
+<% active_tab = params[:tab] == "available" ? 1 : 0 %>
+
 <div class="max-w-3xl mx-auto">
-  <div class="flex items-center justify-between mb-8">
-    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
-    <% if @available_models.any? %>
-      <%= link_to t(".edit_button"), main_app.edit_madmin_ai_models_path, class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
-    <% end %>
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-white"><%= t(".heading") %></h1>
   </div>
 
-  <% if @available_models.empty? %>
-    <div class="card-bg p-6 text-center">
-      <div class="text-dark-400 mb-2"><%= t(".no_models") %></div>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".no_models_hint") %></p>
-      <%= link_to t(".sync_models"), "/madmin/models", class: "inline-flex items-center gap-2 px-4 py-2 bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
-    </div>
-  <% else %>
-    <div class="card-bg p-6 mb-6">
-      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".chat_heading") %></h2>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".chat_description") %></p>
-      <dl class="space-y-4">
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".default_model") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.default_model.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <code class="text-sm text-dark-200 font-mono"><%= @setting.default_model %></code>
-            <% else %>
-              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
-              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
-            <% end %>
-          </dd>
-        </div>
-      </dl>
+  <div data-controller="tabs" data-tabs-active-class="border-accent-500 text-dark-100" data-tabs-inactive-class="border-transparent text-dark-400 hover:text-dark-200">
+    <div class="flex gap-0 border-b border-dark-700 mb-6">
+      <button data-tabs-target="tab" data-action="click->tabs#select" data-index="0"
+              class="px-5 py-3 text-sm font-medium border-b-2 transition-colors -mb-px <%= active_tab == 0 ? 'border-accent-500 text-dark-100' : 'border-transparent text-dark-400 hover:text-dark-200' %>">
+        <%= t(".tab_used") %>
+      </button>
+      <button data-tabs-target="tab" data-action="click->tabs#select" data-index="1"
+              class="px-5 py-3 text-sm font-medium border-b-2 transition-colors -mb-px <%= active_tab == 1 ? 'border-accent-500 text-dark-100' : 'border-transparent text-dark-400 hover:text-dark-200' %>">
+        <%= t(".tab_available") %>
+      </button>
     </div>
 
-    <div class="card-bg p-6 mb-6">
-      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".translation_heading") %></h2>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".translation_description") %></p>
-      <dl class="space-y-4">
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".translation_model") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.translation_model.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <code class="text-sm text-dark-200 font-mono"><%= @setting.translation_model %></code>
-            <% else %>
-              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
-              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
-            <% end %>
-          </dd>
+    <%# Used Tab — inline editing with autosave %>
+    <div data-tabs-target="panel" class="<%= 'hidden' if active_tab != 0 %>">
+      <% if @available_models.empty? %>
+        <div class="card-bg p-6 text-center">
+          <div class="text-dark-400 mb-2"><%= t(".no_models") %></div>
+          <p class="text-sm text-dark-500 mb-4"><%= t(".no_models_hint") %></p>
         </div>
-      </dl>
+      <% else %>
+        <%= form_with model: @setting, url: main_app.madmin_ai_models_path, method: :patch, data: { controller: "autosave" }, class: "space-y-6" do |form| %>
+          <span data-autosave-target="status" class="hidden fixed top-4 right-4 z-50 px-3 py-1.5 bg-dark-700 text-dark-200 text-sm rounded-lg shadow-lg"></span>
+
+          <% model_options = [["— Select model —", ""]] + @available_models.map { |name, model_id| ["#{name} (#{model_id})", model_id] } %>
+
+          <%# Chat Model %>
+          <div class="card-bg p-6">
+            <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".chat_heading") %></h2>
+            <p class="text-sm text-dark-500 mb-4"><%= t(".chat_description") %></p>
+            <div>
+              <%= form.select :default_model,
+                options_for_select(model_options, @setting.default_model),
+                {},
+                data: { action: "change->autosave#save" },
+                class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
+            </div>
+          </div>
+
+          <%# Translation Model %>
+          <div class="card-bg p-6">
+            <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".translation_heading") %></h2>
+            <p class="text-sm text-dark-500 mb-4"><%= t(".translation_description") %></p>
+            <div>
+              <%= form.select :translation_model,
+                options_for_select(model_options, @setting.translation_model),
+                {},
+                data: { action: "change->autosave#save" },
+                class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
+            </div>
+          </div>
+
+          <%# Moderation Model %>
+          <div class="card-bg p-6">
+            <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".moderation_heading") %></h2>
+            <p class="text-sm text-dark-500 mb-4"><%= t(".moderation_description") %></p>
+            <div>
+              <%= form.select :moderation_model,
+                options_for_select(model_options, @setting.moderation_model),
+                {},
+                data: { action: "change->autosave#save" },
+                class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
+            </div>
+          </div>
+
+          <%# Embedding Model %>
+          <div class="card-bg p-6">
+            <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".embedding_heading") %></h2>
+            <p class="text-sm text-dark-500 mb-4"><%= t(".embedding_description") %></p>
+            <div>
+              <%= form.text_field :embedding_model,
+                data: { action: "change->autosave#save" },
+                class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm font-mono" %>
+            </div>
+          </div>
+        <% end %>
+      <% end %>
     </div>
 
-    <div class="card-bg p-6 mb-6">
-      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".moderation_heading") %></h2>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".moderation_description") %></p>
-      <dl class="space-y-4">
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".moderation_model") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.moderation_model.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <code class="text-sm text-dark-200 font-mono"><%= @setting.moderation_model %></code>
-            <% else %>
-              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
-              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
-            <% end %>
-          </dd>
+    <%# Available Tab — models table %>
+    <div data-tabs-target="panel" class="<%= 'hidden' if active_tab != 1 %>">
+      <div class="flex items-center justify-between mb-4">
+        <div class="flex gap-3 items-end flex-wrap">
+          <%= form_with url: main_app.madmin_ai_models_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+            <%= f.hidden_field :tab, value: "available" %>
+            <div>
+              <%= f.search_field :q, value: params[:q], placeholder: "Search models...", class: "form-input" %>
+            </div>
+            <div>
+              <%= f.select :provider,
+                options_for_select([["All providers", ""]] + @providers_list.map { |p| [p.titleize, p] }, params[:provider]),
+                {},
+                class: "form-select" %>
+            </div>
+            <div class="flex gap-2">
+              <%= f.submit "Filter", class: "btn btn-primary" %>
+              <% if params[:q].present? || params[:provider].present? %>
+                <%= link_to "Clear", main_app.madmin_ai_models_path(tab: "available"), class: "btn btn-secondary" %>
+              <% end %>
+            </div>
+          <% end %>
         </div>
-      </dl>
-    </div>
+        <%= button_to t(".refresh_models"),
+            main_app.refresh_all_madmin_ai_models_path,
+            method: :post,
+            class: "btn btn-primary",
+            data: { turbo_confirm: "Refresh all models from RubyLLM?" } %>
+      </div>
 
-    <div class="card-bg p-6 mb-6">
-      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".conversations_heading") %></h2>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".conversations_description") %></p>
-      <dl class="space-y-4">
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".conversation_digest_window_minutes") %></dt>
-          <dd class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-            <code class="text-sm text-dark-200 font-mono"><%= @setting.conversation_digest_window_minutes || 5 %></code>
-          </dd>
-        </div>
-      </dl>
-    </div>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th>Provider</th>
+              <th>Family</th>
+              <th>Name</th>
+              <th>Chats</th>
+              <th>Total Cost</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @models.each do |model| %>
+              <tr>
+                <td>
+                  <span class="px-2 py-1 text-xs font-medium rounded bg-dark-600 text-dark-200">
+                    <%= model.provider %>
+                  </span>
+                </td>
+                <td><%= model.family %></td>
+                <td>
+                  <%= link_to "/madmin/models/#{model.id}", class: "font-medium hover:underline" do %>
+                    <%= model.name %>
+                  <% end %>
+                </td>
+                <td><%= model.chats_count %></td>
+                <td class="<%= (model.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= model.formatted_total_cost || "-" %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
 
-    <div class="card-bg p-6 mb-6">
-      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".search_heading") %></h2>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".search_description") %></p>
-      <dl class="space-y-4">
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".search_tokenizer") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.search_tokenizer.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <code class="text-sm text-dark-200 font-mono"><%= @setting.search_tokenizer %></code>
-            <% else %>
-              <span class="w-2 h-2 bg-dark-600 rounded-full"></span>
-              <span class="text-sm text-dark-500">—</span>
-            <% end %>
-          </dd>
-        </div>
-      </dl>
+      <div class="pagination">
+        <% if @pagy.respond_to?(:series_nav) %>
+          <%== @pagy.series_nav if @pagy.last > 1 %>
+          <%== @pagy.info_tag %>
+        <% else %>
+          <%== pagy_nav @pagy if @pagy.last > 1 %>
+          <%== pagy_info @pagy %>
+        <% end %>
+      </div>
     </div>
-
-    <div class="card-bg p-6 mb-6">
-      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".embedding_heading") %></h2>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".embedding_description") %></p>
-      <dl class="space-y-4">
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".embedding_model") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.embedding_model.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <code class="text-sm text-dark-200 font-mono"><%= @setting.embedding_model %></code>
-            <% else %>
-              <span class="w-2 h-2 bg-dark-600 rounded-full"></span>
-              <span class="text-sm text-dark-500">—</span>
-            <% end %>
-          </dd>
-        </div>
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".rrf_k") %></dt>
-          <dd class="flex items-center gap-2">
-            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-            <code class="text-sm text-dark-200 font-mono"><%= @setting.rrf_k || 60 %></code>
-          </dd>
-        </div>
-      </dl>
-    </div>
-
-    <div class="card-bg p-6">
-      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".currency_country_heading") %></h2>
-      <p class="text-sm text-dark-500 mb-4"><%= t(".currency_country_description") %></p>
-      <dl class="space-y-4">
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".default_currency") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.default_currency.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <code class="text-sm text-dark-200 font-mono"><%= @setting.default_currency %></code>
-            <% else %>
-              <span class="w-2 h-2 bg-red-400 rounded-full"></span>
-              <span class="text-sm text-red-400"><%= t(".not_configured") %></span>
-            <% end %>
-          </dd>
-        </div>
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".default_country_code") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.default_country_code.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <code class="text-sm text-dark-200 font-mono"><%= @setting.default_country_code %></code>
-            <% else %>
-              <span class="w-2 h-2 bg-dark-600 rounded-full"></span>
-              <span class="text-sm text-dark-500">—</span>
-            <% end %>
-          </dd>
-        </div>
-        <div class="flex items-center justify-between">
-          <dt class="text-sm font-medium text-dark-400"><%= t(".currencylayer_api_key") %></dt>
-          <dd class="flex items-center gap-2">
-            <% if @setting.currencylayer_api_key.present? %>
-              <span class="w-2 h-2 bg-green-400 rounded-full"></span>
-              <span class="text-sm text-dark-200"><%= t(".secret_set") %></span>
-            <% else %>
-              <span class="w-2 h-2 bg-dark-600 rounded-full"></span>
-              <span class="text-sm text-dark-500">—</span>
-            <% end %>
-          </dd>
-        </div>
-      </dl>
-    </div>
-  <% end %>
+  </div>
 </div>

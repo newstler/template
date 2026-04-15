@@ -29,14 +29,14 @@ module HybridSearchable
   end
 
   class_methods do
-    def hybrid_search(query, limit: 20)
+    def hybrid_search(query, limit: 20, max_distance: nil)
       return none if query.blank?
 
       k = Setting.rrf_k
-      pool_size = limit * 3
+      pool_size = limit * Setting.hybrid_pool_multiplier
 
       fts_ids = search(query).limit(pool_size).pluck(:id)
-      vector_ids = similar_to(query, limit: pool_size).pluck(:id)
+      vector_ids = similar_to(query, limit: pool_size, max_distance: max_distance).pluck(:id)
 
       return none if fts_ids.empty? && vector_ids.empty?
 

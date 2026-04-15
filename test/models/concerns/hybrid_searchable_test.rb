@@ -14,7 +14,7 @@ class HybridSearchableTest < ActiveSupport::TestCase
     test = self
     RubyLLM.define_singleton_method(:embed) do |text, **_opts|
       vector = test.fake_embed(text)
-      RubyLLM::Embedding.new(vectors: [ vector ], model: "fake", input_tokens: 0)
+      RubyLLM::Embedding.new(vectors: vector, model: "fake", input_tokens: 0)
     end
     yield
   ensure

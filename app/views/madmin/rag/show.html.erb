@@ -1,0 +1,231 @@
+<style>
+  .rag-slider input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 6px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    z-index: 2;
+  }
+
+  .rag-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: oklch(72% 0.19 260);
+    border: 3px solid oklch(22% 0.02 260);
+    box-shadow: 0 0 0 3px oklch(72% 0.19 260 / 0.25), 0 2px 8px oklch(0% 0 0 / 0.3);
+    cursor: grab;
+    transition: box-shadow 0.15s ease, transform 0.15s ease;
+  }
+
+  .rag-slider input[type="range"]::-webkit-slider-thumb:hover {
+    transform: scale(1.15);
+    box-shadow: 0 0 0 5px oklch(72% 0.19 260 / 0.3), 0 2px 12px oklch(0% 0 0 / 0.4);
+  }
+
+  .rag-slider input[type="range"]::-webkit-slider-thumb:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+  }
+
+  .rag-slider input[type="range"]::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: oklch(72% 0.19 260);
+    border: 3px solid oklch(22% 0.02 260);
+    box-shadow: 0 0 0 3px oklch(72% 0.19 260 / 0.25), 0 2px 8px oklch(0% 0 0 / 0.3);
+    cursor: grab;
+  }
+
+  .rag-slider input[type="range"]::-moz-range-track {
+    background: transparent;
+    height: 6px;
+  }
+
+  .rag-slider-track {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 6px;
+    transform: translateY(-50%);
+    border-radius: 3px;
+    background: oklch(25% 0.015 260);
+    overflow: hidden;
+  }
+
+  .rag-slider-fill {
+    height: 100%;
+    border-radius: 3px;
+    background: linear-gradient(90deg, oklch(62% 0.19 260), oklch(72% 0.19 260));
+    transition: width 0.1s ease;
+  }
+</style>
+
+<div class="max-w-3xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-white"><%= t(".heading") %></h1>
+    <p class="text-dark-300 mt-1"><%= t(".subtitle") %></p>
+  </div>
+
+  <%= form_with model: @setting, url: main_app.madmin_rag_path, method: :patch, data: { controller: "autosave" }, class: "space-y-6" do |form| %>
+    <span data-autosave-target="status" class="hidden fixed top-4 right-4 z-50 px-3 py-1.5 bg-dark-700 text-dark-200 text-sm rounded-lg shadow-lg"></span>
+
+    <%# Full-text Search %>
+    <div class="card-bg p-6">
+      <div class="flex items-center justify-between mb-2">
+        <h2 class="text-xl font-semibold text-dark-100"><%= t(".fts_heading") %></h2>
+        <%= link_to t(".rebuild_fts"), main_app.rebuild_fts_madmin_rag_path, data: { turbo_method: :post, turbo_confirm: t(".rebuild_fts_confirm") }, class: "inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+      </div>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".fts_description") %></p>
+      <div>
+        <%= form.label :search_tokenizer, t(".search_tokenizer"), class: "block text-sm font-medium text-dark-200 mb-2" %>
+        <% tokenizer_options = [
+          ["Porter + Unicode (recommended)", "porter unicode61 remove_diacritics 2"],
+          ["Porter only (English stemming)", "porter"],
+          ["Unicode only (no stemming)", "unicode61 remove_diacritics 2"],
+          ["Trigram (substring matching)", "trigram"],
+          ["Simple (whitespace split)", "unicode61"],
+        ] %>
+        <%= form.select :search_tokenizer,
+          options_for_select(tokenizer_options, @setting.search_tokenizer),
+          {},
+          data: { action: "change->autosave#save" },
+          class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
+        <p class="mt-1 text-xs text-dark-500"><%= t(".search_tokenizer_hint") %></p>
+      </div>
+    </div>
+
+    <%# Similarity Search %>
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".similarity_heading") %></h2>
+      <p class="text-sm text-dark-500 mb-6"><%= t(".similarity_description") %></p>
+
+      <div class="space-y-8">
+        <%# Max Distance %>
+        <div class="rag-slider" data-controller="range-slider">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-sm font-medium text-dark-200"><%= t(".max_similarity_distance") %></label>
+            <span class="text-sm font-mono font-semibold text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded-md" data-range-slider-target="value"><%= @setting.max_similarity_distance %></span>
+          </div>
+          <div class="relative h-6 flex items-center">
+            <div class="rag-slider-track">
+              <div class="rag-slider-fill" data-range-slider-target="fill" style="width: <%= ((@setting.max_similarity_distance.to_f - 0.1) / 1.9 * 100) %>%"></div>
+            </div>
+            <%= form.range_field :max_similarity_distance,
+              min: 0.1, max: 2.0, step: 0.05,
+              value: @setting.max_similarity_distance,
+              data: { range_slider_target: "input", action: "input->range-slider#update input->autosave#save" } %>
+          </div>
+          <div class="flex justify-between mt-1.5">
+            <span class="text-xs text-dark-600">0.1 (<%= t(".strict") %>)</span>
+            <span class="text-xs text-dark-600">2.0 (<%= t(".permissive") %>)</span>
+          </div>
+          <p class="mt-2 text-xs text-dark-500"><%= t(".max_similarity_distance_hint") %></p>
+        </div>
+
+        <%# RRF K %>
+        <div class="rag-slider" data-controller="range-slider">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-sm font-medium text-dark-200"><%= t(".rrf_k") %></label>
+            <span class="text-sm font-mono font-semibold text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded-md" data-range-slider-target="value"><%= @setting.rrf_k %></span>
+          </div>
+          <div class="relative h-6 flex items-center">
+            <div class="rag-slider-track">
+              <div class="rag-slider-fill" data-range-slider-target="fill" style="width: <%= ((@setting.rrf_k.to_f - 1) / 199 * 100) %>%"></div>
+            </div>
+            <%= form.range_field :rrf_k,
+              min: 1, max: 200, step: 1,
+              value: @setting.rrf_k,
+              data: { range_slider_target: "input", action: "input->range-slider#update input->autosave#save" } %>
+          </div>
+          <div class="flex justify-between mt-1.5">
+            <span class="text-xs text-dark-600">1</span>
+            <span class="text-xs text-dark-600">200</span>
+          </div>
+          <p class="mt-2 text-xs text-dark-500"><%= t(".rrf_k_hint") %></p>
+        </div>
+
+        <%# Pool Multiplier %>
+        <div class="rag-slider" data-controller="range-slider">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-sm font-medium text-dark-200"><%= t(".hybrid_pool_multiplier") %></label>
+            <span class="text-sm font-mono font-semibold text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded-md" data-range-slider-target="value"><%= @setting.hybrid_pool_multiplier %></span>
+          </div>
+          <div class="relative h-6 flex items-center">
+            <div class="rag-slider-track">
+              <div class="rag-slider-fill" data-range-slider-target="fill" style="width: <%= ((@setting.hybrid_pool_multiplier.to_f - 1) / 9 * 100) %>%"></div>
+            </div>
+            <%= form.range_field :hybrid_pool_multiplier,
+              min: 1, max: 10, step: 1,
+              value: @setting.hybrid_pool_multiplier,
+              data: { range_slider_target: "input", action: "input->range-slider#update input->autosave#save" } %>
+          </div>
+          <div class="flex justify-between mt-1.5">
+            <span class="text-xs text-dark-600">1x</span>
+            <span class="text-xs text-dark-600">10x</span>
+          </div>
+          <p class="mt-2 text-xs text-dark-500"><%= t(".hybrid_pool_multiplier_hint") %></p>
+        </div>
+      </div>
+    </div>
+
+    <%# Document Chunking %>
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".chunking_heading") %></h2>
+      <p class="text-sm text-dark-500 mb-6"><%= t(".chunking_description") %></p>
+
+      <div class="space-y-8">
+        <%# Chunk Size %>
+        <div class="rag-slider" data-controller="range-slider">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-sm font-medium text-dark-200"><%= t(".chunk_size") %></label>
+            <span class="text-sm font-mono font-semibold text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded-md"><span data-range-slider-target="value"><%= @setting.chunk_size %></span> <%= t(".words") %></span>
+          </div>
+          <div class="relative h-6 flex items-center">
+            <div class="rag-slider-track">
+              <div class="rag-slider-fill" data-range-slider-target="fill" style="width: <%= ((@setting.chunk_size.to_f - 50) / 1950 * 100) %>%"></div>
+            </div>
+            <%= form.range_field :chunk_size,
+              min: 50, max: 2000, step: 50,
+              value: @setting.chunk_size,
+              data: { range_slider_target: "input", action: "input->range-slider#update input->autosave#save" } %>
+          </div>
+          <div class="flex justify-between mt-1.5">
+            <span class="text-xs text-dark-600">50</span>
+            <span class="text-xs text-dark-600">2000</span>
+          </div>
+          <p class="mt-2 text-xs text-dark-500"><%= t(".chunk_size_hint") %></p>
+        </div>
+
+        <%# Chunk Overlap %>
+        <div class="rag-slider" data-controller="range-slider">
+          <div class="flex items-center justify-between mb-3">
+            <label class="text-sm font-medium text-dark-200"><%= t(".chunk_overlap") %></label>
+            <span class="text-sm font-mono font-semibold text-accent-400 bg-accent-500/10 px-2.5 py-1 rounded-md"><span data-range-slider-target="value"><%= @setting.chunk_overlap %></span> <%= t(".words") %></span>
+          </div>
+          <div class="relative h-6 flex items-center">
+            <div class="rag-slider-track">
+              <div class="rag-slider-fill" data-range-slider-target="fill" style="width: <%= (@setting.chunk_overlap.to_f / 200 * 100) %>%"></div>
+            </div>
+            <%= form.range_field :chunk_overlap,
+              min: 0, max: 200, step: 5,
+              value: @setting.chunk_overlap,
+              data: { range_slider_target: "input", action: "input->range-slider#update input->autosave#save" } %>
+          </div>
+          <div class="flex justify-between mt-1.5">
+            <span class="text-xs text-dark-600">0</span>
+            <span class="text-xs text-dark-600">200</span>
+          </div>
+          <p class="mt-2 text-xs text-dark-500"><%= t(".chunk_overlap_hint") %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>

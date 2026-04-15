@@ -18,12 +18,18 @@ module Madmin
 
     def scoped_resources
       resources = resource.model.send(valid_scope)
-      resources = Madmin::Search.new(resources, resource, search_term).run
+      resources = if search_term.present?
+        resources.hybrid_search(search_term, limit: 100, max_distance: Setting.max_similarity_distance)
+      else
+        resources
+      end
       resources = resources.includes(:team, :user)
 
       if params[:team_id].present?
         resources = resources.where(team_id: params[:team_id])
       end
+
+      return resources if search_term.present? && params[:sort].blank?
 
       dir = sort_direction == "asc" ? "ASC" : "DESC"
 

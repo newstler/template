@@ -2,25 +2,18 @@
 ru:
   madmin:
     mail:
-      edit:
-        cancel: Отмена
+      show:
+        conversation_digest_window_minutes: Окно дайджеста (минуты)
+        conversation_digest_window_minutes_hint: Сколько минут ждать перед отправкой
+          дайджеста переписки.
+        conversations_description: Настройки пакетной отправки уведомлений о переписках.
+        conversations_heading: Переписки
         general: Основные
-        heading: Редактировать настройки почты
+        heading: Настройки почты
         key_placeholder: Введите ключ...
         mail_from: Адрес отправителя
-        save: Сохранить настройки
         smtp: SMTP
         smtp_address: Адрес сервера
         smtp_password: Пароль
         smtp_username: Имя пользователя
         smtp_username_placeholder: your-username
-      show:
-        edit_button: Редактировать настройки
-        general: Основные
-        heading: Настройки почты
-        mail_from: Адрес отправителя
-        not_configured: Не настроено
-        smtp: SMTP
-        smtp_address: Адрес сервера
-        smtp_password: Пароль
-        smtp_username: Имя пользователя

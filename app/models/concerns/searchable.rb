@@ -33,6 +33,14 @@
 module Searchable
   extend ActiveSupport::Concern
 
+  def self.registry
+    @registry ||= []
+  end
+
+  included do
+    Searchable.registry << self unless Searchable.registry.include?(self)
+  end
+
   class_methods do
     def searchable_fields(*fields)
       @searchable_fields_list = fields.map(&:to_sym)
@@ -104,7 +112,13 @@ module Searchable
     fts = self.class.searchable_table_name
     columns = ([ "id" ] + fields.map(&:to_s)).join(", ")
     placeholders = ([ "?" ] * (fields.length + 1)).join(", ")
-    values = [ id ] + fields.map { |f| public_send(f).to_s }
+    values = [ id ] + fields.map { |f|
+      if self.class.include?(Translatable)
+        Mobility.with_locale(:en) { public_send(f).to_s }
+      else
+        public_send(f).to_s
+      end
+    }
 
     # FTS5 auto-generates its own rowid; our string id is a plain UNINDEXED
     # column, so INSERT OR REPLACE can't dedupe by id. Delete then insert.

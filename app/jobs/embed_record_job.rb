@@ -13,7 +13,7 @@ class EmbedRecordJob < ApplicationJob
     return if model.blank?
 
     response = RubyLLM.embed(source, model: model)
-    vector = Array(response.vectors).first
+    vector = response.vectors
     return if vector.blank?
 
     write_embedding(klass, record, vector, source)

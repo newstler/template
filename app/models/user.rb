@@ -17,7 +17,7 @@ class User < ApplicationRecord
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :name, presence: true, on: :update
   validates :locale, inclusion: { in: ->(_) { Language.enabled_codes } }, allow_nil: true
-  validates :preferred_currency, inclusion: { in: ->(_) { CurrencyConvertible::SUPPORTED_CURRENCIES } }, allow_nil: true
+  validates :preferred_currency, inclusion: { in: ->(_) { Setting.enabled_currencies } }, allow_nil: true
 
   countryable :residence_country_code
 

@@ -1,6 +1,12 @@
 I18n::Backend::Simple.include I18n::Backend::Pluralization
 
 Rails.application.config.after_initialize do
+  I18n.backend.store_translations :en, i18n: {
+    plural: {
+      rule: lambda { |n| n == 1 ? :one : :other }
+    }
+  }
+
   I18n.backend.store_translations :ru, i18n: {
     plural: {
       rule: lambda { |n|

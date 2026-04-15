@@ -62,13 +62,14 @@ module Embeddable
     # Returns an ActiveRecord::Relation of records ranked by vec0
     # distance ascending (nearest first). Each returned record has a
     # +#similarity_distance+ method for UI display.
-    def similar_to(query_text, limit: 20, filter_by: {})
+    def similar_to(query_text, limit: 20, filter_by: {}, max_distance: nil)
       return none if query_text.blank?
 
       embedding = embed_query(query_text)
       return none if embedding.blank?
 
       rows = vec_search(embedding, limit: limit, filter_by: filter_by)
+      rows = rows.select { |r| r["distance"].to_f <= max_distance } if max_distance
       return none if rows.empty?
 
       ids = rows.map { |r| r["id"] }
@@ -85,7 +86,7 @@ module Embeddable
       return nil if model.blank?
 
       response = RubyLLM.embed(text, model: model)
-      Array(response.vectors).first
+      response.vectors
     rescue StandardError => e
       Rails.logger.warn("[Embeddable] query embed failed: #{e.message}")
       nil

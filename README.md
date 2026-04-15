@@ -64,6 +64,7 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Full audit trail in Madmin at `/madmin/noticed_events`
 - **Currencies + Countries**
   - Money gem with daily rate refresh from CurrencyLayer
+  - Admin-toggleable currencies — enable/disable individual currencies at `/madmin/languages` (Currencies tab)
   - Per-team default currency, per-user preferred currency
   - Per-team and per-user country (ISO 3166) with emoji flag picker
   - Locale-aware amount formatting (Russian: `1 000 000`; English: `1,000,000`)
@@ -76,9 +77,11 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Vector Search + RAG kit** (`Embeddable`, `Chunkable`, `HybridSearchable`)
   - sqlite-vec backed vec0 virtual tables, zero external dependencies
   - Ordered KNN results with per-record confidence (`record.similarity_distance`)
+  - Configurable distance threshold (`max_distance`) to filter irrelevant results
   - Metadata pre-filtering for WHERE-aware KNN
   - Chunking for long documents via the polymorphic `Chunk` model
   - Hybrid keyword + semantic retrieval via Reciprocal Rank Fusion
+  - All RAG parameters (distance threshold, RRF k, chunk size/overlap, pool multiplier) configurable via admin sliders at `/madmin/rag`
   - Cosine (default), L2, L1, Hamming distance metrics
 - **Team Messaging** (Conversations)
   - Team-scoped person-to-person chat with attachments

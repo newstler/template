@@ -25,12 +25,13 @@
             <% if local_assigns.key?(:currency_target_controller) %>data-<%= currency_target_controller %>-target="<%= currency_target_name %>"<% end %>
             style="background-image: none;"
             class="appearance-none w-[38px] h-[38px] pl-[11px] pr-0 bg-dark-600 border border-dark-600 rounded-l-lg text-dark-300 text-sm cursor-pointer focus:ring-2 focus:ring-accent-500 focus:border-transparent">
-      <% CurrencyConvertible::POPULAR_CURRENCIES.each do |code| %>
+      <% enabled = Setting.enabled_currencies %>
+      <% (CurrencyConvertible::POPULAR_CURRENCIES & enabled).each do |code| %>
         <% sym = Money::Currency.find(code)&.symbol || code %>
         <option value="<%= code %>" data-symbol="<%= sym %>" data-full="<%= currency_name(code) %>" <%= "selected" if code == currency_selected %>><%= currency_name(code) %></option>
       <% end %>
       <option disabled>───</option>
-      <% (CurrencyConvertible::SUPPORTED_CURRENCIES - CurrencyConvertible::POPULAR_CURRENCIES).sort.each do |code| %>
+      <% (enabled - CurrencyConvertible::POPULAR_CURRENCIES).sort.each do |code| %>
         <% sym = Money::Currency.find(code)&.symbol || code %>
         <option value="<%= code %>" data-symbol="<%= sym %>" data-full="<%= currency_name(code) %>" <%= "selected" if code == currency_selected %>><%= currency_name(code) %></option>
       <% end %>

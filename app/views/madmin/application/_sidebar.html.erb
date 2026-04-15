@@ -56,23 +56,22 @@
       <% end %>
     </div>
 
-    <div class="my-4 border-t border-dark-700"></div>
+    <div class="my-2 border-t border-dark-700"></div>
 
     <%# Accounts %>
-    <div class="mb-2 px-3">
-      <span class="text-xs font-semibold text-dark-500 uppercase tracking-wider">Accounts</span>
+    <div class="mb-1 px-3">
+      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Accounts</span>
     </div>
     <div class="space-y-1">
       <%= render "shared/sidebar_link", path: "/madmin/users", icon: "user", label: "Users", counter: sidebar_counts[:users] %>
       <%= render "shared/sidebar_link", path: "/madmin/teams", icon: "users", label: "Teams", counter: sidebar_counts[:teams] %>
-      <%= render "shared/sidebar_link", path: "/madmin/memberships", icon: "users", label: "Memberships", counter: sidebar_counts[:memberships] %>
     </div>
 
-    <div class="my-4 border-t border-dark-700"></div>
+    <div class="my-2 border-t border-dark-700"></div>
 
     <%# Content %>
-    <div class="mb-2 px-3">
-      <span class="text-xs font-semibold text-dark-500 uppercase tracking-wider">Content</span>
+    <div class="mb-1 px-3">
+      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Content</span>
     </div>
 
     <%# Conversations (collapsible) %>
@@ -93,11 +92,11 @@
       <%= render "shared/sidebar_link", path: "/madmin/articles", icon: "file", label: "Articles", counter: sidebar_counts[:articles] %>
     </div>
 
-    <div class="my-4 border-t border-dark-700"></div>
+    <div class="my-2 border-t border-dark-700"></div>
 
     <%# Notifications %>
-    <div class="mb-2 px-3">
-      <span class="text-xs font-semibold text-dark-500 uppercase tracking-wider">Notifications</span>
+    <div class="mb-1 px-3">
+      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Notifications</span>
     </div>
     <div class="space-y-1">
       <%= render "shared/sidebar_link", path: "/madmin/noticed_events", icon: "bell", label: "Events", counter: sidebar_counts[:noticed_events] %>
@@ -108,17 +107,8 @@
     <div class="flex-1"></div>
 
     <%# Config %>
-    <div class="border-t border-dark-700 pt-4 mb-2 px-3">
-      <span class="text-xs font-semibold text-dark-500 uppercase tracking-wider">Config</span>
-    </div>
-
-    <%# AI Section (collapsible) %>
-    <div class="mt-1">
-      <%= render "shared/sidebar_group", id: "ai", icon: "sparkles", label: "AI" do %>
-        <%= render "shared/sidebar_link", path: "/madmin/ai_models", icon: "sparkles", label: "AI Models", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/providers", icon: "cog", label: "Providers", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/models", icon: "cube", label: "Models", nested: true, counter: sidebar_counts[:models] %>
-      <% end %>
+    <div class="border-t border-dark-700 pt-2 mb-1 px-3">
+      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Configuration</span>
     </div>
 
     <%# Active Storage Section (collapsible) %>
@@ -135,9 +125,10 @@
       <%= render "shared/sidebar_group", id: "settings", icon: "cog", label: "Settings" do %>
         <%= render "shared/sidebar_link", path: "/madmin/admins", icon: "shield", label: "Admins", nested: true, counter: sidebar_counts[:admins] %>
         <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "key", label: "API Keys", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/ai_models", icon: "sparkles", label: "AI Models", nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/rag", icon: "search", label: "Search", nested: true %>
         <%= render "shared/sidebar_link", path: "/madmin/prices", icon: "dollar", label: "Prices", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/languages", icon: "globe", label: "Languages", nested: true, counter: sidebar_counts[:languages] %>
-        <%= render "shared/sidebar_link", path: "/madmin/team_languages", icon: "globe", label: "Team Languages", nested: true, counter: sidebar_counts[:team_languages] %>
+        <%= render "shared/sidebar_link", path: "/madmin/languages", icon: "globe", label: "Localization", nested: true %>
         <%= render "shared/sidebar_link", path: "/madmin/mail", icon: "mail", label: "Mail", nested: true %>
       <% end %>
     </div>

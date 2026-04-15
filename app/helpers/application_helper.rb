@@ -69,8 +69,9 @@ module ApplicationHelper
   end
 
   def currency_options_for_select(selected = nil, include_auto: false, auto_label: nil)
-    popular = CurrencyConvertible::POPULAR_CURRENCIES.map { |c| [ currency_name(c), c ] }
-    rest = (CurrencyConvertible::SUPPORTED_CURRENCIES - CurrencyConvertible::POPULAR_CURRENCIES).sort.map { |c| [ currency_name(c), c ] }
+    enabled = Setting.enabled_currencies
+    popular = (CurrencyConvertible::POPULAR_CURRENCIES & enabled).map { |c| [ currency_name(c), c ] }
+    rest = (enabled - CurrencyConvertible::POPULAR_CURRENCIES).sort.map { |c| [ currency_name(c), c ] }
 
     safe_join([
       (options_for_select([ [ auto_label || t("helpers.currency.auto"), "" ] ], selected.to_s) if include_auto),

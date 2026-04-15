@@ -2,25 +2,19 @@
 en:
   madmin:
     mail:
-      edit:
-        cancel: Cancel
+      show:
+        conversation_digest_window_minutes: Digest window (minutes)
+        conversation_digest_window_minutes_hint: How many minutes to wait before sending
+          a conversation digest email.
+        conversations_description: Settings that control how conversation notifications
+          are batched and delivered.
+        conversations_heading: Conversations
         general: General
-        heading: Edit Mail Settings
+        heading: Mail Settings
         key_placeholder: Enter key...
         mail_from: From Address
-        save: Save Settings
         smtp: SMTP
         smtp_address: Server Address
         smtp_password: Password
         smtp_username: Username
         smtp_username_placeholder: your-username
-      show:
-        edit_button: Edit Settings
-        general: General
-        heading: Mail Settings
-        mail_from: From Address
-        not_configured: Not configured
-        smtp: SMTP
-        smtp_address: Server Address
-        smtp_password: Password
-        smtp_username: Username

@@ -34,6 +34,9 @@ en:
       ai_models:
         update:
           notice: AI model settings saved successfully
+      common:
+        rebuild_fts:
+          notice: FTS index rebuilt successfully
       mail:
         update:
           notice: Mail settings saved successfully
@@ -43,6 +46,9 @@ en:
       providers:
         update:
           notice: Provider credentials saved successfully
+      rag:
+        update:
+          notice: RAG settings saved successfully
       settings:
         update:
           notice: Settings saved successfully

@@ -60,7 +60,7 @@ class ApplicationController < ActionController::Base
 
     # 2. Signed cookie
     cookie_val = cookies.signed[:tmpl_currency]
-    if cookie_val.present? && CurrencyConvertible::SUPPORTED_CURRENCIES.include?(cookie_val)
+    if cookie_val.present? && Setting.enabled_currencies.include?(cookie_val)
       return cookie_val
     end
 

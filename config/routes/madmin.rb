@@ -32,13 +32,22 @@ namespace :madmin do
   resources :languages do
     collection do
       post :sync
+      patch :update_currency
+      patch :toggle_currency
+      patch :bulk_toggle
+      patch :bulk_toggle_currency
     end
     member do
       patch :toggle
     end
   end
-  resource :settings, only: [ :show, :edit, :update ]
-  resource :ai_models, only: [ :show, :edit, :update ], controller: "ai_models"
+  resource :settings, only: [ :show, :update ]
+  resource :ai_models, only: [ :show, :update ], controller: "ai_models" do
+    post :refresh_all, on: :member
+  end
+  resource :rag, only: [ :show, :update ], controller: "rag" do
+    post :rebuild_fts, on: :member
+  end
   resources :providers, only: [ :index ] do
     collection do
       patch :update
@@ -47,7 +56,7 @@ namespace :madmin do
   resource :prices, only: [ :show ] do
     post :sync, on: :member
   end
-  resource :mail, only: [ :show, :edit, :update ], controller: "mail"
+  resource :mail, only: [ :show, :update ], controller: "mail"
   resources :noticed_events, only: [ :index, :show ]
   resources :noticed_notifications, only: [ :index, :show ]
   resources :conversations do

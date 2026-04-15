@@ -32,12 +32,12 @@ module Chunkable
 
     def chunk_size(size = nil)
       @chunk_size = size if size
-      @chunk_size || DEFAULT_CHUNK_SIZE
+      @chunk_size || Setting.chunk_size
     end
 
     def chunk_overlap(overlap = nil)
       @chunk_overlap = overlap if overlap
-      @chunk_overlap || DEFAULT_CHUNK_OVERLAP
+      @chunk_overlap || Setting.chunk_overlap
     end
   end
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_15_172824) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_200000) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -442,6 +442,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_172824) do
   create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.boolean "ai_chats_enabled", default: true, null: false
     t.boolean "articles_enabled", default: true, null: false
+    t.integer "chunk_overlap", default: 40
+    t.integer "chunk_size", default: 400
     t.integer "conversation_digest_window_minutes", default: 5, null: false
     t.boolean "conversation_moderation_enabled", default: true, null: false
     t.boolean "conversations_enabled", default: true, null: false
@@ -451,10 +453,13 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_172824) do
     t.string "default_currency", default: "USD"
     t.string "default_model"
     t.string "embedding_model", default: "text-embedding-3-small"
+    t.text "enabled_currencies"
+    t.integer "hybrid_pool_multiplier", default: 3
     t.string "litestream_replica_access_key"
     t.string "litestream_replica_bucket"
     t.string "litestream_replica_key_id"
     t.string "mail_from"
+    t.float "max_similarity_distance", default: 0.75
     t.string "moderation_model"
     t.integer "rrf_k", default: 60
     t.string "search_tokenizer", default: "porter unicode61 remove_diacritics 2"
@@ -556,6 +561,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_172824) do
 
   # Virtual tables defined in this database.
   # Note that virtual tables may not work with other database engines. Be careful if changing database.
+  create_virtual_table "articles_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
+  create_virtual_table "articles_fts", "fts5", ["id UNINDEXED", "title", "tokenize='porter unicode61 remove_diacritics 2'"]
   create_virtual_table "chunks_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
   create_virtual_table "searchable_things_embeddings", "vec0", ["tags text partition key", "id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
   create_virtual_table "searchable_things_fts", "fts5", ["id UNINDEXED", "name", "description", "tags", "tokenize='porter unicode61 remove_diacritics 2'"]

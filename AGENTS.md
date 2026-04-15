@@ -692,6 +692,7 @@ Every team-scoped app uses the same primitives.
 ### Money
 
 - `CurrencyConvertible` concern holds constants (`SUPPORTED_CURRENCIES`, `POPULAR_CURRENCIES`, `CURRENCY_NAMES`, `COUNTRY_CURRENCY`) and a `convert_amount(cents, from, to)` helper backed by Money's CurrencyLayer bank.
+- **Enabled currencies** are managed via `Setting.enabled_currencies` (admin-toggleable at `/madmin/languages` → Currencies tab). All currency selectors, validations, and detection use `Setting.enabled_currencies` instead of the hardcoded `SUPPORTED_CURRENCIES` constant.
 - `Current.currency` is set on every request via the detection chain:
   1. `current_user.preferred_currency`
   2. Signed cookie `tmpl_currency`
@@ -700,7 +701,7 @@ Every team-scoped app uses the same primitives.
   5. `Setting.default_currency` (platform default)
 - Daily `RefreshCurrencyRatesJob` (recurring, 04:00 UTC) warms `Money.default_bank`'s file cache so no request blocks on a CurrencyLayer API call.
 - `format_amount(value)` uses the current locale's delimiter (English `1,000,000`, Russian `1 000 000`).
-- Settings editable in Madmin at `/madmin/ai_models`: `currencylayer_api_key`, `default_currency`, `default_country_code`.
+- Default currency editable at `/madmin/languages` (Currencies tab). CurrencyLayer API key at `/madmin/settings` (System tab).
 
 ### Country
 
@@ -808,10 +809,11 @@ class Candidate < ApplicationRecord
   embeddable_distance :cosine
 end
 
-Candidate.similar_to("welder with marine experience", limit: 20)
+Candidate.similar_to("welder with marine experience", limit: 20, max_distance: Setting.max_similarity_distance)
 # → ActiveRecord::Relation of Candidates ordered by vec0 distance ascending
 # → each record exposes #similarity_distance for UI display
 # → composable with .where / .includes
+# → max_distance filters out results with cosine distance above the threshold
 ```
 
 ### Metadata pre-filtering
@@ -836,9 +838,10 @@ class Candidate < ApplicationRecord
   include HybridSearchable
 end
 
-Candidate.hybrid_search("welder marine experience", limit: 20)
+Candidate.hybrid_search("welder marine experience", limit: 20, max_distance: Setting.max_similarity_distance)
 # → FTS5 bm25 + vector KNN, fused via Reciprocal Rank Fusion (k = Setting.rrf_k)
-# → score(id) = Σ 1 / (k + rank) across both result lists
+# → pool_size = limit * Setting.hybrid_pool_multiplier (default 3)
+# → max_distance filters vector results above the threshold before RRF
 # → RRF sidesteps the score-normalization problem between bm25 and cosine similarity
 ```
 
@@ -849,8 +852,8 @@ class Article < ApplicationRecord
   include Embeddable
   include Chunkable
   chunk_source ->(r) { r.body }
-  chunk_size 400     # words per chunk
-  chunk_overlap 40   # words carried into the next chunk
+  chunk_size 400     # words per chunk (default from Setting.chunk_size)
+  chunk_overlap 40   # words carried into the next chunk (default from Setting.chunk_overlap)
 end
 ```
 
@@ -864,10 +867,15 @@ bin/rails db:migrate
 bin/rails 'embeddings:rebuild[Candidate]'
 ```
 
-### Settings (editable in Madmin at `/madmin/ai_models`)
+### Settings (editable in Madmin)
 
-- `Setting.embedding_model` — default `"text-embedding-3-small"`
-- `Setting.rrf_k` — default `60` (Cormack et al. SIGIR 2009 standard)
+- `Setting.embedding_model` — default `"text-embedding-3-small"` (editable at `/madmin/ai_models`)
+- `Setting.rrf_k` — default `60` (editable at `/madmin/rag`)
+- `Setting.max_similarity_distance` — default `0.75` cosine distance threshold (editable at `/madmin/rag`)
+- `Setting.chunk_size` — default `400` words per chunk (editable at `/madmin/rag`)
+- `Setting.chunk_overlap` — default `40` words overlap (editable at `/madmin/rag`)
+- `Setting.hybrid_pool_multiplier` — default `3` (editable at `/madmin/rag`)
+- `Setting.search_tokenizer` — FTS5 tokenizer config (editable at `/madmin/rag`)
 
 ### Caching
 

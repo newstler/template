@@ -1,0 +1,38 @@
+---
+en:
+  madmin:
+    rag:
+      show:
+        chunk_overlap: Chunk overlap
+        chunk_overlap_hint: Words carried into the next chunk for context continuity
+          at boundaries.
+        chunk_size: Chunk size
+        chunk_size_hint: Target words per chunk. Smaller chunks = more precise retrieval,
+          larger = more context per result.
+        chunking_description: How long documents are split before embedding. Changes
+          apply to newly chunked documents.
+        chunking_heading: Document Chunking
+        fts_description: Configuration for SQLite FTS5-backed full-text search.
+        fts_heading: Full-text Search
+        heading: Search
+        hybrid_pool_multiplier: Hybrid pool multiplier
+        hybrid_pool_multiplier_hint: How many extra candidates to fetch before RRF
+          ranking. E.g. 3x with limit 20 = 60 candidates from each source.
+        max_similarity_distance: Max distance threshold
+        max_similarity_distance_hint: Results with cosine distance above this value
+          are filtered out. Lower = stricter matching.
+        permissive: permissive
+        rebuild_fts: Rebuild FTS Index
+        rebuild_fts_confirm: This will rebuild the full-text search index for all
+          searchable models. Continue?
+        rrf_k: RRF k parameter
+        rrf_k_hint: Reciprocal Rank Fusion constant. Higher values favor breadth,
+          lower values favor top results.
+        search_tokenizer: Search tokenizer
+        search_tokenizer_hint: Changes apply to new records. Use "Rebuild FTS" to
+          re-index existing data.
+        similarity_description: Controls how vector search filters and ranks results.
+        similarity_heading: Similarity Search
+        strict: strict
+        subtitle: Full-text search, vector similarity, and chunking parameters
+        words: words
