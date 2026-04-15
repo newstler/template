@@ -4,6 +4,7 @@
 class SearchableThing < ApplicationRecord
   include Searchable
   include Embeddable
+  include HybridSearchable
   include Chunkable
 
   searchable_fields :name, :description, :tags

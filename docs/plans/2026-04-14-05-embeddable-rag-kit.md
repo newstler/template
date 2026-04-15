@@ -880,7 +880,7 @@ Expected: PASS.
 - Create: `app/models/concerns/hybrid_searchable.rb`
 - Create: `test/models/concerns/hybrid_searchable_test.rb`
 
-- [ ] **Step 1: Create the concern**
+- [x] **Step 1: Create the concern**
 
 ```ruby
 module HybridSearchable
@@ -915,7 +915,7 @@ module HybridSearchable
 end
 ```
 
-- [ ] **Step 2: Add to SearchableThing**
+- [x] **Step 2: Add to SearchableThing**
 
 ```ruby
 class SearchableThing < ApplicationRecord
@@ -926,7 +926,7 @@ class SearchableThing < ApplicationRecord
 end
 ```
 
-- [ ] **Step 3: Write test**
+- [x] **Step 3: Write test**
 
 Create `test/models/concerns/hybrid_searchable_test.rb`:
 
@@ -954,16 +954,7 @@ class HybridSearchableTest < ActiveSupport::TestCase
 end
 ```
 
-- [ ] **Step 4: Run and commit**
-
-Run: `rails test test/models/concerns/hybrid_searchable_test.rb`
-
-```bash
-git add app/models/concerns/hybrid_searchable.rb \
-        app/models/searchable_thing.rb \
-        test/models/concerns/hybrid_searchable_test.rb
-git commit -m "feat: HybridSearchable with Reciprocal Rank Fusion"
-```
+- [x] **Step 4: Run and commit**
 
 ---
 
