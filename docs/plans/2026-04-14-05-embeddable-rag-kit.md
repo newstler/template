@@ -59,14 +59,14 @@ AGENTS.md
 - Create: `vendor/sqlite-vec/{linux-x86_64,linux-aarch64,darwin-arm64}/`
 - Create: `vendor/sqlite-vec/README.md`
 
-- [ ] **Step 1: Download latest release**
+- [x] **Step 1: Download latest release**
 
 Check https://github.com/asg017/sqlite-vec/releases for the latest stable release. Download the three binary archives:
 - `sqlite-vec-<version>-loadable-linux-x86_64.tar.gz`
 - `sqlite-vec-<version>-loadable-linux-aarch64.tar.gz`
 - `sqlite-vec-<version>-loadable-macos-aarch64.tar.gz`
 
-- [ ] **Step 2: Extract and place**
+- [x] **Step 2: Extract and place**
 
 For each archive, extract the `vec0.so` (Linux) or `vec0.dylib` (macOS) into the corresponding subdirectory:
 
@@ -76,7 +76,7 @@ vendor/sqlite-vec/linux-aarch64/vec0.so
 vendor/sqlite-vec/darwin-arm64/vec0.dylib
 ```
 
-- [ ] **Step 3: Document provenance**
+- [x] **Step 3: Document provenance**
 
 Create `vendor/sqlite-vec/README.md`:
 
@@ -113,7 +113,7 @@ Intel macOS is not included — run on Rosetta if needed. Windows is out of scop
 4. Run `bin/rails test` locally + `bin/ci` before committing.
 ```
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add vendor/sqlite-vec/
