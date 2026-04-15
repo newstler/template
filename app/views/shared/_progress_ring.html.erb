@@ -1,0 +1,18 @@
+<%# Locals: size:, radius:, circumference:, offset:, percent:, label:, color: %>
+<svg xmlns="http://www.w3.org/2000/svg" width="<%= size %>" height="<%= size %>"
+     viewBox="0 0 <%= size %> <%= size %>" class="text-<%= color %>-500">
+  <circle cx="<%= size / 2 %>" cy="<%= size / 2 %>" r="<%= radius %>"
+          fill="none" stroke="currentColor" stroke-opacity="0.2" stroke-width="4" />
+  <circle cx="<%= size / 2 %>" cy="<%= size / 2 %>" r="<%= radius %>"
+          fill="none" stroke="currentColor" stroke-width="4"
+          stroke-dasharray="<%= circumference %>"
+          stroke-dashoffset="<%= offset %>"
+          stroke-linecap="round"
+          transform="rotate(-90 <%= size / 2 %> <%= size / 2 %>)" />
+  <% if label %>
+    <text x="<%= size / 2 %>" y="<%= size / 2 + 4 %>" text-anchor="middle"
+          font-size="12" fill="currentColor">
+      <%= label %>
+    </text>
+  <% end %>
+</svg>
