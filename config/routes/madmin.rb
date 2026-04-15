@@ -45,8 +45,9 @@ namespace :madmin do
   resource :settings, only: [ :show, :update ]
   resource :ai_models, only: [ :show, :update ], controller: "ai_models" do
     post :refresh_all, on: :member
+    post :rebuild_embeddings, on: :member
   end
-  resource :rag, only: [ :show, :update ], controller: "rag" do
+  resource :search, only: [ :show, :update ], controller: "rag" do
     post :rebuild_fts, on: :member
   end
   resources :providers, only: [ :index ] do

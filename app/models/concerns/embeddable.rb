@@ -25,6 +25,12 @@
 module Embeddable
   extend ActiveSupport::Concern
 
+  class EmbeddingDimensionMismatch < StandardError
+    def initialize(model_name)
+      super("Embedding dimension mismatch for #{model_name}. Rebuild embeddings after changing the embedding model at /madmin/ai_models.")
+    end
+  end
+
   class_methods do
     def embeddable_source(proc = nil, &block)
       @embeddable_source = proc || block
@@ -79,6 +85,9 @@ module Embeddable
       relation.extending(SimilarityDistanceAttachment).tap do |rel|
         rel.instance_variable_set(:@similarity_distances, distances)
       end
+    rescue ActiveRecord::StatementInvalid => e
+      raise unless e.message.include?("Dimension mismatch")
+      raise EmbeddingDimensionMismatch, name
     end
 
     def embed_query(text)

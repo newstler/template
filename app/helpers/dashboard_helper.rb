@@ -1,7 +1,7 @@
 module DashboardHelper
   # Renders a KPI card via the shared partial.
-  def kpi_card(label:, value:, trend: nil, icon: nil, href: nil)
-    render "shared/kpi_card", label: label, value: value, trend: trend, icon: icon, href: href
+  def kpi_card(label:, value:, trend: nil, icon: nil, href: nil, gradient: nil)
+    render "shared/kpi_card", label: label, value: value, trend: trend, icon: icon, href: href, gradient: gradient
   end
 
   # Returns the percent change between current and previous values.

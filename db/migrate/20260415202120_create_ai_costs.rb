@@ -14,7 +14,7 @@ class CreateAiCosts < ActiveRecord::Migration[8.2]
     end
 
     add_index :ai_costs, :cost_type
-    add_index :ai_costs, [:trackable_type, :trackable_id]
+    add_index :ai_costs, [ :trackable_type, :trackable_id ]
     add_index :ai_costs, :created_at
   end
 end

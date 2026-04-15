@@ -28,11 +28,11 @@
       <p class="text-xs text-white/80 mt-1"><%= t(".kpi.total_cost") %></p>
     <% end %>
 
-    <%= kpi_card label: t(".kpi.total_users"), value: number_with_delimiter(@metrics[:total_users]), trend: nil, icon: "users", href: "/madmin/users" %>
-    <%= kpi_card label: t(".kpi.total_teams"), value: number_with_delimiter(@metrics[:total_teams]), icon: "users", href: "/madmin/teams" %>
-    <%= kpi_card label: t(".kpi.total_chats"), value: number_with_delimiter(@metrics[:total_chats]), icon: "chat", href: "/madmin/chats" %>
-    <%= kpi_card label: t(".kpi.total_messages"), value: number_with_delimiter(@metrics[:total_messages]), icon: "messages", href: "/madmin/messages" %>
-    <%= kpi_card label: t(".kpi.total_tokens"), value: number_with_delimiter(@metrics[:total_tokens]), icon: "lightning" %>
+    <%= kpi_card label: t(".kpi.total_tokens"), value: number_with_delimiter(@metrics[:total_tokens]), icon: "lightning", gradient: "from-amber-600/80 to-orange-700/80 shadow-amber-500/20 hover:shadow-amber-500/30" %>
+    <%= kpi_card label: t(".kpi.total_chats"), value: number_with_delimiter(@metrics[:total_chats]), icon: "chat", href: "/madmin/chats", gradient: "from-blue-600/80 to-indigo-700/80 shadow-blue-500/20 hover:shadow-blue-500/30" %>
+    <%= kpi_card label: t(".kpi.total_messages"), value: number_with_delimiter(@metrics[:total_messages]), icon: "messages", href: "/madmin/messages", gradient: "from-violet-600/80 to-purple-700/80 shadow-violet-500/20 hover:shadow-violet-500/30" %>
+    <%= kpi_card label: t(".kpi.total_teams"), value: number_with_delimiter(@metrics[:total_teams]), icon: "users", href: "/madmin/teams", gradient: "from-cyan-600/80 to-teal-700/80 shadow-cyan-500/20 hover:shadow-cyan-500/30" %>
+    <%= kpi_card label: t(".kpi.total_users"), value: number_with_delimiter(@metrics[:total_users]), trend: nil, icon: "users", href: "/madmin/users", gradient: "from-rose-600/80 to-pink-700/80 shadow-rose-500/20 hover:shadow-rose-500/30" %>
   </div>
 
   <%# Charts row %>

@@ -72,7 +72,10 @@
           <%# Embedding Model %>
           <% embedding_options = [["— Select model —", ""]] + @embedding_models.map { |model_id| [model_id, model_id] } %>
           <div class="card-bg p-6">
-            <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".embedding_heading") %></h2>
+            <div class="flex items-center justify-between mb-2">
+              <h2 class="text-xl font-semibold text-dark-100"><%= t(".embedding_heading") %></h2>
+              <%= link_to t(".rebuild_embeddings"), main_app.rebuild_embeddings_madmin_ai_models_path, data: { turbo_method: :post, turbo_confirm: t(".rebuild_embeddings_confirm") }, class: "inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium bg-dark-700 hover:bg-dark-600 text-dark-200 rounded-lg transition-colors" %>
+            </div>
             <p class="text-sm text-dark-500 mb-4"><%= t(".embedding_description") %></p>
             <div>
               <%= form.select :embedding_model,

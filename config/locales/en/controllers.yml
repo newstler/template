@@ -32,6 +32,9 @@ en:
         notice: Article updated
     madmin:
       ai_models:
+        rebuild_embeddings:
+          notice: Rebuilding all embeddings in the background. This may take a few
+            minutes.
         update:
           notice: AI model settings saved successfully
       common:

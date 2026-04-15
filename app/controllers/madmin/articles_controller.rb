@@ -1,6 +1,7 @@
 module Madmin
   class ArticlesController < Madmin::ResourceController
     skip_before_action :set_record, only: :toggle_articles
+    rescue_from Embeddable::EmbeddingDimensionMismatch, with: :handle_dimension_mismatch
 
     def toggle_articles
       setting = Setting.instance
@@ -9,6 +10,10 @@ module Madmin
     end
 
     private
+
+    def handle_dimension_mismatch(exception)
+      redirect_to main_app.madmin_articles_path, alert: exception.message
+    end
 
     def set_record
       @record = resource.model

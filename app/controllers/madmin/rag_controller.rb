@@ -10,12 +10,12 @@ module Madmin
       if @setting.update(rag_params)
         respond_to do |format|
           format.json { head :ok }
-          format.html { redirect_to main_app.madmin_rag_path, notice: t("controllers.madmin.rag.update.notice") }
+          format.html { redirect_to main_app.madmin_search_path, notice: t("controllers.madmin.rag.update.notice") }
         end
       else
         respond_to do |format|
           format.json { head :unprocessable_entity }
-          format.html { redirect_to main_app.madmin_rag_path, alert: @setting.errors.full_messages.join(", ") }
+          format.html { redirect_to main_app.madmin_search_path, alert: @setting.errors.full_messages.join(", ") }
         end
       end
     end
@@ -24,7 +24,7 @@ module Madmin
       Searchable.registry.each do |klass|
         klass.find_each(&:update_search_index)
       end
-      redirect_to main_app.madmin_rag_path, notice: t("controllers.madmin.common.rebuild_fts.notice")
+      redirect_to main_app.madmin_search_path, notice: t("controllers.madmin.common.rebuild_fts.notice")
     end
 
     private

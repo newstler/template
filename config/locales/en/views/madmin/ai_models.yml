@@ -15,6 +15,9 @@ en:
         moderation_heading: Moderation Model
         no_models: No models available
         no_models_hint: Configure AI providers and sync models first.
+        rebuild_embeddings: Rebuild All Embeddings
+        rebuild_embeddings_confirm: This will recreate vector tables and re-embed
+          all records. Continue?
         refresh_models: Refresh Models
         tab_available: Available
         tab_used: Used

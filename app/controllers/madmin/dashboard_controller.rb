@@ -50,7 +50,7 @@ module Madmin
           name: type.titleize,
           data: AiCost.where(cost_type: type, created_at: @range)
                   .group_by_day(:created_at, range: @range)
-                  .sum(:cost),
+                  .sum(:cost)
         }
       end
 
