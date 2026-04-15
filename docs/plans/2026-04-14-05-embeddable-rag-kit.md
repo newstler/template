@@ -618,11 +618,19 @@ bin/rails runner 'puts ActiveRecord::Base.connection.execute("SELECT name FROM s
 
 ## Task 6: Wire SearchableThing to Embeddable and fill in tests
 
+Completed — 11 tests, all passing.
+
+**Gotcha:** the initial `SimilarityDistanceAttachment` hooked `#load`
+and called `records` inside the block. In Rails 8, `#records` calls
+back into `#load`, which loops forever. Hooking `#exec_queries`
+instead is the safe override point — it returns the loaded array
+without recursing.
+
 **Files:**
 - Modify: `app/models/searchable_thing.rb`
 - Modify: `test/models/concerns/embeddable_test.rb`
 
-- [ ] **Step 1: Update the test model**
+- [x] **Step 1: Update the test model**
 
 Open `app/models/searchable_thing.rb`:
 
@@ -639,7 +647,7 @@ class SearchableThing < ApplicationRecord
 end
 ```
 
-- [ ] **Step 2: Fill in the tests**
+- [x] **Step 2: Fill in the tests**
 
 Replace `test/models/concerns/embeddable_test.rb`:
 
@@ -697,18 +705,13 @@ end
 
 **Test limitation:** actual similarity search requires real embeddings from an LLM. The tests above avoid that by checking job enqueue, table layout, and purge. End-to-end similarity testing with real embeddings is deferred to Task 8 and runs only when an embedding model is configured.
 
-- [ ] **Step 3: Run the tests**
+- [x] **Step 3: Run the tests**
 
 Run: `rails test test/models/concerns/embeddable_test.rb`
 
 Expected: PASS. Tests that depend on embeddings being populated are gated behind `Setting.embedding_model.present?`.
 
-- [ ] **Step 4: Commit**
-
-```bash
-git add app/models/searchable_thing.rb test/models/concerns/embeddable_test.rb
-git commit -m "feat: include Embeddable in SearchableThing + unit tests"
-```
+- [x] **Step 4: Commit**
 
 ---
 

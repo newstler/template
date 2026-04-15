@@ -126,15 +126,17 @@ module Embeddable
 
   # Relation extension that decorates each loaded record with its
   # vec0 distance score (accessible via +#similarity_distance+).
+  # Hooks +exec_queries+ rather than +load+ so calling +records+
+  # inside the attachment doesn't recurse through +load+.
   module SimilarityDistanceAttachment
-    def load
-      super
+    def exec_queries(&)
+      loaded_records = super
       distances = @similarity_distances || {}
-      records.each do |record|
+      loaded_records.each do |record|
         distance = distances[record.id]
         record.define_singleton_method(:similarity_distance) { distance }
       end
-      self
+      loaded_records
     end
   end
 
