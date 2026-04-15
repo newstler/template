@@ -100,3 +100,7 @@ gem "rails_error_dashboard"
 # Notifications framework — database, email, Turbo Stream, and more
 # See https://github.com/excid3/noticed
 gem "noticed", "~> 2.0"
+
+# Dashboards: charts + time-series grouping
+gem "chartkick", "~> 5.1"
+gem "groupdate", "~> 6.5"
