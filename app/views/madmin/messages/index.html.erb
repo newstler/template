@@ -61,7 +61,7 @@
           </td>
           <td class="max-w-[200px]">
             <%= link_to "/madmin/chats/#{record.chat_id}", class: "block truncate hover:underline" do %>
-              <%= record.chat&.messages&.order(:created_at)&.first&.content&.truncate(40) || "Chat ##{record.chat_id.to_s[0..7]}" %>
+              <%= record.chat&.messages&.min_by(&:created_at)&.content&.truncate(40) || "Chat ##{record.chat_id.to_s[0..7]}" %>
             <% end %>
           </td>
           <td>

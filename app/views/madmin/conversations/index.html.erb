@@ -53,8 +53,11 @@
             <% end %>
           </td>
           <td>
-            <%= link_to "/madmin/teams/#{record.team_id}", class: "hover:underline" do %>
-              <span class="font-medium"><%= record.team.name %></span>
+            <%= link_to "/madmin/teams/#{record.team.slug}", class: "flex items-center gap-1.5 hover:underline" do %>
+              <div class="w-5 h-5 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
+                <%= record.team.name.first(2).upcase %>
+              </div>
+              <span class="font-medium text-sm"><%= record.team.name %></span>
             <% end %>
           </td>
           <td>

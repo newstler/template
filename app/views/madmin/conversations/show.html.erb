@@ -19,7 +19,7 @@
     <div class="flex-1">
       <h2 class="text-2xl font-bold text-dark-100"><%= @record.title.presence || "Conversation #{@record.id[0, 8]}..." %></h2>
       <p class="text-dark-500 text-sm mt-1">
-        in <%= link_to @record.team.name, "/madmin/teams/#{@record.team_id}", class: "text-accent-400 hover:text-accent-300" %>
+        in <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "text-accent-400 hover:text-accent-300" %>
         <% if @record.subject_type.present? %>
           &middot; re: <span class="text-dark-300"><%= @record.subject_type %> #<%= @record.subject_id.to_s[0, 8] %></span>
         <% end %>

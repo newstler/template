@@ -20,7 +20,8 @@
   <div class="grid grid-cols-2 gap-4 text-sm">
     <div>
       <span class="text-dark-500">Chat:</span>
-      <span class="font-medium"><%= link_to @record.chat_id, "/madmin/chats/#{@record.chat_id}", class: "text-dark-300 hover:text-dark-100" %></span>
+      <% chat_label = @record.chat&.messages&.min_by(&:created_at)&.content&.truncate(50) || "Chat ##{@record.chat_id.to_s[0, 8]}" %>
+      <span class="font-medium"><%= link_to chat_label, "/madmin/chats/#{@record.chat_id}", class: "text-dark-300 hover:text-dark-100" %></span>
     </div>
     <div>
       <span class="text-dark-500">Role:</span>
