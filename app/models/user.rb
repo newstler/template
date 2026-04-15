@@ -38,6 +38,10 @@ class User < ApplicationRecord
     update_column(:total_cost, chats.sum(:total_cost))
   end
 
+  def conversations_in(team)
+    conversations.where(team: team)
+  end
+
   def membership_for(team)
     memberships.find_by(team: team)
   end

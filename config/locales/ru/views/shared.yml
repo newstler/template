@@ -9,13 +9,15 @@ ru:
     sidebar:
       articles: Статьи
       billing: Оплата
-      chats: Чаты
+      chats: AI Чаты
       collapse: Свернуть боковую панель
+      conversations: Переписки
       create_team: Создать команду
       home: Главная
       languages: Языки
       members: Участники
       new_chat: Новый чат
+      new_conversation: Новая переписка
       notifications: Уведомления
       personal: Личное
       settings: Настройки

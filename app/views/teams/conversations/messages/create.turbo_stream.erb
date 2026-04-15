@@ -1,0 +1,7 @@
+<%= turbo_stream.append "conversation_messages" do %>
+  <%= render partial: "teams/conversations/conversation_message", locals: { message: @message } %>
+<% end %>
+
+<%= turbo_stream.replace "conversation_message_form" do %>
+  <%= render "teams/conversations/composer" %>
+<% end %>

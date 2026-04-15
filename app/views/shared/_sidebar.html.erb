@@ -27,7 +27,20 @@
     <% if current_team %>
       <%= render "shared/sidebar_link", path: team_root_path(current_team), icon: "home", label: t("shared.sidebar.home") %>
 
-      <%# Chats Section (collapsible) - only shown when chats are enabled %>
+      <%# Conversations Section (collapsible) %>
+      <% sidebar_conversations = current_user&.conversations_in(current_team)&.includes(:participants, :conversation_messages, :conversation_participants)&.order(updated_at: :desc)&.limit(10)&.to_a || [] %>
+      <% sidebar_conv_participants = sidebar_conversations.to_h { |c| [c.id, c.conversation_participants.find { |cp| cp.user_id == current_user.id }] } %>
+      <% total_conv_unread = sidebar_conv_participants.values.sum { |cp| cp&.unread_count.to_i } %>
+      <%= render "shared/sidebar_group", id: "conversations", icon: "messages", label: t("shared.sidebar.conversations"), path: team_conversations_path(current_team), badge: total_conv_unread do %>
+        <%= render "shared/sidebar_link", path: new_team_conversation_path(current_team), icon: "plus", label: t("shared.sidebar.new_conversation"), nested: true %>
+        <% sidebar_conversations.each do |conversation| %>
+          <% conv_label = conversation.title.presence || conversation.participants.reject { |p| p.id == current_user.id }.map { |p| p.name.presence || p.email }.join(", ") %>
+          <% conv_unread = sidebar_conv_participants[conversation.id]&.unread_count.to_i %>
+          <%= render "shared/sidebar_link", path: team_conversation_path(current_team, conversation), icon: "messages", label: conv_label.presence || t("common.untitled"), nested: true, truncate: true, badge: conv_unread %>
+        <% end %>
+      <% end %>
+
+      <%# AI Chats Section (collapsible) - only shown when chats are enabled %>
       <% if Setting.chats_enabled? %>
         <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: t("shared.sidebar.chats"), path: team_chats_path(current_team) do %>
           <%= render "shared/sidebar_link", path: new_team_chat_path(current_team), icon: "plus", label: t("shared.sidebar.new_chat"), nested: true %>

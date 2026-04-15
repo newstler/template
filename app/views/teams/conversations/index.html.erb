@@ -1,0 +1,37 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-white"><%= t(".heading") %></h1>
+    <%= link_to t(".new_conversation"), new_team_conversation_path(current_team), class: "inline-flex items-center gap-2 px-4 py-2 bg-accent-600 hover:bg-accent-500 text-white rounded-lg transition-colors" %>
+  </div>
+
+  <% if @conversations.any? %>
+    <div class="space-y-2">
+      <% @conversations.each do |conversation| %>
+        <%= link_to team_conversation_path(current_team, conversation),
+              class: "block card-bg p-4 hover:bg-dark-700 transition-colors rounded-lg" do %>
+          <div class="flex items-center justify-between">
+            <div class="flex-1 min-w-0">
+              <h3 class="font-semibold text-white truncate">
+                <%= conversation.title.presence || conversation.participants.map(&:name).join(", ") %>
+              </h3>
+              <% if (last_message = conversation.conversation_messages.max_by(&:created_at)) %>
+                <p class="text-sm text-dark-400 truncate mt-1">
+                  <%= last_message.user.name %>: <%= truncate(last_message.content, length: 100) %>
+                </p>
+              <% end %>
+            </div>
+            <span class="text-xs text-dark-500 flex-shrink-0 ml-4">
+              <%= time_ago_in_words(conversation.updated_at) %>
+            </span>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="card-bg p-8 text-center">
+      <p class="text-dark-400"><%= t(".empty") %></p>
+    </div>
+  <% end %>
+</div>

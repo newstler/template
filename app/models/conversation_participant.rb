@@ -22,4 +22,9 @@ class ConversationParticipant < ApplicationRecord
   def unread_since
     [ last_read_at, last_notified_at ].compact.max
   end
+
+  def unread_count
+    scope = conversation.conversation_messages.where.not(user_id: user_id)
+    last_read_at ? scope.where("created_at > ?", last_read_at).count : scope.count
+  end
 end

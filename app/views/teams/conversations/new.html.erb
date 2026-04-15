@@ -1,0 +1,40 @@
+<% content_for :title, t(".heading") %>
+
+<div class="max-w-2xl mx-auto py-12">
+  <div class="text-center mb-8">
+    <div class="w-16 h-16 bg-gradient-to-br from-accent-500 to-accent-700 rounded-2xl flex items-center justify-center mx-auto mb-4 shadow-lg shadow-accent-500/25">
+      <%= inline_svg "icons/messages.svg", class: "w-8 h-8 text-white" %>
+    </div>
+    <h1 class="text-2xl font-bold text-dark-50 mb-2"><%= t(".heading") %></h1>
+    <p class="text-dark-400"><%= t(".subheading") %></p>
+  </div>
+
+  <%= form_with model: @conversation, url: team_conversations_path(current_team), class: "space-y-6" do |f| %>
+    <div>
+      <%= f.label :title, t(".title_label"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.text_field :title, class: "w-full rounded-lg bg-dark-700 border border-dark-600 text-white px-4 py-2.5 focus:ring-2 focus:ring-accent-500 focus:border-transparent", placeholder: t(".title_placeholder") %>
+    </div>
+
+    <% if @team_members.any? %>
+      <div>
+        <label class="block text-sm font-medium text-dark-300 mb-2"><%= t(".participants_label") %></label>
+        <div class="space-y-2 max-h-64 overflow-y-auto rounded-lg bg-dark-700 border border-dark-600 p-3">
+          <% @team_members.each do |member| %>
+            <label class="flex items-center gap-3 p-2 rounded-md hover:bg-dark-600 cursor-pointer transition-colors">
+              <%= check_box_tag "conversation[participant_ids][]", member.id, false, class: "rounded bg-dark-600 border-dark-500 text-accent-500 focus:ring-accent-500" %>
+              <span class="text-white text-sm"><%= member.name.presence || member.email %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <div class="flex items-center justify-between pt-2">
+      <%= link_to team_conversations_path(current_team), class: "inline-flex items-center gap-2 text-dark-400 hover:text-dark-200 transition-colors" do %>
+        <%= inline_svg "icons/chevron-left.svg", class: "w-4 h-4" %>
+        <%= t(".back") %>
+      <% end %>
+      <%= f.submit t(".create"), class: "px-6 py-2.5 bg-accent-600 hover:bg-accent-500 text-white rounded-lg font-medium transition-colors cursor-pointer" %>
+    </div>
+  <% end %>
+</div>

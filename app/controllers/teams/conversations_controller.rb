@@ -2,8 +2,40 @@ class Teams::ConversationsController < ApplicationController
   PAGE_SIZE = 20
 
   before_action :authenticate_user!
-  before_action :set_conversation
-  before_action :ensure_participant!
+  before_action :set_conversation, only: :show
+  before_action :ensure_participant!, only: :show
+
+  def index
+    latest = current_team.conversations
+      .joins(:conversation_participants)
+      .where(conversation_participants: { user: current_user })
+      .order(updated_at: :desc)
+      .first
+
+    if latest
+      redirect_to team_conversation_path(current_team, latest)
+    else
+      redirect_to new_team_conversation_path(current_team)
+    end
+  end
+
+  def new
+    @conversation = Conversation.new
+    @team_members = current_team.users.where.not(id: current_user.id).order(:name)
+  end
+
+  def create
+    participant_ids = Array(params.dig(:conversation, :participant_ids)).reject(&:blank?)
+    participants = current_team.users.where(id: participant_ids).to_a
+    participants = ([ current_user ] + participants).uniq
+
+    @conversation = current_team.conversations.create!(title: params.dig(:conversation, :title))
+    participants.each do |user|
+      @conversation.conversation_participants.find_or_create_by!(user: user)
+    end
+
+    redirect_to team_conversation_path(current_team, @conversation)
+  end
 
   def show
     @participant = @conversation.conversation_participants.find_by!(user: current_user)
@@ -12,13 +44,8 @@ class Teams::ConversationsController < ApplicationController
     @messages = scope_for_messages
     @has_older = scope_for_older_messages.any?
 
-    respond_to do |format|
-      format.html
-      format.turbo_stream do
-        response.set_header("X-Has-Older", @has_older.to_s)
-        response.set_header("X-Oldest-Id", @messages.first&.id.to_s)
-      end
-    end
+    response.set_header("X-Has-Older", @has_older.to_s)
+    response.set_header("X-Oldest-Id", @messages.first&.id.to_s)
   end
 
   private

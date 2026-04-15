@@ -55,7 +55,7 @@ Rails.application.routes.draw do
     # Content
     resources :articles
     resources :languages, only: [ :index, :create, :destroy ], controller: "teams/languages"
-    resources :conversations, controller: "teams/conversations", only: [ :show ] do
+    resources :conversations, controller: "teams/conversations", only: [ :index, :new, :create, :show ] do
       resources :messages, controller: "teams/conversations/messages", only: [ :create ]
     end
 

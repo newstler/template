@@ -9,13 +9,15 @@ en:
     sidebar:
       articles: Articles
       billing: Billing
-      chats: Chats
+      chats: AI Chats
       collapse: Collapse sidebar
+      conversations: Conversations
       create_team: Create Team
       home: Home
       languages: Languages
       members: Members
       new_chat: New Chat
+      new_conversation: New Conversation
       notifications: Notifications
       personal: Personal
       settings: Settings

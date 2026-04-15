@@ -8,7 +8,10 @@ class Teams::Conversations::MessagesController < ApplicationController
     @message.user = current_user
 
     if @message.save
-      redirect_to team_conversation_path(current_team.slug, @conversation)
+      respond_to do |format|
+        format.turbo_stream
+        format.html { redirect_to team_conversation_path(current_team.slug, @conversation) }
+      end
     else
       @messages = @conversation.conversation_messages.includes(:user).chronologically.last(Teams::ConversationsController::PAGE_SIZE)
       @has_older = false

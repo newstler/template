@@ -4,8 +4,19 @@ ru:
     conversations:
       composer:
         placeholder: Напишите сообщение...
-        send: Отправить
       conversation_message:
         hidden_by_moderation: Это сообщение скрыто модерацией.
+      index:
+        empty: Переписок пока нет.
+        heading: Переписки
+        new_conversation: Новая переписка
+      new:
+        back: Назад к перепискам
+        create: Начать переписку
+        heading: Новая переписка
+        participants_label: Участники
+        subheading: Начните переписку с участниками команды.
+        title_label: Название
+        title_placeholder: Необязательное название переписки
       show:
         title: Переписка
