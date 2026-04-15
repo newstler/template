@@ -12,11 +12,29 @@ export default class extends Controller {
     this.loadCollapsedState()
     this.loadMinimizedState()
     this.checkMobileView()
+    this.restoreScrollPosition()
     window.addEventListener("resize", this.handleResize.bind(this))
+    document.addEventListener("turbo:before-visit", this.saveScrollPosition)
   }
 
   disconnect() {
     window.removeEventListener("resize", this.handleResize.bind(this))
+    document.removeEventListener("turbo:before-visit", this.saveScrollPosition)
+  }
+
+  saveScrollPosition = () => {
+    const nav = this.sidebarTarget?.querySelector("nav")
+    if (nav) {
+      sessionStorage.setItem("sidebar-scroll", nav.scrollTop)
+    }
+  }
+
+  restoreScrollPosition() {
+    const nav = this.sidebarTarget?.querySelector("nav")
+    const saved = sessionStorage.getItem("sidebar-scroll")
+    if (nav && saved) {
+      nav.scrollTop = parseInt(saved, 10)
+    }
   }
 
   toggle() {

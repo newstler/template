@@ -2,7 +2,8 @@
 <% unread_count = current_user_unread_notifications_count %>
 
 <%# Sidebar %>
-<aside data-sidebar-target="sidebar"
+<aside id="sidebar"
+       data-sidebar-target="sidebar"
        style="--sidebar-width: 16rem; width: var(--sidebar-width);"
        class="fixed inset-y-0 left-0 z-40 bg-dark-850 transform -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out flex flex-col">
 
@@ -27,8 +28,10 @@
     <% if current_team %>
       <%= render "shared/sidebar_link", path: team_root_path(current_team), icon: "home", label: t("shared.sidebar.home") %>
 
-      <%# Conversations Section (collapsible) %>
-      <% sidebar_conversations = current_user&.conversations_in(current_team)&.includes(:participants, :conversation_messages, :conversation_participants)&.order(updated_at: :desc)&.limit(10)&.to_a || [] %>
+      <%# Conversations Section (collapsible with pagination) %>
+      <% sidebar_conversations = current_user&.conversations_in(current_team)&.includes(:participants, :conversation_messages, :conversation_participants)&.order(updated_at: :desc)&.limit(11)&.to_a || [] %>
+      <% has_more_conversations = sidebar_conversations.size > 10 %>
+      <% sidebar_conversations = sidebar_conversations.first(10) %>
       <% sidebar_conv_participants = sidebar_conversations.to_h { |c| [c.id, c.conversation_participants.find { |cp| cp.user_id == current_user.id }] } %>
       <% total_conv_unread = sidebar_conv_participants.values.sum { |cp| cp&.unread_count.to_i } %>
       <%= render "shared/sidebar_group", id: "conversations", icon: "messages", label: t("shared.sidebar.conversations"), path: team_conversations_path(current_team), badge: total_conv_unread do %>
@@ -38,15 +41,28 @@
           <% conv_unread = sidebar_conv_participants[conversation.id]&.unread_count.to_i %>
           <%= render "shared/sidebar_link", path: team_conversation_path(current_team, conversation), icon: "messages", label: conv_label.presence || t("common.untitled"), nested: true, truncate: true, badge: conv_unread %>
         <% end %>
+        <% if has_more_conversations %>
+          <%= turbo_frame_tag "sidebar_conversations_page" do %>
+            <%= link_to t("shared.sidebar.load_more"), team_sidebar_conversations_path(current_team, offset: 10), class: "block pl-10 py-2 text-xs text-dark-500 hover:text-dark-300 transition-colors", data: { turbo_frame: "sidebar_conversations_page" } %>
+          <% end %>
+        <% end %>
       <% end %>
 
-      <%# AI Chats Section (collapsible) - only shown when chats are enabled %>
+      <%# AI Chats Section (collapsible with pagination) - only shown when chats are enabled %>
       <% if Setting.chats_enabled? %>
+        <% sidebar_chats = current_user&.chats&.where(team: current_team)&.order(updated_at: :desc)&.limit(11)&.to_a || [] %>
+        <% has_more_chats = sidebar_chats.size > 10 %>
+        <% sidebar_chats = sidebar_chats.first(10) %>
         <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: t("shared.sidebar.chats"), path: team_chats_path(current_team) do %>
           <%= render "shared/sidebar_link", path: new_team_chat_path(current_team), icon: "plus", label: t("shared.sidebar.new_chat"), nested: true %>
-          <% current_user&.chats&.where(team: current_team)&.order(updated_at: :desc)&.limit(10)&.each do |chat| %>
+          <% sidebar_chats.each do |chat| %>
             <% first_user_message = chat.first_user_message_preview.presence || t("common.untitled") %>
             <%= render "shared/sidebar_link", path: team_chat_path(current_team, chat), icon: "chat", label: first_user_message, nested: true, truncate: true %>
+          <% end %>
+          <% if has_more_chats %>
+            <%= turbo_frame_tag "sidebar_chats_page" do %>
+              <%= link_to t("shared.sidebar.load_more"), team_sidebar_chats_path(current_team, offset: 10), class: "block pl-10 py-2 text-xs text-dark-500 hover:text-dark-300 transition-colors", data: { turbo_frame: "sidebar_chats_page" } %>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>

@@ -52,6 +52,10 @@ Rails.application.routes.draw do
     resources :members, only: [ :index, :show, :new, :create, :destroy ], controller: "teams/members"
     resource :profile, only: [ :show, :edit, :update ], controller: "profiles"
 
+    # Sidebar pagination
+    get "sidebar/conversations", to: "teams/sidebar#conversations", as: :sidebar_conversations
+    get "sidebar/chats", to: "teams/sidebar#chats", as: :sidebar_chats
+
     # Content
     resources :articles
     resources :languages, only: [ :index, :create, :destroy ], controller: "teams/languages"

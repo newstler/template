@@ -21,7 +21,7 @@
   should_truncate = local_assigns[:truncate] || false
   counter_value = local_assigns[:counter]
   has_badge = local_assigns[:badge].to_i > 0
-  link_data = { turbo_frame: "main_content" }.merge(local_assigns[:data] || {})
+  link_data = local_assigns[:data] || {}
 
   base_classes = "relative flex items-center gap-3 px-3 py-2.5 text-sm rounded-lg transition-all duration-200 hover:bg-white/5"
   active_classes = "text-white"
