@@ -70,12 +70,18 @@ module Madmin
 
     def calculate_subscription_revenue
       Rails.cache.fetch("admin_subscription_revenue", expires_in: 15.minutes) do
-        fetch_stripe_revenue
+        fetch_stripe_mrr
+      end.merge(total: calculate_total_revenue)
+    end
+
+    def calculate_total_revenue
+      Rails.cache.fetch("admin:total_revenue", expires_in: 1.hour) do
+        fetch_stripe_total_revenue
       end
     end
 
-    def fetch_stripe_revenue
-      return { mrr: 0, total: 0, available: false } unless Setting.instance.stripe_secret_key.present?
+    def fetch_stripe_mrr
+      return { mrr: 0, available: false } unless Setting.instance.stripe_secret_key.present?
 
       subs = Stripe::Subscription.list(status: "active", limit: 100)
       mrr = subs.data.sum do |s|
@@ -85,13 +91,26 @@ module Madmin
         end
       end / 100.0
 
-      invoices = Stripe::Invoice.list(status: "paid", limit: 100)
-      total = invoices.data.sum(&:amount_paid) / 100.0
-
-      { mrr: mrr, total: total, available: true }
+      { mrr: mrr, available: true }
     rescue => e
-      Rails.logger.warn("Failed to fetch Stripe revenue: #{e.message}")
-      { mrr: 0, total: 0, available: false }
+      Rails.logger.warn("Failed to fetch Stripe MRR: #{e.message}")
+      { mrr: 0, available: false }
+    end
+
+    # Iterates every paid invoice via Stripe's auto-paging iterator so
+    # the admin total revenue metric reflects lifetime revenue, not
+    # just the most recent 100 invoices.
+    def fetch_stripe_total_revenue
+      return 0 unless Setting.instance.stripe_secret_key.present?
+
+      total = 0
+      Stripe::Invoice.list(status: "paid", limit: 100).auto_paging_each do |invoice|
+        total += invoice.amount_paid.to_i
+      end
+      total / 100.0
+    rescue => e
+      Rails.logger.warn("Failed to fetch Stripe total revenue: #{e.message}")
+      0
     end
   end
 end

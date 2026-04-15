@@ -35,7 +35,7 @@ en:
           mrr: Monthly revenue
           none: None
           past_due: Past due
-          total_revenue: Total revenue
+          total_revenue: Total revenue (all time)
           trialing: Trialing
         subtitle: Platform-wide overview
         title: Dashboard

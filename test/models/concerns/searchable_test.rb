@@ -80,7 +80,7 @@ class SearchableTest < ActiveSupport::TestCase
     assert_nothing_raised do
       SearchableThing.search('operator* NEAR "bar"')
     end
-    result = SearchableThing.search('operator NEAR bar')
+    result = SearchableThing.search("operator NEAR bar")
     assert_includes result, thing
   end
 end
