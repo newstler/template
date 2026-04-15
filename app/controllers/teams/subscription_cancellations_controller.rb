@@ -1,6 +1,7 @@
 class Teams::SubscriptionCancellationsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_team_admin!
+  before_action :require_stripe!
 
   def create
     current_team.cancel_subscription!

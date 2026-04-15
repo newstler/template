@@ -11,6 +11,12 @@ class ApplicationController < ActionController::Base
 
   private
 
+  def require_stripe!
+    return if Setting.stripe_configured?
+
+    redirect_to team_root_path(current_team), alert: t("controllers.application.stripe_not_configured")
+  end
+
   def set_current_user
     Current.user = current_user
   end

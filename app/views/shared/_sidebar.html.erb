@@ -67,11 +67,13 @@
             nested: true %>
 
         <% if current_membership&.admin? %>
-          <%= render "shared/sidebar_link",
-              path: team_billing_path(current_team),
-              icon: "credit-card",
-              label: t("shared.sidebar.billing"),
-              nested: true %>
+          <% if Setting.stripe_configured? %>
+            <%= render "shared/sidebar_link",
+                path: team_billing_path(current_team),
+                icon: "credit-card",
+                label: t("shared.sidebar.billing"),
+                nested: true %>
+          <% end %>
 
           <%= render "shared/sidebar_link",
               path: team_languages_path(current_team),

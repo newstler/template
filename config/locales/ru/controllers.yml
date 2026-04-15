@@ -20,6 +20,7 @@ ru:
       authenticate_admin: Войдите как администратор
       authenticate_user: Пожалуйста, войдите в систему
       chats_disabled: Чаты сейчас недоступны
+      stripe_not_configured: Оплата для этого приложения не настроена
       subscription_required: Для доступа к этой функции необходима активная подписка
       team_not_found: Команда не найдена или у вас нет доступа
     articles:

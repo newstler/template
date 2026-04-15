@@ -1,6 +1,7 @@
 class Teams::BillingController < ApplicationController
   before_action :authenticate_user!
   before_action :require_team_admin!
+  before_action :require_stripe!
 
   def show
     if current_team.stripe_customer_id.present?

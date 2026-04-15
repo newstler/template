@@ -70,6 +70,10 @@ class Setting < ApplicationRecord
     default_model.present? && get(:public_chats) != false && Model.configured_providers.any?
   end
 
+  def self.stripe_configured?
+    get(:stripe_secret_key).present?
+  end
+
   def self.reconfigure!
     instance.reconfigure!
   rescue ActiveRecord::StatementInvalid, ActiveRecord::NoDatabaseError
