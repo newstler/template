@@ -73,4 +73,19 @@ class DashboardHelperTest < ActionView::TestCase
     assert_equal "", attention_items_strip([])
     assert_equal "", attention_items_strip(nil)
   end
+
+  test "kpi_card renders label and value" do
+    html = render partial: "shared/kpi_card",
+                  locals: { label: "Users", value: "1,234", trend: 12 }
+    assert_match "Users", html
+    assert_match "1,234", html
+    assert_match "12", html
+  end
+
+  test "kpi_card without trend omits trend row" do
+    html = render partial: "shared/kpi_card",
+                  locals: { label: "Chats", value: 42, trend: nil, icon: nil, href: nil }
+    assert_match "Chats", html
+    assert_no_match(/text-emerald-400|text-red-400/, html)
+  end
 end

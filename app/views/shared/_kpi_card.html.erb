@@ -1,0 +1,24 @@
+<%# Locals: label:, value:, trend: (optional), icon: (optional), href: (optional) %>
+<% wrapper_tag = local_assigns[:href].present? ? :a : :div %>
+<% wrapper_attrs = local_assigns[:href].present? ? { href: href, class: "block" } : { class: "block" } %>
+
+<%= content_tag(wrapper_tag, wrapper_attrs) do %>
+  <div class="p-4 bg-dark-800 rounded-lg hover:bg-dark-700 transition-colors">
+    <div class="flex items-center justify-between mb-2">
+      <span class="text-sm text-dark-300"><%= label %></span>
+      <% if local_assigns[:icon].present? %>
+        <%= inline_svg "icons/#{icon}.svg", class: "w-4 h-4 text-dark-300" %>
+      <% end %>
+    </div>
+
+    <div class="text-2xl font-semibold text-white">
+      <%= value %>
+    </div>
+
+    <% if local_assigns[:trend].present? %>
+      <div class="mt-1 text-xs <%= trend >= 0 ? 'text-emerald-400' : 'text-red-400' %>">
+        <%= trend_arrow(trend) %> <%= trend.abs %>%
+      </div>
+    <% end %>
+  </div>
+<% end %>
