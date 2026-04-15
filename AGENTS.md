@@ -788,6 +788,99 @@ Tokenizer changes only affect new rows. Run `fts:rebuild` to re-index existing r
 - No facets — compose with `.where` scopes instead.
 - Public API is stable enough to swap to Meilisearch/Typesense under the hood without touching callers.
 
+## Embeddable + RAG Kit
+
+Vector search and semantic retrieval via [sqlite-vec](https://github.com/asg017/sqlite-vec), a loadable SQLite extension with zero runtime dependencies. Binaries for `linux-x86_64`, `linux-aarch64`, and `darwin-arm64` are vendored at `vendor/sqlite-vec/` and loaded on every new SQLite connection via `lib/sqlite_vec.rb` (wired into `config/database.yml`'s `extensions:` array).
+
+### Basic similarity search
+
+```ruby
+class Candidate < ApplicationRecord
+  include Embeddable
+
+  embeddable_source ->(r) { "#{r.profession} #{r.skills} #{r.experience_summary}" }
+  embeddable_model  -> { Setting.embedding_model }
+  embeddable_distance :cosine
+end
+
+Candidate.similar_to("welder with marine experience", limit: 20)
+# → ActiveRecord::Relation of Candidates ordered by vec0 distance ascending
+# → each record exposes #similarity_distance for UI display
+# → composable with .where / .includes
+```
+
+### Metadata pre-filtering
+
+Declare metadata columns in the vec0 table (via the generator's `--metadata` option). Then filter before KNN:
+
+```ruby
+embeddable_metadata ->(r) { { nationality: r.nationality_code, years_experience: r.experience_years } }
+
+Candidate.similar_to("welder", filter_by: { nationality: "UZ", years_experience: 3..10 })
+# → WHERE nationality = 'UZ' AND years_experience BETWEEN 3 AND 10 → KNN
+```
+
+Supported filter types: scalar, `Range`, and `Array` (IN).
+
+### Hybrid search (keyword + semantic)
+
+```ruby
+class Candidate < ApplicationRecord
+  include Searchable
+  include Embeddable
+  include HybridSearchable
+end
+
+Candidate.hybrid_search("welder marine experience", limit: 20)
+# → FTS5 bm25 + vector KNN, fused via Reciprocal Rank Fusion (k = Setting.rrf_k)
+# → score(id) = Σ 1 / (k + rank) across both result lists
+# → RRF sidesteps the score-normalization problem between bm25 and cosine similarity
+```
+
+### Chunking long documents
+
+```ruby
+class Article < ApplicationRecord
+  include Embeddable
+  include Chunkable
+  chunk_source ->(r) { r.body }
+  chunk_size 400     # words per chunk
+  chunk_overlap 40   # words carried into the next chunk
+end
+```
+
+Chunks live in the polymorphic `chunks` table and each chunk includes `Embeddable`, so they get their own vec0 rows in `chunks_embeddings`. Rechunking runs in `after_save_commit` only when the SHA256 of the source changes.
+
+### Installation
+
+```bash
+bin/rails generate embeddable:install Candidate 1536 --metadata nationality profession
+bin/rails db:migrate
+bin/rails 'embeddings:rebuild[Candidate]'
+```
+
+### Settings (editable in Madmin at `/madmin/ai_models`)
+
+- `Setting.embedding_model` — default `"text-embedding-3-small"`
+- `Setting.rrf_k` — default `60` (Cormack et al. SIGIR 2009 standard)
+
+### Caching
+
+- Re-embedding is skipped when the SHA256 of the source string is unchanged (compared against `source_hash` in the vec0 row before enqueuing `EmbedRecordJob`).
+- Metadata pre-filtering via `filter_by:` is always WHERE-before-KNN, cheaper than post-filtering.
+
+### Deployment
+
+When deploying a consuming app with sqlite-vec, ensure `vendor/sqlite-vec/` is copied into the container. The template's `Dockerfile` already does this via `COPY . .`; if a consuming app has its own Dockerfile, replicate that line (or add an explicit `COPY vendor/sqlite-vec vendor/sqlite-vec`).
+
+### Out of scope
+
+- External vector databases (Pinecone, Weaviate, pgvector)
+- Re-ranking models (Cohere Rerank)
+- Query expansion (HyDE, multi-query)
+
+The public API (`similar_to`, `hybrid_search`, `include Embeddable`) is stable enough to swap the concern's implementation without touching call sites.
+
 ## Testing
 
 Minitest + fixtures only (no RSpec, no FactoryBot):

@@ -1024,7 +1024,7 @@ Tech stack:
 
 ## Task 11: AGENTS.md update
 
-- [ ] **Step 1: Add section**
+- [x] **Step 1: Add section**
 
 ```markdown
 ## Embeddable + RAG Kit
@@ -1109,12 +1109,7 @@ bin/rails 'embeddings:rebuild[Candidate]'
 If you need any of these, swap the concern's implementation; the public API (`similar_to`, `hybrid_search`) is stable.
 ```
 
-- [ ] **Step 2: Commit**
-
-```bash
-git add AGENTS.md
-git commit -m "docs: AGENTS.md Embeddable + RAG kit section"
-```
+- [x] **Step 2: Commit**
 
 ---
 
