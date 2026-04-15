@@ -39,6 +39,34 @@ class MessageTest < ActiveSupport::TestCase
     assert_nil message.formatted_cost
   end
 
+  test "first user message sets the chat's first_user_message_preview" do
+    chat = chats(:one)
+    chat.messages.destroy_all
+    chat.update_columns(first_user_message_preview: nil)
+
+    Message.create!(chat: chat, role: "user", content: "Hello there, world")
+    assert_equal "Hello there, world", chat.reload.first_user_message_preview
+  end
+
+  test "subsequent user messages do not overwrite the preview" do
+    chat = chats(:one)
+    chat.messages.destroy_all
+    chat.update_columns(first_user_message_preview: nil)
+
+    Message.create!(chat: chat, role: "user", content: "First")
+    Message.create!(chat: chat, role: "user", content: "Second")
+    assert_equal "First", chat.reload.first_user_message_preview
+  end
+
+  test "assistant messages do not set the preview" do
+    chat = chats(:one)
+    chat.messages.destroy_all
+    chat.update_columns(first_user_message_preview: nil)
+
+    Message.create!(chat: chat, role: "assistant", content: "I am a bot")
+    assert_nil chat.reload.first_user_message_preview
+  end
+
   test "calculates cost based on token usage" do
     message = Message.new(
       chat: chats(:one),

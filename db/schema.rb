@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_15_130000) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_140000) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -59,6 +59,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_130000) do
 
   create_table "chats", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "first_user_message_preview"
     t.integer "messages_count", default: 0, null: false
     t.string "model_id"
     t.string "team_id"
