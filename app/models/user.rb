@@ -42,6 +42,21 @@ class User < ApplicationRecord
     conversations.where(team: team)
   end
 
+  # Returns every Noticed::Notification visible to this user:
+  # - notifications where this user is the recipient
+  # - notifications where a team the user admins is the recipient
+  # Team-level notifications are only visible to admins/owners of that team.
+  def visible_notifications
+    admin_team_ids = memberships.where(role: %w[admin owner]).pluck(:team_id)
+
+    Noticed::Notification.where(
+      "(recipient_type = 'User' AND recipient_id = :user_id) OR " \
+      "(recipient_type = 'Team' AND recipient_id IN (:team_ids))",
+      user_id: id,
+      team_ids: admin_team_ids.presence || [ nil ]
+    )
+  end
+
   def membership_for(team)
     memberships.find_by(team: team)
   end

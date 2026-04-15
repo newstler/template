@@ -143,7 +143,7 @@ class ApplicationController < ActionController::Base
   # persists via insert_all! and bypasses Noticed::Notification callbacks.
   def current_user_unread_notifications_count
     return 0 unless current_user
-    @current_user_unread_notifications_count ||= current_user.notifications.unread.count
+    @current_user_unread_notifications_count ||= current_user.visible_notifications.unread.count
   end
   helper_method :current_user_unread_notifications_count
 

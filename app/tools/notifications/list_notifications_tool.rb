@@ -18,7 +18,7 @@ module Notifications
     def call(limit: 20, unread_only: false)
       require_user!
 
-      scope = current_user.notifications.includes(:event).order(created_at: :desc)
+      scope = current_user.visible_notifications.includes(:event).order(created_at: :desc)
       scope = scope.unread if unread_only
       notifications = scope.limit(limit)
 

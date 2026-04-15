@@ -17,7 +17,7 @@ module Notifications
     def call(id:)
       require_user!
 
-      notification = current_user.notifications.find_by(id: id)
+      notification = current_user.visible_notifications.find_by(id: id)
       return error_response("Notification not found", code: "not_found") unless notification
 
       notification.mark_as_read!

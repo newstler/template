@@ -1,6 +1,7 @@
 class Team < ApplicationRecord
   extend FriendlyId
   include Countryable
+  include Notifiable
   include Subscribable
 
   friendly_id :name, use: :slugged

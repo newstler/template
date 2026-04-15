@@ -16,7 +16,7 @@ module Notifications
     def call
       require_user!
 
-      unread = current_user.notifications.unread
+      unread = current_user.visible_notifications.unread
       count = unread.count
       unread.mark_as_read
 

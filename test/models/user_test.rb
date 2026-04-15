@@ -105,4 +105,24 @@ class UserTest < ActiveSupport::TestCase
     user = User.create!(email: "loner@example.com")
     assert_not user.owner?
   end
+
+  test "visible_notifications includes own notifications" do
+    user = users(:one)
+    WelcomeNotifier.with(record: user).deliver(user)
+    assert user.visible_notifications.any?
+  end
+
+  test "visible_notifications includes team-recipient notifications when user admins the team" do
+    admin = users(:one)  # owner of team_one
+    team = teams(:one)
+    WelcomeNotifier.with(record: team).deliver(team)
+    assert_equal 1, admin.visible_notifications.where(recipient: team).count
+  end
+
+  test "visible_notifications excludes team-recipient notifications for non-admin members" do
+    member = users(:three)  # member of team_one, not admin
+    team = teams(:one)
+    WelcomeNotifier.with(record: team).deliver(team)
+    assert_equal 0, member.visible_notifications.where(recipient: team).count
+  end
 end

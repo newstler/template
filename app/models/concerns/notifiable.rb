@@ -6,6 +6,8 @@ module Notifiable
   end
 
   def wants_notification?(kind:, channel:)
+    return true unless respond_to?(:notification_preferences)
+
     kind_key = kind.to_s
     channel_key = channel.to_s
     pref = notification_preferences.dig(kind_key, channel_key)
