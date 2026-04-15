@@ -11,14 +11,25 @@
 # Install the FTS virtual table with the generator:
 #   bin/rails generate searchable:install Candidate profession skills notes
 #
+# Tested combinations:
+#   - insert / update / destroy callbacks keep the FTS table in sync
+#   - Cyrillic content (Сварщик)
+#   - Turkish diacritics via remove_diacritics 2 (Çilingir → "cilingir")
+#   - Composability with .where scopes and pagination
+#
 # Limitations (acceptable at template scale):
 #   - Two-step lookup (FTS ids → records) rather than a single JOIN so the
 #     result stays compatible with string primary keys.
-#   - No phrase queries unless the user escapes quotes.
-#   - No facets (compose with .where scopes instead).
+#   - No phrase queries unless the user escapes quotes — the concern
+#     sanitizes stray quotes into whitespace to avoid "malformed MATCH".
+#   - No facets (compose with .where scopes instead; FTS5 has no native
+#     support for aggregate facets anyway).
+#   - Aggregate cross-model ranking not supported — each model has its
+#     own FTS5 table and bm25 is computed per-table.
 #
 # For larger apps, the public API (include, searchable_fields, .search)
-# is stable enough to swap to Meilisearch/Typesense underneath.
+# is stable enough to swap to Meilisearch/Typesense underneath without
+# touching call sites.
 module Searchable
   extend ActiveSupport::Concern
 

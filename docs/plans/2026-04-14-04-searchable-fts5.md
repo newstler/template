@@ -532,7 +532,7 @@ git commit -m "docs: README Searchable section"
 
 ## Task 9: AGENTS.md update
 
-- [ ] **Step 1: Add section**
+- [x] **Step 1: Add section**
 
 Add after Currencies + Countries:
 
@@ -582,11 +582,11 @@ bin/rails 'fts:rebuild[Candidate]'
 Controlled by `Setting.search_tokenizer`, default `"porter unicode61 remove_diacritics 2"`. Override globally via Madmin; changes take effect for future indexes (run `fts:rebuild` to apply to existing indexes).
 ```
 
-- [ ] **Step 2: Run final CI**
+- [x] **Step 2: Run final CI**
 
 Run: `bin/ci`
 
-- [ ] **Step 3: Commit and PR**
+- [x] **Step 3: Commit and PR**
 
 ```bash
 git add AGENTS.md
@@ -615,7 +615,7 @@ FTS5 with `content='main_table'` assumes the main table uses `rowid` as the impl
 
 If a consuming app hits a limitation, upgrade to a dedicated search backend (Meilisearch, Typesense) — the `Searchable` concern's public API (`include Searchable`, `searchable_fields`, `.search(query)`) is stable enough to swap implementations underneath without touching callers.
 
-- [ ] **Step 1: Document in the concern**
+- [x] **Step 1: Document in the concern**
 
 Add a comment at the top of `app/models/concerns/searchable.rb`:
 
@@ -639,7 +639,7 @@ Add a comment at the top of `app/models/concerns/searchable.rb`:
 # is stable enough to swap to Meilisearch/Typesense underneath.
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add app/models/concerns/searchable.rb
