@@ -65,16 +65,9 @@ class ApplicationController < ActionController::Base
     end
 
     # 3. IP → country → currency
-    if request.remote_ip.present?
-      begin
-        result = Geocoder.search(request.remote_ip).first
-        if result&.country_code.present?
-          mapped = CurrencyConvertible::COUNTRY_CURRENCY[result.country_code.to_s.upcase]
-          return mapped if mapped
-        end
-      rescue StandardError => e
-        Rails.logger.debug "[detect_currency] Geocoder lookup failed: #{e.message}"
-      end
+    if (code = current_ip_country)
+      mapped = CurrencyConvertible::COUNTRY_CURRENCY[code]
+      return mapped if mapped
     end
 
     # 4. Current team default
@@ -84,6 +77,23 @@ class ApplicationController < ActionController::Base
     Setting.default_currency
   end
   helper_method :detect_currency
+
+  # Memoized per-request IP geolocation. Single lookup used by both
+  # currency detection and the country_code view helper.
+  def current_ip_country
+    return @current_ip_country if defined?(@current_ip_country)
+    @current_ip_country = nil
+    return @current_ip_country if request.remote_ip.blank?
+
+    begin
+      result = Geocoder.search(request.remote_ip).first
+      @current_ip_country = result&.country_code.to_s.upcase.presence
+    rescue StandardError => e
+      Rails.logger.debug "[current_ip_country] Geocoder lookup failed: #{e.message}"
+      @current_ip_country = nil
+    end
+  end
+  helper_method :current_ip_country
 
   def set_current_team
     @current_team = current_user&.teams&.find_by(slug: params[:team_slug])

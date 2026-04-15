@@ -33,15 +33,7 @@ module ApplicationHelper
   end
 
   def country_code
-    return @country_code if defined?(@country_code)
-
-    @country_code = Rails.cache.fetch("geo:#{request.remote_ip}", expires_in: 1.year) do
-      result = Geocoder.search(request.remote_ip).first
-      result&.country_code&.upcase
-    rescue => e
-      Rails.logger.warn "Geocoder lookup failed: #{e.message}"
-      nil
-    end
+    current_ip_country
   end
 
   # ── Markdown ──
