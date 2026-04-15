@@ -1,4 +1,7 @@
 class ConversationMessage < ApplicationRecord
+  include TranslatableMessage
+  include ModeratableMessage
+
   belongs_to :conversation, touch: true
   belongs_to :user
 
@@ -16,8 +19,14 @@ class ConversationMessage < ApplicationRecord
     body_translations[recipient.locale.to_s] || content
   end
 
-  def visible_to?(user)
-    flagged_at.blank? || user == self.user
+  # Flagged messages are hidden from non-sender, non-admin recipients.
+  # Returns true if: message is not flagged, OR recipient is the sender,
+  # OR recipient is a team admin in the conversation's team.
+  def visible_to?(recipient)
+    return true if flagged_at.blank?
+    return true if recipient == user
+    return false unless recipient.is_a?(User)
+    recipient.admin_of?(conversation.team)
   end
 
   private

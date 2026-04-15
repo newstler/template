@@ -5,5 +5,7 @@ ru:
       composer:
         placeholder: Напишите сообщение...
         send: Отправить
+      conversation_message:
+        hidden_by_moderation: Это сообщение скрыто модерацией.
       show:
         title: Переписка

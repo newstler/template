@@ -5,5 +5,7 @@ en:
       composer:
         placeholder: Write a message...
         send: Send
+      conversation_message:
+        hidden_by_moderation: This message was hidden by moderation.
       show:
         title: Conversation

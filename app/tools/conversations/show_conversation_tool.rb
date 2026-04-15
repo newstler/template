@@ -43,11 +43,13 @@ module Conversations
     private
 
     def serialize_message(message)
+      visible = message.visible_to?(current_user)
       {
         id: message.id,
         user_id: message.user_id,
-        content: message.body_for(current_user),
+        content: visible ? message.body_for(current_user) : nil,
         flagged: message.flagged_at.present?,
+        hidden: !visible,
         created_at: format_timestamp(message.created_at)
       }
     end
