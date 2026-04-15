@@ -33,7 +33,8 @@ module Madmin
         :currencylayer_api_key,
         :default_currency,
         :default_country_code,
-        :search_tokenizer
+        :search_tokenizer,
+        :conversation_digest_window_minutes
       )
     end
   end

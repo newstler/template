@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_15_020851) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_120000) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -99,10 +99,12 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_020851) do
     t.datetime "created_at", null: false
     t.datetime "last_notified_at"
     t.datetime "last_read_at"
+    t.datetime "pending_notification_at"
     t.datetime "updated_at", null: false
     t.string "user_id", null: false
     t.index ["conversation_id", "user_id"], name: "index_conversation_participants_on_conversation_id_and_user_id", unique: true
     t.index ["conversation_id"], name: "index_conversation_participants_on_conversation_id"
+    t.index ["pending_notification_at"], name: "index_conversation_participants_on_pending_notification_at"
     t.index ["user_id"], name: "index_conversation_participants_on_user_id"
   end
 
@@ -428,6 +430,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_020851) do
   end
 
   create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.integer "conversation_digest_window_minutes", default: 5, null: false
     t.datetime "created_at", null: false
     t.string "currencylayer_api_key"
     t.string "default_country_code"

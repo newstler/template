@@ -1,5 +1,6 @@
 class Setting < ApplicationRecord
   ALLOWED_KEYS = %i[
+    conversation_digest_window_minutes
     currencylayer_api_key
     default_country_code
     default_currency
@@ -64,6 +65,10 @@ class Setting < ApplicationRecord
 
   def self.rrf_k
     (get(:rrf_k) || 60).to_i
+  end
+
+  def self.conversation_digest_window_minutes
+    (get(:conversation_digest_window_minutes) || 5).to_i
   end
 
   def self.chats_enabled?

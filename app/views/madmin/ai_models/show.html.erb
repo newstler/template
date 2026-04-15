@@ -71,6 +71,20 @@
     </div>
 
     <div class="card-bg p-6 mb-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".conversations_heading") %></h2>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".conversations_description") %></p>
+      <dl class="space-y-4">
+        <div class="flex items-center justify-between">
+          <dt class="text-sm font-medium text-dark-400"><%= t(".conversation_digest_window_minutes") %></dt>
+          <dd class="flex items-center gap-2">
+            <span class="w-2 h-2 bg-green-400 rounded-full"></span>
+            <code class="text-sm text-dark-200 font-mono"><%= @setting.conversation_digest_window_minutes || 5 %></code>
+          </dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="card-bg p-6 mb-6">
       <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".search_heading") %></h2>
       <p class="text-sm text-dark-500 mb-4"><%= t(".search_description") %></p>
       <dl class="space-y-4">

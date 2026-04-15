@@ -3,3 +3,7 @@ production:
     class: RefreshCurrencyRatesJob
     queue: low_priority
     schedule: every day at 4am UTC
+  conversation_digest_sweep:
+    class: ConversationDigestSweepJob
+    queue: default
+    schedule: every 5 minutes

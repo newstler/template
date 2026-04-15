@@ -62,6 +62,19 @@
         </div>
       </div>
 
+      <%# Conversations %>
+      <div class="bg-dark-900 py-8 px-6 rounded-xl border border-dark-700">
+        <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".conversations_heading") %></h2>
+        <p class="text-sm text-dark-500 mb-6"><%= t(".conversations_description") %></p>
+        <div>
+          <%= form.label :conversation_digest_window_minutes, t(".conversation_digest_window_minutes"), class: "block text-sm font-medium text-dark-200 mb-2" %>
+          <%= form.number_field :conversation_digest_window_minutes,
+            min: 1,
+            class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm font-mono" %>
+          <p class="mt-1 text-xs text-dark-500"><%= t(".conversation_digest_window_minutes_hint") %></p>
+        </div>
+      </div>
+
       <%# Currency & Country %>
       <div class="bg-dark-900 py-8 px-6 rounded-xl border border-dark-700">
         <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".currency_country_heading") %></h2>

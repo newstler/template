@@ -12,7 +12,7 @@ class ConversationMessage < ApplicationRecord
   validate :content_or_attachments_present
 
   after_create_commit :broadcast_append_to_conversation
-  after_create_commit :schedule_digest_notifications
+  after_create_commit :mark_recipient_participants_pending
 
   def body_for(recipient)
     return content unless recipient&.locale.present?
@@ -43,7 +43,14 @@ class ConversationMessage < ApplicationRecord
                         locals: { message: self }
   end
 
-  def schedule_digest_notifications
-    ConversationDigestNotificationJob.set(wait: 2.minutes).perform_later(id)
+  # Mark every non-sender participant as pending a digest email. The
+  # ConversationDigestSweepJob sweeps these on a recurring schedule and
+  # flushes one email per participant per window.
+  def mark_recipient_participants_pending
+    conversation
+      .conversation_participants
+      .where.not(user_id: user_id)
+      .where(pending_notification_at: nil)
+      .update_all(pending_notification_at: Time.current, updated_at: Time.current)
   end
 end

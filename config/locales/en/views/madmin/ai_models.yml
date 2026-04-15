@@ -7,6 +7,13 @@ en:
         chat_description: The model used for new chat conversations when no specific
           model is selected.
         chat_heading: Chat Model
+        conversation_digest_window_minutes: Digest window (minutes)
+        conversation_digest_window_minutes_hint: 'How long to wait between conversation
+          digest sweeps. Participants with pending notifications older than this receive
+          a single digest email. Default: 5.'
+        conversations_description: Settings that control how conversation notifications
+          are batched and delivered.
+        conversations_heading: Conversations
         currency_country_description: Platform-wide fallbacks when no user or team
           preference is set.
         currency_country_heading: Currency & Country
@@ -56,6 +63,10 @@ en:
         chat_description: The model used for new chat conversations when no specific
           model is selected.
         chat_heading: Chat Model
+        conversation_digest_window_minutes: Digest window (minutes)
+        conversations_description: Settings that control how conversation notifications
+          are batched and delivered.
+        conversations_heading: Conversations
         currency_country_description: Platform-wide fallbacks when no user or team
           preference is set.
         currency_country_heading: Currency & Country
