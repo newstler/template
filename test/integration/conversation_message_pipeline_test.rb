@@ -33,4 +33,30 @@ class ConversationMessagePipelineTest < ActionDispatch::IntegrationTest
       )
     end
   end
+
+  test "regex moderation flags a message with an email address before delivery" do
+    message = ConversationMessage.create!(
+      conversation: @conversation,
+      user: @sender,
+      content: "Reach me at hello@example.com"
+    )
+
+    assert message.flagged_at.present?
+    assert_match(/\Aregex:/, message.flag_reason)
+
+    # Sender still sees it, recipient does not.
+    recipient = users(:two)
+    assert message.visible_to?(@sender)
+    assert_not message.visible_to?(recipient)
+  end
+
+  test "regex-flagged messages do not enqueue the LLM moderation job" do
+    assert_no_enqueued_jobs only: ModerateMessageJob do
+      ConversationMessage.create!(
+        conversation: @conversation,
+        user: @sender,
+        content: "email me at off@example.com"
+      )
+    end
+  end
 end

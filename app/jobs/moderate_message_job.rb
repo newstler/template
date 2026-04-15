@@ -5,20 +5,10 @@ class ModerateMessageJob < ApplicationJob
     message = ConversationMessage.find_by(id: message_id)
     return unless message
     return if message.content.blank?
-
-    patterns = if message.class.respond_to?(:moderation_patterns)
-      message.class.moderation_patterns
-    else
-      ModeratableMessage::DEFAULT_PATTERNS
-    end
-    pattern_hit = patterns.find { |p| message.content.match?(p) }
-    if pattern_hit
-      message.update_columns(
-        flagged_at: Time.current,
-        flag_reason: "pattern_match:#{pattern_hit.source[0, 50]}"
-      )
-      return
-    end
+    # Regex gate has already run synchronously in the model's
+    # before_validation callback. If a message reaches the LLM stage
+    # flagged, it was caught there — skip.
+    return if message.flagged_at.present?
 
     model = Setting.moderation_model
     return unless model
