@@ -1,0 +1,17 @@
+---
+en:
+  madmin:
+    team_languages:
+      index:
+        active: Active
+        all_languages: All languages
+        all_statuses: All
+        all_teams: All teams
+        col_added: Added
+        col_language: Language
+        col_status: Status
+        col_team: Team
+        disabled_status: Disabled
+        no_team_languages: No team languages yet
+        no_team_languages_hint: Teams pick languages from their settings page. Once
+          a team enables a language it appears here.

@@ -1,0 +1,62 @@
+---
+ru:
+  madmin:
+    active_storage:
+      attachments:
+        index:
+          col_blob_filename: Имя файла
+          col_created: Создано
+          col_name: Название
+          col_record: Запись
+          search_placeholder: Поиск вложений...
+        show:
+          attached_to: Прикреплено к %{record_type}
+          attachment_name: Название вложения
+          blob: Файл
+          click_to_preview: Нажмите для предпросмотра
+          created: Создано %{date}
+          delete: Удалить
+          delete_confirm: Вы уверены?
+          details: Детали
+          download: Скачать
+          file_size: Размер файла
+          name: Название
+          preview: Предпросмотр
+          record_id: ID записи
+          record_type: Тип записи
+      blobs:
+        index:
+          col_content_type: Тип содержимого
+          col_created: Создан
+          col_filename: Имя файла
+          col_size: Размер
+          search_placeholder: Поиск по имени файла...
+        show:
+          bytes: байт
+          checksum: Контрольная сумма
+          click_to_preview: Нажмите для предпросмотра
+          content_type: Тип содержимого
+          created: Создан
+          delete_confirm: Вы уверены?
+          details: Детали
+          download: Скачать
+          file_size: Размер файла
+          filename: Имя файла
+          key: Ключ
+          metadata: Метаданные
+          preview: Предпросмотр
+          service: Сервис
+          size: Размер
+          uploaded: Загружен %{date}
+      variant_records:
+        show:
+          blob: Файл
+          blob_filename: Имя файла
+          blob_size: Размер файла
+          delete: Удалить
+          delete_confirm: Вы уверены?
+          details: Детали
+          id: ID
+          original_preview: Предпросмотр оригинала
+          variant_of_blob: Вариант файла
+          variation_digest: Дайджест варианта

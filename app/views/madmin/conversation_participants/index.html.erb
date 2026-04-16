@@ -1,23 +1,23 @@
-<%= content_for :title, "Conversation Participants" %>
+<%= content_for :title, t(".heading") %>
 
 <header class="header">
-  <h1>Conversation Participants</h1>
+  <h1><%= t(".heading") %></h1>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :status, "Status", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :status, t(".col_status"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <%= f.select :status,
-          options_for_select([["All", ""], ["Has read", "read"], ["Never read", "never_read"]], params[:status]),
+          options_for_select([[t(".all_statuses"), ""], [t(".has_read"), "read"], [t(".never_read"), "never_read"]], params[:status]),
           {},
           class: "form-select" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:status].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -28,12 +28,12 @@
     <table>
       <thead>
         <tr>
-          <th><%= sortable :user_name, "User" %></th>
-          <th><%= sortable :conversation_title, "Conversation" %></th>
-          <th>Team</th>
-          <th><%= sortable :last_read_at, "Last Read" %></th>
-          <th><%= sortable :last_notified_at, "Last Notified" %></th>
-          <th><%= sortable :created_at, "Joined" %></th>
+          <th><%= sortable :user_name, t(".col_user") %></th>
+          <th><%= sortable :conversation_title, t(".col_conversation") %></th>
+          <th><%= t(".col_team") %></th>
+          <th><%= sortable :last_read_at, t(".col_last_read") %></th>
+          <th><%= sortable :last_notified_at, t(".col_last_notified") %></th>
+          <th><%= sortable :created_at, t(".col_joined") %></th>
         </tr>
       </thead>
 
@@ -44,7 +44,7 @@
               <%= link_to resource.show_path(record), class: "flex items-center gap-3 hover:underline" do %>
                 <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(record.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
                 <div>
-                  <div class="font-medium"><%= record.user.name.presence || "Unnamed" %></div>
+                  <div class="font-medium"><%= record.user.name.presence || t("madmin.common.unnamed") %></div>
                   <div class="text-xs text-dark-500"><%= record.user.email %></div>
                 </div>
               <% end %>
@@ -72,7 +72,7 @@
                   <%= time_ago_in_words(record.last_read_at) %> ago
                 </span>
               <% else %>
-                <span class="text-dark-500">Never</span>
+                <span class="text-dark-500"><%= t("madmin.common.never") %></span>
               <% end %>
             </td>
             <td class="text-sm">
@@ -95,8 +95,8 @@
     <div class="w-14 h-14 mx-auto rounded-2xl bg-dark-700 flex items-center justify-center mb-4">
       <%= inline_svg "icons/users.svg", class: "w-7 h-7 text-dark-400" %>
     </div>
-    <h2 class="text-lg font-semibold text-dark-100 mb-1">No participants yet</h2>
-    <p class="text-sm text-dark-400 max-w-md mx-auto">Participants are created when users join a conversation. They will appear here as soon as teams start messaging.</p>
+    <h2 class="text-lg font-semibold text-dark-100 mb-1"><%= t(".no_participants") %></h2>
+    <p class="text-sm text-dark-400 max-w-md mx-auto"><%= t(".no_participants_hint") %></p>
   </div>
 <% end %>
 

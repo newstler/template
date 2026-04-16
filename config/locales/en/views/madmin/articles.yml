@@ -1,0 +1,12 @@
+---
+en:
+  madmin:
+    articles:
+      index:
+        all_teams: All teams
+        articles: Articles
+        col_article: Article
+        col_author: Author
+        col_created: Created
+        col_team: Team
+        search_placeholder: Search articles...

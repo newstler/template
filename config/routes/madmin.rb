@@ -34,6 +34,7 @@ namespace :madmin do
     collection do
       post :sync
       patch :update_currency
+      patch :update_language
       patch :toggle_currency
       patch :bulk_toggle
       patch :bulk_toggle_currency

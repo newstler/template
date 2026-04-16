@@ -1,0 +1,15 @@
+---
+ru:
+  madmin:
+    conversations:
+      index:
+        col_conversation: Переписка
+        col_created: Создана
+        col_last_activity: Последняя активность
+        col_messages: Сообщения
+        col_participants: Участники
+        col_subject: Тема
+        col_teams: Команды
+        conversations: Переписки
+        moderation: Модерация
+        search_placeholder: Поиск по названию...

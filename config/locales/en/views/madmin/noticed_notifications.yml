@@ -1,0 +1,16 @@
+---
+en:
+  madmin:
+    noticed_notifications:
+      index:
+        all_statuses: All
+        all_types: All types
+        col_created: Created
+        col_event: Event
+        col_notification: Notification
+        col_recipient: Recipient
+        col_status: Status
+        deleted_user: Deleted user
+        heading: Notifications
+        read: Read
+        unread: Unread

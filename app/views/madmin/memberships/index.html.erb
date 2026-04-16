@@ -7,31 +7,31 @@
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search by user or team...", class: "form-input" %>
+      <%= f.label :q, t("madmin.common.search"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
     </div>
 
     <div>
-      <%= f.label :role, "Role", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :role, t(".col_role"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <%= f.select :role,
-          options_for_select([["All roles", ""]] + Membership::ROLES.map { |r| [r.titleize, r] }, params[:role]),
+          options_for_select([[t(".all_roles"), ""]] + Membership::ROLES.map { |r| [r.titleize, r] }, params[:role]),
           {},
           class: "form-select" %>
     </div>
 
     <div>
-      <%= f.label :team_id, "Team", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :team_id, t(".col_team"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <% teams = Team.order(:name).pluck(:name, :id) %>
       <%= f.select :team_id,
-          options_for_select([["All teams", ""]] + teams, params[:team_id]),
+          options_for_select([[t(".all_teams"), ""]] + teams, params[:team_id]),
           {},
           class: "form-select" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:q].present? || params[:role].present? || params[:team_id].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -41,10 +41,10 @@
   <table>
     <thead>
       <tr>
-        <th><%= sortable :user_name, "User" %></th>
-        <th><%= sortable :team_name, "Team" %></th>
-        <th><%= sortable :role, "Role" %></th>
-        <th><%= sortable :created_at, "Joined" %></th>
+        <th><%= sortable :user_name, t(".col_user") %></th>
+        <th><%= sortable :team_name, t(".col_team") %></th>
+        <th><%= sortable :role, t(".col_role") %></th>
+        <th><%= sortable :created_at, t(".col_joined") %></th>
       </tr>
     </thead>
 
@@ -55,7 +55,7 @@
             <%= link_to "/madmin/users/#{record.user.id}", class: "flex items-center gap-3" do %>
               <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(record.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
               <div>
-                <div class="font-medium"><%= record.user.name.presence || "Unnamed" %></div>
+                <div class="font-medium"><%= record.user.name.presence || t("madmin.common.unnamed") %></div>
                 <div class="text-xs text-dark-500"><%= record.user.email %></div>
               </div>
             <% end %>

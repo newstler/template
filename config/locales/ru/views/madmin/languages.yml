@@ -1,0 +1,25 @@
+---
+ru:
+  madmin:
+    languages:
+      index:
+        col_code: Код
+        col_currency_code: Код
+        col_currency_name: Название
+        col_enabled: Статус
+        col_name: Название
+        col_native_name: Родное название
+        col_symbol: Символ
+        default_currency: Валюта по умолчанию
+        default_currency_hint: Валюта по умолчанию для всей платформы, когда нет настроек
+          пользователя или команды.
+        default_language: Язык по умолчанию
+        default_language_hint: Язык платформы по умолчанию, когда нет настроек пользователя
+          или совпадения с языком браузера.
+        heading: Локализация
+        search_placeholder: Поиск языков...
+        select_currency: "-- Выберите валюту --"
+        select_language: "-- Выберите язык --"
+        sync_locale_files: Синхронизировать файлы локалей
+        tab_currencies: Валюты
+        tab_languages: Языки

@@ -5,7 +5,7 @@ module Madmin
     def toggle_ai_chats
       setting = Setting.instance
       setting.update!(ai_chats_enabled: !setting.ai_chats_enabled?)
-      redirect_to main_app.madmin_chats_path, notice: "AI Chats #{setting.ai_chats_enabled? ? 'enabled' : 'disabled'}"
+      redirect_to main_app.madmin_chats_path, notice: t("controllers.madmin.chats.toggle_ai_chats.#{setting.ai_chats_enabled? ? 'enabled' : 'disabled'}")
     end
 
     private

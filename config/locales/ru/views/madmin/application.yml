@@ -1,0 +1,29 @@
+---
+ru:
+  madmin:
+    application:
+      edit:
+        breadcrumb: Редактирование
+        description: Обновите данные %{resource} ниже
+        heading: 'Редактирование: %{resource}'
+      form:
+        cancel: Отмена
+        error:
+          few: "%{count} ошибки не позволили сохранить %{resource}:"
+          many: "%{count} ошибок не позволили сохранить %{resource}:"
+          one: "%{count} ошибка не позволила сохранить %{resource}:"
+          other: "%{count} ошибок не позволили сохранить %{resource}:"
+        view: Просмотр
+      index:
+        all: Все
+        clear: Сбросить
+        new: Создать %{resource}
+      new:
+        breadcrumb: Создание
+        description: Создать новый %{resource}
+        heading: 'Создание: %{resource}'
+      show:
+        delete: Удалить
+        delete_confirm: Вы уверены, что хотите удалить %{resource}?
+        details: 'Детали: %{resource}'
+        edit: Редактировать

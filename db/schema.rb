@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_15_202120) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_16_130000) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -42,6 +42,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_202120) do
   create_table "admins", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
+    t.string "locale"
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_admins_on_email", unique: true
   end
@@ -470,6 +471,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_202120) do
     t.string "currencylayer_api_key"
     t.string "default_country_code"
     t.string "default_currency", default: "USD"
+    t.string "default_language", default: "en"
     t.string "default_model"
     t.string "embedding_model", default: "text-embedding-3-small"
     t.text "enabled_currencies"
@@ -582,9 +584,9 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_15_202120) do
 
   # Virtual tables defined in this database.
   # Note that virtual tables may not work with other database engines. Be careful if changing database.
-  create_virtual_table "articles_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
+  create_virtual_table "articles_embeddings", "vec0", ["id text primary key", "embedding float[3072] distance_metric=cosine", "source_hash text"]
   create_virtual_table "articles_fts", "fts5", ["id UNINDEXED", "title", "tokenize='porter unicode61 remove_diacritics 2'"]
-  create_virtual_table "chunks_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
+  create_virtual_table "chunks_embeddings", "vec0", ["id text primary key", "embedding float[3072] distance_metric=cosine", "source_hash text"]
   create_virtual_table "searchable_things_embeddings", "vec0", ["tags text partition key", "id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
   create_virtual_table "searchable_things_fts", "fts5", ["id UNINDEXED", "name", "description", "tags", "tokenize='porter unicode61 remove_diacritics 2'"]
 end

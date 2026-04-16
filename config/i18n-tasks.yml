@@ -46,6 +46,7 @@ ignore_unused:
   - 'support.*'
   # Allow common keys to be defined even if not always used
   - 'common.*'
+  - 'madmin.common.*'
   - 'app_name'
   - 'messages.count'
   # Mobility translation keys are dynamic

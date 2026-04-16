@@ -8,7 +8,7 @@
   </h1>
 
   <div class="actions">
-    <%= button_to "Delete", resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+    <%= button_to t("madmin.active_storage.variant_records.show.delete"), resource.show_path(@record), method: :delete, data: { turbo_confirm: t("madmin.active_storage.variant_records.show.delete_confirm") }, class: "btn btn-danger" %>
   </div>
 </header>
 
@@ -25,7 +25,7 @@
     <% end %>
     <div class="flex-1">
       <h2 class="text-2xl font-bold text-dark-100"><%= @record.blob&.filename || "Unknown" %></h2>
-      <p class="text-dark-400 mt-1">Variant of blob</p>
+      <p class="text-dark-400 mt-1"><%= t("madmin.active_storage.variant_records.show.variant_of_blob") %></p>
       <p class="text-dark-500 text-sm mt-2 font-mono break-all">Digest: <%= @record.variation_digest&.truncate(40) %></p>
     </div>
   </div>
@@ -33,28 +33,28 @@
 
 <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Blob Filename</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t("madmin.active_storage.variant_records.show.blob_filename") %></div>
     <div class="text-xl font-bold text-dark-100"><%= @record.blob&.filename || "-" %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Blob Size</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t("madmin.active_storage.variant_records.show.blob_size") %></div>
     <div class="text-xl font-bold text-dark-100"><%= @record.blob ? number_to_human_size(@record.blob.byte_size) : "-" %></div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t("madmin.active_storage.variant_records.show.details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">ID</th>
+          <th class="label"><%= t("madmin.active_storage.variant_records.show.id") %></th>
           <td class="font-mono text-sm"><%= @record.id %></td>
         </tr>
         <tr>
-          <th class="label">Blob</th>
+          <th class="label"><%= t("madmin.active_storage.variant_records.show.blob") %></th>
           <td>
             <% if @record.blob %>
               <%= link_to @record.blob.filename, "/madmin/active_storage/blobs/#{@record.blob_id}", class: "text-accent-400 hover:underline" %>
@@ -65,7 +65,7 @@
           </td>
         </tr>
         <tr>
-          <th class="label">Variation Digest</th>
+          <th class="label"><%= t("madmin.active_storage.variant_records.show.variation_digest") %></th>
           <td class="font-mono text-sm break-all"><%= @record.variation_digest %></td>
         </tr>
       </tbody>
@@ -76,7 +76,7 @@
 <% if @record.blob&.image? %>
 <div class="card-bg mt-6 overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Original Blob Preview</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t("madmin.active_storage.variant_records.show.original_preview") %></h2>
   </div>
   <div class="p-5">
     <div class="bg-dark-800 rounded-lg p-4">

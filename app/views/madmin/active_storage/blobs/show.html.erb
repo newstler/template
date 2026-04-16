@@ -8,7 +8,7 @@
   </h1>
 
   <div class="actions">
-    <%= button_to "Delete", resource.show_path(@record), method: :delete, data: { turbo_confirm: "Are you sure?" }, class: "btn btn-danger" %>
+    <%= button_to t("madmin.common.delete"), resource.show_path(@record), method: :delete, data: { turbo_confirm: t("madmin.active_storage.blobs.show.delete_confirm") }, class: "btn btn-danger" %>
   </div>
 </header>
 
@@ -26,65 +26,65 @@
     <div class="flex-1">
       <h2 class="text-2xl font-bold text-dark-100"><%= @record.filename %></h2>
       <p class="text-dark-400 mt-1"><%= @record.content_type %></p>
-      <p class="text-dark-500 text-sm mt-2">Uploaded <%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t("madmin.active_storage.blobs.show.uploaded", date: @record.created_at.strftime("%-d %B %Y at %H:%M")) %></p>
     </div>
   </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">File Size</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t("madmin.active_storage.blobs.show.file_size") %></div>
     <div class="text-2xl font-bold text-dark-100"><%= number_to_human_size(@record.byte_size) %></div>
-    <div class="text-dark-500 text-xs mt-1"><%= number_with_delimiter(@record.byte_size) %> bytes</div>
+    <div class="text-dark-500 text-xs mt-1"><%= number_with_delimiter(@record.byte_size) %> <%= t("madmin.active_storage.blobs.show.bytes") %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Content Type</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t("madmin.active_storage.blobs.show.content_type") %></div>
     <div class="text-xl font-bold text-dark-100 truncate"><%= @record.content_type %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Service</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t("madmin.active_storage.blobs.show.service") %></div>
     <div class="text-xl font-bold text-dark-100"><%= @record.service_name %></div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t("madmin.active_storage.blobs.show.details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">Filename</th>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.filename") %></th>
           <td><%= @record.filename %></td>
         </tr>
         <tr>
-          <th class="label">Key</th>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.key") %></th>
           <td class="font-mono text-sm"><%= @record.key %></td>
         </tr>
         <tr>
-          <th class="label">Content Type</th>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.content_type") %></th>
           <td><%= @record.content_type %></td>
         </tr>
         <tr>
-          <th class="label">Size</th>
-          <td><%= number_to_human_size(@record.byte_size) %> (<%= number_with_delimiter(@record.byte_size) %> bytes)</td>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.size") %></th>
+          <td><%= number_to_human_size(@record.byte_size) %> (<%= number_with_delimiter(@record.byte_size) %> <%= t("madmin.active_storage.blobs.show.bytes") %>)</td>
         </tr>
         <tr>
-          <th class="label">Checksum</th>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.checksum") %></th>
           <td class="font-mono text-sm"><%= @record.checksum || "-" %></td>
         </tr>
         <tr>
-          <th class="label">Service</th>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.service") %></th>
           <td><%= @record.service_name %></td>
         </tr>
         <tr>
-          <th class="label">Created</th>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.created") %></th>
           <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
         <% if @record.metadata.present? %>
         <tr>
-          <th class="label">Metadata</th>
+          <th class="label"><%= t("madmin.active_storage.blobs.show.metadata") %></th>
           <td><pre class="text-sm"><%= @record.metadata %></pre></td>
         </tr>
         <% end %>
@@ -95,10 +95,10 @@
 
 <div class="card-bg mt-6 overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700 flex items-center justify-between">
-    <h2 class="text-lg font-semibold text-dark-100">Preview</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t("madmin.active_storage.blobs.show.preview") %></h2>
     <a href="<%= main_app.rails_blob_path(@record, disposition: :attachment) %>" download class="btn btn-secondary flex items-center gap-2">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
-      Download
+      <%= t("madmin.active_storage.blobs.show.download") %>
     </a>
   </div>
   <div class="p-5">
@@ -110,7 +110,7 @@
       <button type="button" class="bg-dark-800 rounded-lg p-8 cursor-pointer w-full flex flex-col items-center gap-4" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.rails_blob_path(@record, disposition: :inline) %>" data-lightbox-filename-value="<%= @record.filename %>" data-lightbox-type-value="document">
         <span class="text-6xl"><%= @record.content_type == "application/pdf" ? "📕" : "📄" %></span>
         <span class="text-dark-300 text-lg"><%= @record.filename %></span>
-        <span class="text-dark-500 text-sm">Click to preview</span>
+        <span class="text-dark-500 text-sm"><%= t("madmin.active_storage.blobs.show.click_to_preview") %></span>
       </button>
     <% end %>
   </div>

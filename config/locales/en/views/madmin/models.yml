@@ -1,0 +1,31 @@
+---
+en:
+  madmin:
+    models:
+      index:
+        all_providers: All providers
+        col_chats: Chats
+        col_family: Family
+        col_name: Name
+        col_provider: Provider
+        col_total_cost: Total Cost
+        refresh_confirm: Refresh all models from RubyLLM?
+        refresh_models: Refresh Models from RubyLLM
+        search_placeholder: Search models...
+      show:
+        capabilities: Capabilities
+        context_window: Context Window
+        created: Created
+        details: Details
+        family: Family
+        knowledge_cutoff: Knowledge Cutoff
+        max_output: Max Output
+        max_output_tokens: Max Output Tokens
+        metadata: Metadata
+        modalities: Modalities
+        model_id: Model ID
+        name: Name
+        pricing: Pricing
+        provider: Provider
+        total_chats: Total Chats
+        total_cost: Total Cost

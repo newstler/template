@@ -1,0 +1,15 @@
+---
+ru:
+  madmin:
+    teams:
+      index:
+        col_chats: Чаты
+        col_cost: Стоимость
+        col_created: Создана
+        col_members: Участники
+        col_owner: Владелец
+        col_subscription: Подписка
+        col_team: Команда
+        days_left: "%{count}д осталось"
+        no_owner: Нет владельца
+        search_placeholder: Поиск команд...

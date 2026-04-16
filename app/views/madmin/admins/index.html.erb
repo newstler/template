@@ -11,14 +11,14 @@
   <div class="filters mb-4 p-4 card-bg">
     <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
       <div>
-        <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-        <%= f.search_field :q, value: params[:q], placeholder: "Search admins...", class: "form-input" %>
+        <%= f.label :q, t("madmin.common.search"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+        <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
       </div>
 
       <div class="flex gap-2">
-        <%= f.submit "Filter", class: "btn btn-primary" %>
+        <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
         <% if params[:q].present? %>
-          <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+          <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
         <% end %>
       </div>
     <% end %>
@@ -28,8 +28,8 @@
     <table>
       <thead>
         <tr>
-          <th><%= sortable :email, "Email" %></th>
-          <th><%= sortable :created_at, "Created" %></th>
+          <th><%= sortable :email, t(".col_email") %></th>
+          <th><%= sortable :created_at, t(".col_created") %></th>
         </tr>
       </thead>
 

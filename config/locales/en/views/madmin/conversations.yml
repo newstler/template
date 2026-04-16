@@ -1,0 +1,15 @@
+---
+en:
+  madmin:
+    conversations:
+      index:
+        col_conversation: Conversation
+        col_created: Created
+        col_last_activity: Last Activity
+        col_messages: Messages
+        col_participants: Participants
+        col_subject: Subject
+        col_teams: Teams
+        conversations: Conversations
+        moderation: Moderation
+        search_placeholder: Search by title...

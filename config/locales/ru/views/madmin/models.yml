@@ -1,0 +1,31 @@
+---
+ru:
+  madmin:
+    models:
+      index:
+        all_providers: Все провайдеры
+        col_chats: Чаты
+        col_family: Семейство
+        col_name: Название
+        col_provider: Провайдер
+        col_total_cost: Общая стоимость
+        refresh_confirm: Обновить все модели из RubyLLM?
+        refresh_models: Обновить модели из RubyLLM
+        search_placeholder: Поиск моделей...
+      show:
+        capabilities: Возможности
+        context_window: Окно контекста
+        created: Создан
+        details: Детали
+        family: Семейство
+        knowledge_cutoff: Дата обучения
+        max_output: Макс. выход
+        max_output_tokens: Макс. токенов выхода
+        metadata: Метаданные
+        modalities: Модальности
+        model_id: ID модели
+        name: Название
+        pricing: Ценообразование
+        provider: Провайдер
+        total_chats: Всего чатов
+        total_cost: Общая стоимость

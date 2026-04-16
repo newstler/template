@@ -1,0 +1,18 @@
+---
+ru:
+  madmin:
+    conversation_participants:
+      index:
+        all_statuses: Все
+        col_conversation: Переписка
+        col_joined: Вступление
+        col_last_notified: Последнее уведомление
+        col_last_read: Последнее чтение
+        col_team: Команда
+        col_user: Пользователь
+        has_read: Прочитано
+        heading: Участники переписок
+        never_read: Не прочитано
+        no_participants: Участников пока нет
+        no_participants_hint: Участники создаются при вступлении в переписку. Они
+          появятся здесь, когда команды начнут общаться.

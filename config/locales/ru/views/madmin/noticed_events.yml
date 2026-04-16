@@ -1,0 +1,12 @@
+---
+ru:
+  madmin:
+    noticed_events:
+      index:
+        all_record_types: Все типы записей
+        all_types: Все типы
+        col_created: Создано
+        col_deliveries: Доставки
+        col_event_type: Тип события
+        col_record: Запись
+        heading: События уведомлений

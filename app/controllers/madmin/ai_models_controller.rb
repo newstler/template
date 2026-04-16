@@ -29,7 +29,7 @@ module Madmin
 
     def refresh_all
       Model.refresh!
-      redirect_to main_app.madmin_ai_models_path(tab: "available"), notice: "Models refreshed! Total: #{Model.count}"
+      redirect_to main_app.madmin_ai_models_path(tab: "available"), notice: t("controllers.madmin.ai_models.refresh.notice", count: Model.count)
     end
 
     def rebuild_embeddings

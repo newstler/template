@@ -1,0 +1,10 @@
+---
+en:
+  madmin:
+    tool_calls:
+      index:
+        col_created: Created
+        col_message: Message
+        col_name: Name
+        col_tool_call_id: Tool Call ID
+        search_placeholder: Search tool calls...

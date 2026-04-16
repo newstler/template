@@ -1,0 +1,13 @@
+---
+en:
+  madmin:
+    chats:
+      index:
+        ai_chats: AI Chats
+        col_cost: Cost
+        col_created: Created
+        col_first_message: First Message
+        col_messages: Messages
+        col_user: User
+        empty_chat: Empty chat
+        search_placeholder: Search by user email...

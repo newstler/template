@@ -1,0 +1,40 @@
+---
+en:
+  madmin:
+    application:
+      sidebar:
+        accounts: Accounts
+        active_storage: Active Storage
+        admins: Admins
+        ai_chats: AI Chats
+        ai_costs: AI Costs
+        ai_models: AI Models
+        api_keys: API Keys
+        articles: Articles
+        attachments: Attachments
+        blobs: Blobs
+        chats: Chats
+        content: Content
+        conv_messages: Messages
+        conv_participants: Participants
+        conversations: Conversations
+        conversations_group: Conversations
+        dashboard: Dashboard
+        error_dashboard: Error Dashboard
+        events: Events
+        jobs_dashboard: Jobs Dashboard
+        localization: Localization
+        mail: Mail
+        messages: Messages
+        notification_deliveries: Notifications
+        notifications: Notifications
+        open_main_app: Open Main App
+        prices: Prices
+        search: Search
+        settings: Settings
+        sign_out: Sign Out
+        sign_out_confirm: Sign out from admin panel?
+        teams: Teams
+        tool_calls: Tool Calls
+        users: Users
+        variants: Variants

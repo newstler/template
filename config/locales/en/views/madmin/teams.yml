@@ -1,0 +1,15 @@
+---
+en:
+  madmin:
+    teams:
+      index:
+        col_chats: Chats
+        col_cost: Cost
+        col_created: Created
+        col_members: Members
+        col_owner: Owner
+        col_subscription: Subscription
+        col_team: Team
+        days_left: "%{count}d left"
+        no_owner: No owner
+        search_placeholder: Search teams...

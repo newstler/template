@@ -1,0 +1,18 @@
+---
+en:
+  madmin:
+    conversation_participants:
+      index:
+        all_statuses: All
+        col_conversation: Conversation
+        col_joined: Joined
+        col_last_notified: Last Notified
+        col_last_read: Last Read
+        col_team: Team
+        col_user: User
+        has_read: Has read
+        heading: Conversation Participants
+        never_read: Never read
+        no_participants: No participants yet
+        no_participants_hint: Participants are created when users join a conversation.
+          They will appear here as soon as teams start messaging.

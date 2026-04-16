@@ -1,0 +1,12 @@
+---
+en:
+  madmin:
+    messages:
+      index:
+        all_roles: All roles
+        col_chat: Chat
+        col_cost: Cost
+        col_created: Created
+        col_message: Message
+        col_role: Role
+        search_placeholder: Search messages...

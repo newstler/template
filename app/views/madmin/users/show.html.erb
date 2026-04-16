@@ -8,7 +8,7 @@
   </h1>
 
   <div class="actions">
-    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
+    <%= link_to t("madmin.common.edit"), resource.edit_path(@record), class: "btn btn-secondary" %>
   </div>
 </header>
 
@@ -16,9 +16,9 @@
   <div class="flex items-start gap-6">
     <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.email.downcase.strip) %>?s=120&d=mp" class="w-24 h-24 rounded-full" alt="">
     <div class="flex-1">
-      <h2 class="text-2xl font-bold text-dark-100"><%= @record.name || "Unnamed User" %></h2>
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.name || t(".unnamed_user") %></h2>
       <p class="text-dark-400 mt-1"><%= @record.email %></p>
-      <p class="text-dark-500 text-sm mt-2">Member since <%= @record.created_at.strftime("%-d %B %Y") %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t(".member_since", date: @record.created_at.strftime("%-d %B %Y")) %></p>
     </div>
   </div>
 </div>
@@ -27,44 +27,44 @@
 <% total_messages = @record.chats.sum(&:messages_count) %>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Total Chats</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".total_chats") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= chats_count %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Total Messages</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".total_messages") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= total_messages %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Total Cost</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".total_cost") %></div>
     <div class="text-3xl font-bold <%= @record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= @record.formatted_total_cost || "$0.00" %></div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">ID</th>
+          <th class="label"><%= t(".id") %></th>
           <td class="font-mono text-sm"><%= @record.id %></td>
         </tr>
         <tr>
-          <th class="label">Email</th>
+          <th class="label"><%= t(".email") %></th>
           <td><%= @record.email %></td>
         </tr>
         <tr>
-          <th class="label">Name</th>
+          <th class="label"><%= t(".name") %></th>
           <td><%= @record.name || "-" %></td>
         </tr>
         <tr>
-          <th class="label">Created</th>
+          <th class="label"><%= t(".created") %></th>
           <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
+          <th class="label"><%= t(".updated") %></th>
           <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
       </tbody>
@@ -76,16 +76,16 @@
 <% if memberships.any? %>
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Teams (<%= memberships.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".teams", count: memberships.size) %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>Team</th>
-          <th>Role</th>
-          <th>Chats</th>
-          <th>Joined</th>
+          <th><%= t(".col_team") %></th>
+          <th><%= t(".col_role") %></th>
+          <th><%= t(".col_chats") %></th>
+          <th><%= t(".col_joined") %></th>
         </tr>
       </thead>
       <tbody>
@@ -121,17 +121,17 @@
 <% recent_chats = @record.chats.sort_by(&:created_at).reverse.first(5) %>
 <div class="card-bg mt-6 overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Recent Chats</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".recent_chats") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>First Message</th>
-          <th>Model</th>
-          <th>Messages</th>
-          <th>Cost</th>
-          <th>Created</th>
+          <th><%= t(".col_first_message") %></th>
+          <th><%= t(".col_model") %></th>
+          <th><%= t(".col_messages") %></th>
+          <th><%= t(".col_cost") %></th>
+          <th><%= t(".col_created") %></th>
         </tr>
       </thead>
       <tbody>
@@ -139,10 +139,10 @@
           <tr>
             <td class="max-w-xs">
               <%= link_to "/madmin/chats/#{chat.id}", class: "block truncate hover:underline" do %>
-                <%= chat.messages.min_by(&:created_at)&.content&.truncate(60) || "Empty chat" %>
+                <%= chat.messages.min_by(&:created_at)&.content&.truncate(60) || t(".empty_chat") %>
               <% end %>
             </td>
-            <td><%= chat.model&.name || "Default" %></td>
+            <td><%= chat.model&.name || t(".default_model") %></td>
             <td><%= chat.messages_count %></td>
             <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= chat.formatted_total_cost || "-" %></td>
             <td><%= chat.created_at.strftime("%-d %b %Y") %></td>
@@ -153,7 +153,7 @@
   </div>
   <% if chats_count > 5 %>
     <div class="px-5 py-3 border-t border-dark-700">
-      <%= link_to "View all #{chats_count} chats →", "/madmin/chats?q=#{@record.email}", class: "text-sm text-accent-400 hover:text-accent-300" %>
+      <%= link_to t(".view_all_chats", count: chats_count), "/madmin/chats?q=#{@record.email}", class: "text-sm text-accent-400 hover:text-accent-300" %>
     </div>
   <% end %>
 </div>

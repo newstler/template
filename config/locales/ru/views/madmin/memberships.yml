@@ -1,0 +1,12 @@
+---
+ru:
+  madmin:
+    memberships:
+      index:
+        all_roles: Все роли
+        all_teams: Все команды
+        col_joined: Вступление
+        col_role: Роль
+        col_team: Команда
+        col_user: Пользователь
+        search_placeholder: Поиск по пользователю или команде...

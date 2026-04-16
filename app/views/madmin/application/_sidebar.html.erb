@@ -38,7 +38,7 @@
       <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-pink-600 rounded-lg flex items-center justify-center">
         <%= inline_svg "icons/shield.svg", class: "w-5 h-5 text-white" %>
       </div>
-      <span class="font-semibold text-lg"><%= Madmin.site_name %> Admin</span>
+      <span class="font-semibold text-lg"><%= t("madmin.common.admin_title", site_name: Madmin.site_name) %></span>
     <% end %>
   </div>
 
@@ -46,18 +46,18 @@
   <nav class="flex-1 overflow-y-auto py-4 px-3 flex flex-col sidebar-scroll">
     <%# Dashboard (top entry) %>
     <div class="space-y-1">
-      <%= render "shared/sidebar_link", path: "/madmin", icon: "dashboard", label: "Dashboard" %>
+      <%= render "shared/sidebar_link", path: "/madmin", icon: "dashboard", label: t(".dashboard") %>
       <%= link_to "/red", class: "flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors", target: "_blank" do %>
         <%= inline_svg "icons/external-link.svg", class: "w-5 h-5 flex-shrink-0" %>
-        <span>Error Dashboard</span>
+        <span><%= t(".error_dashboard") %></span>
       <% end %>
       <%= link_to "/jobs", class: "flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors", target: "_blank" do %>
         <%= inline_svg "icons/external-link.svg", class: "w-5 h-5 flex-shrink-0" %>
-        <span>Jobs Dashboard</span>
+        <span><%= t(".jobs_dashboard") %></span>
       <% end %>
       <%= link_to main_app.root_path, class: "flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors", target: "_blank" do %>
         <%= inline_svg "icons/external-link.svg", class: "w-5 h-5 flex-shrink-0" %>
-        <span>Open Main App</span>
+        <span><%= t(".open_main_app") %></span>
       <% end %>
     </div>
 
@@ -65,55 +65,55 @@
 
     <%# Accounts %>
     <div class="mb-1 px-3">
-      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Accounts</span>
+      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider"><%= t(".accounts") %></span>
     </div>
     <div class="space-y-1">
-      <%= render "shared/sidebar_link", path: "/madmin/users", icon: "user", label: "Users", counter: sidebar_counts[:users] %>
-      <%= render "shared/sidebar_link", path: "/madmin/teams", icon: "users", label: "Teams", counter: sidebar_counts[:teams] %>
+      <%= render "shared/sidebar_link", path: "/madmin/users", icon: "user", label: t(".users"), counter: sidebar_counts[:users] %>
+      <%= render "shared/sidebar_link", path: "/madmin/teams", icon: "users", label: t(".teams"), counter: sidebar_counts[:teams] %>
     </div>
 
     <div class="my-2 border-t border-dark-700"></div>
 
     <%# Content %>
     <div class="mb-1 px-3">
-      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Content</span>
+      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider"><%= t(".content") %></span>
     </div>
 
     <%# Active Storage Section (collapsible) %>
-    <%= render "shared/sidebar_group", id: "storage", icon: "folder", label: "Active Storage" do %>
-      <%= render "shared/sidebar_link", path: "/madmin/active_storage/blobs", icon: "file", label: "Blobs", nested: true, counter: sidebar_counts[:blobs] %>
-      <%= render "shared/sidebar_link", path: "/madmin/active_storage/attachments", icon: "paperclip", label: "Attachments", nested: true, counter: sidebar_counts[:attachments] %>
-      <%= render "shared/sidebar_link", path: "/madmin/active_storage/variant_records", icon: "image", label: "Variants", nested: true, counter: sidebar_counts[:variants] %>
+    <%= render "shared/sidebar_group", id: "storage", icon: "folder", label: t("madmin.application.sidebar.active_storage") do %>
+      <%= render "shared/sidebar_link", path: "/madmin/active_storage/blobs", icon: "file", label: t("madmin.application.sidebar.blobs"), nested: true, counter: sidebar_counts[:blobs] %>
+      <%= render "shared/sidebar_link", path: "/madmin/active_storage/attachments", icon: "paperclip", label: t("madmin.application.sidebar.attachments"), nested: true, counter: sidebar_counts[:attachments] %>
+      <%= render "shared/sidebar_link", path: "/madmin/active_storage/variant_records", icon: "image", label: t("madmin.application.sidebar.variants"), nested: true, counter: sidebar_counts[:variants] %>
     <% end %>
 
     <%# Conversations (collapsible) %>
-    <%= render "shared/sidebar_group", id: "madmin-conversations", icon: "chat", label: "Conversations" do %>
-      <%= render "shared/sidebar_link", path: "/madmin/conversations", icon: "chat", label: "Conversations", nested: true, counter: sidebar_counts[:conversations] %>
-      <%= render "shared/sidebar_link", path: "/madmin/conversation_messages", icon: "chat", label: "Messages", nested: true, counter: sidebar_counts[:conversation_messages] %>
-      <%= render "shared/sidebar_link", path: "/madmin/conversation_participants", icon: "users", label: "Participants", nested: true, counter: sidebar_counts[:conversation_participants] %>
+    <%= render "shared/sidebar_group", id: "madmin-conversations", icon: "chat", label: t("madmin.application.sidebar.conversations_group") do %>
+      <%= render "shared/sidebar_link", path: "/madmin/conversations", icon: "chat", label: t("madmin.application.sidebar.conversations"), nested: true, counter: sidebar_counts[:conversations] %>
+      <%= render "shared/sidebar_link", path: "/madmin/conversation_messages", icon: "chat", label: t("madmin.application.sidebar.conv_messages"), nested: true, counter: sidebar_counts[:conversation_messages] %>
+      <%= render "shared/sidebar_link", path: "/madmin/conversation_participants", icon: "users", label: t("madmin.application.sidebar.conv_participants"), nested: true, counter: sidebar_counts[:conversation_participants] %>
     <% end %>
 
     <%# AI Chats (collapsible) %>
-    <%= render "shared/sidebar_group", id: "madmin-ai", icon: "sparkles", label: "AI Chats" do %>
-      <%= render "shared/sidebar_link", path: "/madmin/chats", icon: "sparkles", label: "Chats", nested: true, counter: sidebar_counts[:chats] %>
-      <%= render "shared/sidebar_link", path: "/madmin/messages", icon: "sparkles", label: "Messages", nested: true, counter: sidebar_counts[:messages] %>
-      <%= render "shared/sidebar_link", path: "/madmin/tool_calls", icon: "wrench", label: "Tool Calls", nested: true, counter: sidebar_counts[:tool_calls] %>
-      <%= render "shared/sidebar_link", path: "/madmin/ai_costs", icon: "dollar", label: "AI Costs", nested: true, counter: sidebar_counts[:ai_costs] %>
+    <%= render "shared/sidebar_group", id: "madmin-ai", icon: "sparkles", label: t("madmin.application.sidebar.ai_chats") do %>
+      <%= render "shared/sidebar_link", path: "/madmin/chats", icon: "sparkles", label: t("madmin.application.sidebar.chats"), nested: true, counter: sidebar_counts[:chats] %>
+      <%= render "shared/sidebar_link", path: "/madmin/messages", icon: "sparkles", label: t("madmin.application.sidebar.messages"), nested: true, counter: sidebar_counts[:messages] %>
+      <%= render "shared/sidebar_link", path: "/madmin/tool_calls", icon: "wrench", label: t("madmin.application.sidebar.tool_calls"), nested: true, counter: sidebar_counts[:tool_calls] %>
+      <%= render "shared/sidebar_link", path: "/madmin/ai_costs", icon: "dollar", label: t("madmin.application.sidebar.ai_costs"), nested: true, counter: sidebar_counts[:ai_costs] %>
     <% end %>
 
     <div class="space-y-1">
-      <%= render "shared/sidebar_link", path: "/madmin/articles", icon: "file", label: "Articles", counter: sidebar_counts[:articles] %>
+      <%= render "shared/sidebar_link", path: "/madmin/articles", icon: "file", label: t(".articles"), counter: sidebar_counts[:articles] %>
     </div>
 
     <div class="my-2 border-t border-dark-700"></div>
 
     <%# Notifications %>
     <div class="mb-1 px-3">
-      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider">Notifications</span>
+      <span class="text-[10px] font-semibold text-dark-600 uppercase tracking-wider"><%= t(".notifications") %></span>
     </div>
     <div class="space-y-1">
-      <%= render "shared/sidebar_link", path: "/madmin/noticed_events", icon: "bell", label: "Events", counter: sidebar_counts[:noticed_events] %>
-      <%= render "shared/sidebar_link", path: "/madmin/noticed_notifications", icon: "mail", label: "Notifications", counter: sidebar_counts[:noticed_notifications] %>
+      <%= render "shared/sidebar_link", path: "/madmin/noticed_events", icon: "bell", label: t(".events"), counter: sidebar_counts[:noticed_events] %>
+      <%= render "shared/sidebar_link", path: "/madmin/noticed_notifications", icon: "mail", label: t(".notification_deliveries"), counter: sidebar_counts[:noticed_notifications] %>
     </div>
 
     <%# Spacer to push admin section to bottom %>
@@ -125,14 +125,14 @@
   <div class="px-3 pb-4">
     <div class="border-t border-dark-700 pt-3 space-y-1">
       <%# Settings Section (collapsible) %>
-      <%= render "shared/sidebar_group", id: "settings", icon: "cog", label: "Settings", compact: true do %>
-        <%= render "shared/sidebar_link", path: "/madmin/admins", icon: "shield", label: "Admins", nested: true, counter: sidebar_counts[:admins] %>
-        <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "key", label: "API Keys", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/ai_models", icon: "sparkles", label: "AI Models", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/search", icon: "search", label: "Search", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/prices", icon: "dollar", label: "Prices", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/languages", icon: "globe", label: "Localization", nested: true %>
-        <%= render "shared/sidebar_link", path: "/madmin/mail", icon: "mail", label: "Mail", nested: true %>
+      <%= render "shared/sidebar_group", id: "settings", icon: "cog", label: t("madmin.application.sidebar.settings"), compact: true do %>
+        <%= render "shared/sidebar_link", path: "/madmin/admins", icon: "shield", label: t("madmin.application.sidebar.admins"), nested: true, counter: sidebar_counts[:admins] %>
+        <%= render "shared/sidebar_link", path: "/madmin/settings", icon: "key", label: t("madmin.application.sidebar.api_keys"), nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/ai_models", icon: "sparkles", label: t("madmin.application.sidebar.ai_models"), nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/search", icon: "search", label: t("madmin.application.sidebar.search"), nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/prices", icon: "dollar", label: t("madmin.application.sidebar.prices"), nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/languages", icon: "globe", label: t("madmin.application.sidebar.localization"), nested: true %>
+        <%= render "shared/sidebar_link", path: "/madmin/mail", icon: "mail", label: t("madmin.application.sidebar.mail"), nested: true %>
       <% end %>
       <% if defined?(current_admin) && current_admin %>
         <%= link_to "/madmin/admins/#{current_admin.id}", class: "flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors" do %>
@@ -140,9 +140,9 @@
           <span class="truncate"><%= current_admin.email %></span>
         <% end %>
       <% end %>
-      <%= button_to main_app.admins_session_path, method: :delete, class: "w-full flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors", data: { turbo_confirm: "Sign out from admin panel?" } do %>
+      <%= button_to main_app.admins_session_path, method: :delete, class: "w-full flex items-center gap-3 px-3 py-2 text-sm text-dark-500 hover:text-dark-200 hover:bg-white/5 rounded-lg transition-colors", data: { turbo_confirm: t(".sign_out_confirm") } do %>
         <%= inline_svg "icons/sign-out.svg", class: "w-5 h-5 flex-shrink-0" %>
-        <span>Sign Out</span>
+        <span><%= t(".sign_out") %></span>
       <% end %>
     </div>
   </div>

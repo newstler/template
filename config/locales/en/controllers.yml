@@ -31,18 +31,60 @@ en:
       update:
         notice: Article updated
     madmin:
+      admins:
+        send_magic_link:
+          notice: Magic link sent to %{email}!
+        update:
+          notice: Admin settings saved
       ai_models:
         rebuild_embeddings:
           notice: Rebuilding all embeddings in the background. This may take a few
             minutes.
+        refresh:
+          notice: 'Models refreshed! Total: %{count}'
         update:
           notice: AI model settings saved successfully
+      application:
+        authenticate_admin: Please log in as admin
+      articles:
+        toggle_articles:
+          disabled: Articles disabled
+          enabled: Articles enabled
+      chats:
+        toggle_ai_chats:
+          disabled: AI Chats disabled
+          enabled: AI Chats enabled
       common:
         rebuild_fts:
           notice: FTS index rebuilt successfully
+      conversations:
+        toggle_conversations:
+          disabled: Conversations disabled
+          enabled: Conversations enabled
+        toggle_moderation:
+          disabled: Conversation moderation disabled
+          enabled: Conversation moderation enabled
+      languages:
+        bulk_toggle:
+          disabled: All languages disabled
+          enabled: All languages enabled
+        bulk_toggle_currency:
+          disabled: All currencies disabled
+          enabled: All currencies enabled
+        sync:
+          added: Added %{languages}
+          already_synced: All locale files already synced
+          removed: Removed %{languages}
+        update_currency:
+          notice: Currency settings updated
+        update_language:
+          notice: Default language updated
       mail:
         update:
           notice: Mail settings saved successfully
+      models:
+        refresh:
+          notice: 'Models refreshed! Total: %{count}'
       prices:
         sync:
           notice: Prices synced from Stripe

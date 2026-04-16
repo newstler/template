@@ -9,6 +9,7 @@ class Setting < ApplicationRecord
     currencylayer_api_key
     default_country_code
     default_currency
+    default_language
     enabled_currencies
     default_model
     embedding_model
@@ -77,6 +78,10 @@ class Setting < ApplicationRecord
       current + [ code ]
     end
     instance.update!(enabled_currencies: updated.join(","))
+  end
+
+  def self.default_language
+    get(:default_language).presence || "en"
   end
 
   def self.default_country_code

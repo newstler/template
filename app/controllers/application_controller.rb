@@ -41,8 +41,8 @@ class ApplicationController < ActionController::Base
       end
     end
 
-    # 3. Default
-    I18n.default_locale
+    # 3. Platform default language
+    Setting.default_language.to_sym
   end
 
   def detected_locale

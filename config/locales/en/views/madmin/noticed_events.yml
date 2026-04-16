@@ -1,0 +1,12 @@
+---
+en:
+  madmin:
+    noticed_events:
+      index:
+        all_record_types: All record types
+        all_types: All types
+        col_created: Created
+        col_deliveries: Deliveries
+        col_event_type: Event Type
+        col_record: Record
+        heading: Notification Events

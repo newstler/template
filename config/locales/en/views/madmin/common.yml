@@ -1,0 +1,30 @@
+---
+en:
+  madmin:
+    common:
+      admin_title: "%{site_name} Admin"
+      ago: ago
+      all: All
+      all_items: All %{items}
+      cancel: Cancel
+      clear: Clear
+      delete: Delete
+      deleted: "(deleted)"
+      disable_all: Disable All
+      disabled: Disabled
+      edit: Edit
+      enable_all: Enable All
+      enabled: Enabled
+      'false': 'Off'
+      filter: Filter
+      from: 'From:'
+      never: Never
+      new: New %{resource}
+      no_content: "[No content]"
+      save: Save
+      search: Search
+      search_placeholder: Search %{resources}...
+      to: 'To:'
+      'true': 'On'
+      unnamed: Unnamed
+      view: View

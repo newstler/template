@@ -1,0 +1,46 @@
+---
+ru:
+  madmin:
+    dashboard:
+      show:
+        ago: назад
+        chats: чаты
+        cost_over_time: Стоимость по времени
+        cost_over_time_subtitle: Ежедневная стоимость AI за выбранный период
+        default_model: По умолчанию
+        empty_chat: Пустой чат
+        heading: Панель администратора
+        kpi:
+          total_chats: Всего чатов
+          total_cost: Общая стоимость AI
+          total_messages: Всего сообщений
+          total_teams: Всего команд
+          total_tokens: Токены AI
+          total_users: Всего пользователей
+        msgs: сообщ.
+        no_chats: Чатов пока нет
+        no_usage: AI пока не использовался
+        ranges:
+          30d: Последние 30 дней
+          7d: Последние 7 дней
+          90d: Последние 90 дней
+        recent_chats: Последние чаты
+        signups_over_time: Регистрации по времени
+        signups_over_time_subtitle: Ежедневные регистрации новых пользователей
+        subscriptions:
+          active: Активные
+          canceled: Отменённые
+          configure_stripe: Настроить Stripe
+          heading: Подписки
+          mrr: Ежемесячный доход
+          none: Нет
+          past_due: Просрочено
+          total_revenue: Общий доход (за всё время)
+          trialing: Пробный период
+        subtitle: Обзор платформы
+        title: Панель управления
+        top_teams: Топ команд по стоимости AI
+        top_users: Топ пользователей по стоимости AI
+        unknown: Неизвестно
+        unnamed: Без имени
+        view_all: Показать все

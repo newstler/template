@@ -1,0 +1,25 @@
+---
+en:
+  madmin:
+    languages:
+      index:
+        col_code: Code
+        col_currency_code: Code
+        col_currency_name: Name
+        col_enabled: Enabled
+        col_name: Name
+        col_native_name: Native Name
+        col_symbol: Symbol
+        default_currency: Default Currency
+        default_currency_hint: Platform-wide default when no user or team preference
+          is set.
+        default_language: Default Language
+        default_language_hint: Platform-wide default when no user preference or browser
+          language matches.
+        heading: Localization
+        search_placeholder: Search languages...
+        select_currency: "-- Select currency --"
+        select_language: "-- Select language --"
+        sync_locale_files: Sync Locale Files
+        tab_currencies: Currencies
+        tab_languages: Languages

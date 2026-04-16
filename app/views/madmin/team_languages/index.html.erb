@@ -7,35 +7,35 @@
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :team_id, "Team", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :team_id, t(".col_team"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <% teams = Team.order(:name).pluck(:name, :id) %>
       <%= f.select :team_id,
-          options_for_select([["All teams", ""]] + teams, params[:team_id]),
+          options_for_select([[t(".all_teams"), ""]] + teams, params[:team_id]),
           {},
           class: "form-select" %>
     </div>
 
     <div>
-      <%= f.label :language_id, "Language", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :language_id, t(".col_language"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <% languages = Language.order(:name).pluck(:name, :id) %>
       <%= f.select :language_id,
-          options_for_select([["All languages", ""]] + languages, params[:language_id]),
+          options_for_select([[t(".all_languages"), ""]] + languages, params[:language_id]),
           {},
           class: "form-select" %>
     </div>
 
     <div>
-      <%= f.label :active, "Status", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :active, t(".col_status"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <%= f.select :active,
-          options_for_select([["All", ""], ["Active", "true"], ["Disabled", "false"]], params[:active]),
+          options_for_select([[t(".all_statuses"), ""], [t(".active"), "true"], [t(".disabled_status"), "false"]], params[:active]),
           {},
           class: "form-select" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:team_id].present? || params[:language_id].present? || params[:active].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -46,10 +46,10 @@
     <table>
       <thead>
         <tr>
-          <th><%= sortable :team_name, "Team" %></th>
-          <th><%= sortable :language_name, "Language" %></th>
-          <th><%= sortable :active, "Status" %></th>
-          <th><%= sortable :created_at, "Added" %></th>
+          <th><%= sortable :team_name, t(".col_team") %></th>
+          <th><%= sortable :language_name, t(".col_language") %></th>
+          <th><%= sortable :active, t(".col_status") %></th>
+          <th><%= sortable :created_at, t(".col_added") %></th>
         </tr>
       </thead>
 
@@ -76,11 +76,11 @@
             <td>
               <% if record.active? %>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">
-                  <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5"></span>Active
+                  <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5"></span><%= t(".active") %>
                 </span>
               <% else %>
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">
-                  <span class="w-1.5 h-1.5 bg-dark-500 rounded-full mr-1.5"></span>Disabled
+                  <span class="w-1.5 h-1.5 bg-dark-500 rounded-full mr-1.5"></span><%= t(".disabled_status") %>
                 </span>
               <% end %>
             </td>
@@ -95,8 +95,8 @@
     <div class="w-14 h-14 mx-auto rounded-2xl bg-dark-700 flex items-center justify-center mb-4">
       <%= inline_svg "icons/globe.svg", class: "w-7 h-7 text-dark-400" %>
     </div>
-    <h2 class="text-lg font-semibold text-dark-100 mb-1">No team languages yet</h2>
-    <p class="text-sm text-dark-400 max-w-md mx-auto">Teams pick languages from their settings page. Once a team enables a language it appears here.</p>
+    <h2 class="text-lg font-semibold text-dark-100 mb-1"><%= t(".no_team_languages") %></h2>
+    <p class="text-sm text-dark-400 max-w-md mx-auto"><%= t(".no_team_languages_hint") %></p>
   </div>
 <% end %>
 

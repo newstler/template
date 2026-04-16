@@ -7,14 +7,14 @@
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search teams...", class: "form-input" %>
+      <%= f.label :q, t("madmin.common.search"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:q].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -24,13 +24,13 @@
   <table>
     <thead>
       <tr>
-        <th><%= sortable :name, "Team" %></th>
-        <th><%= sortable :owner_name, "Owner" %></th>
-        <th><%= sortable :members_count, "Members" %></th>
-        <th><%= sortable :chats_count, "Chats" %></th>
-        <th><%= sortable :total_cost, "Cost" %></th>
-        <th><%= sortable :subscription_status, "Subscription" %></th>
-        <th><%= sortable :created_at, "Created" %></th>
+        <th><%= sortable :name, t(".col_team") %></th>
+        <th><%= sortable :owner_name, t(".col_owner") %></th>
+        <th><%= sortable :members_count, t(".col_members") %></th>
+        <th><%= sortable :chats_count, t(".col_chats") %></th>
+        <th><%= sortable :total_cost, t(".col_cost") %></th>
+        <th><%= sortable :subscription_status, t(".col_subscription") %></th>
+        <th><%= sortable :created_at, t(".col_created") %></th>
       </tr>
     </thead>
 
@@ -49,12 +49,12 @@
               <%= link_to "/madmin/users/#{owner.user.id}", class: "flex items-center gap-3" do %>
                 <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(owner.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
                 <div>
-                  <div class="font-medium"><%= owner.user.name.presence || "Unnamed" %></div>
+                  <div class="font-medium"><%= owner.user.name.presence || t("madmin.common.unnamed") %></div>
                   <div class="text-xs text-dark-500"><%= owner.user.email %></div>
                 </div>
               <% end %>
             <% else %>
-              <span class="text-xs text-dark-500">No owner</span>
+              <span class="text-xs text-dark-500"><%= t(".no_owner") %></span>
             <% end %>
           </td>
           <td><%= record.memberships.size %></td>
@@ -76,7 +76,7 @@
               <%= status.titleize %>
             </span>
             <% if record.trialing? && record.trial_days_remaining > 0 %>
-              <span class="text-xs text-dark-500 ml-1"><%= record.trial_days_remaining %>d left</span>
+              <span class="text-xs text-dark-500 ml-1"><%= t(".days_left", count: record.trial_days_remaining) %></span>
             <% end %>
           </td>
           <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>

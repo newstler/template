@@ -3,9 +3,15 @@ en:
   madmin:
     ai_models:
       show:
+        all_providers: All providers
         chat_description: The model used for new chat conversations when no specific
           model is selected.
         chat_heading: Chat Model
+        col_chats: Chats
+        col_family: Family
+        col_name: Name
+        col_provider: Provider
+        col_total_cost: Total Cost
         embedding_description: Model and ranking knobs for vector similarity search
           and RAG retrieval via sqlite-vec.
         embedding_heading: Embeddings & RAG
@@ -18,7 +24,10 @@ en:
         rebuild_embeddings: Rebuild All Embeddings
         rebuild_embeddings_confirm: This will recreate vector tables and re-embed
           all records. Continue?
+        refresh_confirm: Refresh all models from RubyLLM?
         refresh_models: Refresh Models
+        search_placeholder: Search models...
+        select_model: "— Select model —"
         tab_available: Available
         tab_used: Used
         translation_description: The model used for automatic content translation

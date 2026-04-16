@@ -1,0 +1,12 @@
+---
+en:
+  madmin:
+    memberships:
+      index:
+        all_roles: All roles
+        all_teams: All teams
+        col_joined: Joined
+        col_role: Role
+        col_team: Team
+        col_user: User
+        search_placeholder: Search by user or team...

@@ -33,6 +33,12 @@ class Admins::SessionsController < ApplicationController
     admin = Admin.find_signed!(params[:token], purpose: :magic_link)
     session[:admin_id] = admin.id
 
+    # Auto-detect locale from browser on first sign-in
+    if admin.locale.blank?
+      detected = detect_browser_locale
+      admin.update_column(:locale, detected) if detected
+    end
+
     redirect_to "/madmin", notice: t("controllers.admins.sessions.verify.notice")
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     redirect_to new_admins_session_path, alert: t("controllers.admins.sessions.verify.alert")
@@ -41,5 +47,20 @@ class Admins::SessionsController < ApplicationController
   def destroy
     reset_session
     redirect_to root_path, notice: t("controllers.admins.sessions.destroy.notice")
+  end
+
+  private
+
+  def detect_browser_locale
+    return nil unless request.headers["Accept-Language"]
+
+    accepted = parse_accept_language(request.headers["Accept-Language"])
+    enabled = Language.enabled_codes
+
+    accepted.each do |code|
+      return code if enabled.include?(code)
+    end
+
+    nil
   end
 end

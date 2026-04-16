@@ -5,30 +5,30 @@
   <% setting = Setting.instance %>
   <%= button_to main_app.toggle_articles_madmin_articles_path, method: :patch, class: "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors #{setting.articles_enabled? ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25' : 'bg-dark-700 text-dark-400 hover:bg-dark-600'}" do %>
     <span class="w-2 h-2 rounded-full <%= setting.articles_enabled? ? 'bg-emerald-400' : 'bg-dark-500' %>"></span>
-    Articles <%= setting.articles_enabled? ? "On" : "Off" %>
+    <%= t(".articles") %> <%= setting.articles_enabled? ? t("madmin.common.on") : t("madmin.common.off") %>
   <% end %>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search articles...", class: "form-input" %>
+      <%= f.label :q, t("madmin.common.search"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
     </div>
 
     <div>
-      <%= f.label :team_id, "Team", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :team_id, t(".col_team"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <% teams = Team.order(:name).pluck(:name, :id) %>
       <%= f.select :team_id,
-          options_for_select([["All teams", ""]] + teams, params[:team_id]),
+          options_for_select([[t(".all_teams"), ""]] + teams, params[:team_id]),
           {},
           class: "form-select" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:q].present? || params[:team_id].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -38,10 +38,10 @@
   <table>
     <thead>
       <tr>
-        <th><%= sortable :title, "Article" %></th>
-        <th><%= sortable :team_name, "Team" %></th>
-        <th><%= sortable :author_name, "Author" %></th>
-        <th><%= sortable :created_at, "Created" %></th>
+        <th><%= sortable :title, t(".col_article") %></th>
+        <th><%= sortable :team_name, t(".col_team") %></th>
+        <th><%= sortable :author_name, t(".col_author") %></th>
+        <th><%= sortable :created_at, t(".col_created") %></th>
       </tr>
     </thead>
 

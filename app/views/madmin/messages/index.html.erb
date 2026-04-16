@@ -7,33 +7,33 @@
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search messages...", class: "form-input" %>
+      <%= f.label :q, t("madmin.common.search"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
     </div>
 
     <div>
       <%= f.label :role, class: "block text-sm font-medium text-dark-300 mb-1" %>
       <% roles = Message.distinct.order(:role).pluck(:role) %>
       <%= f.select :role,
-          options_for_select([["All roles", ""]] + roles.map { |r| [r.titleize, r] }, params[:role]),
+          options_for_select([[t(".all_roles"), ""]] + roles.map { |r| [r.titleize, r] }, params[:role]),
           {},
           class: "form-select" %>
     </div>
 
     <div>
-      <%= f.label :created_at_from, "From:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :created_at_from, t("madmin.common.from"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <%= f.date_field :created_at_from, value: params[:created_at_from], class: "form-input" %>
     </div>
 
     <div>
-      <%= f.label :created_at_to, "To:", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.label :created_at_to, t("madmin.common.to"), class: "block text-sm font-medium text-dark-300 mb-1" %>
       <%= f.date_field :created_at_to, value: params[:created_at_to], class: "form-input" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:q].present? || params[:role].present? || params[:created_at_from].present? || params[:created_at_to].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -43,11 +43,11 @@
   <table>
     <thead>
       <tr>
-        <th><%= sortable :content, "Message" %></th>
-        <th><%= sortable :chat_id, "Chat" %></th>
-        <th><%= sortable :role, "Role" %></th>
-        <th><%= sortable :cost, "Cost" %></th>
-        <th><%= sortable :created_at, "Created" %></th>
+        <th><%= sortable :content, t(".col_message") %></th>
+        <th><%= sortable :chat_id, t(".col_chat") %></th>
+        <th><%= sortable :role, t(".col_role") %></th>
+        <th><%= sortable :cost, t(".col_cost") %></th>
+        <th><%= sortable :created_at, t(".col_created") %></th>
       </tr>
     </thead>
 
@@ -56,7 +56,7 @@
         <tr>
           <td class="max-w-xs">
             <%= link_to resource.show_path(record), class: "block truncate" do %>
-              <%= record.content&.truncate(80) || "[No content]" %>
+              <%= record.content&.truncate(80) || t("madmin.common.no_content") %>
             <% end %>
           </td>
           <td class="max-w-[200px]">

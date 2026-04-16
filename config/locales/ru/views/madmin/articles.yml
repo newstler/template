@@ -1,0 +1,12 @@
+---
+ru:
+  madmin:
+    articles:
+      index:
+        all_teams: Все команды
+        articles: Статьи
+        col_article: Статья
+        col_author: Автор
+        col_created: Создана
+        col_team: Команда
+        search_placeholder: Поиск статей...

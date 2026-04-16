@@ -6,7 +6,7 @@ module Madmin
     def toggle_articles
       setting = Setting.instance
       setting.update!(articles_enabled: !setting.articles_enabled?)
-      redirect_to main_app.madmin_articles_path, notice: "Articles #{setting.articles_enabled? ? 'enabled' : 'disabled'}"
+      redirect_to main_app.madmin_articles_path, notice: t("controllers.madmin.articles.toggle_articles.#{setting.articles_enabled? ? 'enabled' : 'disabled'}")
     end
 
     private

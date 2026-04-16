@@ -1,0 +1,16 @@
+---
+ru:
+  madmin:
+    noticed_notifications:
+      index:
+        all_statuses: Все
+        all_types: Все типы
+        col_created: Создано
+        col_event: Событие
+        col_notification: Уведомление
+        col_recipient: Получатель
+        col_status: Статус
+        deleted_user: Удалённый пользователь
+        heading: Уведомления
+        read: Прочитано
+        unread: Не прочитано

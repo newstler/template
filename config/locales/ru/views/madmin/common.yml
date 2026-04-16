@@ -1,0 +1,30 @@
+---
+ru:
+  madmin:
+    common:
+      admin_title: "%{site_name} Админ"
+      ago: назад
+      all: Все
+      all_items: Все %{items}
+      cancel: Отмена
+      clear: Сбросить
+      delete: Удалить
+      deleted: "(удалено)"
+      disable_all: Отключить все
+      disabled: Отключено
+      edit: Редактировать
+      enable_all: Включить все
+      enabled: Включено
+      'false': Выкл
+      filter: Фильтр
+      from: 'С:'
+      never: Никогда
+      new: Новый %{resource}
+      no_content: "[Нет содержимого]"
+      save: Сохранить
+      search: Поиск
+      search_placeholder: Поиск %{resources}...
+      to: 'По:'
+      'true': Вкл
+      unnamed: Без имени
+      view: Просмотр
