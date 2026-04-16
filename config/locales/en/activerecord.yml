@@ -22,8 +22,8 @@ en:
         one: Article
         other: Articles
       chat:
-        one: Chat
-        other: Chats
+        one: AI Chat
+        other: AI Chats
       conversation:
         one: Conversation
         other: Conversations

@@ -28,10 +28,10 @@ ru:
         many: Статей
         other: Статьи
       chat:
-        one: Чат
-        few: Чата
-        many: Чатов
-        other: Чаты
+        one: AI-чат
+        few: AI-чата
+        many: AI-чатов
+        other: AI-чаты
       conversation:
         one: Переписка
         few: Переписки
