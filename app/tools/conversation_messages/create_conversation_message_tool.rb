@@ -25,6 +25,8 @@ module ConversationMessages
         end
 
         message = conversation.conversation_messages.create!(user: current_user, content: content)
+        message.broadcast_to_other_participants
+        message.mark_recipient_participants_pending
 
         success_response(
           {

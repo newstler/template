@@ -50,6 +50,7 @@ namespace :madmin do
   end
   resource :search, only: [ :show, :update ], controller: "rag" do
     post :rebuild_fts, on: :member
+    post :rebuild_embeddings, on: :member
   end
   resources :providers, only: [ :index ] do
     collection do

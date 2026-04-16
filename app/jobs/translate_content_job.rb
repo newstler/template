@@ -53,6 +53,9 @@ class TranslateContentJob < ApplicationJob
       end
       record.save!
     end
+
+    # Re-embed once all translations are done (last job to finish triggers it)
+    reembed_if_all_translations_complete(record) if record.class.include?(Embeddable)
   ensure
     record&.skip_translation_callbacks = false if record
   end
@@ -79,6 +82,17 @@ class TranslateContentJob < ApplicationJob
 
     translations = record.body_translations.merge(target_locale.to_s => translation)
     record.update_columns(body_translations: translations)
+  end
+
+  def reembed_if_all_translations_complete(record)
+    return unless record.respond_to?(:team) && record.team.present?
+
+    target_codes = record.team.translation_target_codes(exclude: record.source_locale.to_s)
+    return if target_codes.empty?
+
+    attributes = record.class.translatable_attributes
+    all_done = target_codes.all? { |locale| translations_exist?(record, locale, attributes) }
+    EmbedRecordJob.perform_later(record.class.name, record.id) if all_done
   end
 
   def record_cost(record, model, response)

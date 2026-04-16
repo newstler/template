@@ -8,6 +8,8 @@ class Teams::Conversations::MessagesController < ApplicationController
     @message.user = current_user
 
     if @message.save
+      @message.broadcast_to_other_participants
+      @message.mark_recipient_participants_pending
       respond_to do |format|
         format.turbo_stream
         format.html { redirect_to team_conversation_path(current_team.slug, @conversation) }
