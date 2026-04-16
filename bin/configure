@@ -374,6 +374,7 @@ FileUtils.chdir APP_ROOT do
 
   unless repo_url.to_s.empty?
     system("git", "remote", "add", "origin", repo_url)
+    system("git", "branch", "--set-upstream-to=origin/main", "main")
     success("  ✓ Set origin to #{repo_url}")
   end
 
