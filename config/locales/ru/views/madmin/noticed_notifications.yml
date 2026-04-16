@@ -14,3 +14,22 @@ ru:
         heading: Уведомления
         read: Прочитано
         unread: Не прочитано
+      show:
+        breadcrumb: Уведомления
+        read: Прочитано
+        unread: Не прочитано
+        delivered_to: Доставлено
+        recipient: Получатель
+        status: Статус
+        read_at: Прочитано в
+        seen_at: Просмотрено в
+        source_event: Исходное событие
+        label_event: Событие
+        label_record: Запись
+        label_event_created: Событие создано
+        label_params: Параметры
+        details: Детали
+        label_id: ID
+        label_type: Тип
+        label_recipient: Получатель
+        label_created: Создано

@@ -23,3 +23,26 @@ en:
         sync_locale_files: Sync Locale Files
         tab_currencies: Currencies
         tab_languages: Languages
+      show:
+        disable: Disable
+        enable: Enable
+        enabled_badge: Enabled
+        disabled_badge: Disabled
+        required_badge: Required
+        kpi_teams_using: Teams Using This Language
+        kpi_currently_active: Currently Active
+        kpi_created: Created
+        ago: "%{time} ago"
+        details: Details
+        label_code: Code
+        label_english_name: English Name
+        label_native_name: Native Name
+        label_enabled: Enabled
+        label_created: Created
+        label_updated: Updated
+        teams_heading: "Teams (%{count})"
+        col_team: Team
+        col_status: Status
+        col_added: Added
+        active: Active
+        disabled: Disabled

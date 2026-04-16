@@ -28,3 +28,5 @@ en:
       status_on: 'On'
       unnamed: Unnamed
       view: View
+      json_format_hint: Enter valid JSON format
+      json_placeholder: Enter valid JSON

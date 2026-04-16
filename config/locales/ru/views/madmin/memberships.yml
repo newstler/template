@@ -10,3 +10,15 @@ ru:
         col_team: Команда
         col_user: Пользователь
         search_placeholder: Поиск по пользователю или команде...
+      show:
+        in_team: "в"
+        member_since: "Участник с %{date}"
+        details: Детали
+        label_id: ID
+        label_user: Пользователь
+        label_email: Email
+        label_team: Команда
+        label_role: Роль
+        label_invited_by: Приглашён
+        label_joined: Вступление
+        label_updated: Обновлено

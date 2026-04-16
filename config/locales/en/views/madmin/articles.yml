@@ -10,3 +10,15 @@ en:
         col_created: Created
         col_team: Team
         search_placeholder: Search articles...
+      show:
+        by: "by"
+        in: "in"
+        details: Details
+        label_id: ID
+        label_team: Team
+        label_author: Author
+        label_created: Created
+        label_updated: Updated
+        title: Title
+        body: Body
+        no_translation: No translation available

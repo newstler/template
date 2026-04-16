@@ -15,3 +15,24 @@ ru:
         heading: Сообщения в переписках
         not_flagged: Без флага
         search_placeholder: Поиск по содержимому...
+      show:
+        breadcrumb: Сообщения в переписках
+        flagged_badge: С флагом
+        in_conversation: "в %{conversation}"
+        author: Автор
+        conversation: Переписка
+        attachments_label: Вложения
+        content: Содержимое
+        no_text_content: Нет текстового содержимого (сообщение только с вложением)
+        moderation_flag: Флаг модерации
+        flagged_at: Отмечено
+        reason: Причина
+        no_reason: Причина не указана
+        translations: Переводы
+        locale: Локаль
+        translation: Перевод
+        attachments_heading: "Вложения (%{count})"
+        details: Детали
+        id: ID
+        created: Создано
+        updated: Обновлено

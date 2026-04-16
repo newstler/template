@@ -13,3 +13,17 @@ ru:
         conversations: Переписки
         moderation: Модерация
         search_placeholder: Поиск по названию...
+      show:
+        conversation_prefix: "Переписка %{short_id}..."
+        in: "в"
+        re: "тема:"
+        created: "Создана %{date}"
+        participants_kpi: Участники
+        messages_kpi: Сообщения
+        last_activity_kpi: Последняя активность
+        participants_heading: "Участники (%{count})"
+        col_user: Пользователь
+        col_last_read: Последнее чтение
+        col_last_notified: Последнее уведомление
+        messages_heading: "Сообщения (%{count})"
+        flagged: Помечено

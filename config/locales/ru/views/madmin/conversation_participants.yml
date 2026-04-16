@@ -16,3 +16,28 @@ ru:
         no_participants: Участников пока нет
         no_participants_hint: Участники создаются при вступлении в переписку. Они
           появятся здесь, когда команды начнут общаться.
+      show:
+        breadcrumb: Участники переписок
+        in_conversation: "в %{conversation}"
+        joined: "Вступил(а) %{date}"
+        ago: "%{time} назад"
+        last_read: Последнее чтение
+        last_notified: Последнее уведомление
+        unread_status: Статус прочтения
+        unread_messages:
+          one: непрочитанное сообщение
+          few: непрочитанных сообщения
+          many: непрочитанных сообщений
+          other: непрочитанных сообщения
+        caught_up: Всё прочитано
+        conversation: Переписка
+        title: Название
+        teams: Команды
+        subject: Тема
+        started: Начато
+        joined_label: Вступление
+        updated: Обновлено
+        other_participants: "Другие участники (%{count})"
+        col_user: Пользователь
+        col_last_read: Последнее чтение
+        col_joined: Вступление

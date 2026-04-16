@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to "Notification Events", resource.index_path %>
+    <%= link_to t(".breadcrumb"), resource.index_path %>
     /
     <%= @record.type.to_s.sub("Notifier", "") %>
   </h1>
@@ -20,7 +20,7 @@
       <h2 class="text-2xl font-bold text-dark-100"><%= type_label %></h2>
       <% if @record.record_type.present? && @record.record %>
         <p class="text-dark-400 text-sm mt-1">
-          Triggered by
+          <%= t(".triggered_by") %>
           <% madmin_path = "/madmin/#{@record.record_type.underscore.pluralize}/#{@record.record_id}" %>
           <% if @record.record_type == "User" %>
             <%= link_to madmin_path, class: "inline-flex items-center gap-1.5 text-accent-400 hover:text-accent-300" do %>
@@ -39,15 +39,15 @@
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Event Type</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".event_type") %></div>
     <div class="text-lg font-bold text-purple-400"><%= type_label %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Deliveries</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".deliveries") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= @record.notifications_count.to_i %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Record</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".record") %></div>
     <% if @record.record_type.present? && @record.record %>
       <% madmin_record_path = "/madmin/#{@record.record_type.underscore.pluralize}/#{@record.record_id}" %>
       <% if @record.record_type == "User" %>
@@ -59,7 +59,7 @@
         <%= link_to(@record.record.try(:name) || @record.record.try(:title) || @record.record_type, madmin_record_path, class: "text-lg font-bold text-dark-100 hover:text-dark-50") %>
       <% end %>
     <% else %>
-      <div class="text-lg font-bold text-dark-100">None</div>
+      <div class="text-lg font-bold text-dark-100"><%= t(".none") %></div>
     <% end %>
   </div>
 </div>
@@ -67,7 +67,7 @@
 <% if @record.params.present? && @record.params.any? %>
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Event Params</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".event_params") %></h2>
   </div>
   <div class="p-5">
     <pre class="text-sm text-dark-300 bg-dark-900 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.params) %></pre>
@@ -77,18 +77,18 @@
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Deliveries (<%= notifications.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".deliveries_heading", count: notifications.size) %></h2>
   </div>
   <% if notifications.any? %>
     <div class="table-scroll">
       <table>
         <thead>
           <tr>
-            <th>Recipient</th>
-            <th>Type</th>
-            <th>Read</th>
-            <th>Seen</th>
-            <th>Created</th>
+            <th><%= t(".col_recipient") %></th>
+            <th><%= t(".col_type") %></th>
+            <th><%= t(".col_read") %></th>
+            <th><%= t(".col_seen") %></th>
+            <th><%= t(".col_created") %></th>
           </tr>
         </thead>
         <tbody>
@@ -103,7 +103,7 @@
                       <span class="text-sm"><%= recipient.name.presence || recipient.email %></span>
                     <% end %>
                   <% else %>
-                    <span class="text-dark-500 text-sm">Deleted user</span>
+                    <span class="text-dark-500 text-sm"><%= t(".deleted_user") %></span>
                   <% end %>
                 <% else %>
                   <span class="text-dark-300 text-sm"><%= notification.recipient_type %> #<%= notification.recipient_id.to_s[0, 8] %></span>
@@ -117,12 +117,12 @@
               <td>
                 <% if notification.read_at %>
                   <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">
-                    Read
+                    <%= t(".read") %>
                   </span>
                   <div class="text-[10px] text-dark-500 mt-0.5"><%= notification.read_at.strftime("%-d %b %H:%M") %></div>
                 <% else %>
                   <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-amber-500/15 text-amber-400">
-                    Unread
+                    <%= t(".unread") %>
                   </span>
                 <% end %>
               </td>
@@ -140,42 +140,42 @@
       </table>
     </div>
   <% else %>
-    <div class="p-5 text-dark-500 text-center">No deliveries yet</div>
+    <div class="p-5 text-dark-500 text-center"><%= t(".no_deliveries") %></div>
   <% end %>
 </div>
 
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">ID</th>
+          <th class="label"><%= t(".label_id") %></th>
           <td class="font-mono text-sm"><%= @record.id %></td>
         </tr>
         <tr>
-          <th class="label">Type</th>
+          <th class="label"><%= t(".label_type") %></th>
           <td><%= @record.type %></td>
         </tr>
         <tr>
-          <th class="label">Record</th>
+          <th class="label"><%= t(".label_record") %></th>
           <td>
             <% if @record.record_type.present? %>
               <span class="text-dark-300"><%= @record.record_type %></span>
               <span class="font-mono text-dark-500 text-sm ml-1"><%= @record.record_id %></span>
             <% else %>
-              <span class="text-dark-500">None</span>
+              <span class="text-dark-500"><%= t(".none") %></span>
             <% end %>
           </td>
         </tr>
         <tr>
-          <th class="label">Created</th>
+          <th class="label"><%= t(".label_created") %></th>
           <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
+          <th class="label"><%= t(".label_updated") %></th>
           <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
       </tbody>

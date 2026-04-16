@@ -19,37 +19,37 @@
 <div class="card-bg p-4 mb-6">
   <div class="grid grid-cols-2 md:grid-cols-3 gap-4 text-sm">
     <div>
-      <span class="text-dark-400">User:</span>
+      <span class="text-dark-400"><%= t(".user") %></span>
       <%= link_to @record.user&.name || @record.user&.email, "/madmin/users/#{@record.user_id}", class: "font-medium text-dark-300 hover:text-dark-100" %>
     </div>
     <div>
-      <span class="text-dark-400">Model:</span>
-      <span class="font-medium text-dark-100"><%= @record.model&.name || 'Default' %></span>
+      <span class="text-dark-400"><%= t(".model") %></span>
+      <span class="font-medium text-dark-100"><%= @record.model&.name || t(".default_model") %></span>
     </div>
     <div>
-      <span class="text-dark-400">Created:</span>
+      <span class="text-dark-400"><%= t(".created") %></span>
       <span class="font-medium text-dark-100"><%= @record.created_at.strftime("%B %d, %Y at %I:%M %p") %></span>
     </div>
     <div>
-      <span class="text-dark-400">Messages:</span>
+      <span class="text-dark-400"><%= t(".messages") %></span>
       <span class="font-medium text-dark-100"><%= @record.messages_count %></span>
     </div>
     <div>
-      <span class="text-dark-400">Tokens:</span>
+      <span class="text-dark-400"><%= t(".tokens") %></span>
       <span class="font-medium text-dark-100">
-        In: <%= @record.messages.sum { |m| m.input_tokens.to_i } %> / Out: <%= @record.messages.sum { |m| m.output_tokens.to_i } %>
+        <%= t(".input_tokens", count: @record.messages.sum { |m| m.input_tokens.to_i }) %> / <%= t(".output_tokens", count: @record.messages.sum { |m| m.output_tokens.to_i }) %>
       </span>
     </div>
     <div>
-      <span class="text-dark-400">Total Cost:</span>
-      <span class="font-medium text-emerald-400"><%= @record.formatted_total_cost || 'N/A' %></span>
+      <span class="text-dark-400"><%= t(".total_cost") %></span>
+      <span class="font-medium text-emerald-400"><%= @record.formatted_total_cost || t(".na") %></span>
     </div>
   </div>
 </div>
 
 <div class="card-bg">
   <div class="p-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Conversation</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".conversation") %></h2>
   </div>
   <div class="p-6 max-h-[600px] overflow-y-auto">
     <div class="max-w-3xl mx-auto">
@@ -88,7 +88,7 @@
             <div class="flex justify-center">
               <div>
                 <div class="bg-dark-700 text-dark-300 rounded-lg px-4 py-2 text-sm italic">
-                  <span class="font-medium">System:</span> <%= message.content.truncate(200) %>
+                  <span class="font-medium"><%= t(".system_label") %></span> <%= message.content.truncate(200) %>
                 </div>
                 <div class="text-xs text-dark-400 text-center mt-1"><%= message.created_at.strftime("%b %d, %Y at %I:%M %p") %></div>
               </div>

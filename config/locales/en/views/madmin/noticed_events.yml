@@ -10,3 +10,27 @@ en:
         col_event_type: Event Type
         col_record: Record
         heading: Notification Events
+      show:
+        breadcrumb: Notification Events
+        triggered_by: Triggered by
+        event_type: Event Type
+        deliveries: Deliveries
+        deliveries_heading: "Deliveries (%{count})"
+        record: Record
+        none: None
+        event_params: Event Params
+        col_recipient: Recipient
+        col_type: Type
+        col_read: Read
+        col_seen: Seen
+        col_created: Created
+        read: Read
+        unread: Unread
+        deleted_user: Deleted user
+        no_deliveries: No deliveries yet
+        details: Details
+        label_id: ID
+        label_type: Type
+        label_record: Record
+        label_created: Created
+        label_updated: Updated

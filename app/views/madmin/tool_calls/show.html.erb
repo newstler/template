@@ -19,16 +19,16 @@
         <span class="font-mono text-xs text-dark-500"><%= @record.tool_call_id %></span>
         <% if @record.message %>
           <span>&middot;</span>
-          <span>in
+          <span><%= t(".in_message") %>
             <%= link_to "/madmin/messages/#{@record.message_id}", class: "text-dark-200 hover:underline" do %>
-              <%= @record.message.content&.truncate(50) || "Message ##{@record.message_id.to_s[0, 8]}" %>
+              <%= @record.message.content&.truncate(50) || t(".message_label", id: @record.message_id.to_s[0, 8]) %>
             <% end %>
           </span>
         <% end %>
       </div>
       <p class="text-dark-500 text-sm mt-2">
         <%= @record.created_at.strftime("%-d %B %Y at %H:%M") %>
-        <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> ago)</span>
+        <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> <%= t("madmin.common.ago") %>)</span>
       </p>
     </div>
   </div>
@@ -36,41 +36,41 @@
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">Tool</th>
+          <th class="label"><%= t(".label_tool") %></th>
           <td class="font-medium text-dark-100"><%= @record.name %></td>
         </tr>
         <tr>
-          <th class="label">Tool Call ID</th>
+          <th class="label"><%= t(".label_tool_call_id") %></th>
           <td class="font-mono text-sm text-dark-300"><%= @record.tool_call_id %></td>
         </tr>
         <% if @record.message %>
           <tr>
-            <th class="label">Message</th>
+            <th class="label"><%= t(".label_message") %></th>
             <td>
               <%= link_to "/madmin/messages/#{@record.message_id}", class: "hover:underline block max-w-md truncate" do %>
-                <%= @record.message.content&.truncate(80) || "Message ##{@record.message_id.to_s[0, 8]}" %>
+                <%= @record.message.content&.truncate(80) || t(".message_label", id: @record.message_id.to_s[0, 8]) %>
               <% end %>
             </td>
           </tr>
           <% if @record.message.chat %>
             <tr>
-              <th class="label">Chat</th>
+              <th class="label"><%= t(".label_chat") %></th>
               <td>
                 <%= link_to "/madmin/chats/#{@record.message.chat_id}", class: "hover:underline" do %>
-                  Chat #<%= @record.message.chat_id.to_s[0, 8] %>
+                  <%= t(".chat_label", id: @record.message.chat_id.to_s[0, 8]) %>
                 <% end %>
               </td>
             </tr>
           <% end %>
         <% end %>
         <tr>
-          <th class="label">Created</th>
+          <th class="label"><%= t(".label_created") %></th>
           <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
       </tbody>
@@ -81,7 +81,7 @@
 <% if @record.arguments.present? %>
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Arguments</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".arguments") %></h2>
   </div>
   <div class="p-5">
     <pre class="text-sm text-dark-200 bg-dark-950 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.arguments) rescue @record.arguments.inspect %></pre>
@@ -92,7 +92,7 @@
 <% if @record.respond_to?(:result) && @record.result.present? %>
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Result</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".result") %></h2>
   </div>
   <div class="p-5">
     <pre class="text-sm text-dark-200 bg-dark-950 rounded-lg p-4 overflow-x-auto max-h-96"><%= JSON.pretty_generate(@record.result) rescue @record.result.to_s %></pre>

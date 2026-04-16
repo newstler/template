@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to "Conversation Messages", resource.index_path %>
+    <%= link_to t(".breadcrumb"), resource.index_path %>
     /
     <%= resource.display_name(@record) %>
   </h1>
@@ -18,12 +18,12 @@
         <% end %>
         <% if @record.flagged_at.present? %>
           <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-red-500/15 text-red-400">
-            Flagged
+            <%= t(".flagged_badge") %>
           </span>
         <% end %>
       </div>
       <p class="text-dark-500 text-sm mt-1">
-        in <%= link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...", "/madmin/conversations/#{@record.conversation_id}", class: "text-accent-400 hover:text-accent-300") %>
+        <%= t(".in_conversation", conversation: link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...", "/madmin/conversations/#{@record.conversation_id}", class: "text-accent-400 hover:text-accent-300")).html_safe %>
         &middot; <%= @record.conversation.teams.map(&:name).join(" · ") %>
       </p>
       <p class="text-dark-500 text-sm"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
@@ -33,30 +33,30 @@
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Author</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".author") %></div>
     <div class="text-lg font-bold text-dark-100"><%= @record.user.name.presence || @record.user.email %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Conversation</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".conversation") %></div>
     <%= link_to "/madmin/conversations/#{@record.conversation_id}", class: "text-lg font-bold text-accent-400 hover:text-accent-300" do %>
       <%= @record.conversation.title.presence || "Conv #{@record.conversation_id[0, 8]}..." %>
     <% end %>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Attachments</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".attachments_label") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= @record.attachments.size %></div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Content</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".content") %></h2>
   </div>
   <div class="p-5">
     <% if @record.content.present? %>
       <div class="text-dark-200 whitespace-pre-wrap"><%= @record.content %></div>
     <% else %>
-      <p class="text-dark-500 italic">No text content (attachment-only message)</p>
+      <p class="text-dark-500 italic"><%= t(".no_text_content") %></p>
     <% end %>
   </div>
 </div>
@@ -64,18 +64,18 @@
 <% if @record.flagged_at.present? %>
 <div class="card-bg overflow-hidden mb-6 ring-1 ring-red-500/30">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-red-400">Moderation Flag</h2>
+    <h2 class="text-lg font-semibold text-red-400"><%= t(".moderation_flag") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">Flagged At</th>
+          <th class="label"><%= t(".flagged_at") %></th>
           <td><%= @record.flagged_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
         <tr>
-          <th class="label">Reason</th>
-          <td><%= @record.flag_reason.presence || "No reason provided" %></td>
+          <th class="label"><%= t(".reason") %></th>
+          <td><%= @record.flag_reason.presence || t(".no_reason") %></td>
         </tr>
       </tbody>
     </table>
@@ -86,14 +86,14 @@
 <% if @record.body_translations.present? && @record.body_translations.any? %>
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Translations</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".translations") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>Locale</th>
-          <th>Translation</th>
+          <th><%= t(".locale") %></th>
+          <th><%= t(".translation") %></th>
         </tr>
       </thead>
       <tbody>
@@ -116,7 +116,7 @@
 <% if @record.attachments.any? %>
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Attachments (<%= @record.attachments.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".attachments_heading", count: @record.attachments.size) %></h2>
   </div>
   <div class="p-5">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -136,21 +136,21 @@
 
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">ID</th>
+          <th class="label"><%= t(".id") %></th>
           <td class="font-mono text-sm"><%= @record.id %></td>
         </tr>
         <tr>
-          <th class="label">Created</th>
+          <th class="label"><%= t(".created") %></th>
           <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
+          <th class="label"><%= t(".updated") %></th>
           <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
       </tbody>

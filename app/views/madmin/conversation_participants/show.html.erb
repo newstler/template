@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to "Conversation Participants", resource.index_path %>
+    <%= link_to t(".breadcrumb"), resource.index_path %>
     /
     <%= resource.display_name(@record) %>
   </h1>
@@ -16,59 +16,58 @@
         <%= link_to @record.user.name.presence || @record.user.email, "/madmin/users/#{@record.user_id}", class: "hover:underline" %>
       </h2>
       <p class="text-dark-500 text-sm mt-1">
-        in
-        <%= link_to @record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...",
+        <%= t(".in_conversation", conversation: link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...",
               "/madmin/conversations/#{@record.conversation_id}",
-              class: "text-accent-400 hover:text-accent-300" %>
+              class: "text-accent-400 hover:text-accent-300")).html_safe %>
         &middot;
         <%= @record.conversation.teams.map { |t| link_to(t.name, "/madmin/teams/#{t.slug}", class: "text-dark-300 hover:text-dark-100") }.join(" · ").html_safe %>
       </p>
-      <p class="text-dark-500 text-sm mt-1">Joined <%= @record.created_at.strftime("%-d %B %Y") %> <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> ago)</span></p>
+      <p class="text-dark-500 text-sm mt-1"><%= t(".joined", date: @record.created_at.strftime("%-d %B %Y")) %> <span class="text-dark-600">(<%= t(".ago", time: time_ago_in_words(@record.created_at)) %>)</span></p>
     </div>
   </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Last Read</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".last_read") %></div>
     <% if @record.last_read_at %>
-      <div class="text-lg font-bold text-dark-100"><%= time_ago_in_words(@record.last_read_at) %> ago</div>
+      <div class="text-lg font-bold text-dark-100"><%= t(".ago", time: time_ago_in_words(@record.last_read_at)) %></div>
       <div class="text-xs text-dark-500 mt-1"><%= @record.last_read_at.strftime("%-d %b %Y %H:%M") %></div>
     <% else %>
-      <div class="text-lg font-bold text-dark-400">Never</div>
+      <div class="text-lg font-bold text-dark-400"><%= t("madmin.common.never") %></div>
     <% end %>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Last Notified</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".last_notified") %></div>
     <% if @record.last_notified_at %>
-      <div class="text-lg font-bold text-dark-100"><%= time_ago_in_words(@record.last_notified_at) %> ago</div>
+      <div class="text-lg font-bold text-dark-100"><%= t(".ago", time: time_ago_in_words(@record.last_notified_at)) %></div>
       <div class="text-xs text-dark-500 mt-1"><%= @record.last_notified_at.strftime("%-d %b %Y %H:%M") %></div>
     <% else %>
       <div class="text-lg font-bold text-dark-400">-</div>
     <% end %>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Unread Status</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".unread_status") %></div>
     <% unread_cutoff = @record.unread_since %>
     <% recent_messages = @record.conversation.conversation_messages.select { |m| m.user_id != @record.user_id && (unread_cutoff.nil? || m.created_at > unread_cutoff) } %>
     <% if recent_messages.any? %>
       <div class="text-2xl font-bold text-amber-400"><%= recent_messages.size %></div>
-      <div class="text-xs text-dark-500 mt-1">unread <%= "message".pluralize(recent_messages.size) %></div>
+      <div class="text-xs text-dark-500 mt-1"><%= t(".unread_messages", count: recent_messages.size) %></div>
     <% else %>
-      <div class="text-2xl font-bold text-emerald-400">Caught up</div>
+      <div class="text-2xl font-bold text-emerald-400"><%= t(".caught_up") %></div>
     <% end %>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Conversation</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".conversation") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">Title</th>
+          <th class="label"><%= t(".title") %></th>
           <td>
             <%= link_to @record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...",
                   "/madmin/conversations/#{@record.conversation_id}",
@@ -76,7 +75,7 @@
           </td>
         </tr>
         <tr>
-          <th class="label">Teams</th>
+          <th class="label"><%= t(".teams") %></th>
           <td>
             <div class="flex flex-wrap items-center gap-2">
               <% @record.conversation.teams.each do |team| %>
@@ -92,20 +91,20 @@
         </tr>
         <% if @record.conversation.subject_type.present? %>
           <tr>
-            <th class="label">Subject</th>
+            <th class="label"><%= t(".subject") %></th>
             <td class="text-dark-300"><%= @record.conversation.subject_type %> <span class="font-mono text-xs text-dark-500">#<%= @record.conversation.subject_id.to_s[0, 8] %></span></td>
           </tr>
         <% end %>
         <tr>
-          <th class="label">Started</th>
+          <th class="label"><%= t(".started") %></th>
           <td><%= @record.conversation.created_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
         <tr>
-          <th class="label">Joined</th>
+          <th class="label"><%= t(".joined_label") %></th>
           <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
+          <th class="label"><%= t(".updated") %></th>
           <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
         </tr>
       </tbody>
@@ -117,15 +116,15 @@
 <% if other_participants.any? %>
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Other Participants (<%= other_participants.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".other_participants", count: other_participants.size) %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>User</th>
-          <th>Last Read</th>
-          <th>Joined</th>
+          <th><%= t(".col_user") %></th>
+          <th><%= t(".col_last_read") %></th>
+          <th><%= t(".col_joined") %></th>
         </tr>
       </thead>
       <tbody>
@@ -139,9 +138,9 @@
             </td>
             <td class="text-sm text-dark-400">
               <% if cp.last_read_at %>
-                <%= time_ago_in_words(cp.last_read_at) %> ago
+                <%= t(".ago", time: time_ago_in_words(cp.last_read_at)) %>
               <% else %>
-                Never
+                <%= t("madmin.common.never") %>
               <% end %>
             </td>
             <td class="text-sm text-dark-400"><%= cp.created_at.strftime("%-d %b %Y") %></td>

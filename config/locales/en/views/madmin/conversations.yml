@@ -13,3 +13,17 @@ en:
         conversations: Conversations
         moderation: Moderation
         search_placeholder: Search by title...
+      show:
+        conversation_prefix: "Conversation %{short_id}..."
+        in: "in"
+        re: "re:"
+        created: "Created %{date}"
+        participants_kpi: Participants
+        messages_kpi: Messages
+        last_activity_kpi: Last Activity
+        participants_heading: "Participants (%{count})"
+        col_user: User
+        col_last_read: Last Read
+        col_last_notified: Last Notified
+        messages_heading: "Messages (%{count})"
+        flagged: Flagged

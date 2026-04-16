@@ -87,11 +87,11 @@
       <div>
         <%= form.label :search_tokenizer, t(".search_tokenizer"), class: "block text-sm font-medium text-dark-200 mb-2" %>
         <% tokenizer_options = [
-          ["Porter + Unicode (recommended)", "porter unicode61 remove_diacritics 2"],
-          ["Porter only (English stemming)", "porter"],
-          ["Unicode only (no stemming)", "unicode61 remove_diacritics 2"],
-          ["Trigram (substring matching)", "trigram"],
-          ["Simple (whitespace split)", "unicode61"],
+          [t(".tokenizer_porter_unicode"), "porter unicode61 remove_diacritics 2"],
+          [t(".tokenizer_porter"), "porter"],
+          [t(".tokenizer_unicode"), "unicode61 remove_diacritics 2"],
+          [t(".tokenizer_trigram"), "trigram"],
+          [t(".tokenizer_simple"), "unicode61"],
         ] %>
         <%= form.select :search_tokenizer,
           options_for_select(tokenizer_options, @setting.search_tokenizer),

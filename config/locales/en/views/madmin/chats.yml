@@ -11,3 +11,16 @@ en:
         col_user: User
         empty_chat: Empty chat
         search_placeholder: Search by user email...
+      show:
+        user: "User:"
+        model: "Model:"
+        created: "Created:"
+        messages: "Messages:"
+        tokens: "Tokens:"
+        input_tokens: "In: %{count}"
+        output_tokens: "Out: %{count}"
+        total_cost: "Total Cost:"
+        na: N/A
+        conversation: Conversation
+        system_label: "System:"
+        default_model: Default

@@ -15,3 +15,24 @@ en:
         heading: Conversation Messages
         not_flagged: Not flagged
         search_placeholder: Search message content...
+      show:
+        breadcrumb: Conversation Messages
+        flagged_badge: Flagged
+        in_conversation: "in %{conversation}"
+        author: Author
+        conversation: Conversation
+        attachments_label: Attachments
+        content: Content
+        no_text_content: No text content (attachment-only message)
+        moderation_flag: Moderation Flag
+        flagged_at: Flagged At
+        reason: Reason
+        no_reason: No reason provided
+        translations: Translations
+        locale: Locale
+        translation: Translation
+        attachments_heading: "Attachments (%{count})"
+        details: Details
+        id: ID
+        created: Created
+        updated: Updated

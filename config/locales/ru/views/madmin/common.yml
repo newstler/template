@@ -28,3 +28,5 @@ ru:
       status_on: Вкл
       unnamed: Без имени
       view: Просмотр
+      json_format_hint: Введите корректный JSON
+      json_placeholder: Введите корректный JSON

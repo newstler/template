@@ -10,3 +10,15 @@ en:
         col_message: Message
         col_role: Role
         search_placeholder: Search messages...
+      show:
+        chat: "Chat:"
+        role: "Role:"
+        created: "Created:"
+        tokens: "Tokens:"
+        input_tokens: "In: %{count}"
+        output_tokens: "Out: %{count}"
+        na: "N/A"
+        cost: "Cost:"
+        message_content: Message Content
+        system_prompt: "System Prompt:"
+        tool_calls: Tool Calls

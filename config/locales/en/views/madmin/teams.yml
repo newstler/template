@@ -13,3 +13,37 @@ en:
         days_left: "%{count}d left"
         no_owner: No owner
         search_placeholder: Search teams...
+      show:
+        created_date: "Created %{date}"
+        days_left: "%{count}d left"
+        members: Members
+        chats: Chats
+        total_messages: Total Messages
+        total_cost: Total Cost
+        details: Details
+        id: ID
+        name: Name
+        slug: Slug
+        api_key: API Key
+        stripe_customer: Stripe Customer
+        subscription: Subscription
+        cancels_at_period_end: Cancels at period end
+        period_ends: Period Ends
+        created: Created
+        updated: Updated
+        members_heading: "Members (%{count})"
+        col_user: User
+        col_role: Role
+        col_chats: Chats
+        col_joined: Joined
+        recent_chats: Recent Chats
+        col_first_message: First Message
+        col_user_chat: User
+        col_model: Model
+        col_messages: Messages
+        col_cost: Cost
+        col_created: Created
+        empty_chat: Empty chat
+        default_model: Default
+        unknown: Unknown
+        view_all_chats: "View all %{count} chats →"

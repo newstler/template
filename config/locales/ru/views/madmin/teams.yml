@@ -13,3 +13,37 @@ ru:
         days_left: "%{count}д осталось"
         no_owner: Нет владельца
         search_placeholder: Поиск команд...
+      show:
+        created_date: "Создана %{date}"
+        days_left: "%{count}д осталось"
+        members: Участники
+        chats: Чаты
+        total_messages: Всего сообщений
+        total_cost: Общая стоимость
+        details: Детали
+        id: ID
+        name: Название
+        slug: Slug
+        api_key: API-ключ
+        stripe_customer: Stripe-клиент
+        subscription: Подписка
+        cancels_at_period_end: Отмена в конце периода
+        period_ends: Период заканчивается
+        created: Создана
+        updated: Обновлена
+        members_heading: "Участники (%{count})"
+        col_user: Пользователь
+        col_role: Роль
+        col_chats: Чаты
+        col_joined: Присоединился
+        recent_chats: Последние чаты
+        col_first_message: Первое сообщение
+        col_user_chat: Пользователь
+        col_model: Модель
+        col_messages: Сообщения
+        col_cost: Стоимость
+        col_created: Создан
+        empty_chat: Пустой чат
+        default_model: По умолчанию
+        unknown: Неизвестно
+        view_all_chats: "Показать все %{count} чатов →"

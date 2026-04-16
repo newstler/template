@@ -15,3 +15,18 @@ en:
         no_team_languages: No team languages yet
         no_team_languages_hint: Teams pick languages from their settings page. Once
           a team enables a language it appears here.
+      show:
+        active: Active
+        disabled: Disabled
+        details: Details
+        label_team: Team
+        label_language: Language
+        label_status: Status
+        label_added: Added
+        label_last_updated: Last Updated
+        ago: "%{time} ago"
+        other_languages_heading: "Other Languages in %{team}"
+        col_language: Language
+        col_code: Code
+        col_status: Status
+        col_added: Added

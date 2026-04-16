@@ -29,6 +29,11 @@ en:
         rrf_k_hint: Reciprocal Rank Fusion constant. Higher values favor breadth,
           lower values favor top results.
         search_tokenizer: Search tokenizer
+        tokenizer_porter_unicode: Porter + Unicode (recommended)
+        tokenizer_porter: Porter only (English stemming)
+        tokenizer_unicode: Unicode only (no stemming)
+        tokenizer_trigram: Trigram (substring matching)
+        tokenizer_simple: Simple (whitespace split)
         search_tokenizer_hint: Changes apply to new records. Use "Rebuild FTS" to
           re-index existing data.
         similarity_description: Controls how vector search filters and ranks results.

@@ -16,3 +16,26 @@ en:
         no_participants: No participants yet
         no_participants_hint: Participants are created when users join a conversation.
           They will appear here as soon as teams start messaging.
+      show:
+        breadcrumb: Conversation Participants
+        in_conversation: "in %{conversation}"
+        joined: "Joined %{date}"
+        ago: "%{time} ago"
+        last_read: Last Read
+        last_notified: Last Notified
+        unread_status: Unread Status
+        unread_messages:
+          one: unread message
+          other: unread messages
+        caught_up: Caught up
+        conversation: Conversation
+        title: Title
+        teams: Teams
+        subject: Subject
+        started: Started
+        joined_label: Joined
+        updated: Updated
+        other_participants: "Other Participants (%{count})"
+        col_user: User
+        col_last_read: Last Read
+        col_joined: Joined

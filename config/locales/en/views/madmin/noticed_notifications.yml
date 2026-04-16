@@ -14,3 +14,22 @@ en:
         heading: Notifications
         read: Read
         unread: Unread
+      show:
+        breadcrumb: Notifications
+        read: Read
+        unread: Unread
+        delivered_to: Delivered to
+        recipient: Recipient
+        status: Status
+        read_at: Read At
+        seen_at: Seen At
+        source_event: Source Event
+        label_event: Event
+        label_record: Record
+        label_event_created: Event Created
+        label_params: Params
+        details: Details
+        label_id: ID
+        label_type: Type
+        label_recipient: Recipient
+        label_created: Created

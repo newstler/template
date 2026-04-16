@@ -10,3 +10,15 @@ ru:
         col_message: Сообщение
         col_role: Роль
         search_placeholder: Поиск сообщений...
+      show:
+        chat: "Чат:"
+        role: "Роль:"
+        created: "Создано:"
+        tokens: "Токены:"
+        input_tokens: "Вх: %{count}"
+        output_tokens: "Вых: %{count}"
+        na: "Н/Д"
+        cost: "Стоимость:"
+        message_content: Содержимое сообщения
+        system_prompt: "Системный промпт:"
+        tool_calls: Вызовы инструментов

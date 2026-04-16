@@ -11,3 +11,16 @@ ru:
         col_user: Пользователь
         empty_chat: Пустой чат
         search_placeholder: Поиск по email пользователя...
+      show:
+        user: "Пользователь:"
+        model: "Модель:"
+        created: "Создан:"
+        messages: "Сообщения:"
+        tokens: "Токены:"
+        input_tokens: "Вход: %{count}"
+        output_tokens: "Выход: %{count}"
+        total_cost: "Общая стоимость:"
+        na: Н/Д
+        conversation: Разговор
+        system_label: "Система:"
+        default_model: По умолчанию

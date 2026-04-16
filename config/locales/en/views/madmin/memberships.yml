@@ -10,3 +10,15 @@ en:
         col_team: Team
         col_user: User
         search_placeholder: Search by user or team...
+      show:
+        in_team: "in"
+        member_since: "Member since %{date}"
+        details: Details
+        label_id: ID
+        label_user: User
+        label_email: Email
+        label_team: Team
+        label_role: Role
+        label_invited_by: Invited By
+        label_joined: Joined
+        label_updated: Updated
