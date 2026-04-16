@@ -93,7 +93,7 @@ gem "babosa"
 
 gem "money", "~> 6.19"
 gem "money-currencylayer-bank", "~> 0.7"
-gem "countries", "~> 7.1"
+gem "countries", "~> 8.1"
 
 gem "tidewave", "~> 0.4.1", group: :development
 
