@@ -21,7 +21,7 @@
     <% resource.attributes.values.select{ _1.field.present? && _1.field.visible?(action_name) }.each do |attribute| %>
       <div class="form-field">
         <label class="block text-sm font-medium text-dark-300 mb-2">
-          <%= attribute.field.options.label || attribute.name.to_s.titleize %>
+          <%= attribute.field.options.label || resource.model.human_attribute_name(attribute.name) %>
           <% if attribute.field.required? %>
             <span class="text-red-400 ml-1">*</span>
           <% end %>

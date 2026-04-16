@@ -42,7 +42,7 @@
     <thead>
       <tr>
         <% visible_attributes.each do |attribute| %>
-          <th><%= sortable attribute.name, attribute.name.to_s.titleize %></th>
+          <th><%= sortable attribute.name, resource.model.human_attribute_name(attribute.name) %></th>
         <% end %>
       </tr>
     </thead>

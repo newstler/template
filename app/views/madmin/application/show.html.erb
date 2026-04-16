@@ -42,7 +42,7 @@
 
       <div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 px-6 py-4 border-b border-dark-600 last:border-b-0">
         <dt class="text-sm font-medium text-dark-400 sm:w-48 sm:shrink-0">
-          <%= attribute.field.options.label || attribute.name.to_s.titleize %>
+          <%= attribute.field.options.label || resource.model.human_attribute_name(attribute.name) %>
         </dt>
         <dd class="text-dark-100 min-w-0 break-words">
           <%= render partial: attribute.field.to_partial_path("show"), locals: { field: attribute.field, record: @record, resource: resource } %>

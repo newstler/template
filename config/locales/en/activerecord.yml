@@ -1,7 +1,20 @@
 ---
 en:
   activerecord:
+    attributes:
+      ai_cost:
+        cost_type: Cost Type
+        model_id: Model
+        input_tokens: Input Tokens
+        output_tokens: Output Tokens
+        cost: Cost
+        team: Team
+        user: User
+        created_at: Created
     models:
+      ai_cost:
+        one: AI Cost
+        other: AI Costs
       admin:
         one: Admin
         other: Admins
@@ -44,6 +57,12 @@ en:
       user:
         one: User
         other: Users
+      noticed/event:
+        one: Notification Event
+        other: Notification Events
+      noticed/notification:
+        one: Notification
+        other: Notifications
       active_storage/blob:
         one: Blob
         other: Blobs

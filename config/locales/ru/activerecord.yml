@@ -1,7 +1,22 @@
 ---
 ru:
   activerecord:
+    attributes:
+      ai_cost:
+        cost_type: Тип затрат
+        model_id: Модель
+        input_tokens: Входные токены
+        output_tokens: Выходные токены
+        cost: Стоимость
+        team: Команда
+        user: Пользователь
+        created_at: Создано
     models:
+      ai_cost:
+        one: Затрата AI
+        few: Затраты AI
+        many: Затрат AI
+        other: Затраты AI
       admin:
         one: Администратор
         few: Администратора
@@ -72,6 +87,16 @@ ru:
         few: Пользователя
         many: Пользователей
         other: Пользователи
+      noticed/event:
+        one: Событие уведомления
+        few: События уведомлений
+        many: Событий уведомлений
+        other: События уведомлений
+      noticed/notification:
+        one: Уведомление
+        few: Уведомления
+        many: Уведомлений
+        other: Уведомления
       active_storage/blob:
         one: Файл
         few: Файла
