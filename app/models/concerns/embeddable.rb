@@ -27,7 +27,7 @@ module Embeddable
 
   class EmbeddingDimensionMismatch < StandardError
     def initialize(model_name)
-      super("Embedding dimension mismatch for #{model_name}. Rebuild embeddings after changing the embedding model at /madmin/ai_models.")
+      super(I18n.t("errors.embedding_dimension_mismatch", model: model_name))
     end
   end
 

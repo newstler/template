@@ -1,6 +1,9 @@
 ---
 ru:
   app_name: Template
+  errors:
+    embedding_dimension_mismatch: "Несоответствие размерности эмбеддингов для %{model}.
+      Пересоздайте эмбеддинги после смены модели в /madmin/ai_models."
   common:
     ago: назад
     back: Назад
