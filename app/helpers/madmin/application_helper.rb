@@ -8,7 +8,8 @@ module Madmin
     end
 
     def resource_name_plural(res = resource)
-      resource_name(res, count: 2)
+      key = "activerecord.models.#{res.model.model_name.i18n_key}.other"
+      I18n.t(key, default: res.model.model_name.human.pluralize)
     end
 
     # Navigation link helper for Madmin sidebar
