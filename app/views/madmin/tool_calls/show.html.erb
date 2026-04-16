@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.name %>
   </h1>
@@ -27,7 +27,7 @@
         <% end %>
       </div>
       <p class="text-dark-500 text-sm mt-2">
-        <%= @record.created_at.strftime("%-d %B %Y at %H:%M") %>
+        <%= l(@record.created_at, format: :long) %>
         <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> <%= t("madmin.common.ago") %>)</span>
       </p>
     </div>
@@ -71,7 +71,7 @@
         <% end %>
         <tr>
           <th class="label"><%= t(".label_created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

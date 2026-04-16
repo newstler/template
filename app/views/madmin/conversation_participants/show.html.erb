@@ -22,7 +22,7 @@
         &middot;
         <%= @record.conversation.teams.map { |t| link_to(t.name, "/madmin/teams/#{t.slug}", class: "text-dark-300 hover:text-dark-100") }.join(" · ").html_safe %>
       </p>
-      <p class="text-dark-500 text-sm mt-1"><%= t(".joined", date: @record.created_at.strftime("%-d %B %Y")) %> <span class="text-dark-600">(<%= t(".ago", time: time_ago_in_words(@record.created_at)) %>)</span></p>
+      <p class="text-dark-500 text-sm mt-1"><%= t(".joined", date: l(@record.created_at, format: :long)) %> <span class="text-dark-600">(<%= t(".ago", time: time_ago_in_words(@record.created_at)) %>)</span></p>
     </div>
   </div>
 </div>
@@ -32,7 +32,7 @@
     <div class="text-dark-500 text-sm mb-1"><%= t(".last_read") %></div>
     <% if @record.last_read_at %>
       <div class="text-lg font-bold text-dark-100"><%= t(".ago", time: time_ago_in_words(@record.last_read_at)) %></div>
-      <div class="text-xs text-dark-500 mt-1"><%= @record.last_read_at.strftime("%-d %b %Y %H:%M") %></div>
+      <div class="text-xs text-dark-500 mt-1"><%= l(@record.last_read_at, format: :short) %></div>
     <% else %>
       <div class="text-lg font-bold text-dark-400"><%= t("madmin.common.never") %></div>
     <% end %>
@@ -41,7 +41,7 @@
     <div class="text-dark-500 text-sm mb-1"><%= t(".last_notified") %></div>
     <% if @record.last_notified_at %>
       <div class="text-lg font-bold text-dark-100"><%= t(".ago", time: time_ago_in_words(@record.last_notified_at)) %></div>
-      <div class="text-xs text-dark-500 mt-1"><%= @record.last_notified_at.strftime("%-d %b %Y %H:%M") %></div>
+      <div class="text-xs text-dark-500 mt-1"><%= l(@record.last_notified_at, format: :short) %></div>
     <% else %>
       <div class="text-lg font-bold text-dark-400">-</div>
     <% end %>
@@ -97,15 +97,15 @@
         <% end %>
         <tr>
           <th class="label"><%= t(".started") %></th>
-          <td><%= @record.conversation.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.conversation.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".joined_label") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -143,7 +143,7 @@
                 <%= t("madmin.common.never") %>
               <% end %>
             </td>
-            <td class="text-sm text-dark-400"><%= cp.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm text-dark-400"><%= l(cp.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>

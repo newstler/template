@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.name %>
   </h1>
@@ -16,7 +16,7 @@
     <div class="flex-1">
       <h2 class="text-2xl font-bold text-dark-100"><%= @record.name %></h2>
       <p class="text-dark-400 mt-1 font-mono text-sm"><%= @record.slug %></p>
-      <p class="text-dark-500 text-sm mt-2"><%= t(".created_date", date: @record.created_at.strftime("%-d %B %Y")) %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t(".created_date", date: l(@record.created_at, format: :long)) %></p>
     </div>
     <div>
       <% status = @record.subscription_status || "none" %>
@@ -28,7 +28,7 @@
         else "bg-dark-700 text-dark-400"
       end %>
       <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= badge_class %>">
-        <%= status.titleize %>
+        <%= t("madmin.common.subscription_status.#{status}") %>
       </span>
       <% if @record.trialing? && @record.trial_days_remaining > 0 %>
         <div class="text-xs text-dark-500 mt-1 text-center"><%= t(".days_left", count: @record.trial_days_remaining) %></div>
@@ -92,7 +92,7 @@
           <th class="label"><%= t(".subscription") %></th>
           <td>
             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
-              <%= status.titleize %>
+              <%= t("madmin.common.subscription_status.#{status}") %>
             </span>
             <% if @record.cancellation_pending? %>
               <span class="text-xs text-amber-400 ml-2"><%= t(".cancels_at_period_end") %></span>
@@ -102,16 +102,16 @@
         <% if @record.current_period_ends_at.present? %>
         <tr>
           <th class="label"><%= t(".period_ends") %></th>
-          <td><%= @record.current_period_ends_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.current_period_ends_at, format: :long) %></td>
         </tr>
         <% end %>
         <tr>
           <th class="label"><%= t(".created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -155,7 +155,7 @@
               </span>
             </td>
             <td><%= chats.count { |c| c.user_id == membership.user_id } %></td>
-            <td class="text-sm"><%= membership.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm"><%= l(membership.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>
@@ -205,7 +205,7 @@
             <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>">
               <%= chat.total_cost.zero? ? "-" : format_cost(chat.total_cost, precision: 4) %>
             </td>
-            <td><%= chat.created_at.strftime("%-d %b %Y") %></td>
+            <td><%= l(chat.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>

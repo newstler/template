@@ -34,7 +34,7 @@
           <span class="text-dark-300"><%= @record.recipient_type %> #<%= @record.recipient_id.to_s[0, 8] %></span>
         <% end %>
       </p>
-      <p class="text-dark-500 text-sm"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+      <p class="text-dark-500 text-sm"><%= l(@record.created_at, format: :long) %></p>
     </div>
   </div>
 </div>
@@ -94,7 +94,7 @@
         <% end %>
         <tr>
           <th class="label"><%= t(".label_event_created") %></th>
-          <td><%= event.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(event.created_at, format: :long) %></td>
         </tr>
         <% if event.params.present? && event.params.any? %>
         <tr>
@@ -131,7 +131,7 @@
         </tr>
         <tr>
           <th class="label"><%= t(".label_created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

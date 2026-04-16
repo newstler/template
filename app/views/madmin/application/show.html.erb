@@ -2,7 +2,7 @@
 
 <div class="mb-8">
   <nav class="flex items-center gap-2 text-sm text-dark-400 mb-4">
-    <%= link_to resource.friendly_name.pluralize, resource.index_path, class: "hover:text-dark-200 transition-colors" %>
+    <%= link_to resource_name_plural, resource.index_path, class: "hover:text-dark-200 transition-colors" %>
     <span>/</span>
     <span class="text-dark-200"><%= resource.display_name(@record) %></span>
   </nav>
@@ -10,7 +10,7 @@
   <div class="flex items-start justify-between gap-4">
     <div>
       <h1 class="text-3xl font-bold text-dark-50"><%= resource.display_name(@record) %></h1>
-      <p class="text-dark-400 mt-1"><%= t(".details", resource: resource.friendly_name) %></p>
+      <p class="text-dark-400 mt-1"><%= t(".details", resource: resource_name) %></p>
     </div>
 
     <div class="flex items-center gap-2">
@@ -25,7 +25,7 @@
         <% end %>
       <% end %>
       <% if resource_actions.include?(:destroy) || resource_actions.include?(:delete) %>
-        <%= button_to resource.show_path(@record), method: :delete, data: { turbo_confirm: t(".delete_confirm", resource: resource.friendly_name.downcase) }, class: "btn btn-danger" do %>
+        <%= button_to resource.show_path(@record), method: :delete, data: { turbo_confirm: t(".delete_confirm", resource: resource_name.downcase) }, class: "btn btn-danger" do %>
           <%= inline_svg "icons/trash.svg", class: "w-4 h-4" %>
           <span><%= t(".delete") %></span>
         <% end %>

@@ -5,7 +5,7 @@
         <%= inline_svg "icons/x-circle.svg", class: "w-5 h-5 text-red-400 mt-0.5 shrink-0" %>
         <div>
           <p class="font-medium text-red-400">
-            <%= t(".error", count: form.object.errors.full_messages.count, resource: resource.friendly_name.downcase) %>
+            <%= t(".error", count: form.object.errors.full_messages.count, resource: resource_name.downcase) %>
           </p>
           <ul class="mt-2 space-y-1 text-sm text-red-300">
             <% form.object.errors.full_messages.each do |message| %>

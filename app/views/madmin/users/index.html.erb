@@ -1,7 +1,7 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
@@ -76,7 +76,7 @@
           </td>
           <td><%= record.chats.size %></td>
           <td class="<%= record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= (record.total_cost || 0).zero? ? "-" : format_cost(record.total_cost, precision: 4) %></td>
-          <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>
+          <td class="text-sm"><%= l(record.created_at, format: :short) %></td>
         </tr>
       <% end %>
     </tbody>

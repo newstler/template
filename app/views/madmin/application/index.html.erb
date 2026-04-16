@@ -1,12 +1,12 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 
   <div class="actions">
     <form class="search">
       <%= hidden_field_tag :page, params[:page], value: 1 %>
-      <%= search_field_tag :q, params[:q], placeholder: "Search #{resource.friendly_name.pluralize.downcase}...", class: "form-input" %>
+      <%= search_field_tag :q, params[:q], placeholder: "Search #{resource_name_plural.downcase}...", class: "form-input" %>
     </form>
 
     <% if params[:q].present? %>
@@ -17,7 +17,7 @@
 
     <% if resource.actions.include?(:new) %>
       <%= link_to resource.new_path, class: "btn btn-primary" do %>
-        <%= t(".new", resource: resource.friendly_name) %>
+        <%= t(".new", resource: resource_name) %>
       <% end %>
     <% end %>
   </div>

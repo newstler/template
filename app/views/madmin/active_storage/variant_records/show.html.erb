@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.blob&.filename || "Variant Record" %>
   </h1>

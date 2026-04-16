@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.blob&.filename || "Attachment" %>
   </h1>
@@ -26,7 +26,7 @@
     <div class="flex-1">
       <h2 class="text-2xl font-bold text-dark-100"><%= @record.blob&.filename || "Unknown" %></h2>
       <p class="text-dark-400 mt-1"><%= t("madmin.active_storage.attachments.show.attached_to", record_type: @record.record_type) %></p>
-      <p class="text-dark-500 text-sm mt-2"><%= t("madmin.active_storage.attachments.show.created", date: @record.created_at.strftime("%-d %B %Y at %H:%M")) %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t("madmin.active_storage.attachments.show.created", date: l(@record.created_at, format: :long)) %></p>
     </div>
   </div>
 </div>
@@ -78,7 +78,7 @@
         </tr>
         <tr>
           <th class="label"><%= t("madmin.active_storage.blobs.show.created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

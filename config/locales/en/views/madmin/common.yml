@@ -30,3 +30,9 @@ en:
       view: View
       json_format_hint: Enter valid JSON format
       json_placeholder: Enter valid JSON
+      subscription_status:
+        active: Active
+        canceled: Canceled
+        none: None
+        past_due: Past due
+        trialing: Trialing

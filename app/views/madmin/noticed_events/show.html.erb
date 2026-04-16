@@ -32,7 +32,7 @@
           <% end %>
         </p>
       <% end %>
-      <p class="text-dark-500 text-sm mt-1"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+      <p class="text-dark-500 text-sm mt-1"><%= l(@record.created_at, format: :long) %></p>
     </div>
   </div>
 </div>
@@ -133,7 +133,7 @@
                   <span class="text-dark-500">-</span>
                 <% end %>
               </td>
-              <td class="text-sm"><%= notification.created_at.strftime("%-d %b %Y %H:%M") %></td>
+              <td class="text-sm"><%= l(notification.created_at, format: :short) %></td>
             </tr>
           <% end %>
         </tbody>
@@ -172,11 +172,11 @@
         </tr>
         <tr>
           <th class="label"><%= t(".label_created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".label_updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

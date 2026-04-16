@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.name || @record.email %>
   </h1>
@@ -18,7 +18,7 @@
     <div class="flex-1">
       <h2 class="text-2xl font-bold text-dark-100"><%= @record.name || t(".unnamed_user") %></h2>
       <p class="text-dark-400 mt-1"><%= @record.email %></p>
-      <p class="text-dark-500 text-sm mt-2"><%= t(".member_since", date: @record.created_at.strftime("%-d %B %Y")) %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t(".member_since", date: l(@record.created_at, format: :long)) %></p>
     </div>
   </div>
 </div>
@@ -61,11 +61,11 @@
         </tr>
         <tr>
           <th class="label"><%= t(".created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -108,7 +108,7 @@
               </span>
             </td>
             <td><%= @record.chats.count { |c| c.team_id == membership.team_id } %></td>
-            <td class="text-sm"><%= membership.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm"><%= l(membership.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>
@@ -145,7 +145,7 @@
             <td><%= chat.model&.name || t(".default_model") %></td>
             <td><%= chat.messages_count %></td>
             <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= (chat.total_cost || 0).zero? ? "-" : format_cost(chat.total_cost, precision: 4) %></td>
-            <td><%= chat.created_at.strftime("%-d %b %Y") %></td>
+            <td><%= l(chat.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>

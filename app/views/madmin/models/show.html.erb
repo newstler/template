@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.name %>
   </h1>
@@ -93,11 +93,11 @@
         </tr>
         <tr>
           <th class="label"><%= t(".knowledge_cutoff") %></th>
-          <td><%= @record.knowledge_cutoff&.strftime("%-d %B %Y") || "-" %></td>
+          <td><%= @record.knowledge_cutoff&l(, format: :long) || "-" %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

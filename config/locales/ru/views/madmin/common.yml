@@ -30,3 +30,9 @@ ru:
       view: Просмотр
       json_format_hint: Введите корректный JSON
       json_placeholder: Введите корректный JSON
+      subscription_status:
+        active: Активна
+        canceled: Отменена
+        none: Нет
+        past_due: Просрочена
+        trialing: Пробный период

@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= resource.display_name(@record) %>
   </h1>
@@ -27,7 +27,7 @@
         <span class="text-dark-500"><%= t(".in_team") %></span>
         <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "text-dark-200 hover:underline font-medium" %>
       </div>
-      <p class="text-dark-500 text-sm mt-2"><%= t(".member_since", date: @record.created_at.strftime("%-d %B %Y")) %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t(".member_since", date: l(@record.created_at, format: :long)) %></p>
     </div>
   </div>
 </div>
@@ -83,11 +83,11 @@
         <% end %>
         <tr>
           <th class="label"><%= t(".label_joined") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".label_updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

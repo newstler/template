@@ -1,7 +1,7 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
   <div class="flex gap-2">
     <% setting = Setting.instance %>
     <%= button_to main_app.toggle_conversations_madmin_conversations_path, method: :patch, class: "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors #{setting.conversations_enabled? ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25' : 'bg-dark-700 text-dark-400 hover:bg-dark-600'}" do %>
@@ -100,8 +100,8 @@
               <span class="text-dark-500">-</span>
             <% end %>
           </td>
-          <td class="text-sm"><%= record.updated_at.strftime("%-d %b %Y %H:%M") %></td>
-          <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>
+          <td class="text-sm"><%= l(record.updated_at, format: :short) %></td>
+          <td class="text-sm"><%= l(record.created_at, format: :short) %></td>
         </tr>
       <% end %>
     </tbody>

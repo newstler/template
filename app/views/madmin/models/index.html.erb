@@ -1,7 +1,7 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 
   <div class="actions">
     <%= button_to t(".refresh_models"),
@@ -11,7 +11,7 @@
         data: { turbo_confirm: t(".refresh_confirm") } %>
 
     <%= link_to resource.new_path, class: "btn btn-secondary" do %>
-      New <%= tag.span resource.friendly_name, class: "hidden md:inline-block" %>
+      New <%= tag.span resource_name, class: "hidden md:inline-block" %>
     <% end %>
   </div>
 </header>

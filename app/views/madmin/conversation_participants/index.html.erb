@@ -84,7 +84,7 @@
                 <span class="text-dark-500">-</span>
               <% end %>
             </td>
-            <td class="text-sm text-dark-400"><%= record.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm text-dark-400"><%= l(record.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>

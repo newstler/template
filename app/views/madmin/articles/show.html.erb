@@ -4,7 +4,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= Mobility.with_locale(:en) { @record.title }.truncate(50) %>
   </h1>
@@ -26,7 +26,7 @@
           <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "text-dark-200 hover:underline" %>
         </span>
         <span>&middot;</span>
-        <span><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></span>
+        <span><%= l(@record.created_at, format: :long) %></span>
       </div>
     </div>
   </div>
@@ -60,11 +60,11 @@
         </tr>
         <tr>
           <th class="label"><%= t(".label_created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".label_updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

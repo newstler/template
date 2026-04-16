@@ -26,7 +26,7 @@
         <%= t(".in_conversation", conversation: link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...", "/madmin/conversations/#{@record.conversation_id}", class: "text-accent-400 hover:text-accent-300")).html_safe %>
         &middot; <%= @record.conversation.teams.map(&:name).join(" · ") %>
       </p>
-      <p class="text-dark-500 text-sm"><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+      <p class="text-dark-500 text-sm"><%= l(@record.created_at, format: :long) %></p>
     </div>
   </div>
 </div>
@@ -71,7 +71,7 @@
       <tbody>
         <tr>
           <th class="label"><%= t(".flagged_at") %></th>
-          <td><%= @record.flagged_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.flagged_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".reason") %></th>
@@ -147,11 +147,11 @@
         </tr>
         <tr>
           <th class="label"><%= t(".created") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

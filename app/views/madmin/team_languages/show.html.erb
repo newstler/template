@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= resource.display_name(@record) %>
   </h1>
@@ -77,11 +77,11 @@
         </tr>
         <tr>
           <th class="label"><%= t(".label_added") %></th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %> <span class="text-dark-500 text-xs ml-1">(<%= t(".ago", time: time_ago_in_words(@record.created_at)) %>)</span></td>
+          <td><%= l(@record.created_at, format: :long) %> <span class="text-dark-500 text-xs ml-1">(<%= t(".ago", time: time_ago_in_words(@record.created_at)) %>)</span></td>
         </tr>
         <tr>
           <th class="label"><%= t(".label_last_updated") %></th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -120,7 +120,7 @@
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400"><%= t(".disabled") %></span>
               <% end %>
             </td>
-            <td class="text-sm text-dark-400"><%= tl.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm text-dark-400"><%= l(tl.created_at, format: :short) %></td>
           </tr>
         <% end %>
       </tbody>

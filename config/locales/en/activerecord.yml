@@ -1,0 +1,55 @@
+---
+en:
+  activerecord:
+    models:
+      admin:
+        one: Admin
+        other: Admins
+      article:
+        one: Article
+        other: Articles
+      chat:
+        one: Chat
+        other: Chats
+      conversation:
+        one: Conversation
+        other: Conversations
+      conversation_message:
+        one: Conversation Message
+        other: Conversation Messages
+      conversation_participant:
+        one: Conversation Participant
+        other: Conversation Participants
+      language:
+        one: Language
+        other: Languages
+      membership:
+        one: Membership
+        other: Memberships
+      message:
+        one: Message
+        other: Messages
+      model:
+        one: Model
+        other: Models
+      team:
+        one: Team
+        other: Teams
+      team_language:
+        one: Team Language
+        other: Team Languages
+      tool_call:
+        one: Tool Call
+        other: Tool Calls
+      user:
+        one: User
+        other: Users
+      active_storage/blob:
+        one: Blob
+        other: Blobs
+      active_storage/attachment:
+        one: Attachment
+        other: Attachments
+      active_storage/variant_record:
+        one: Variant Record
+        other: Variant Records

@@ -1,7 +1,7 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
@@ -73,13 +73,13 @@
               else "bg-dark-700 text-dark-400"
             end %>
             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
-              <%= status.titleize %>
+              <%= t("madmin.common.subscription_status.#{status}") %>
             </span>
             <% if record.trialing? && record.trial_days_remaining > 0 %>
               <span class="text-xs text-dark-500 ml-1"><%= t(".days_left", count: record.trial_days_remaining) %></span>
             <% end %>
           </td>
-          <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>
+          <td class="text-sm"><%= l(record.created_at, format: :short) %></td>
         </tr>
       <% end %>
     </tbody>

@@ -1,7 +1,7 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
@@ -55,7 +55,7 @@
               <%= record.message&.content&.truncate(50) || "Message ##{record.message_id.to_s[0..7]}" %>
             <% end %>
           </td>
-          <td><%= record.created_at.strftime("%-d %B %Y") %></td>
+          <td><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
     </tbody>

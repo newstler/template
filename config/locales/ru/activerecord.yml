@@ -1,0 +1,89 @@
+---
+ru:
+  activerecord:
+    models:
+      admin:
+        one: Администратор
+        few: Администратора
+        many: Администраторов
+        other: Администраторы
+      article:
+        one: Статья
+        few: Статьи
+        many: Статей
+        other: Статьи
+      chat:
+        one: Чат
+        few: Чата
+        many: Чатов
+        other: Чаты
+      conversation:
+        one: Переписка
+        few: Переписки
+        many: Переписок
+        other: Переписки
+      conversation_message:
+        one: Сообщение
+        few: Сообщения
+        many: Сообщений
+        other: Сообщения переписок
+      conversation_participant:
+        one: Участник
+        few: Участника
+        many: Участников
+        other: Участники переписок
+      language:
+        one: Язык
+        few: Языка
+        many: Языков
+        other: Языки
+      membership:
+        one: Членство
+        few: Членства
+        many: Членств
+        other: Членства
+      message:
+        one: Сообщение
+        few: Сообщения
+        many: Сообщений
+        other: Сообщения
+      model:
+        one: Модель
+        few: Модели
+        many: Моделей
+        other: Модели
+      team:
+        one: Команда
+        few: Команды
+        many: Команд
+        other: Команды
+      team_language:
+        one: Язык команды
+        few: Языка команды
+        many: Языков команды
+        other: Языки команд
+      tool_call:
+        one: Вызов инструмента
+        few: Вызова инструмента
+        many: Вызовов инструментов
+        other: Вызовы инструментов
+      user:
+        one: Пользователь
+        few: Пользователя
+        many: Пользователей
+        other: Пользователи
+      active_storage/blob:
+        one: Файл
+        few: Файла
+        many: Файлов
+        other: Файлы
+      active_storage/attachment:
+        one: Вложение
+        few: Вложения
+        many: Вложений
+        other: Вложения
+      active_storage/variant_record:
+        one: Вариант
+        few: Варианта
+        many: Вариантов
+        other: Варианты

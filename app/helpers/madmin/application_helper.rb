@@ -2,6 +2,15 @@ module Madmin
   module ApplicationHelper
     include Pagy::Frontend if defined?(Pagy::Frontend)
 
+    # I18n-aware resource name (singular and plural)
+    def resource_name(res = resource, count: 1)
+      res.model.model_name.human(count: count)
+    end
+
+    def resource_name_plural(res = resource)
+      resource_name(res, count: 2)
+    end
+
     # Navigation link helper for Madmin sidebar
     def madmin_nav_link(path, icon, label, nested: false)
       is_active = current_page?(path) || (path != "/madmin" && request.path.start_with?(path.to_s.split("?").first))
