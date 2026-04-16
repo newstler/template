@@ -23,7 +23,7 @@
         <% end %>
       </div>
       <p class="text-dark-500 text-sm mt-1">
-        <%= t(".in_conversation", conversation: link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...", "/madmin/conversations/#{@record.conversation_id}", class: "text-accent-400 hover:text-accent-300")).html_safe %>
+        <%= t(".in_conversation_html", conversation: link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...", "/madmin/conversations/#{@record.conversation_id}", class: "text-accent-400 hover:text-accent-300")) %>
         &middot; <%= @record.conversation.teams.map(&:name).join(" · ") %>
       </p>
       <p class="text-dark-500 text-sm"><%= l(@record.created_at, format: :long) %></p>

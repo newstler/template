@@ -16,9 +16,9 @@
         <%= link_to @record.user.name.presence || @record.user.email, "/madmin/users/#{@record.user_id}", class: "hover:underline" %>
       </h2>
       <p class="text-dark-500 text-sm mt-1">
-        <%= t(".in_conversation", conversation: link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...",
+        <%= t(".in_conversation_html", conversation: link_to(@record.conversation.title.presence || "Conversation #{@record.conversation_id[0, 8]}...",
               "/madmin/conversations/#{@record.conversation_id}",
-              class: "text-accent-400 hover:text-accent-300")).html_safe %>
+              class: "text-accent-400 hover:text-accent-300")) %>
         &middot;
         <%= @record.conversation.teams.map { |t| link_to(t.name, "/madmin/teams/#{t.slug}", class: "text-dark-300 hover:text-dark-100") }.join(" · ").html_safe %>
       </p>

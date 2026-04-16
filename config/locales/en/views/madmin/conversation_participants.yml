@@ -25,7 +25,7 @@ en:
         col_last_read: Last Read
         col_user: User
         conversation: Conversation
-        in_conversation: in %{conversation}
+        in_conversation_html: in %{conversation}
         joined: Joined %{date}
         joined_label: Joined
         last_notified: Last Notified

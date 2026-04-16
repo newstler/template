@@ -25,7 +25,7 @@ ru:
         col_last_read: Последнее чтение
         col_user: Пользователь
         conversation: Переписка
-        in_conversation: в %{conversation}
+        in_conversation_html: в %{conversation}
         joined: Вступил(а) %{date}
         joined_label: Вступление
         last_notified: Последнее уведомление

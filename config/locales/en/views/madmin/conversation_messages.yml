@@ -27,7 +27,7 @@ en:
         flagged_at: Flagged At
         flagged_badge: Flagged
         id: ID
-        in_conversation: in %{conversation}
+        in_conversation_html: in %{conversation}
         locale: Locale
         moderation_flag: Moderation Flag
         no_reason: No reason provided

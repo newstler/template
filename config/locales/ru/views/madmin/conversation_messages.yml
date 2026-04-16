@@ -27,7 +27,7 @@ ru:
         flagged_at: Отмечено
         flagged_badge: С флагом
         id: ID
-        in_conversation: в %{conversation}
+        in_conversation_html: в %{conversation}
         locale: Локаль
         moderation_flag: Флаг модерации
         no_reason: Причина не указана

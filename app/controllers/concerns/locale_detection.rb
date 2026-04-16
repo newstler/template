@@ -9,7 +9,7 @@ module LocaleDetection
     accepted = parse_accept_language(request.headers["Accept-Language"])
     enabled = Language.enabled_codes
 
-    accepted.find { |code| enabled.include?(code) }
+    accepted.find { |code| enabled.include?(code) }&.to_sym
   end
 
   def parse_accept_language(header)

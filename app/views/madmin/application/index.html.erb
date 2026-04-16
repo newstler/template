@@ -6,7 +6,7 @@
   <div class="actions">
     <form class="search">
       <%= hidden_field_tag :page, params[:page], value: 1 %>
-      <%= search_field_tag :q, params[:q], placeholder: "Search #{resource_name_plural.downcase}...", class: "form-input" %>
+      <%= search_field_tag :q, params[:q], placeholder: t("madmin.common.search_placeholder", resources: resource_name_plural.downcase), class: "form-input" %>
     </form>
 
     <% if params[:q].present? %>

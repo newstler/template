@@ -38,6 +38,19 @@ class SettingTest < ActiveSupport::TestCase
     assert Setting.stripe_configured?
   end
 
+  test "default_language returns stored value" do
+    Setting.instance.update!(default_language: "es")
+    assert_equal "es", Setting.default_language
+  end
+
+  test "default_language falls back to en when blank" do
+    Setting.instance.update!(default_language: nil)
+    assert_equal "en", Setting.default_language
+
+    Setting.instance.update!(default_language: "")
+    assert_equal "en", Setting.default_language
+  end
+
   test "stripe_configured? is false when secret key is blank" do
     Setting.instance.update!(stripe_secret_key: nil)
     assert_not Setting.stripe_configured?

@@ -22,7 +22,7 @@ module Madmin
 
       # 2. Accept-Language header
       detected = detect_browser_locale
-      return detected.to_sym if detected
+      return detected if detected
 
       # 3. Platform default language
       Setting.default_language.to_sym
