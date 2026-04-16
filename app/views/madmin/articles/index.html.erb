@@ -5,7 +5,7 @@
   <% setting = Setting.instance %>
   <%= button_to main_app.toggle_articles_madmin_articles_path, method: :patch, class: "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors #{setting.articles_enabled? ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25' : 'bg-dark-700 text-dark-400 hover:bg-dark-600'}" do %>
     <span class="w-2 h-2 rounded-full <%= setting.articles_enabled? ? 'bg-emerald-400' : 'bg-dark-500' %>"></span>
-    <%= t(".articles") %> <%= setting.articles_enabled? ? t("madmin.common.on") : t("madmin.common.off") %>
+    <%= t(".articles") %> <%= setting.articles_enabled? ? t("madmin.common.status_on") : t("madmin.common.status_off") %>
   <% end %>
 </header>
 

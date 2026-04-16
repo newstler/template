@@ -6,11 +6,11 @@
     <% setting = Setting.instance %>
     <%= button_to main_app.toggle_conversations_madmin_conversations_path, method: :patch, class: "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors #{setting.conversations_enabled? ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25' : 'bg-dark-700 text-dark-400 hover:bg-dark-600'}" do %>
       <span class="w-2 h-2 rounded-full <%= setting.conversations_enabled? ? 'bg-emerald-400' : 'bg-dark-500' %>"></span>
-      <%= t(".conversations") %> <%= setting.conversations_enabled? ? t("madmin.common.on") : t("madmin.common.off") %>
+      <%= t(".conversations") %> <%= setting.conversations_enabled? ? t("madmin.common.status_on") : t("madmin.common.status_off") %>
     <% end %>
     <%= button_to main_app.toggle_moderation_madmin_conversations_path, method: :patch, class: "inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-medium transition-colors #{setting.conversation_moderation_enabled? ? 'bg-emerald-500/15 text-emerald-400 hover:bg-emerald-500/25' : 'bg-dark-700 text-dark-400 hover:bg-dark-600'}" do %>
       <span class="w-2 h-2 rounded-full <%= setting.conversation_moderation_enabled? ? 'bg-emerald-400' : 'bg-dark-500' %>"></span>
-      <%= t(".moderation") %> <%= setting.conversation_moderation_enabled? ? t("madmin.common.on") : t("madmin.common.off") %>
+      <%= t(".moderation") %> <%= setting.conversation_moderation_enabled? ? t("madmin.common.status_on") : t("madmin.common.status_off") %>
     <% end %>
   </div>
 </header>

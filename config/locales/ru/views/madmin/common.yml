@@ -15,7 +15,7 @@ ru:
       edit: Редактировать
       enable_all: Включить все
       enabled: Включено
-      'false': Выкл
+      status_off: Выкл
       filter: Фильтр
       from: 'С:'
       never: Никогда
@@ -25,6 +25,6 @@ ru:
       search: Поиск
       search_placeholder: Поиск %{resources}...
       to: 'По:'
-      'true': Вкл
+      status_on: Вкл
       unnamed: Без имени
       view: Просмотр
