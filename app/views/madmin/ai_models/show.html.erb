@@ -145,7 +145,7 @@
                   <% end %>
                 </td>
                 <td><%= model.chats_count %></td>
-                <td class="<%= (model.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= (model.total_cost || 0).zero? ? "-" : format_cost(model.total_cost, precision: 4) %></td>
+                <td class="<%= (model.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(model.total_cost || 0, precision: 4) %></td>
               </tr>
             <% end %>
           </tbody>

@@ -10,12 +10,20 @@ ru:
         col_owner: Владелец
         col_subscription: Подписка
         col_team: Команда
-        days_left: "%{count}д осталось"
+        days_left:
+          one: "%{count} день осталось"
+          few: "%{count} дня осталось"
+          many: "%{count} дней осталось"
+          other: "%{count} дней осталось"
         no_owner: Нет владельца
         search_placeholder: Поиск команд...
       show:
         created_date: "Создана %{date}"
-        days_left: "%{count}д осталось"
+        days_left:
+          one: "%{count} день осталось"
+          few: "%{count} дня осталось"
+          many: "%{count} дней осталось"
+          other: "%{count} дней осталось"
         members: Участники
         chats: Чаты
         total_messages: Всего сообщений

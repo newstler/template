@@ -144,7 +144,7 @@
             </td>
             <td><%= chat.model&.name || t(".default_model") %></td>
             <td><%= chat.messages_count %></td>
-            <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= (chat.total_cost || 0).zero? ? "-" : format_cost(chat.total_cost, precision: 4) %></td>
+            <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(chat.total_cost || 0, precision: 4) %></td>
             <td><%= l(chat.created_at, format: :short) %></td>
           </tr>
         <% end %>

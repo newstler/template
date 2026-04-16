@@ -42,7 +42,7 @@
     </div>
     <div>
       <span class="text-dark-400"><%= t(".total_cost") %></span>
-      <span class="font-medium text-emerald-400"><%= (@record.total_cost || 0).zero? ? t(".na") : format_cost(@record.total_cost, precision: 4) %></span>
+      <span class="font-medium text-emerald-400"><%= format_cost(@record.total_cost || 0, precision: 4) %></span>
     </div>
   </div>
 </div>

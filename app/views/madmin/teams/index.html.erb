@@ -61,7 +61,7 @@
           <td><%= record.chats.size %></td>
           <% cost = record.chats.sum(&:total_cost) %>
           <td class="<%= cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>">
-            <%= cost.zero? ? "-" : format_cost(cost, precision: 4) %>
+            <%= format_cost(cost, precision: 4) %>
           </td>
           <td>
             <% status = record.subscription_status || "none" %>

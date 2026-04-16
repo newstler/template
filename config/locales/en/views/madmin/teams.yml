@@ -10,12 +10,16 @@ en:
         col_owner: Owner
         col_subscription: Subscription
         col_team: Team
-        days_left: "%{count}d left"
+        days_left:
+          one: "%{count} day left"
+          other: "%{count} days left"
         no_owner: No owner
         search_placeholder: Search teams...
       show:
         created_date: "Created %{date}"
-        days_left: "%{count}d left"
+        days_left:
+          one: "%{count} day left"
+          other: "%{count} days left"
         members: Members
         chats: Chats
         total_messages: Total Messages

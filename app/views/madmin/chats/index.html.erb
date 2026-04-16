@@ -61,7 +61,7 @@
             <% end %>
           </td>
           <td><%= record.messages_count %></td>
-          <td class="<%= (record.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= (record.total_cost || 0).zero? ? "-" : format_cost(record.total_cost, precision: 4) %></td>
+          <td class="<%= (record.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.total_cost || 0, precision: 4) %></td>
           <td><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
