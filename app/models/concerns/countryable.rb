@@ -19,7 +19,7 @@ module Countryable
       end
 
       define_method(:country_name) do
-        country&.translations&.dig(I18n.locale.to_s) || country&.common_name
+        country&.translations&.dig(I18n.locale) || country&.common_name
       end
 
       define_method(:country_flag) do

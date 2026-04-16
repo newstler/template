@@ -93,7 +93,7 @@ module ApplicationHelper
     return nil if code.blank?
     country = ISO3166::Country.new(code)
     return code unless country
-    country.translations[I18n.locale.to_s] || country.common_name
+    country.translations[I18n.locale] || country.common_name
   end
 
   def country_flag(code)
@@ -109,7 +109,7 @@ module ApplicationHelper
     end
 
     pairs = list.map do |country|
-      name = country.translations[I18n.locale.to_s] || country.common_name
+      name = country.translations[I18n.locale] || country.common_name
       [ "#{country.emoji_flag} #{name}", country.alpha2 ]
     end.sort_by { |pair| pair[0] }
 
