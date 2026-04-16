@@ -93,7 +93,7 @@
         </tr>
         <tr>
           <th class="label"><%= t(".knowledge_cutoff") %></th>
-          <td><%= @record.knowledge_cutoff&l(, format: :long) || "-" %></td>
+          <td><%= @record.knowledge_cutoff ? l(@record.knowledge_cutoff, format: :long) : "-" %></td>
         </tr>
         <tr>
           <th class="label"><%= t(".created") %></th>

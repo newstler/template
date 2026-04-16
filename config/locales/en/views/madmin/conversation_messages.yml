@@ -16,23 +16,23 @@ en:
         not_flagged: Not flagged
         search_placeholder: Search message content...
       show:
-        breadcrumb: Conversation Messages
-        flagged_badge: Flagged
-        in_conversation: "in %{conversation}"
-        author: Author
-        conversation: Conversation
+        attachments_heading: Attachments (%{count})
         attachments_label: Attachments
+        author: Author
+        breadcrumb: Conversation Messages
         content: Content
-        no_text_content: No text content (attachment-only message)
-        moderation_flag: Moderation Flag
-        flagged_at: Flagged At
-        reason: Reason
-        no_reason: No reason provided
-        translations: Translations
-        locale: Locale
-        translation: Translation
-        attachments_heading: "Attachments (%{count})"
-        details: Details
-        id: ID
+        conversation: Conversation
         created: Created
+        details: Details
+        flagged_at: Flagged At
+        flagged_badge: Flagged
+        id: ID
+        in_conversation: in %{conversation}
+        locale: Locale
+        moderation_flag: Moderation Flag
+        no_reason: No reason provided
+        no_text_content: No text content (attachment-only message)
+        reason: Reason
+        translation: Translation
+        translations: Translations
         updated: Updated

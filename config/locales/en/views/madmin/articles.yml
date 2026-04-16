@@ -4,21 +4,20 @@ en:
     articles:
       index:
         all_teams: All teams
-        articles: Articles
         col_article: Article
         col_author: Author
         col_created: Created
         col_team: Team
         search_placeholder: Search articles...
       show:
-        by: "by"
-        in: "in"
+        body: Body
+        by: by
         details: Details
-        label_id: ID
-        label_team: Team
+        in: in
         label_author: Author
         label_created: Created
+        label_id: ID
+        label_team: Team
         label_updated: Updated
-        title: Title
-        body: Body
         no_translation: No translation available
+        title: Title

@@ -10,20 +10,18 @@ en:
         col_participants: Participants
         col_subject: Subject
         col_teams: Teams
-        conversations: Conversations
-        moderation: Moderation
         search_placeholder: Search by title...
       show:
-        conversation_prefix: "Conversation %{short_id}..."
-        in: "in"
-        re: "re:"
-        created: "Created %{date}"
-        participants_kpi: Participants
-        messages_kpi: Messages
-        last_activity_kpi: Last Activity
-        participants_heading: "Participants (%{count})"
-        col_user: User
-        col_last_read: Last Read
         col_last_notified: Last Notified
-        messages_heading: "Messages (%{count})"
+        col_last_read: Last Read
+        col_user: User
+        conversation_prefix: Conversation %{short_id}...
+        created: Created %{date}
         flagged: Flagged
+        in: in
+        last_activity_kpi: Last Activity
+        messages_heading: Messages (%{count})
+        messages_kpi: Messages
+        participants_heading: Participants (%{count})
+        participants_kpi: Participants
+        re: 're:'

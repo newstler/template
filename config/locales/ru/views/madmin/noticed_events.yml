@@ -12,25 +12,25 @@ ru:
         heading: События уведомлений
       show:
         breadcrumb: События уведомлений
-        triggered_by: Инициировано
-        event_type: Тип события
-        deliveries: Доставки
-        deliveries_heading: "Доставки (%{count})"
-        record: Запись
-        none: Нет
-        event_params: Параметры события
-        col_recipient: Получатель
-        col_type: Тип
-        col_read: Прочитано
-        col_seen: Просмотрено
         col_created: Создано
-        read: Прочитано
-        unread: Не прочитано
+        col_read: Прочитано
+        col_recipient: Получатель
+        col_seen: Просмотрено
+        col_type: Тип
         deleted_user: Удалённый пользователь
-        no_deliveries: Доставок пока нет
+        deliveries: Доставки
+        deliveries_heading: Доставки (%{count})
         details: Детали
-        label_id: ID
-        label_type: Тип
-        label_record: Запись
+        event_params: Параметры события
+        event_type: Тип события
         label_created: Создано
+        label_id: ID
+        label_record: Запись
+        label_type: Тип
         label_updated: Обновлено
+        no_deliveries: Доставок пока нет
+        none: Нет
+        read: Прочитано
+        record: Запись
+        triggered_by: Инициировано
+        unread: Не прочитано

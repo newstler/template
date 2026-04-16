@@ -11,47 +11,47 @@ ru:
         col_subscription: Подписка
         col_team: Команда
         days_left:
-          one: "%{count} день осталось"
           few: "%{count} дня осталось"
           many: "%{count} дней осталось"
+          one: "%{count} день осталось"
           other: "%{count} дней осталось"
         no_owner: Нет владельца
         search_placeholder: Поиск команд...
       show:
-        created_date: "Создана %{date}"
-        days_left:
-          one: "%{count} день осталось"
-          few: "%{count} дня осталось"
-          many: "%{count} дней осталось"
-          other: "%{count} дней осталось"
-        members: Участники
-        chats: Чаты
-        total_messages: Всего сообщений
-        total_cost: Общая стоимость
-        details: Детали
-        id: ID
-        name: Название
-        slug: Slug
         api_key: API-ключ
-        stripe_customer: Stripe-клиент
-        subscription: Подписка
         cancels_at_period_end: Отмена в конце периода
-        period_ends: Период заканчивается
-        created: Создана
-        updated: Обновлена
-        members_heading: "Участники (%{count})"
-        col_user: Пользователь
-        col_role: Роль
+        chats: Чаты
         col_chats: Чаты
-        col_joined: Присоединился
-        recent_chats: Последние чаты
-        col_first_message: Первое сообщение
-        col_user_chat: Пользователь
-        col_model: Модель
-        col_messages: Сообщения
         col_cost: Стоимость
         col_created: Создан
-        empty_chat: Пустой чат
+        col_first_message: Первое сообщение
+        col_joined: Присоединился
+        col_messages: Сообщения
+        col_model: Модель
+        col_role: Роль
+        col_user: Пользователь
+        col_user_chat: Пользователь
+        created: Создана
+        created_date: Создана %{date}
+        days_left:
+          few: "%{count} дня осталось"
+          many: "%{count} дней осталось"
+          one: "%{count} день осталось"
+          other: "%{count} дней осталось"
         default_model: По умолчанию
+        details: Детали
+        empty_chat: Пустой чат
+        id: ID
+        members: Участники
+        members_heading: Участники (%{count})
+        name: Название
+        period_ends: Период заканчивается
+        recent_chats: Последние чаты
+        slug: Slug
+        stripe_customer: Stripe-клиент
+        subscription: Подписка
+        total_cost: Общая стоимость
+        total_messages: Всего сообщений
         unknown: Неизвестно
-        view_all_chats: "Показать все %{count} чатов →"
+        updated: Обновлена
+        view_all_chats: Показать все %{count} чатов →

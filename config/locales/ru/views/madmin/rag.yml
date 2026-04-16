@@ -29,11 +29,6 @@ ru:
         rrf_k_hint: Константа Reciprocal Rank Fusion. Большие значения для широты,
           меньшие — для топ-результатов.
         search_tokenizer: Токенизатор поиска
-        tokenizer_porter_unicode: Porter + Unicode (рекомендуется)
-        tokenizer_porter: Только Porter (английский стемминг)
-        tokenizer_unicode: Только Unicode (без стемминга)
-        tokenizer_trigram: Триграммы (поиск подстрок)
-        tokenizer_simple: Простой (разделение по пробелам)
         search_tokenizer_hint: Изменения применяются к новым записям. Используйте
           «Перестроить FTS» для переиндексации.
         similarity_description: Управление фильтрацией и ранжированием результатов
@@ -41,4 +36,9 @@ ru:
         similarity_heading: Поиск по сходству
         strict: строгий
         subtitle: Полнотекстовый поиск, векторное сходство и параметры разбиения
+        tokenizer_porter: Только Porter (английский стемминг)
+        tokenizer_porter_unicode: Porter + Unicode (рекомендуется)
+        tokenizer_simple: Простой (разделение по пробелам)
+        tokenizer_trigram: Триграммы (поиск подстрок)
+        tokenizer_unicode: Только Unicode (без стемминга)
         words: слов

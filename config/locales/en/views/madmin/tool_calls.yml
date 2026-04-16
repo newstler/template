@@ -9,14 +9,14 @@ en:
         col_tool_call_id: Tool Call ID
         search_placeholder: Search tool calls...
       show:
+        arguments: Arguments
+        chat_label: 'Chat #%{id}'
         details: Details
-        label_tool: Tool
-        label_tool_call_id: Tool Call ID
-        label_message: Message
+        in_message: in
         label_chat: Chat
         label_created: Created
-        arguments: Arguments
+        label_message: Message
+        label_tool: Tool
+        label_tool_call_id: Tool Call ID
+        message_label: 'Message #%{id}'
         result: Result
-        in_message: "in"
-        chat_label: "Chat #%{id}"
-        message_label: "Message #%{id}"

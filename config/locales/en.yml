@@ -1,9 +1,6 @@
 ---
 en:
   app_name: Template
-  errors:
-    embedding_dimension_mismatch: "Embedding dimension mismatch for %{model}. Rebuild
-      embeddings after changing the embedding model at /madmin/ai_models."
   common:
     ago: ago
     back: Back
@@ -13,6 +10,9 @@ en:
     sign_out: Sign Out
     sign_out_confirm: Are you sure you want to sign out?
     untitled: Untitled
+  errors:
+    embedding_dimension_mismatch: Embedding dimension mismatch for %{model}. Rebuild
+      embeddings after changing the embedding model at /madmin/ai_models.
   helpers:
     currency:
       auto: Auto

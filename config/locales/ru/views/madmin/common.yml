@@ -15,24 +15,24 @@ ru:
       edit: Редактировать
       enable_all: Включить все
       enabled: Включено
-      status_off: Отключено
       filter: Фильтр
       from: 'С:'
+      json_format_hint: Введите корректный JSON
+      json_placeholder: Введите корректный JSON
       never: Никогда
       new: Новый %{resource}
       no_content: "[Нет содержимого]"
       save: Сохранить
       search: Поиск
       search_placeholder: Поиск %{resources}...
-      to: 'По:'
+      status_off: Отключено
       status_on: Включено
-      unnamed: Без имени
-      view: Просмотр
-      json_format_hint: Введите корректный JSON
-      json_placeholder: Введите корректный JSON
       subscription_status:
         active: Активна
         canceled: Отменена
         none: Нет
         past_due: Просрочена
         trialing: Пробный период
+      to: 'По:'
+      unnamed: Без имени
+      view: Просмотр

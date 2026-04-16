@@ -3,112 +3,112 @@ ru:
   activerecord:
     attributes:
       ai_cost:
-        cost_type: Тип затрат
-        model_id: Модель
-        input_tokens: Входные токены
-        output_tokens: Выходные токены
         cost: Стоимость
+        cost_type: Тип затрат
+        created_at: Создано
+        input_tokens: Входные токены
+        model_id: Модель
+        output_tokens: Выходные токены
         team: Команда
         user: Пользователь
-        created_at: Создано
     models:
-      ai_cost:
-        one: Затрата AI
-        few: Затраты AI
-        many: Затрат AI
-        other: Затраты AI
-      admin:
-        one: Администратор
-        few: Администратора
-        many: Администраторов
-        other: Администраторы
-      article:
-        one: Статья
-        few: Статьи
-        many: Статей
-        other: Статьи
-      chat:
-        one: AI-чат
-        few: AI-чата
-        many: AI-чатов
-        other: AI-чаты
-      conversation:
-        one: Переписка
-        few: Переписки
-        many: Переписок
-        other: Переписки
-      conversation_message:
-        one: Сообщение
-        few: Сообщения
-        many: Сообщений
-        other: Сообщения переписок
-      conversation_participant:
-        one: Участник
-        few: Участника
-        many: Участников
-        other: Участники переписок
-      language:
-        one: Язык
-        few: Языка
-        many: Языков
-        other: Языки
-      membership:
-        one: Членство
-        few: Членства
-        many: Членств
-        other: Членства
-      message:
-        one: Сообщение
-        few: Сообщения
-        many: Сообщений
-        other: Сообщения
-      model:
-        one: Модель
-        few: Модели
-        many: Моделей
-        other: Модели
-      team:
-        one: Команда
-        few: Команды
-        many: Команд
-        other: Команды
-      team_language:
-        one: Язык команды
-        few: Языка команды
-        many: Языков команды
-        other: Языки команд
-      tool_call:
-        one: Вызов инструмента
-        few: Вызова инструмента
-        many: Вызовов инструментов
-        other: Вызовы инструментов
-      user:
-        one: Пользователь
-        few: Пользователя
-        many: Пользователей
-        other: Пользователи
-      noticed/event:
-        one: Событие уведомления
-        few: События уведомлений
-        many: Событий уведомлений
-        other: События уведомлений
-      noticed/notification:
-        one: Уведомление
-        few: Уведомления
-        many: Уведомлений
-        other: Уведомления
-      active_storage/blob:
-        one: Файл
-        few: Файла
-        many: Файлов
-        other: Файлы
       active_storage/attachment:
-        one: Вложение
         few: Вложения
         many: Вложений
+        one: Вложение
         other: Вложения
+      active_storage/blob:
+        few: Файла
+        many: Файлов
+        one: Файл
+        other: Файлы
       active_storage/variant_record:
-        one: Вариант
         few: Варианта
         many: Вариантов
+        one: Вариант
         other: Варианты
+      admin:
+        few: Администратора
+        many: Администраторов
+        one: Администратор
+        other: Администраторы
+      ai_cost:
+        few: Затраты AI
+        many: Затрат AI
+        one: Затрата AI
+        other: Затраты AI
+      article:
+        few: Статьи
+        many: Статей
+        one: Статья
+        other: Статьи
+      chat:
+        few: AI-чата
+        many: AI-чатов
+        one: AI-чат
+        other: AI-чаты
+      conversation:
+        few: Переписки
+        many: Переписок
+        one: Переписка
+        other: Переписки
+      conversation_message:
+        few: Сообщения
+        many: Сообщений
+        one: Сообщение
+        other: Сообщения переписок
+      conversation_participant:
+        few: Участника
+        many: Участников
+        one: Участник
+        other: Участники переписок
+      language:
+        few: Языка
+        many: Языков
+        one: Язык
+        other: Языки
+      membership:
+        few: Членства
+        many: Членств
+        one: Членство
+        other: Членства
+      message:
+        few: Сообщения
+        many: Сообщений
+        one: Сообщение
+        other: Сообщения
+      model:
+        few: Модели
+        many: Моделей
+        one: Модель
+        other: Модели
+      noticed/event:
+        few: События уведомлений
+        many: Событий уведомлений
+        one: Событие уведомления
+        other: События уведомлений
+      noticed/notification:
+        few: Уведомления
+        many: Уведомлений
+        one: Уведомление
+        other: Уведомления
+      team:
+        few: Команды
+        many: Команд
+        one: Команда
+        other: Команды
+      team_language:
+        few: Языка команды
+        many: Языков команды
+        one: Язык команды
+        other: Языки команд
+      tool_call:
+        few: Вызова инструмента
+        many: Вызовов инструментов
+        one: Вызов инструмента
+        other: Вызовы инструментов
+      user:
+        few: Пользователя
+        many: Пользователей
+        one: Пользователь
+        other: Пользователи

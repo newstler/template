@@ -3,7 +3,6 @@ en:
   madmin:
     chats:
       index:
-        ai_chats: AI Chats
         col_cost: Cost
         col_created: Created
         col_first_message: First Message
@@ -12,15 +11,14 @@ en:
         empty_chat: Empty chat
         search_placeholder: Search by user email...
       show:
-        user: "User:"
-        model: "Model:"
-        created: "Created:"
-        messages: "Messages:"
-        tokens: "Tokens:"
-        input_tokens: "In: %{count}"
-        output_tokens: "Out: %{count}"
-        total_cost: "Total Cost:"
-        na: N/A
         conversation: Conversation
-        system_label: "System:"
+        created: 'Created:'
         default_model: Default
+        input_tokens: 'In: %{count}'
+        messages: 'Messages:'
+        model: 'Model:'
+        output_tokens: 'Out: %{count}'
+        system_label: 'System:'
+        tokens: 'Tokens:'
+        total_cost: 'Total Cost:'
+        user: 'User:'

@@ -24,25 +24,25 @@ en:
         tab_currencies: Currencies
         tab_languages: Languages
       show:
+        active: Active
+        ago: "%{time} ago"
+        col_added: Added
+        col_status: Status
+        col_team: Team
+        details: Details
         disable: Disable
+        disabled: Disabled
+        disabled_badge: Disabled
         enable: Enable
         enabled_badge: Enabled
-        disabled_badge: Disabled
-        required_badge: Required
-        kpi_teams_using: Teams Using This Language
-        kpi_currently_active: Currently Active
         kpi_created: Created
-        ago: "%{time} ago"
-        details: Details
+        kpi_currently_active: Currently Active
+        kpi_teams_using: Teams Using This Language
         label_code: Code
+        label_created: Created
+        label_enabled: Enabled
         label_english_name: English Name
         label_native_name: Native Name
-        label_enabled: Enabled
-        label_created: Created
         label_updated: Updated
-        teams_heading: "Teams (%{count})"
-        col_team: Team
-        col_status: Status
-        col_added: Added
-        active: Active
-        disabled: Disabled
+        required_badge: Required
+        teams_heading: Teams (%{count})

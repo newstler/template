@@ -15,24 +15,24 @@ en:
       edit: Edit
       enable_all: Enable All
       enabled: Enabled
-      status_off: 'Off'
       filter: Filter
       from: 'From:'
+      json_format_hint: Enter valid JSON format
+      json_placeholder: Enter valid JSON
       never: Never
       new: New %{resource}
       no_content: "[No content]"
       save: Save
       search: Search
       search_placeholder: Search %{resources}...
-      to: 'To:'
+      status_off: 'Off'
       status_on: 'On'
-      unnamed: Unnamed
-      view: View
-      json_format_hint: Enter valid JSON format
-      json_placeholder: Enter valid JSON
       subscription_status:
         active: Active
         canceled: Canceled
         none: None
         past_due: Past due
         trialing: Trialing
+      to: 'To:'
+      unnamed: Unnamed
+      view: View

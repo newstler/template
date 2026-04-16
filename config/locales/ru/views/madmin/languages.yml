@@ -24,25 +24,25 @@ ru:
         tab_currencies: Валюты
         tab_languages: Языки
       show:
+        active: Активен
+        ago: "%{time} назад"
+        col_added: Добавлен
+        col_status: Статус
+        col_team: Команда
+        details: Детали
         disable: Отключить
+        disabled: Отключён
+        disabled_badge: Отключён
         enable: Включить
         enabled_badge: Включён
-        disabled_badge: Отключён
-        required_badge: Обязательный
-        kpi_teams_using: Команды с этим языком
-        kpi_currently_active: Сейчас активен
         kpi_created: Создан
-        ago: "%{time} назад"
-        details: Детали
+        kpi_currently_active: Сейчас активен
+        kpi_teams_using: Команды с этим языком
         label_code: Код
+        label_created: Создано
+        label_enabled: Статус
         label_english_name: Английское название
         label_native_name: Родное название
-        label_enabled: Статус
-        label_created: Создано
         label_updated: Обновлено
-        teams_heading: "Команды (%{count})"
-        col_team: Команда
-        col_status: Статус
-        col_added: Добавлен
-        active: Активен
-        disabled: Отключён
+        required_badge: Обязательный
+        teams_heading: Команды (%{count})

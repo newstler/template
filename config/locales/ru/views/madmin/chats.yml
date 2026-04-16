@@ -3,7 +3,6 @@ ru:
   madmin:
     chats:
       index:
-        ai_chats: AI-чаты
         col_cost: Стоимость
         col_created: Создан
         col_first_message: Первое сообщение
@@ -12,15 +11,14 @@ ru:
         empty_chat: Пустой чат
         search_placeholder: Поиск по email пользователя...
       show:
-        user: "Пользователь:"
-        model: "Модель:"
-        created: "Создан:"
-        messages: "Сообщения:"
-        tokens: "Токены:"
-        input_tokens: "Вход: %{count}"
-        output_tokens: "Выход: %{count}"
-        total_cost: "Общая стоимость:"
-        na: Н/Д
         conversation: Разговор
-        system_label: "Система:"
+        created: 'Создан:'
         default_model: По умолчанию
+        input_tokens: 'Вход: %{count}'
+        messages: 'Сообщения:'
+        model: 'Модель:'
+        output_tokens: 'Выход: %{count}'
+        system_label: 'Система:'
+        tokens: 'Токены:'
+        total_cost: 'Общая стоимость:'
+        user: 'Пользователь:'

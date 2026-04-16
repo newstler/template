@@ -4,11 +4,11 @@ ru:
     conversation_participants:
       index:
         all_statuses: Все
-        col_status: Статус
         col_conversation: Переписка
         col_joined: Вступление
         col_last_notified: Последнее уведомление
         col_last_read: Последнее чтение
+        col_status: Статус
         col_team: Команда
         col_user: Пользователь
         has_read: Прочитано
@@ -18,27 +18,27 @@ ru:
         no_participants_hint: Участники создаются при вступлении в переписку. Они
           появятся здесь, когда команды начнут общаться.
       show:
-        breadcrumb: Участники переписок
-        in_conversation: "в %{conversation}"
-        joined: "Вступил(а) %{date}"
         ago: "%{time} назад"
-        last_read: Последнее чтение
+        breadcrumb: Участники переписок
+        caught_up: Всё прочитано
+        col_joined: Вступление
+        col_last_read: Последнее чтение
+        col_user: Пользователь
+        conversation: Переписка
+        in_conversation: в %{conversation}
+        joined: Вступил(а) %{date}
+        joined_label: Вступление
         last_notified: Последнее уведомление
-        unread_status: Статус прочтения
+        last_read: Последнее чтение
+        other_participants: Другие участники (%{count})
+        started: Начато
+        subject: Тема
+        teams: Команды
+        title: Название
         unread_messages:
-          one: непрочитанное сообщение
           few: непрочитанных сообщения
           many: непрочитанных сообщений
+          one: непрочитанное сообщение
           other: непрочитанных сообщения
-        caught_up: Всё прочитано
-        conversation: Переписка
-        title: Название
-        teams: Команды
-        subject: Тема
-        started: Начато
-        joined_label: Вступление
+        unread_status: Статус прочтения
         updated: Обновлено
-        other_participants: "Другие участники (%{count})"
-        col_user: Пользователь
-        col_last_read: Последнее чтение
-        col_joined: Вступление

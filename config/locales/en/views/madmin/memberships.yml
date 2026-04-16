@@ -11,14 +11,14 @@ en:
         col_user: User
         search_placeholder: Search by user or team...
       show:
-        in_team: "in"
-        member_since: "Member since %{date}"
         details: Details
-        label_id: ID
-        label_user: User
+        in_team: in
         label_email: Email
-        label_team: Team
-        label_role: Role
+        label_id: ID
         label_invited_by: Invited By
         label_joined: Joined
+        label_role: Role
+        label_team: Team
         label_updated: Updated
+        label_user: User
+        member_since: Member since %{date}

@@ -11,14 +11,14 @@ en:
         col_role: Role
         search_placeholder: Search messages...
       show:
-        chat: "Chat:"
-        role: "Role:"
-        created: "Created:"
-        tokens: "Tokens:"
-        input_tokens: "In: %{count}"
-        output_tokens: "Out: %{count}"
-        na: "N/A"
-        cost: "Cost:"
+        chat: 'Chat:'
+        cost: 'Cost:'
+        created: 'Created:'
+        input_tokens: 'In: %{count}'
         message_content: Message Content
-        system_prompt: "System Prompt:"
+        na: N/A
+        output_tokens: 'Out: %{count}'
+        role: 'Role:'
+        system_prompt: 'System Prompt:'
+        tokens: 'Tokens:'
         tool_calls: Tool Calls

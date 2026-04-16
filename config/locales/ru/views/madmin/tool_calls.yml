@@ -9,14 +9,14 @@ ru:
         col_tool_call_id: ID вызова
         search_placeholder: Поиск вызовов инструментов...
       show:
+        arguments: Аргументы
+        chat_label: 'Чат #%{id}'
         details: Детали
-        label_tool: Инструмент
-        label_tool_call_id: ID вызова
-        label_message: Сообщение
+        in_message: в
         label_chat: Чат
         label_created: Создано
-        arguments: Аргументы
+        label_message: Сообщение
+        label_tool: Инструмент
+        label_tool_call_id: ID вызова
+        message_label: 'Сообщение #%{id}'
         result: Результат
-        in_message: "в"
-        chat_label: "Чат #%{id}"
-        message_label: "Сообщение #%{id}"

@@ -4,21 +4,20 @@ ru:
     articles:
       index:
         all_teams: Все команды
-        articles: Статьи
         col_article: Статья
         col_author: Автор
         col_created: Создана
         col_team: Команда
         search_placeholder: Поиск статей...
       show:
-        by: "от"
-        in: "в"
+        body: Содержание
+        by: от
         details: Детали
-        label_id: ID
-        label_team: Команда
+        in: в
         label_author: Автор
         label_created: Создано
+        label_id: ID
+        label_team: Команда
         label_updated: Обновлено
-        title: Заголовок
-        body: Содержание
         no_translation: Перевод недоступен
+        title: Заголовок

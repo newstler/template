@@ -4,11 +4,11 @@ en:
     conversation_participants:
       index:
         all_statuses: All
-        col_status: Status
         col_conversation: Conversation
         col_joined: Joined
         col_last_notified: Last Notified
         col_last_read: Last Read
+        col_status: Status
         col_team: Team
         col_user: User
         has_read: Has read
@@ -18,25 +18,25 @@ en:
         no_participants_hint: Participants are created when users join a conversation.
           They will appear here as soon as teams start messaging.
       show:
-        breadcrumb: Conversation Participants
-        in_conversation: "in %{conversation}"
-        joined: "Joined %{date}"
         ago: "%{time} ago"
-        last_read: Last Read
+        breadcrumb: Conversation Participants
+        caught_up: Caught up
+        col_joined: Joined
+        col_last_read: Last Read
+        col_user: User
+        conversation: Conversation
+        in_conversation: in %{conversation}
+        joined: Joined %{date}
+        joined_label: Joined
         last_notified: Last Notified
-        unread_status: Unread Status
+        last_read: Last Read
+        other_participants: Other Participants (%{count})
+        started: Started
+        subject: Subject
+        teams: Teams
+        title: Title
         unread_messages:
           one: unread message
           other: unread messages
-        caught_up: Caught up
-        conversation: Conversation
-        title: Title
-        teams: Teams
-        subject: Subject
-        started: Started
-        joined_label: Joined
+        unread_status: Unread Status
         updated: Updated
-        other_participants: "Other Participants (%{count})"
-        col_user: User
-        col_last_read: Last Read
-        col_joined: Joined

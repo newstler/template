@@ -17,16 +17,16 @@ ru:
           команда включит язык, он появится здесь.
       show:
         active: Активен
-        disabled: Отключён
-        details: Детали
-        label_team: Команда
-        label_language: Язык
-        label_status: Статус
-        label_added: Добавлено
-        label_last_updated: Последнее обновление
         ago: "%{time} назад"
-        other_languages_heading: "Другие языки в %{team}"
-        col_language: Язык
-        col_code: Код
-        col_status: Статус
         col_added: Добавлен
+        col_code: Код
+        col_language: Язык
+        col_status: Статус
+        details: Детали
+        disabled: Отключён
+        label_added: Добавлено
+        label_language: Язык
+        label_last_updated: Последнее обновление
+        label_status: Статус
+        label_team: Команда
+        other_languages_heading: Другие языки в %{team}

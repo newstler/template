@@ -3,21 +3,30 @@ en:
   activerecord:
     attributes:
       ai_cost:
-        cost_type: Cost Type
-        model_id: Model
-        input_tokens: Input Tokens
-        output_tokens: Output Tokens
         cost: Cost
+        cost_type: Cost Type
+        created_at: Created
+        input_tokens: Input Tokens
+        model_id: Model
+        output_tokens: Output Tokens
         team: Team
         user: User
-        created_at: Created
     models:
-      ai_cost:
-        one: AI Cost
-        other: AI Costs
+      active_storage/attachment:
+        one: Attachment
+        other: Attachments
+      active_storage/blob:
+        one: Blob
+        other: Blobs
+      active_storage/variant_record:
+        one: Variant Record
+        other: Variant Records
       admin:
         one: Admin
         other: Admins
+      ai_cost:
+        one: AI Cost
+        other: AI Costs
       article:
         one: Article
         other: Articles
@@ -45,6 +54,12 @@ en:
       model:
         one: Model
         other: Models
+      noticed/event:
+        one: Notification Event
+        other: Notification Events
+      noticed/notification:
+        one: Notification
+        other: Notifications
       team:
         one: Team
         other: Teams
@@ -57,18 +72,3 @@ en:
       user:
         one: User
         other: Users
-      noticed/event:
-        one: Notification Event
-        other: Notification Events
-      noticed/notification:
-        one: Notification
-        other: Notifications
-      active_storage/blob:
-        one: Blob
-        other: Blobs
-      active_storage/attachment:
-        one: Attachment
-        other: Attachments
-      active_storage/variant_record:
-        one: Variant Record
-        other: Variant Records
