@@ -1,0 +1,32 @@
+<%#
+  Wrapper partial that dispatches to a per-kind partial based on the
+  notifier type. The kind is derived from the notifier class name,
+  underscored and demodulized: "WelcomeNotifier" → "welcome".
+%>
+<% kind = notification.event.type.to_s.demodulize.underscore.sub(/_notifier$/, "") %>
+<% partial_path = "notifications/kinds/#{kind}" %>
+
+<li id="<%= dom_id(notification) %>"
+    data-notification-id="<%= notification.id %>"
+    data-controller="notifications"
+    data-action="click->notifications#markRead"
+    data-notifications-mark-read-url-value="<%= mark_read_notification_path(notification) %>"
+    class="<%= class_names(
+      'block p-4 rounded-lg transition-colors cursor-pointer',
+      'bg-dark-700 hover:bg-dark-600': notification.read_at.nil?,
+      'bg-dark-800 hover:bg-dark-700 opacity-75': notification.read_at.present?
+    ) %>">
+  <% if lookup_context.exists?(partial_path, [], true) %>
+    <%= render partial_path, notification: notification %>
+  <% else %>
+    <p><%= notification.message %></p>
+    <time class="text-xs text-dark-300"><%= l(notification.created_at, format: :short) %></time>
+  <% end %>
+
+  <% if notification.recipient.is_a?(Team) %>
+    <div class="mt-2 inline-flex items-center gap-1.5 px-2 py-0.5 rounded-full text-xs font-medium bg-accent-500/15 text-accent-300">
+      <%= inline_svg "icons/users.svg", class: "w-3 h-3" %>
+      <%= notification.recipient.name %>
+    </div>
+  <% end %>
+</li>

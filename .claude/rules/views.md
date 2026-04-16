@@ -12,6 +12,41 @@ globs: ["app/views/**/*.erb", "app/views/**/*.html.erb"]
 - **Helpers for complex logic** - Keep templates clean
 - **No JavaScript frameworks** - Stimulus only when needed
 
+## Page Layout (STRICT)
+
+Every user-facing page must follow the same layout structure for visual consistency.
+
+### Container
+
+```erb
+<div class="max-w-7xl mx-auto px-4 py-8">
+```
+
+Exceptions: auth pages (sessions, onboarding) and chat show use their own layout.
+
+### Page Header
+
+```erb
+<header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+  <div>
+    <h1 class="text-3xl font-bold text-white"><%= t(".heading") %></h1>
+    <p class="text-dark-300 mt-1"><%= t(".subtitle") %></p>
+  </div>
+  <%# Optional action button on the right %>
+</header>
+```
+
+| Element | Classes | Notes |
+|---------|---------|-------|
+| Container | `max-w-7xl mx-auto px-4 py-8` | All user-facing pages |
+| H1 | `text-3xl font-bold text-white` | Never text-dark-50, text-2xl, or font-semibold |
+| Header margin | `mb-8` | Never mb-6, mb-12, or space-y-8 |
+| Subtitle | `text-dark-300 mt-1` | Never text-dark-400 or text-sm |
+
+### Sidebar Active State
+
+Team root (`/t/slug`) and personal home (`/home`) use **exact match only** for the active highlight — prefix matching would incorrectly highlight them on every child page.
+
 ## ERB Conventions
 
 ```erb

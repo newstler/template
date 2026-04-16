@@ -1,10 +1,12 @@
 require "test_helper"
 
 class LanguageTest < ActiveSupport::TestCase
-  test "validates presence of code" do
-    lang = Language.new(name: "Test", native_name: "Test")
+  test "requires code, name, and native_name" do
+    lang = Language.new
     assert_not lang.valid?
     assert_includes lang.errors[:code], "can't be blank"
+    assert_includes lang.errors[:name], "can't be blank"
+    assert_includes lang.errors[:native_name], "can't be blank"
   end
 
   test "validates uniqueness of code" do
@@ -14,53 +16,26 @@ class LanguageTest < ActiveSupport::TestCase
     assert_includes lang.errors[:code], "has already been taken"
   end
 
-  test "validates presence of name" do
-    lang = Language.new(code: "xx", native_name: "Test")
-    assert_not lang.valid?
-    assert_includes lang.errors[:name], "can't be blank"
-  end
-
-  test "validates presence of native_name" do
-    lang = Language.new(code: "xx", name: "Test")
-    assert_not lang.valid?
-    assert_includes lang.errors[:native_name], "can't be blank"
-  end
-
-  test "english? returns true for English" do
+  test "english? and Language.english identify English" do
     assert languages(:english).english?
-  end
-
-  test "english? returns false for non-English" do
     assert_not languages(:spanish).english?
-  end
-
-  test "self.english finds the English language" do
     assert_equal languages(:english), Language.english
   end
 
-  test "enabled scope returns only enabled languages" do
-    enabled = Language.enabled
-    assert_includes enabled, languages(:english)
-    assert_includes enabled, languages(:spanish)
-    assert_not_includes enabled, languages(:disabled_lang)
-  end
+  test "enabled scope and enabled_codes exclude disabled languages" do
+    assert_includes Language.enabled, languages(:english)
+    assert_includes Language.enabled, languages(:spanish)
+    assert_not_includes Language.enabled, languages(:disabled_lang)
 
-  test "by_name scope orders by name" do
-    names = Language.by_name.pluck(:name)
-    assert_equal names.sort, names
-  end
-
-  test "allows disabling any language" do
-    spanish = languages(:spanish)
-    spanish.update!(enabled: false)
-    assert_not spanish.enabled?
-  end
-
-  test "enabled_codes returns codes of enabled languages" do
     codes = Language.enabled_codes
     assert_includes codes, "en"
     assert_includes codes, "es"
     assert_not_includes codes, "de"
+  end
+
+  test "by_name scope orders alphabetically" do
+    names = Language.by_name.pluck(:name)
+    assert_equal names.sort, names
   end
 
   test "bust cache on save" do
@@ -71,16 +46,33 @@ class LanguageTest < ActiveSupport::TestCase
     assert_nil Rails.cache.read("language_available_codes")
   end
 
-  test "available_codes returns codes matching yml files in config/locales" do
+  test "available_codes is sorted and based on locale yml files" do
     codes = Language.available_codes
     assert_includes codes, "en"
-    assert_kind_of Array, codes
-    assert_equal codes.sort, codes, "available_codes should be sorted"
+    assert_equal codes.sort, codes
   end
 
-  test "cannot create language with code that has no yml file" do
+  test "rejects a language whose code has no i18n yml file" do
     lang = Language.new(code: "xx", name: "Unknown", native_name: "Unknown")
     assert_not lang.valid?
     assert_includes lang.errors[:code], "has no matching i18n yml file"
+  end
+
+  test "English and Russian locale files include stubs for tg, uz, ky, tr, sr" do
+    I18n.with_locale(:en) do
+      assert_equal "Tajik",   I18n.t("languages.tg")
+      assert_equal "Uzbek",   I18n.t("languages.uz")
+      assert_equal "Kyrgyz",  I18n.t("languages.ky")
+      assert_equal "Turkish", I18n.t("languages.tr")
+      assert_equal "Serbian", I18n.t("languages.sr")
+    end
+
+    I18n.with_locale(:ru) do
+      assert_equal "Таджикский", I18n.t("languages.tg")
+      assert_equal "Узбекский",  I18n.t("languages.uz")
+      assert_equal "Киргизский", I18n.t("languages.ky")
+      assert_equal "Турецкий",   I18n.t("languages.tr")
+      assert_equal "Сербский",   I18n.t("languages.sr")
+    end
   end
 end

@@ -1,0 +1,7 @@
+<%= t(".heading") %>
+
+<%= t(".intro", sender: @message.user.name.presence || @message.user.email) %>
+
+<%= @message.content %>
+
+<%= t(".cta") %>: <%= team_conversation_url(@conversation.team_for(@recipient).slug, @conversation) %>

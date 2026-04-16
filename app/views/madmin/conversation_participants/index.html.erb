@@ -1,0 +1,111 @@
+<%= content_for :title, "Conversation Participants" %>
+
+<header class="header">
+  <h1>Conversation Participants</h1>
+</header>
+
+<div class="filters mb-4 p-4 card-bg">
+  <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
+    <div>
+      <%= f.label :status, "Status", class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.select :status,
+          options_for_select([["All", ""], ["Has read", "read"], ["Never read", "never_read"]], params[:status]),
+          {},
+          class: "form-select" %>
+    </div>
+
+    <div class="flex gap-2">
+      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <% if params[:status].present? %>
+        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<% if @records.any? %>
+  <div class="table-scroll">
+    <table>
+      <thead>
+        <tr>
+          <th><%= sortable :user_name, "User" %></th>
+          <th><%= sortable :conversation_title, "Conversation" %></th>
+          <th>Team</th>
+          <th><%= sortable :last_read_at, "Last Read" %></th>
+          <th><%= sortable :last_notified_at, "Last Notified" %></th>
+          <th><%= sortable :created_at, "Joined" %></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @records.each do |record| %>
+          <tr>
+            <td>
+              <%= link_to resource.show_path(record), class: "flex items-center gap-3 hover:underline" do %>
+                <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(record.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
+                <div>
+                  <div class="font-medium"><%= record.user.name.presence || "Unnamed" %></div>
+                  <div class="text-xs text-dark-500"><%= record.user.email %></div>
+                </div>
+              <% end %>
+            </td>
+            <td class="max-w-xs">
+              <%= link_to "/madmin/conversations/#{record.conversation_id}", class: "block truncate hover:underline" do %>
+                <%= record.conversation.title.presence || "Conv #{record.conversation_id[0, 8]}..." %>
+              <% end %>
+            </td>
+            <td>
+              <div class="flex flex-wrap items-center gap-1.5">
+                <% record.conversation.teams.each do |team| %>
+                  <%= link_to "/madmin/teams/#{team.slug}", class: "inline-flex items-center gap-1.5 hover:underline" do %>
+                    <div class="w-5 h-5 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
+                      <%= team.name.first(2).upcase %>
+                    </div>
+                    <span class="text-sm"><%= team.name %></span>
+                  <% end %>
+                <% end %>
+              </div>
+            </td>
+            <td class="text-sm">
+              <% if record.last_read_at %>
+                <span class="text-dark-300" title="<%= record.last_read_at.strftime('%-d %B %Y at %H:%M') %>">
+                  <%= time_ago_in_words(record.last_read_at) %> ago
+                </span>
+              <% else %>
+                <span class="text-dark-500">Never</span>
+              <% end %>
+            </td>
+            <td class="text-sm">
+              <% if record.last_notified_at %>
+                <span class="text-dark-300" title="<%= record.last_notified_at.strftime('%-d %B %Y at %H:%M') %>">
+                  <%= time_ago_in_words(record.last_notified_at) %> ago
+                </span>
+              <% else %>
+                <span class="text-dark-500">-</span>
+              <% end %>
+            </td>
+            <td class="text-sm text-dark-400"><%= record.created_at.strftime("%-d %b %Y") %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+<% else %>
+  <div class="card-bg p-10 text-center">
+    <div class="w-14 h-14 mx-auto rounded-2xl bg-dark-700 flex items-center justify-center mb-4">
+      <%= inline_svg "icons/users.svg", class: "w-7 h-7 text-dark-400" %>
+    </div>
+    <h2 class="text-lg font-semibold text-dark-100 mb-1">No participants yet</h2>
+    <p class="text-sm text-dark-400 max-w-md mx-auto">Participants are created when users join a conversation. They will appear here as soon as teams start messaging.</p>
+  </div>
+<% end %>
+
+<div class="pagination">
+  <% if @pagy.respond_to?(:series_nav) %>
+    <%== @pagy.series_nav if @pagy.last > 1 %>
+    <%== @pagy.info_tag %>
+  <% else %>
+    <%== pagy_nav @pagy if @pagy.last > 1 %>
+    <%== pagy_info @pagy %>
+  <% end %>
+</div>

@@ -58,5 +58,38 @@ module Users
       assert_not result[:success]
       assert_equal "no_updates", result[:code]
     end
+
+    test "updates preferred_currency" do
+      mock_mcp_request(team: @team, user: @user)
+
+      result = call_tool(Users::UpdateCurrentUserTool, preferred_currency: "EUR")
+
+      assert result[:success]
+      assert_equal "EUR", result[:data][:preferred_currency]
+      @user.reload
+      assert_equal "EUR", @user.preferred_currency
+    end
+
+    test "clears preferred_currency with auto" do
+      @user.update!(preferred_currency: "EUR")
+      mock_mcp_request(team: @team, user: @user)
+
+      result = call_tool(Users::UpdateCurrentUserTool, preferred_currency: "auto")
+
+      assert result[:success]
+      @user.reload
+      assert_nil @user.preferred_currency
+    end
+
+    test "updates residence_country_code" do
+      mock_mcp_request(team: @team, user: @user)
+
+      result = call_tool(Users::UpdateCurrentUserTool, residence_country_code: "DE")
+
+      assert result[:success]
+      assert_equal "DE", result[:data][:residence_country_code]
+      @user.reload
+      assert_equal "DE", @user.residence_country_code
+    end
   end
 end

@@ -1,0 +1,33 @@
+<% content_for :title, t(".title") %>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <header class="flex items-center justify-between mb-8">
+    <h1 class="text-3xl font-bold text-white"><%= t(".title") %></h1>
+
+    <div class="flex items-center gap-4">
+      <%= link_to t(".preferences"),
+                  edit_notification_preferences_path,
+                  class: "text-sm text-dark-300 hover:text-white" %>
+      <% if @notifications.any? %>
+        <%= button_to t(".mark_all_read"),
+                      mark_all_read_notifications_path,
+                      method: :patch,
+                      class: "text-sm text-dark-300 hover:text-white" %>
+      <% end %>
+    </div>
+  </header>
+
+  <% if @notifications.any? %>
+    <%= turbo_stream_from current_user, :notifications %>
+    <ul id="notifications" class="space-y-2">
+      <%= render partial: "notifications/notification",
+                 collection: @notifications,
+                 as: :notification %>
+    </ul>
+  <% else %>
+    <div data-empty-state class="text-center py-16 text-dark-300">
+      <%= inline_svg "icons/bell-off.svg", class: "w-12 h-12 mx-auto mb-4 opacity-50" %>
+      <p><%= t(".empty") %></p>
+    </div>
+  <% end %>
+</div>

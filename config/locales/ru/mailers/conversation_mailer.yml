@@ -1,0 +1,12 @@
+---
+ru:
+  conversation_mailer:
+    messages_digest:
+      cta: Открыть переписку
+      heading: Новые сообщения в ваших переписках
+      subject: Сводка переписки
+    new_message:
+      cta: Ответить
+      heading: Новое сообщение
+      intro: "%{sender} отправил(а) вам сообщение:"
+      subject: Новое сообщение в вашей переписке

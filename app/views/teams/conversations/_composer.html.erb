@@ -1,0 +1,10 @@
+<div id="conversation_message_form">
+<%= form_with model: ConversationMessage.new,
+              url: team_conversation_messages_path(current_team.slug, @conversation),
+              multipart: true,
+              data: { controller: "chat-input", chat_input_target: "form" } do |f| %>
+  <%= render "shared/message_input_box",
+      form: f,
+      placeholder: t(".placeholder") %>
+<% end %>
+</div>

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
   mount RailsErrorDashboard::Engine => "/red"  # RED (Rails Error Dashboard) — also works at /error_dashboard
+  mount MissionControl::Jobs::Engine, at: "/jobs"
   draw :madmin
 
   # User authentication (magic link - creates user on first use)
@@ -14,6 +15,23 @@ Rails.application.routes.draw do
 
   # Onboarding (first-time user setup, before team context)
   resource :onboarding, only: [ :show, :update ]
+
+  # User notifications inbox (global — not team-scoped because a user may
+  # receive notifications across multiple teams)
+  resources :notifications, only: [ :index, :show ] do
+    member do
+      patch :mark_read
+    end
+    collection do
+      patch :mark_all_read
+    end
+  end
+  resource :notification_preferences, only: [ :edit, :update ],
+           controller: "notifications/preferences"
+
+  # Personal context (authenticated user, no team scope)
+  get "home", to: "personal/home#show", as: :personal_home
+  resource :profile, only: [ :edit, :update ], controller: "personal/profiles", as: :personal_profile
 
   # Team management (multi-tenant only routes for listing/creating teams)
   resources :teams, only: [ :index, :new, :create ], param: :slug
@@ -35,9 +53,17 @@ Rails.application.routes.draw do
     resources :members, only: [ :index, :show, :new, :create, :destroy ], controller: "teams/members"
     resource :profile, only: [ :show, :edit, :update ], controller: "profiles"
 
+    # Sidebar pagination
+    get "sidebar/conversations", to: "teams/sidebar#conversations", as: :sidebar_conversations
+    get "sidebar/chats", to: "teams/sidebar#chats", as: :sidebar_chats
+
     # Content
     resources :articles
     resources :languages, only: [ :index, :create, :destroy ], controller: "teams/languages"
+    resources :conversations, controller: "teams/conversations", only: [ :index, :new, :create, :show ] do
+      resources :messages, controller: "teams/conversations/messages", only: [ :create ]
+      resources :participants, controller: "teams/conversations/participants", only: [ :show ]
+    end
 
     # Billing
     resource :pricing, only: [ :show ], controller: "teams/pricing"

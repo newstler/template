@@ -1,0 +1,53 @@
+<%= turbo_stream_from @conversation %>
+
+<% conv_title = @conversation.title.presence || @conversation.participants.reject { |p| p.id == current_user.id }.map { |p| p.name.presence || p.email }.join(", ").presence || t(".title") %>
+<% content_for :title, conv_title %>
+<% content_for :full_width, true %>
+
+<div class="relative h-[calc(100vh-64px)] lg:h-screen flex flex-col">
+  <%# Fixed header %>
+  <div class="shrink-0 border-b border-dark-700/50 bg-dark-800/95 backdrop-blur-sm z-20">
+    <div class="max-w-4xl mx-auto px-4 py-8 flex items-center gap-4">
+      <div class="flex-1 min-w-0">
+        <h1 class="text-3xl font-bold text-white truncate"><%= conv_title %></h1>
+        <% if @conversation.subject.present? %>
+          <p class="text-sm text-dark-400 truncate mt-1"><%= @conversation.subject.class.model_name.human %>: <%= @conversation.subject.try(:title) || @conversation.subject.try(:name) || @conversation.subject_id %></p>
+        <% end %>
+      </div>
+      <div class="shrink-0 flex items-center gap-1.5 text-sm text-dark-500">
+        <%= inline_svg "icons/users.svg", class: "w-4 h-4" %>
+        <span><%= @conversation.participants.size %></span>
+      </div>
+    </div>
+  </div>
+
+  <%# Messages container - fills remaining height %>
+  <div class="flex-1 overflow-y-auto relative" data-controller="scroll-bottom">
+    <%# Top gradient fade %>
+    <div class="sticky top-0 h-8 bg-gradient-to-b from-dark-800 to-transparent pointer-events-none z-10"></div>
+
+    <div id="conversation_messages" class="max-w-4xl mx-auto px-4 pb-72"
+         data-controller="dedupe-messages chat-scroll"
+         data-chat-scroll-url-value="<%= team_conversation_path(current_team.slug, @conversation) %>"
+         data-chat-scroll-oldest-id-value="<%= @messages.first&.id %>"
+         data-chat-scroll-has-older-value="<%= @has_older %>">
+      <div data-chat-scroll-target="sentinel" class="hidden"><%= t("common.loading") %></div>
+      <%= render partial: "teams/conversations/conversation_message",
+                 collection: @messages,
+                 as: :message %>
+    </div>
+  </div>
+
+  <%# Input area - floating at bottom %>
+  <div class="absolute bottom-0 left-0 right-0 z-20 pointer-events-none">
+    <%# Bottom gradient fade %>
+    <div class="h-24 bg-gradient-to-t from-dark-800 to-transparent"></div>
+
+    <%# Input container %>
+    <div class="bg-dark-800 pb-6 pointer-events-auto">
+      <div class="max-w-4xl mx-auto px-4">
+        <%= render "teams/conversations/composer" %>
+      </div>
+    </div>
+  </div>
+</div>

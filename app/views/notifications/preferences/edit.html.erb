@@ -1,0 +1,49 @@
+<% content_for :title, t(".title") %>
+
+<div class="max-w-3xl mx-auto px-4 py-8">
+  <header class="mb-8">
+    <h1 class="text-3xl font-bold text-white"><%= t(".title") %></h1>
+    <p class="mt-2 text-sm text-dark-300"><%= t(".description") %></p>
+  </header>
+
+  <%= form_with url: notification_preferences_path, method: :patch, class: "space-y-6" do |form| %>
+    <% if @notifier_kinds.empty? %>
+      <p class="text-dark-400"><%= t(".empty") %></p>
+    <% else %>
+      <div class="bg-dark-900 border border-dark-700 rounded-xl overflow-hidden">
+        <table class="w-full text-sm">
+          <thead class="bg-dark-800 text-dark-300">
+            <tr>
+              <th class="text-left px-4 py-3 font-medium"><%= t(".kind") %></th>
+              <% Notifications::PreferencesController::CHANNELS.each do |channel| %>
+                <th class="text-center px-4 py-3 font-medium"><%= t(".channels.#{channel}") %></th>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-dark-700">
+            <% @notifier_kinds.each do |kind| %>
+              <tr>
+                <td class="px-4 py-3 text-dark-100 font-medium"><%= kind.humanize %></td>
+                <% Notifications::PreferencesController::CHANNELS.each do |channel| %>
+                  <td class="px-4 py-3 text-center">
+                    <%= hidden_field_tag "notification_preferences[#{kind}][#{channel}]", "0" %>
+                    <%= check_box_tag "notification_preferences[#{kind}][#{channel}]",
+                                      "1",
+                                      @preferences.dig(kind, channel) != false,
+                                      class: "h-4 w-4 rounded border-dark-600 bg-dark-800 text-accent-500" %>
+                  </td>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <%= form.submit t(".save"),
+                        class: "bg-accent-500 hover:bg-accent-600 text-white py-2 px-4 rounded-lg font-medium transition-colors cursor-pointer" %>
+        <%= link_to t(".cancel"), notifications_path, class: "text-dark-400 hover:text-dark-200" %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

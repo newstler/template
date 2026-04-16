@@ -1,0 +1,9 @@
+<%= turbo_frame_tag "sidebar_chats_page" do %>
+  <% @chats.each do |chat| %>
+    <% first_user_message = chat.first_user_message_preview.presence || t("common.untitled") %>
+    <%= render "shared/sidebar_link", path: team_chat_path(current_team, chat), icon: "sparkles", label: first_user_message, nested: true, truncate: true %>
+  <% end %>
+  <% if @has_more %>
+    <%= link_to t("shared.sidebar.load_more"), team_sidebar_chats_path(current_team, offset: @next_offset), class: "block pl-10 py-2 text-xs text-dark-500 hover:text-dark-300 transition-colors", data: { turbo_frame: "sidebar_chats_page" } %>
+  <% end %>
+<% end %>

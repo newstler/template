@@ -1,9 +1,25 @@
 class Setting < ApplicationRecord
   ALLOWED_KEYS = %i[
+    articles_enabled
+    chunk_overlap
+    chunk_size
+    conversation_digest_window_minutes
+    conversation_moderation_enabled
+    conversations_enabled
+    currencylayer_api_key
+    default_country_code
+    default_currency
+    enabled_currencies
     default_model
+    embedding_model
+    hybrid_pool_multiplier
     litestream_replica_access_key litestream_replica_bucket litestream_replica_key_id
     mail_from
-    public_chats
+    max_similarity_distance
+    moderation_model
+    ai_chats_enabled
+    rrf_k
+    search_tokenizer
     smtp_address smtp_password smtp_username
     stripe_publishable_key stripe_secret_key stripe_webhook_secret
     translation_model
@@ -35,8 +51,88 @@ class Setting < ApplicationRecord
     get(:translation_model).presence
   end
 
-  def self.chats_enabled?
-    default_model.present? && get(:public_chats) != false && Model.configured_providers.any?
+  def self.moderation_model
+    get(:moderation_model).presence
+  end
+
+  def self.default_currency
+    get(:default_currency).presence || "USD"
+  end
+
+  def self.enabled_currencies
+    raw = get(:enabled_currencies)
+    return CurrencyConvertible::SUPPORTED_CURRENCIES if raw.blank?
+    raw.split(",").map(&:strip).select(&:present?)
+  end
+
+  def self.currency_enabled?(code)
+    enabled_currencies.include?(code)
+  end
+
+  def self.toggle_currency!(code)
+    current = enabled_currencies
+    updated = if current.include?(code)
+      current - [ code ]
+    else
+      current + [ code ]
+    end
+    instance.update!(enabled_currencies: updated.join(","))
+  end
+
+  def self.default_country_code
+    get(:default_country_code).presence
+  end
+
+  def self.search_tokenizer
+    get(:search_tokenizer).presence || "porter unicode61 remove_diacritics 2"
+  end
+
+  def self.embedding_model
+    get(:embedding_model).presence
+  end
+
+  def self.rrf_k
+    (get(:rrf_k) || 60).to_i
+  end
+
+  def self.max_similarity_distance
+    (get(:max_similarity_distance) || 0.75).to_f
+  end
+
+  def self.chunk_size
+    (get(:chunk_size) || 400).to_i
+  end
+
+  def self.chunk_overlap
+    (get(:chunk_overlap) || 40).to_i
+  end
+
+  def self.hybrid_pool_multiplier
+    (get(:hybrid_pool_multiplier) || 3).to_i
+  end
+
+  def self.conversation_digest_window_minutes
+    (get(:conversation_digest_window_minutes) || 5).to_i
+  end
+
+  def self.ai_chats_enabled?
+    default_model.present? && get(:ai_chats_enabled) != false && Model.configured_providers.any?
+  end
+
+  def self.conversations_enabled?
+    get(:conversations_enabled) != false
+  end
+
+  def self.articles_enabled?
+    get(:articles_enabled) != false
+  end
+
+  def self.conversation_moderation_enabled?
+    get(:conversation_moderation_enabled) != false
+  end
+
+  def self.stripe_configured?
+    get(:stripe_secret_key).present?
   end
 
   def self.reconfigure!

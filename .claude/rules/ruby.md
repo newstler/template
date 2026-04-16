@@ -33,7 +33,7 @@ def close = create_closure!
 def publish = update!(published_at: Time.current)
 
 # Scopes (adverbs/descriptors)
-scope :chronologically, -> { order(created_at: :asc) }
+scope :chronologically, -> { order(updated_at: :asc) }
 scope :preloaded, -> { includes(:author, :comments) }
 ```
 

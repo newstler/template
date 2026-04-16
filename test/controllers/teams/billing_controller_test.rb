@@ -19,6 +19,14 @@ class Teams::BillingControllerTest < ActionDispatch::IntegrationTest
     assert_response :success
   end
 
+  test "redirects to team root when Stripe is not configured" do
+    sign_in(users(:one))
+    Setting.instance.update!(stripe_secret_key: nil)
+    get team_billing_path(teams(:one))
+    assert_redirected_to team_root_path(teams(:one))
+    assert_equal I18n.t("controllers.application.stripe_not_configured"), flash[:alert]
+  end
+
   private
 
   def sign_in(user)

@@ -14,10 +14,16 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
 - **Deployment**: Kamal 2
 - **Authentication**: Magic Links (passwordless)
 - **Multitenancy**: Team-based with roles (owner/admin/member)
-- **Multilingual**: Mobility gem with RubyLLM auto-translation
+- **Multilingual**: Mobility gem with RubyLLM auto-translation; full UI locales for `en, de, es, fr, ru` plus language-name stubs for `tg, uz, ky, tr, sr` (add content per consuming project)
+- **Currencies**: `money` + `money-currencylayer-bank` (daily rate refresh)
+- **Countries**: `countries` (iso3166) with emoji flags
 - **Analytics**: [Nullitics](https://nullitics.com) with [MaxMind](https://www.maxmind.com) geolocation (optional)
 - **Admin Panel**: Madmin
 - **Error Tracking**: Rails Error Dashboard (RED) at `/red`
+- **Notifications**: [Noticed v2](https://github.com/excid3/noticed)
+- **Search**: SQLite FTS5 via the `Searchable` concern (Unicode61, bm25)
+- **Vector Search**: sqlite-vec (loadable extension) via `Embeddable`, `Chunkable`, `HybridSearchable`
+- **Charts**: Chartkick + Groupdate
 - **Primary Keys**: UUIDv7 (sortable, distributed-friendly)
 
 ## Features
@@ -50,6 +56,46 @@ A modern Rails template for building AI-powered apps — with built-in chat, MCP
   - Continuous backup of all databases (main, cache, queue, cable)
 - **UUIDv7 Primary Keys** for better distributed system support
 - **Solid Stack** for production-ready background jobs, caching, and cable
+- **Notifications** (via Noticed v2)
+  - Database + email delivery out of the box
+  - Live-updating inbox via Turbo Streams
+  - Per-kind, per-channel user preferences
+  - Ready for Slack, SMS, web/mobile push as opt-in adapters
+  - Full audit trail in Madmin at `/madmin/noticed_events`
+- **Currencies + Countries**
+  - Money gem with daily rate refresh from CurrencyLayer
+  - Admin-toggleable currencies — enable/disable individual currencies at `/madmin/languages` (Currencies tab)
+  - Per-team default currency, per-user preferred currency
+  - Per-team and per-user country (ISO 3166) with emoji flag picker
+  - Locale-aware amount formatting (Russian: `1 000 000`; English: `1,000,000`)
+  - `Current.currency` set on every request via a 5-step detection chain
+- **Full-Text Search** via SQLite FTS5
+  - `include Searchable` on any model, declare `searchable_fields`
+  - Unicode61 tokenizer handles Cyrillic, Turkish, and Latin diacritics out of the box
+  - Composable `Model.search(query)` returns a relevance-ordered `ActiveRecord::Relation`
+  - Zero external services — SQLite ships with FTS5 built in
+- **Vector Search + RAG kit** (`Embeddable`, `Chunkable`, `HybridSearchable`)
+  - sqlite-vec backed vec0 virtual tables, zero external dependencies
+  - Ordered KNN results with per-record confidence (`record.similarity_distance`)
+  - Configurable distance threshold (`max_distance`) to filter irrelevant results
+  - Metadata pre-filtering for WHERE-aware KNN
+  - Chunking for long documents via the polymorphic `Chunk` model
+  - Hybrid keyword + semantic retrieval via Reciprocal Rank Fusion
+  - All RAG parameters (distance threshold, RRF k, chunk size/overlap, pool multiplier) configurable via admin sliders at `/madmin/rag`
+  - Cosine (default), L2, L1, Hamming distance metrics
+- **Team Messaging** (Conversations)
+  - Team-scoped person-to-person chat with attachments
+  - Polymorphic `subject` — attach conversations to any record
+  - Live updates via Turbo Streams
+  - Opt-in message translation (`TranslatableMessage` concern)
+  - Opt-in contact-leak moderation (`ModeratableMessage` concern)
+  - Email digests grouped by conversation with anti-spam throttling
+- **Dashboards** (Chartkick + Groupdate)
+  - Reference team dashboard at `/t/:slug/` with KPI cards, a chartkick line chart, attention-items strip, and a 7d/30d/90d time-range selector
+  - Admin dashboard at `/madmin` with platform-wide KPIs, cost + signup time-series, top teams and users by AI cost
+  - Reusable partials: `_kpi_card`, `_chart_card`, `_attention_items_strip`, `_progress_ring`
+  - `DashboardHelper` with `cached_dashboard(key, expires_in:)` for team- and range-aware aggregation caching
+  - OKLCH-aware Stimulus controllers for chart theming, sparklines, and the time-range selector
 - **Vanilla Rails** approach — no unnecessary abstractions
 
 ## Getting Started

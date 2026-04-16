@@ -1,0 +1,9 @@
+<%= turbo_frame_tag "sidebar_conversations_page" do %>
+  <% @conversations.each do |conversation| %>
+    <% participant = conversation.conversation_participants.find { |cp| cp.user_id == current_user.id } %>
+    <%= render "shared/sidebar_conversation", conversation: conversation, unread: participant&.unread_count.to_i %>
+  <% end %>
+  <% if @has_more %>
+    <%= link_to t("shared.sidebar.load_more"), team_sidebar_conversations_path(current_team, offset: @next_offset), class: "block pl-10 py-2 text-xs text-dark-500 hover:text-dark-300 transition-colors", data: { turbo_frame: "sidebar_conversations_page" } %>
+  <% end %>
+<% end %>

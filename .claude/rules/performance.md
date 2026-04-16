@@ -168,3 +168,59 @@ end
 ```
 
 Only optimize this way for truly small, high-frequency partials. Normal-sized partials are fine.
+
+## Vector Search
+
+- Re-embedding on save is automatic via `Embeddable`. To avoid wasted API calls, the source string is hashed (SHA256) and compared against the stored hash before enqueuing `EmbedRecordJob` — unchanged records are skipped.
+- Metadata pre-filtering via `filter_by:` is always cheaper than post-filtering. Declare metadata columns on the vec0 table for any field you'll filter on at query time.
+- `similar_to` performs a two-query lookup (vec0 IDs → main table) which is fine at template scale. For hot paths, consider caching the result IDs.
+- `Chunkable` enqueues rechunking synchronously in an `after_save_commit`. If chunking is slow for your documents, move `#rechunk` into a background job.
+- Prefer `HybridSearchable` over `Embeddable` alone when you have an FTS5 index — Reciprocal Rank Fusion combines lexical and semantic signals cheaply and fixes the "exact keyword miss" failure mode of pure vector search.
+
+## Full-Text Search
+
+Any model that needs user-facing search must `include Searchable` with explicit `searchable_fields`. Do not implement one-off `LIKE`/`ILIKE` scopes on string columns for user search — they don't scale, don't respect diacritics, and don't rank by relevance.
+
+```ruby
+# ❌ BAD: linear scan, no diacritic folding, no ranking
+scope :matching, ->(q) { where("name LIKE ?", "%#{q}%") }
+
+# ✅ GOOD: FTS5-backed, bm25 relevance, Unicode61 diacritic folding
+class Candidate < ApplicationRecord
+  include Searchable
+  searchable_fields :profession, :skills, :languages, :notes
+end
+
+Candidate.search("welder russian speaker")
+```
+
+The `searchable:install` generator emits the FTS5 virtual table migration. Use `bin/rails 'fts:rebuild[ModelName]'` after changing the tokenizer or backfilling data.
+
+For semantic (non-keyword) search, combine with `Embeddable` (see Plan 05).
+
+## Dashboards
+
+Dashboards fetch and compute aggregate data that's accessed on every team or admin page load. Apply these rules strictly:
+
+1. **Scope first, then aggregate.** Always chain `.where(created_at: @range)` and a `current_team` scope before calling `.count`, `.sum`, or `group_by_*`. Never aggregate the whole table.
+2. **Use `groupdate`, not Ruby bucketing.** Time-series series belong in SQL: `current_team.chats.group_by_day(:created_at, range: @range).count`. Do not load records and bucket them in Ruby.
+3. **Wrap expensive aggregations in `cached_dashboard`.** The helper's cache key includes `team_id` and the `@range` beginning date, so invalidation on range change is automatic.
+   ```ruby
+   @top_users = cached_dashboard(:top_users, expires_in: 10.minutes) do
+     current_team.users.joins(:chats).group("users.id")
+                 .order(Arel.sql("SUM(chats.total_cost) DESC")).limit(10).to_a
+   end
+   ```
+4. **Always `includes`** associations the dashboard view will touch (`Chat.includes(:user, :model, :messages)`).
+5. **Counter caches over `.count`.** Use `chat.messages_count`, `team.memberships_count`, etc.
+6. **Collection rendering** for repeated partials (`render partial: "row", collection: @rows`).
+7. **Ruby methods on preloaded data** (`messages.min_by(&:created_at)`, not `messages.order(:created_at).first`).
+
+Dashboard controller tests should assert the query count is bounded, e.g.:
+
+```ruby
+test "team dashboard runs a bounded number of queries" do
+  sign_in users(:one)
+  assert_queries(20) { get team_root_path(teams(:one).slug) }
+end
+```

@@ -1,0 +1,11 @@
+---
+en:
+  notifiers:
+    welcome_notifier:
+      email:
+        body_html: Hi <strong>%{name}</strong>, welcome! Your account is ready.
+        body_text: Hi %{name}, welcome! Your account is ready.
+        cta: Go to your inbox
+        heading: Welcome aboard
+        subject: Welcome to the team
+      message: Welcome aboard, %{name}!

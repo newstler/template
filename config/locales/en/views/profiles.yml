@@ -3,12 +3,16 @@ en:
   profiles:
     edit:
       avatar_label: Avatar
+      currency_auto: Auto-detect
+      currency_help: Defaults to your team's currency when unset
       heading: Edit Profile
       locale_auto: Auto-detect
       locale_help: Sets your UI language and the source language for translations
       locale_label: Language
       name_label: Name
       name_placeholder: Enter your name
+      preferred_currency: Preferred currency
+      residence_country: Country of residence
       submit: Save Changes
     show:
       edit_button: Edit

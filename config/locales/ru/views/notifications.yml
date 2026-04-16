@@ -1,0 +1,21 @@
+---
+ru:
+  notifications:
+    index:
+      empty: Уведомлений пока нет.
+      mark_all_read: Отметить все как прочитанные
+      preferences: Настройки
+      title: Уведомления
+    mark_all_read:
+      marked_all_read: Все уведомления отмечены как прочитанные.
+    preferences:
+      edit:
+        cancel: Отмена
+        channels:
+          database: В приложении
+          email: E-mail
+        description: Выберите, по каким каналам доставлять уведомления каждого типа.
+        empty: Пока нет зарегистрированных типов уведомлений.
+        kind: Тип
+        save: Сохранить настройки
+        title: Настройки уведомлений

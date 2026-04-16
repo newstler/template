@@ -1,10 +1,12 @@
-<%= content_for :title, @record.title.truncate(40) %>
+<%= content_for :title, Mobility.with_locale(:en) { @record.title }.truncate(40) %>
+
+<% languages = [[:en, "English"]] + @record.team.team_languages.includes(:language).where(active: true).map { |tl| [tl.language.code.to_sym, tl.language.name] } %>
 
 <header class="header">
   <h1>
     <%= link_to resource.friendly_name.pluralize, resource.index_path %>
     /
-    <%= @record.title.truncate(50) %>
+    <%= Mobility.with_locale(:en) { @record.title }.truncate(50) %>
   </h1>
 </header>
 
@@ -14,7 +16,7 @@
       <%= inline_svg "icons/file.svg", class: "w-6 h-6 text-white" %>
     </div>
     <div class="flex-1 min-w-0">
-      <h2 class="text-2xl font-bold text-dark-100"><%= @record.title %></h2>
+      <h2 class="text-2xl font-bold text-dark-100"><%= Mobility.with_locale(:en) { @record.title } %></h2>
       <div class="flex items-center gap-4 mt-2 text-sm text-dark-400">
         <span>by
           <%= link_to @record.user.name.presence || @record.user.email, "/madmin/users/#{@record.user.id}", class: "text-dark-200 hover:underline" %>
@@ -40,10 +42,6 @@
         <tr>
           <th class="label">ID</th>
           <td class="font-mono text-sm"><%= @record.id %></td>
-        </tr>
-        <tr>
-          <th class="label">Title</th>
-          <td><%= @record.title %></td>
         </tr>
         <tr>
           <th class="label">Team</th>
@@ -73,15 +71,52 @@
   </div>
 </div>
 
-<% if @record.body.present? %>
-<div class="card-bg overflow-hidden">
+<div class="card-bg overflow-hidden mb-6" data-controller="tabs" data-tabs-active-class="border-accent-500 text-dark-100" data-tabs-inactive-class="border-transparent text-dark-400 hover:text-dark-200">
+  <div class="px-5 py-4 border-b border-dark-700">
+    <h2 class="text-lg font-semibold text-dark-100">Title</h2>
+  </div>
+  <div class="flex gap-0 border-b border-dark-700 px-5">
+    <% languages.each_with_index do |(locale, name), i| %>
+      <button data-tabs-target="tab" data-action="click->tabs#select" data-index="<%= i %>"
+              class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px <%= i == 0 ? 'border-accent-500 text-dark-100' : 'border-transparent text-dark-400 hover:text-dark-200' %>">
+        <%= name %>
+      </button>
+    <% end %>
+  </div>
+  <% languages.each_with_index do |(locale, _name), i| %>
+    <div data-tabs-target="panel" class="p-5 <%= 'hidden' unless i == 0 %>">
+      <% translated_title = Mobility.with_locale(locale) { @record.title } %>
+      <% if translated_title.present? %>
+        <p class="text-dark-200 text-lg"><%= translated_title %></p>
+      <% else %>
+        <p class="text-dark-500 italic">No translation available</p>
+      <% end %>
+    </div>
+  <% end %>
+</div>
+
+<div class="card-bg overflow-hidden" data-controller="tabs" data-tabs-active-class="border-accent-500 text-dark-100" data-tabs-inactive-class="border-transparent text-dark-400 hover:text-dark-200">
   <div class="px-5 py-4 border-b border-dark-700">
     <h2 class="text-lg font-semibold text-dark-100">Body</h2>
   </div>
-  <div class="p-5">
-    <div class="prose prose-invert max-w-none text-dark-200">
-      <%= simple_format(@record.body) %>
-    </div>
+  <div class="flex gap-0 border-b border-dark-700 px-5">
+    <% languages.each_with_index do |(locale, name), i| %>
+      <button data-tabs-target="tab" data-action="click->tabs#select" data-index="<%= i %>"
+              class="px-4 py-2.5 text-sm font-medium border-b-2 transition-colors -mb-px <%= i == 0 ? 'border-accent-500 text-dark-100' : 'border-transparent text-dark-400 hover:text-dark-200' %>">
+        <%= name %>
+      </button>
+    <% end %>
   </div>
+  <% languages.each_with_index do |(locale, _name), i| %>
+    <div data-tabs-target="panel" class="p-5 <%= 'hidden' unless i == 0 %>">
+      <% translated_body = Mobility.with_locale(locale) { @record.body } %>
+      <% if translated_body.present? %>
+        <div class="prose prose-invert max-w-none text-dark-200">
+          <%= simple_format(translated_body) %>
+        </div>
+      <% else %>
+        <p class="text-dark-500 italic">No translation available</p>
+      <% end %>
+    </div>
+  <% end %>
 </div>
-<% end %>

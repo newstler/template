@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
+ActiveRecord::Schema[8.2].define(version: 2026_04_15_202120) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -46,6 +46,25 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
     t.index ["email"], name: "index_admins_on_email", unique: true
   end
 
+  create_table "ai_costs", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.decimal "cost", precision: 10, scale: 6, default: "0.0"
+    t.string "cost_type", null: false
+    t.datetime "created_at", null: false
+    t.integer "input_tokens", default: 0
+    t.string "model_id", null: false
+    t.integer "output_tokens", default: 0
+    t.string "team_id"
+    t.string "trackable_id"
+    t.string "trackable_type"
+    t.datetime "updated_at", null: false
+    t.string "user_id"
+    t.index ["cost_type"], name: "index_ai_costs_on_cost_type"
+    t.index ["created_at"], name: "index_ai_costs_on_created_at"
+    t.index ["team_id"], name: "index_ai_costs_on_team_id"
+    t.index ["trackable_type", "trackable_id"], name: "index_ai_costs_on_trackable_type_and_trackable_id"
+    t.index ["user_id"], name: "index_ai_costs_on_user_id"
+  end
+
   create_table "articles", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.text "body"
     t.datetime "created_at", null: false
@@ -59,6 +78,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
 
   create_table "chats", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.string "first_user_message_preview"
     t.integer "messages_count", default: 0, null: false
     t.string "model_id"
     t.string "team_id"
@@ -68,6 +88,63 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
     t.index ["model_id"], name: "index_chats_on_model_id"
     t.index ["team_id"], name: "index_chats_on_team_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
+  end
+
+  create_table "chunks", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "chunkable_id", null: false
+    t.string "chunkable_type", null: false
+    t.text "content", null: false
+    t.datetime "created_at", null: false
+    t.integer "position", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chunkable_type", "chunkable_id", "position"], name: "index_chunks_on_chunkable_and_position", unique: true
+    t.index ["chunkable_type", "chunkable_id"], name: "index_chunks_on_chunkable"
+  end
+
+  create_table "conversation_messages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.json "body_translations", default: {}, null: false
+    t.text "content"
+    t.string "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.string "flag_reason"
+    t.datetime "flagged_at"
+    t.datetime "updated_at", null: false
+    t.string "user_id", null: false
+    t.index ["conversation_id"], name: "index_conversation_messages_on_conversation_id"
+    t.index ["user_id"], name: "index_conversation_messages_on_user_id"
+  end
+
+  create_table "conversation_participants", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "last_notified_at"
+    t.datetime "last_read_at"
+    t.datetime "pending_notification_at"
+    t.datetime "updated_at", null: false
+    t.string "user_id", null: false
+    t.index ["conversation_id", "user_id"], name: "index_conversation_participants_on_conversation_id_and_user_id", unique: true
+    t.index ["conversation_id"], name: "index_conversation_participants_on_conversation_id"
+    t.index ["pending_notification_at"], name: "index_conversation_participants_on_pending_notification_at"
+    t.index ["user_id"], name: "index_conversation_participants_on_user_id"
+  end
+
+  create_table "conversation_teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "conversation_id", null: false
+    t.datetime "created_at", null: false
+    t.string "team_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["conversation_id", "team_id"], name: "index_conversation_teams_on_conversation_id_and_team_id", unique: true
+    t.index ["conversation_id"], name: "index_conversation_teams_on_conversation_id"
+    t.index ["team_id"], name: "index_conversation_teams_on_team_id"
+  end
+
+  create_table "conversations", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "subject_id"
+    t.string "subject_type"
+    t.string "title"
+    t.datetime "updated_at", null: false
+    t.index ["subject_type", "subject_id"], name: "index_conversations_on_subject"
   end
 
   create_table "languages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -161,6 +238,30 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
     t.index ["family"], name: "index_models_on_family"
     t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
     t.index ["provider"], name: "index_models_on_provider"
+  end
+
+  create_table "noticed_events", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "notifications_count"
+    t.json "params"
+    t.string "record_id"
+    t.string "record_type"
+    t.string "type"
+    t.datetime "updated_at", null: false
+    t.index ["record_type", "record_id"], name: "index_noticed_events_on_record"
+  end
+
+  create_table "noticed_notifications", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "event_id", null: false
+    t.datetime "read_at"
+    t.string "recipient_id", null: false
+    t.string "recipient_type", null: false
+    t.datetime "seen_at"
+    t.string "type"
+    t.datetime "updated_at", null: false
+    t.index ["event_id"], name: "index_noticed_notifications_on_event_id"
+    t.index ["recipient_type", "recipient_id"], name: "index_noticed_notifications_on_recipient"
   end
 
   create_table "provider_credentials", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -348,14 +449,39 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
     t.index ["period_hour"], name: "index_swallowed_exceptions_on_period_hour"
   end
 
-  create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+  create_table "searchable_things", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "chunks_source_digest"
     t.datetime "created_at", null: false
+    t.text "description"
+    t.string "name", null: false
+    t.string "tags"
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "settings", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.boolean "ai_chats_enabled", default: true, null: false
+    t.boolean "articles_enabled", default: true, null: false
+    t.integer "chunk_overlap", default: 40
+    t.integer "chunk_size", default: 400
+    t.integer "conversation_digest_window_minutes", default: 5, null: false
+    t.boolean "conversation_moderation_enabled", default: true, null: false
+    t.boolean "conversations_enabled", default: true, null: false
+    t.datetime "created_at", null: false
+    t.string "currencylayer_api_key"
+    t.string "default_country_code"
+    t.string "default_currency", default: "USD"
     t.string "default_model"
+    t.string "embedding_model", default: "text-embedding-3-small"
+    t.text "enabled_currencies"
+    t.integer "hybrid_pool_multiplier", default: 3
     t.string "litestream_replica_access_key"
     t.string "litestream_replica_bucket"
     t.string "litestream_replica_key_id"
     t.string "mail_from"
-    t.boolean "public_chats", default: true, null: false
+    t.float "max_similarity_distance", default: 0.75
+    t.string "moderation_model"
+    t.integer "rrf_k", default: 60
+    t.string "search_tokenizer", default: "porter unicode61 remove_diacritics 2"
     t.string "smtp_address"
     t.string "smtp_password"
     t.string "smtp_username"
@@ -381,8 +507,10 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
   create_table "teams", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "api_key", null: false
     t.boolean "cancel_at_period_end", default: false, null: false
+    t.string "country_code"
     t.datetime "created_at", null: false
     t.datetime "current_period_ends_at"
+    t.string "default_currency", default: "USD", null: false
     t.string "name", null: false
     t.string "slug", null: false
     t.string "stripe_customer_id"
@@ -413,6 +541,9 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
     t.string "email"
     t.string "locale"
     t.string "name"
+    t.json "notification_preferences", default: {}, null: false
+    t.string "preferred_currency"
+    t.string "residence_country_code"
     t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -420,16 +551,25 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "ai_costs", "teams"
+  add_foreign_key "ai_costs", "users"
   add_foreign_key "articles", "teams"
   add_foreign_key "articles", "users"
   add_foreign_key "chats", "models"
   add_foreign_key "chats", "teams"
   add_foreign_key "chats", "users"
+  add_foreign_key "conversation_messages", "conversations"
+  add_foreign_key "conversation_messages", "users"
+  add_foreign_key "conversation_participants", "conversations"
+  add_foreign_key "conversation_participants", "users"
+  add_foreign_key "conversation_teams", "conversations"
+  add_foreign_key "conversation_teams", "teams"
   add_foreign_key "memberships", "teams"
   add_foreign_key "memberships", "users"
   add_foreign_key "memberships", "users", column: "invited_by_id"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "models"
+  add_foreign_key "noticed_notifications", "noticed_events", column: "event_id"
   add_foreign_key "rails_error_dashboard_cascade_patterns", "rails_error_dashboard_error_logs", column: "child_error_id"
   add_foreign_key "rails_error_dashboard_cascade_patterns", "rails_error_dashboard_error_logs", column: "parent_error_id"
   add_foreign_key "rails_error_dashboard_diagnostic_dumps", "rails_error_dashboard_applications", column: "application_id"
@@ -439,4 +579,12 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_10_170732) do
   add_foreign_key "team_languages", "languages"
   add_foreign_key "team_languages", "teams"
   add_foreign_key "tool_calls", "messages"
+
+  # Virtual tables defined in this database.
+  # Note that virtual tables may not work with other database engines. Be careful if changing database.
+  create_virtual_table "articles_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
+  create_virtual_table "articles_fts", "fts5", ["id UNINDEXED", "title", "tokenize='porter unicode61 remove_diacritics 2'"]
+  create_virtual_table "chunks_embeddings", "vec0", ["id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
+  create_virtual_table "searchable_things_embeddings", "vec0", ["tags text partition key", "id text primary key", "embedding float[1536] distance_metric=cosine", "source_hash text"]
+  create_virtual_table "searchable_things_fts", "fts5", ["id UNINDEXED", "name", "description", "tags", "tokenize='porter unicode61 remove_diacritics 2'"]
 end

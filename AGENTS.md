@@ -82,6 +82,7 @@ npx @anthropic-ai/mcp-inspector
 |------|-------------|---------------|
 | `list_teams` | List user's teams | Team + User |
 | `show_team` | Get team details with members | Team + User |
+| `update_team` | Update team name/currency/country | Team + User (admin) |
 | `invite_member` | Invite user to team | Team + User (admin) |
 | `list_chats` | List user's chats in team | Team + User |
 | `show_chat` | Get chat with messages | Team + User |
@@ -92,9 +93,9 @@ npx @anthropic-ai/mcp-inspector
 | `create_message` | Send message, get response | Team + User |
 | `list_models` | List available AI models | None |
 | `show_model` | Get model details | None |
-| `refresh_models` | Sync models from providers | Admin |
 | `show_current_user` | Get current user info | Team + User |
-| `update_current_user` | Update profile | Team + User |
+| `update_current_user` | Update profile (name, locale, preferred_currency, residence_country_code) | Team + User |
+| `update_notification_preferences` | Update per-kind / per-channel notification preferences | Team + User |
 | `show_subscription` | Get team subscription status | Team + User (admin) |
 | `list_prices` | List available subscription prices | None |
 | `create_checkout` | Create Stripe Checkout session URL | Team + User (admin) |
@@ -110,8 +111,14 @@ npx @anthropic-ai/mcp-inspector
 | `create_article` | Create new article | Team + User |
 | `update_article` | Update article | Team + User |
 | `delete_article` | Delete article | Team + User |
+| `list_conversations` | List conversations the user participates in | Team + User |
+| `show_conversation` | Get a conversation with recent messages | Team + User |
+| `create_conversation` | Create a conversation with participants | Team + User |
+| `list_conversation_messages` | List messages in a conversation | Team + User |
+| `create_conversation_message` | Post a message to a conversation | Team + User |
+| `show_team_dashboard` | Team dashboard KPIs + chats time-series | Team + User |
 
-**Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required.
+**Note:** "Team + User" means both `x-api-key` (team) and `x-user-email` headers required. MCP tools are never admin-only — admin actions live in Madmin at `/madmin`.
 
 ### Available Resources
 
@@ -126,6 +133,7 @@ npx @anthropic-ai/mcp-inspector
 | Available Languages | `app:///languages` | Enabled translation languages |
 | Team Languages | `app:///team/languages` | Team's active languages (directs to tool) |
 | Articles | `app:///articles` | Team's articles (directs to tool) |
+| User Conversations | `app:///conversations` | User's conversations (directs to tool) |
 
 ### File Structure
 
@@ -136,9 +144,13 @@ app/
 │   ├── articles/                # Article CRUD tools
 │   ├── billing/                 # Billing & subscription tools
 │   ├── chats/                   # Chat CRUD tools
+│   ├── conversations/           # Conversation tools (list/show/create)
+│   ├── conversation_messages/   # Conversation message tools
+│   ├── dashboards/              # Team + admin dashboard aggregate tools
 │   ├── languages/               # Language management tools
 │   ├── messages/                # Message tools
 │   ├── models/                  # Model tools
+│   ├── notifications/           # Notification inbox tools
 │   ├── teams/                   # Team management tools
 │   └── users/                   # User tools
 └── resources/
@@ -391,17 +403,23 @@ Helpers: `current_user`, `current_admin`, `current_team`, `current_membership`, 
 
 ## Multitenancy
 
-Users belong to teams. All user-facing routes are team-scoped under `/t/:team_slug/...`.
+Users belong to teams. Team-scoped routes live under `/t/:team_slug/...`. Authenticated users outside any team context land on the **personal** context at `/home`, which lists their teams and offers a create-team CTA (hidden once they own one). The sidebar's context switcher moves between the personal context and each team the user belongs to.
+
+### Contexts
+
+- **Team context** (`/t/:team_slug/...`): `current_team`, `current_membership`, team-scoped queries.
+- **Personal context** (`/home`): `current_user` only, `current_team` is `nil`. Use `personal_context?` helper to branch. Stripe-dependent features hide in this context since there's no team to bill.
 
 ### URL Structure
 
 ```
+/home                    → Personal dashboard (authenticated, no team)
 /t/:team_slug/           → Team home
 /t/:team_slug/chats      → Team's chats
 /t/:team_slug/members    → Team members (admin only for invite/remove)
 /t/:team_slug/settings   → Team settings (admin only)
-/t/:team_slug/pricing    → Subscription pricing (admin only)
-/t/:team_slug/billing    → Billing management (admin only)
+/t/:team_slug/pricing    → Subscription pricing (admin only, Stripe-gated)
+/t/:team_slug/billing    → Billing management (admin only, Stripe-gated)
 /teams                   → Team selection
 ```
 
@@ -476,7 +494,7 @@ Automatic translation of user-generated content via LLM. Uses the Mobility gem (
 Language → code, name, native_name, enabled
 TeamLanguage → team, language, active (join model)
 Translatable → concern for auto-translation
-TranslateContentJob → LLM translation via gpt-4.1-nano
+TranslateContentJob → LLM translation via the model configured in Madmin at Setting.translation_model
 BackfillTranslationsJob → translate existing content when language added
 ```
 
@@ -492,6 +510,456 @@ end
 ```
 
 See `.claude/rules/multilingual.md` for full conventions.
+
+### Adding a New Language
+
+To add support for a language that isn't already in `config/locales/`:
+
+1. **Add language-name stubs** to `config/locales/en.yml` and `config/locales/ru.yml` under the `languages:` key, using the ISO 639-1 code and the localized name:
+   ```yaml
+   en:
+     languages:
+       xx: "Example Language"
+   ru:
+     languages:
+       xx: "Пример языка"
+   ```
+2. **Create the full locale file** at `config/locales/xx.yml` and per-view/mailer files under `config/locales/xx/`. Follow the existing structure of `config/locales/en/` as the canonical layout. The top-level `xx.yml` must define `language_name` and `native_name` so `Language.sync_from_locale_files!` can create the record.
+3. **Run the language sync** to populate the `Language` model:
+   ```bash
+   bin/rails runner 'Language.sync_from_locale_files!'
+   ```
+4. **Enable the language** via Madmin at `/madmin/languages` (admin action) or per-team at `/t/:slug/languages`.
+5. **Verify pluralization rules** — Russian and several Slavic languages have the `one/few/many/other` rule; Arabic has `zero/one/two/few/many/other`. Rails i18n handles these natively if the YAML file defines all the forms.
+
+The template ships language-name stubs for `en, de, es, fr, ru` (full content) and `tg, uz, ky, tr, sr` (stubs only — add content when a consuming project needs them).
+
+### Pluralization Example (Russian)
+
+```yaml
+ru:
+  candidates:
+    count:
+      one:   "%{count} кандидат"
+      few:   "%{count} кандидата"
+      many:  "%{count} кандидатов"
+      other: "%{count} кандидата"
+```
+
+Always use `t("key", count: n)` (not string interpolation) for any countable noun.
+
+## Notifications
+
+User-facing notifications via [Noticed v2](https://github.com/excid3/noticed). Database + email delivery shipped; Slack, Twilio, Vonage, web/mobile push available as opt-in adapters when a consuming app needs them.
+
+### Declaring a Notifier
+
+```ruby
+# app/notifiers/deal_confirmed_notifier.rb
+class DealConfirmedNotifier < ApplicationNotifier
+  deliver_by :email do |config|
+    config.mailer = "NotificationMailer"
+    config.method = :deal_confirmed
+    config.if     = -> { recipient.wants_notification?(kind: :deal_confirmed_notifier, channel: :email) }
+  end
+
+  notification_methods do
+    def message
+      I18n.t("notifiers.deal_confirmed_notifier.message", title: record.title)
+    end
+
+    def url
+      Rails.application.routes.url_helpers.deal_path(record)
+    end
+  end
+end
+```
+
+Subclass `ApplicationNotifier`, not `Noticed::Event` directly — the Turbo Stream broadcast hook is registered globally on `Noticed::Event` via `config/initializers/noticed_broadcasts.rb`.
+
+### Triggering a notification
+
+```ruby
+DealConfirmedNotifier.with(record: deal).deliver(recipient)
+# → creates noticed_event + noticed_notification rows (persistence is automatic in v2)
+# → renders the email via NotificationMailer#deal_confirmed (respects user preferences)
+# → broadcasts a Turbo Stream prepend to [recipient, :notifications]
+```
+
+### Reading the inbox
+
+```ruby
+current_user.notifications              # has_many :notifications via Notifiable concern
+current_user.notifications.unread       # provided by Noticed
+current_user.notifications.mark_as_read # bulk mark-read
+```
+
+### User preferences
+
+`User#notification_preferences` is a JSON column with the shape:
+
+```ruby
+{ "welcome_notifier" => { "email" => false, "database" => true } }
+```
+
+Missing keys mean opt-in (default behavior). Preferences are checked via `user.wants_notification?(kind:, channel:)` inside each Notifier's `deliver_by :if` block.
+
+### Live updates
+
+Any page that renders `<%= turbo_stream_from current_user, :notifications %>` will update live when a new notification arrives. Pages without the helper are unaffected.
+
+### Audit trail
+
+- `/madmin/noticed_events` — every event that was triggered, with its type, record, and params
+- `/madmin/noticed_notifications` — every delivery record, with recipient and read/seen state
+
+### File structure
+
+```
+app/
+├── notifiers/
+│   ├── application_notifier.rb            # Base class (subclass this, not Noticed::Event)
+│   ├── welcome_notifier.rb                # Reference notifier
+│   └── [domain notifiers]
+├── models/concerns/
+│   └── notifiable.rb                      # Recipient concern — wants_notification? helper
+├── mailers/
+│   └── notification_mailer.rb             # One method per notifier using :email delivery
+└── views/
+    ├── notification_mailer/
+    │   └── [method].{html,text}.erb       # One per notifier
+    └── notifications/
+        ├── index.html.erb                 # Inbox
+        ├── _notification.html.erb         # Row wrapper — dispatches by kind
+        └── kinds/
+            └── _[kind].html.erb           # Per-notifier UI partial
+
+config/initializers/
+└── noticed_broadcasts.rb                  # Turbo Stream broadcast hook on Noticed::Event
+```
+
+### Rule: no service-layer notification helpers
+
+Do not wrap `Notifier.with(...).deliver(recipient)` in a service method. The Notifier class *is* the service — calling it from a controller action or model callback is the pattern. If you find yourself wanting a `NotificationService`, that's a sign the Notifier class itself should absorb the logic.
+
+## Conversations
+
+Team-scoped person-to-person messaging at `/t/:slug/conversations/:id`. Distinct from RubyLLM AI chat (`/chats`), which is user-to-LLM.
+
+### Models
+
+- `Conversation` — belongs to `Team`, optional polymorphic `subject` (e.g. a `Deal`, `Request`, or `nil` for a team-general thread)
+- `ConversationParticipant` — join model with `last_read_at` / `last_notified_at` for read/notified tracking
+- `ConversationMessage` — `content` (nullable, allows attachment-only), `body_translations` JSON, `flagged_at`, `flag_reason`, Active Storage `attachments`
+
+### Creating a conversation
+
+```ruby
+conversation = Conversation.find_or_create_for(
+  team: team,
+  subject: deal,
+  participants: [agency_user, employer_user]
+)
+```
+
+### Opt-in concerns
+
+```ruby
+class ConversationMessage < ApplicationRecord
+  include TranslatableMessage   # auto-translate content to each participant's locale
+  include ModeratableMessage    # regex + LLM moderation for contact-leak detection
+end
+```
+
+Both concerns are opt-in because they require configured models (`Setting.translation_model`, `Setting.moderation_model` — both editable at `/madmin/ai_models`). Apps that don't need them simply don't include the concerns.
+
+### Live updates
+
+`<%= turbo_stream_from @conversation %>` in the view enables live updates. Every new `ConversationMessage` is appended to `#conversation_messages` automatically via `after_create_commit :broadcast_append_to_conversation`.
+
+### Read tracking
+
+`ConversationParticipant#mark_as_read!` updates `last_read_at`. The controller calls it in `#show` so visiting the conversation marks it read. `ConversationDigestNotificationJob` throttles email digests to at most one per participant every 5 minutes.
+
+### Notification jobs
+
+- `ConversationDigestNotificationJob` — debounced digest (runs 2 minutes after a message is posted, skips recipients notified in the last 5 minutes)
+
+## Currencies + Countries
+
+Every team-scoped app uses the same primitives.
+
+### Money
+
+- `CurrencyConvertible` concern holds constants (`SUPPORTED_CURRENCIES`, `POPULAR_CURRENCIES`, `CURRENCY_NAMES`, `COUNTRY_CURRENCY`) and a `convert_amount(cents, from, to)` helper backed by Money's CurrencyLayer bank.
+- **Enabled currencies** are managed via `Setting.enabled_currencies` (admin-toggleable at `/madmin/languages` → Currencies tab). All currency selectors, validations, and detection use `Setting.enabled_currencies` instead of the hardcoded `SUPPORTED_CURRENCIES` constant.
+- `Current.currency` is set on every request via the detection chain:
+  1. `current_user.preferred_currency`
+  2. Signed cookie `tmpl_currency`
+  3. IP → country → currency mapping via `CurrencyConvertible::COUNTRY_CURRENCY`
+  4. `current_team.default_currency`
+  5. `Setting.default_currency` (platform default)
+- Daily `RefreshCurrencyRatesJob` (recurring, 04:00 UTC) warms `Money.default_bank`'s file cache so no request blocks on a CurrencyLayer API call.
+- `format_amount(value)` uses the current locale's delimiter (English `1,000,000`, Russian `1 000 000`).
+- Default currency editable at `/madmin/languages` (Currencies tab). CurrencyLayer API key at `/madmin/settings` (System tab).
+
+### Country
+
+```ruby
+class Team < ApplicationRecord
+  include Countryable
+  countryable :country_code
+end
+
+team.country        # => ISO3166::Country instance or nil
+team.country_name   # => localized name
+team.country_flag   # => emoji flag ("🇩🇪")
+```
+
+Helpers: `country_name(code)`, `country_flag(code)`, `country_options_for_select(selected, include_blank:, countries:)`.
+
+Partial: `<%= render "shared/country_select", form: f, method: :country_code %>` for a searchable dropdown with flag emojis.
+
+### MCP tools
+
+- `update_current_user_tool` accepts `preferred_currency` and `residence_country_code`.
+- `update_team_tool` (admin only) accepts `name`, `default_currency`, `country_code`.
+
+### Rule
+
+Currency codes are always ISO 4217 strings (3 uppercase letters). Country codes are always ISO 3166 alpha-2 (2 uppercase letters). Monetary amounts in the database are always integer cents.
+
+## Searchable (Full-Text Search)
+
+SQLite FTS5 via a concern. Zero external dependencies.
+
+### Declaring
+
+```ruby
+class Candidate < ApplicationRecord
+  include Searchable
+  searchable_fields :profession, :specialization, :skills, :languages, :notes
+end
+```
+
+Each declared field is synced into a sibling FTS5 virtual table (`<table>_fts`) on every `after_save_commit` and scrubbed on `after_destroy_commit`.
+
+### Installing the FTS virtual table
+
+```bash
+bin/rails generate searchable:install Candidate profession specialization skills languages notes
+bin/rails db:migrate
+```
+
+The generator emits a `create_virtual_table` migration using the tokenizer from `Setting.search_tokenizer` (default `"porter unicode61 remove_diacritics 2"`).
+
+### Querying
+
+```ruby
+Candidate.search("welder russian speaker")
+# => relevance-ordered ActiveRecord::Relation (bm25)
+# => handles Cyrillic and Turkish diacritics via unicode61
+```
+
+Composable with other scopes:
+
+```ruby
+Candidate.search("welder").where(status: :active).limit(20)
+```
+
+`.search` returns a true `ActiveRecord::Relation`, so `.where`, `.includes`, `.limit`, `.order`, and pagination all compose naturally. Blank or nil queries return `.none`.
+
+### Reindexing
+
+```bash
+bin/rails 'fts:rebuild[Candidate]'
+```
+
+Use this after changing the tokenizer setting or backfilling existing data.
+
+### Tokenizer
+
+Controlled by `Setting.search_tokenizer`, editable in Madmin at `/madmin/ai_models`. Default `"porter unicode61 remove_diacritics 2"`:
+
+- `porter` — stemming (welder → weld)
+- `unicode61` — Unicode word segmentation
+- `remove_diacritics 2` — fold Latin diacritics (Çilingir → cilingir)
+
+Tokenizer changes only affect new rows. Run `fts:rebuild` to re-index existing rows.
+
+### Limitations (acceptable at template scale)
+
+- Two-step query (FTS id lookup → records) rather than a single JOIN, so string PKs stay supported.
+- No phrase queries unless the user escapes quotes (the concern sanitizes stray quotes into whitespace).
+- No facets — compose with `.where` scopes instead.
+- Public API is stable enough to swap to Meilisearch/Typesense under the hood without touching callers.
+
+## Embeddable + RAG Kit
+
+Vector search and semantic retrieval via [sqlite-vec](https://github.com/asg017/sqlite-vec), a loadable SQLite extension with zero runtime dependencies. Binaries for `linux-x86_64`, `linux-aarch64`, and `darwin-arm64` are vendored at `vendor/sqlite-vec/` and loaded on every new SQLite connection via `lib/sqlite_vec.rb` (wired into `config/database.yml`'s `extensions:` array).
+
+### Basic similarity search
+
+```ruby
+class Candidate < ApplicationRecord
+  include Embeddable
+
+  embeddable_source ->(r) { "#{r.profession} #{r.skills} #{r.experience_summary}" }
+  embeddable_model  -> { Setting.embedding_model }
+  embeddable_distance :cosine
+end
+
+Candidate.similar_to("welder with marine experience", limit: 20, max_distance: Setting.max_similarity_distance)
+# → ActiveRecord::Relation of Candidates ordered by vec0 distance ascending
+# → each record exposes #similarity_distance for UI display
+# → composable with .where / .includes
+# → max_distance filters out results with cosine distance above the threshold
+```
+
+### Metadata pre-filtering
+
+Declare metadata columns in the vec0 table (via the generator's `--metadata` option). Then filter before KNN:
+
+```ruby
+embeddable_metadata ->(r) { { nationality: r.nationality_code, years_experience: r.experience_years } }
+
+Candidate.similar_to("welder", filter_by: { nationality: "UZ", years_experience: 3..10 })
+# → WHERE nationality = 'UZ' AND years_experience BETWEEN 3 AND 10 → KNN
+```
+
+Supported filter types: scalar, `Range`, and `Array` (IN).
+
+### Hybrid search (keyword + semantic)
+
+```ruby
+class Candidate < ApplicationRecord
+  include Searchable
+  include Embeddable
+  include HybridSearchable
+end
+
+Candidate.hybrid_search("welder marine experience", limit: 20, max_distance: Setting.max_similarity_distance)
+# → FTS5 bm25 + vector KNN, fused via Reciprocal Rank Fusion (k = Setting.rrf_k)
+# → pool_size = limit * Setting.hybrid_pool_multiplier (default 3)
+# → max_distance filters vector results above the threshold before RRF
+# → RRF sidesteps the score-normalization problem between bm25 and cosine similarity
+```
+
+### Chunking long documents
+
+```ruby
+class Article < ApplicationRecord
+  include Embeddable
+  include Chunkable
+  chunk_source ->(r) { r.body }
+  chunk_size 400     # words per chunk (default from Setting.chunk_size)
+  chunk_overlap 40   # words carried into the next chunk (default from Setting.chunk_overlap)
+end
+```
+
+Chunks live in the polymorphic `chunks` table and each chunk includes `Embeddable`, so they get their own vec0 rows in `chunks_embeddings`. Rechunking runs in `after_save_commit` only when the SHA256 of the source changes.
+
+### Installation
+
+```bash
+bin/rails generate embeddable:install Candidate 1536 --metadata nationality profession
+bin/rails db:migrate
+bin/rails 'embeddings:rebuild[Candidate]'
+```
+
+### Settings (editable in Madmin)
+
+- `Setting.embedding_model` — default `"text-embedding-3-small"` (editable at `/madmin/ai_models`)
+- `Setting.rrf_k` — default `60` (editable at `/madmin/rag`)
+- `Setting.max_similarity_distance` — default `0.75` cosine distance threshold (editable at `/madmin/rag`)
+- `Setting.chunk_size` — default `400` words per chunk (editable at `/madmin/rag`)
+- `Setting.chunk_overlap` — default `40` words overlap (editable at `/madmin/rag`)
+- `Setting.hybrid_pool_multiplier` — default `3` (editable at `/madmin/rag`)
+- `Setting.search_tokenizer` — FTS5 tokenizer config (editable at `/madmin/rag`)
+
+### Caching
+
+- Re-embedding is skipped when the SHA256 of the source string is unchanged (compared against `source_hash` in the vec0 row before enqueuing `EmbedRecordJob`).
+- Metadata pre-filtering via `filter_by:` is always WHERE-before-KNN, cheaper than post-filtering.
+
+### Deployment
+
+When deploying a consuming app with sqlite-vec, ensure `vendor/sqlite-vec/` is copied into the container. The template's `Dockerfile` already does this via `COPY . .`; if a consuming app has its own Dockerfile, replicate that line (or add an explicit `COPY vendor/sqlite-vec vendor/sqlite-vec`).
+
+### Out of scope
+
+- External vector databases (Pinecone, Weaviate, pgvector)
+- Re-ranking models (Cohere Rerank)
+- Query expansion (HyDE, multi-query)
+
+The public API (`similar_to`, `hybrid_search`, `include Embeddable`) is stable enough to swap the concern's implementation without touching call sites.
+
+## Dashboards
+
+Chartkick + Groupdate with a shared `DashboardHelper` module and reusable partials. The reference team dashboard is the root of every team (`/t/:slug/`); the admin dashboard is the Madmin root (`/madmin`).
+
+### Basic pattern
+
+```erb
+<%= kpi_card label: t(".users"), value: @user_count, trend: pct_change(@recent, @prev) %>
+
+<%= render "shared/chart_card", title: t(".growth") do %>
+  <%= line_chart @users_timeline %>
+<% end %>
+
+<%= attention_items_strip(@attention_items) %>
+```
+
+### Time-range selector
+
+```erb
+<select data-controller="time-range" data-action="change->time-range#update">
+  <option value="7d">Last 7 days</option>
+  <option value="30d" selected>Last 30 days</option>
+  <option value="90d">Last 90 days</option>
+</select>
+```
+
+In the controller: `@range = time_range_from(params[:range])` → use `@range` in `.where(created_at: @range)` queries and `.group_by_day(:created_at, range: @range)` for time-series.
+
+### Caching
+
+```ruby
+@top_users = cached_dashboard(:top_users, expires_in: 10.minutes) do
+  current_team.users.joins(:chats).group("users.id")
+              .order(Arel.sql("SUM(chats.total_cost) DESC")).limit(10).to_a
+end
+```
+
+Cache key includes team id + key + range begin, so invalidation is automatic on range change.
+
+### Partials
+
+- `shared/kpi_card` — label, value, optional trend, optional icon, optional link
+- `shared/chart_card` — wraps a Chartkick chart with title + `chart-theme` Stimulus controller
+- `shared/attention_items_strip` — color-coded action badges
+- `shared/progress_ring` — SVG circular progress indicator
+
+### Helpers (`DashboardHelper`)
+
+- `kpi_card(label:, value:, trend:, icon:, href:)`
+- `pct_change(current, previous)` — nil-safe
+- `trend_arrow(delta)` — returns ↑ ↓ →
+- `sparkline(series, width:, height:)` — tiny inline SVG line chart
+- `progress_ring(value:, max:, size:, label:)`
+- `attention_items_strip(items)`
+- `cached_dashboard(key, expires_in:, &block)`
+- `time_range_from(param)` — returns a `Range`
+
+### Stimulus controllers
+
+- `chart_theme` — OKLCH-aware themer for Chartkick/Chart.js canvases
+- `sparkline` — hover tooltips on the inline SVG sparklines
+- `time_range` — posts `?range=` back via `Turbo.visit` when the selector changes
+
+### Rules (enforced)
+
+See `.claude/rules/performance.md` § Dashboards.
 
 ## Testing
 
@@ -652,3 +1120,19 @@ Quick reference for working in this codebase:
 - Stimulus for JS sprinkles
 - `inline_svg` for icons
 - No npm/yarn packages
+
+## Nothing hardcoded: all LLM models are Madmin-configurable
+
+**Rule:** No code in `app/` may reference a specific LLM model name as a string literal. Every LLM model name must come from a `Setting` key, editable in Madmin at `/madmin/ai_models`.
+
+Allowed:
+- `Setting.translation_model`
+- `Setting.default_model`
+- `Setting.embedding_model` (added by Embeddable primitive)
+- `Setting.moderation_model` (added by Conversations primitive)
+
+Not allowed:
+- `RubyLLM.chat(model: "gpt-4.1-nano")` ← replace with `Setting.translation_model`
+- Hardcoded model fallbacks in rescue blocks ← use `Setting` everywhere, fail loudly if unset
+
+Fixture defaults (`test/fixtures/settings.yml`) may contain concrete model names — those are development defaults, not production constants.

@@ -2,7 +2,7 @@
 ru:
   chats:
     form:
-      default_model: "По умолчанию (%{name})"
+      default_model: По умолчанию (%{name})
       default_model_not_set: По умолчанию (не задано)
       prompt_placeholder: О чём хотите поговорить?
     index:

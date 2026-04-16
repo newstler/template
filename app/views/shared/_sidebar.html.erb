@@ -1,13 +1,15 @@
 <%# Modern dark sidebar navigation - inspired by Anthropic/OpenAI/Lovable %>
+<% unread_count = current_user_unread_notifications_count %>
 
 <%# Sidebar %>
-<aside data-sidebar-target="sidebar"
+<aside id="sidebar"
+       data-sidebar-target="sidebar"
        style="--sidebar-width: 16rem; width: var(--sidebar-width);"
        class="fixed inset-y-0 left-0 z-40 bg-dark-850 transform -translate-x-full lg:translate-x-0 transition-all duration-300 ease-in-out flex flex-col">
 
   <%# Logo/Brand with collapse toggle %>
   <div class="flex items-center h-16 px-3 sidebar-header">
-    <%= link_to (current_team ? team_root_path(current_team) : root_path), class: "flex items-center gap-3 text-white hover:opacity-80 transition-opacity overflow-hidden flex-1 min-w-0" do %>
+    <%= link_to (current_team ? team_root_path(current_team) : personal_home_path), class: "flex items-center gap-3 text-white hover:opacity-80 transition-opacity overflow-hidden flex-1 min-w-0" do %>
       <div class="w-10 h-10 bg-gradient-to-br from-accent-500 to-accent-700 rounded-lg flex items-center justify-center flex-shrink-0">
         <%= inline_svg "icons/lightning.svg", class: "w-5 h-5 text-white" %>
       </div>
@@ -22,29 +24,68 @@
   </div>
 
   <%# Navigation %>
-  <nav class="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1">
+  <nav class="flex-1 overflow-y-auto overflow-x-hidden py-4 px-3 space-y-1 sidebar-scroll">
     <% if current_team %>
       <%= render "shared/sidebar_link", path: team_root_path(current_team), icon: "home", label: t("shared.sidebar.home") %>
 
-      <%# Chats Section (collapsible) - only shown when chats are enabled %>
-      <% if Setting.chats_enabled? %>
-        <%= render "shared/sidebar_group", id: "chats", icon: "chat", label: t("shared.sidebar.chats"), path: team_chats_path(current_team) do %>
+      <%# Conversations Section (collapsible with pagination) %>
+      <% if Setting.conversations_enabled? %>
+      <% sidebar_conversations = current_user&.conversations_in(current_team)&.includes(:participants, :conversation_messages, :conversation_participants)&.order(updated_at: :desc)&.limit(11)&.to_a || [] %>
+      <% has_more_conversations = sidebar_conversations.size > 10 %>
+      <% sidebar_conversations = sidebar_conversations.first(10) %>
+      <% sidebar_conv_participants = sidebar_conversations.to_h { |c| [c.id, c.conversation_participants.find { |cp| cp.user_id == current_user.id }] } %>
+      <% total_conv_unread = sidebar_conv_participants.values.sum { |cp| cp&.unread_count.to_i } %>
+      <%= render "shared/sidebar_group", id: "conversations", icon: "chat", label: t("shared.sidebar.conversations"), path: team_conversations_path(current_team), badge: total_conv_unread do %>
+        <%= render "shared/sidebar_link", path: new_team_conversation_path(current_team), icon: "plus", label: t("shared.sidebar.new_conversation"), nested: true %>
+        <div id="sidebar_conversations_list">
+        <% sidebar_conversations.each do |conversation| %>
+          <%= render "shared/sidebar_conversation", conversation: conversation, unread: sidebar_conv_participants[conversation.id]&.unread_count.to_i %>
+        <% end %>
+        <% if has_more_conversations %>
+          <%= turbo_frame_tag "sidebar_conversations_page" do %>
+            <%= link_to t("shared.sidebar.load_more"), team_sidebar_conversations_path(current_team, offset: 10), class: "block pl-10 py-2 text-xs text-dark-500 hover:text-dark-300 transition-colors", data: { turbo_frame: "sidebar_conversations_page" } %>
+          <% end %>
+        <% end %>
+        </div>
+        <div id="sidebar_reorder_trigger" class="hidden"></div>
+      <% end %>
+      <% end %>
+
+      <%# AI Chats Section (collapsible with pagination) - only shown when chats are enabled %>
+      <% if Setting.ai_chats_enabled? %>
+        <% sidebar_chats = current_user&.chats&.where(team: current_team)&.order(updated_at: :desc)&.limit(11)&.to_a || [] %>
+        <% has_more_chats = sidebar_chats.size > 10 %>
+        <% sidebar_chats = sidebar_chats.first(10) %>
+        <%= render "shared/sidebar_group", id: "chats", icon: "sparkles", label: t("shared.sidebar.chats"), path: team_chats_path(current_team) do %>
           <%= render "shared/sidebar_link", path: new_team_chat_path(current_team), icon: "plus", label: t("shared.sidebar.new_chat"), nested: true %>
-          <% current_user&.chats&.where(team: current_team)&.includes(:messages)&.order(updated_at: :desc)&.limit(10)&.each do |chat| %>
-            <% first_user_message = chat.messages.find { |m| m.role == "user" }&.content || t("common.untitled") %>
-            <%= render "shared/sidebar_link", path: team_chat_path(current_team, chat), icon: "chat", label: first_user_message, nested: true, truncate: true %>
+          <% sidebar_chats.each do |chat| %>
+            <% first_user_message = chat.first_user_message_preview.presence || t("common.untitled") %>
+            <%= render "shared/sidebar_link", path: team_chat_path(current_team, chat), icon: "sparkles", label: first_user_message, nested: true, truncate: true %>
+          <% end %>
+          <% if has_more_chats %>
+            <%= turbo_frame_tag "sidebar_chats_page" do %>
+              <%= link_to t("shared.sidebar.load_more"), team_sidebar_chats_path(current_team, offset: 10), class: "block pl-10 py-2 text-xs text-dark-500 hover:text-dark-300 transition-colors", data: { turbo_frame: "sidebar_chats_page" } %>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>
 
-      <%= render "shared/sidebar_link", path: team_articles_path(current_team), icon: "file", label: t("shared.sidebar.articles") %>
+      <% if Setting.articles_enabled? %>
+        <%= render "shared/sidebar_link", path: team_articles_path(current_team), icon: "file", label: t("shared.sidebar.articles") %>
+      <% end %>
     <% else %>
-      <%= render "shared/sidebar_link", path: root_path, icon: "home", label: t("shared.sidebar.home") %>
+      <%= render "shared/sidebar_link", path: personal_home_path, icon: "home", label: t("shared.sidebar.home") %>
+    <% end %>
+
+    <%# Notifications (user-global, shown in nav for personal context) %>
+    <% if current_user && !current_team %>
+      <%= render "shared/sidebar_link", path: notifications_path, icon: "bell", label: t("shared.sidebar.notifications"), badge: unread_count %>
     <% end %>
   </nav>
 
-  <%# Team & User section %>
+  <%# Bottom section: team dropdown, profile, context switcher %>
   <div class="p-3 border-t border-white/5 space-y-1">
+    <%# Team dropdown (team context only) %>
     <% if current_team %>
       <%= render "shared/sidebar_group", id: "team", icon: "users", label: current_team.name, image: (current_team.logo if current_team.logo.attached?) do %>
         <%= render "shared/sidebar_link",
@@ -54,11 +95,13 @@
             nested: true %>
 
         <% if current_membership&.admin? %>
-          <%= render "shared/sidebar_link",
-              path: team_billing_path(current_team),
-              icon: "credit-card",
-              label: t("shared.sidebar.billing"),
-              nested: true %>
+          <% if Setting.stripe_configured? %>
+            <%= render "shared/sidebar_link",
+                path: team_billing_path(current_team),
+                icon: "credit-card",
+                label: t("shared.sidebar.billing"),
+                nested: true %>
+          <% end %>
 
           <%= render "shared/sidebar_link",
               path: team_languages_path(current_team),
@@ -74,14 +117,49 @@
         <% end %>
       <% end %>
     <% end %>
-    <%= render "shared/sidebar_link",
-        path: (current_team ? team_profile_path(current_team) : root_path),
-        icon: "user",
-        label: current_user&.name || t("shared.sidebar.user"),
-        image: (current_user.avatar if current_user&.avatar&.attached?) %>
-    <%= button_to session_path, method: :delete, class: "w-full flex items-center gap-3 px-3 py-2.5 text-sm text-dark-400 hover:text-dark-100 hover:bg-white/5 rounded-lg transition-all duration-200" do %>
-      <%= inline_svg "icons/sign-out.svg", class: "w-5 h-5 flex-shrink-0" %>
-      <span data-sidebar-target="label" class="transition-[opacity,width] duration-300 opacity-100"><%= t("common.sign_out") %></span>
+
+    <%# Profile link (personal context only — no team dropdown shown above) %>
+    <% if current_user && !current_team %>
+      <%= render "shared/sidebar_link",
+          path: edit_personal_profile_path,
+          icon: "user",
+          label: current_user.name || t("shared.sidebar.user"),
+          image: (current_user.avatar if current_user.avatar.attached?) %>
+    <% end %>
+
+    <%# Context switcher — badge shows unread notifications from non-active contexts %>
+    <% if current_user %>
+      <% user_teams = current_user_teams_for_switcher %>
+      <%# All notifications are user-scoped; show badge when in team context (personal has unread) %>
+      <% switcher_badge = personal_context? ? 0 : unread_count %>
+      <%= render "shared/sidebar_group",
+          id: "context",
+          icon: "shuffle",
+          label: t("shared.sidebar.switch_context"),
+          badge: switcher_badge do %>
+        <% unless personal_context? %>
+          <%= render "shared/sidebar_link", path: personal_home_path, icon: "home", label: current_user.name || t("shared.sidebar.personal"), nested: true, image: (current_user.avatar if current_user.avatar.attached?), badge: unread_count, data: { turbo_frame: "_top" } %>
+        <% end %>
+        <% user_teams.each do |team| %>
+          <% next if current_team == team %>
+          <%= render "shared/sidebar_link",
+              path: team_root_path(team),
+              icon: "users",
+              label: team.name,
+              nested: true,
+              image: (team.logo if team.logo.attached?),
+              data: { turbo_frame: "_top" } %>
+        <% end %>
+        <% unless current_user.owner? %>
+          <%= render "shared/sidebar_link",
+              path: new_team_path,
+              icon: "plus",
+              label: t("shared.sidebar.create_team"),
+              nested: true,
+              data: { turbo_frame: "_top" } %>
+        <% end %>
+        <%= render "shared/sidebar_link", path: session_path, icon: "sign-out", label: t("common.sign_out"), nested: true, data: { turbo_method: :delete, turbo_confirm: t("common.sign_out_confirm"), turbo_frame: "_top" } %>
+      <% end %>
     <% end %>
   </div>
 </aside>

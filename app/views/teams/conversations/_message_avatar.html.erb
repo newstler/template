@@ -1,0 +1,26 @@
+<%
+  initials = user.name&.split&.map(&:first)&.first(2)&.join&.upcase || "?"
+  avatar_classes = "w-8 h-8 rounded-full shrink-0 transition-transform hover:scale-110"
+%>
+<% wrapper = path ? :link : :span %>
+<% if path %>
+  <%= link_to path, class: "block shrink-0", title: user.name do %>
+    <% if user.avatar.attached? %>
+      <%= image_tag user.avatar, class: "#{avatar_classes} object-cover ring-2 ring-transparent hover:ring-accent-500/40", alt: user.name %>
+    <% else %>
+      <div class="<%= avatar_classes %> bg-gradient-to-br from-accent-600 to-accent-800 flex items-center justify-center ring-2 ring-transparent hover:ring-accent-500/40">
+        <span class="text-[11px] font-bold text-white/90 select-none"><%= initials %></span>
+      </div>
+    <% end %>
+  <% end %>
+<% else %>
+  <div class="shrink-0">
+    <% if user.avatar.attached? %>
+      <%= image_tag user.avatar, class: "#{avatar_classes} object-cover", alt: user.name %>
+    <% else %>
+      <div class="<%= avatar_classes %> bg-gradient-to-br from-accent-600 to-accent-800 flex items-center justify-center">
+        <span class="text-[11px] font-bold text-white/90 select-none"><%= initials %></span>
+      </div>
+    <% end %>
+  </div>
+<% end %>

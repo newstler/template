@@ -1,7 +1,9 @@
 require "test_helper"
 
 class TranslateContentJobTest < ActiveSupport::TestCase
-  MockResponse = Data.define(:content)
+  MockResponse = Data.define(:content, :input_tokens, :output_tokens) do
+    def initialize(content:, input_tokens: 0, output_tokens: 0) = super
+  end
   include ActiveJob::TestHelper
 
   setup do

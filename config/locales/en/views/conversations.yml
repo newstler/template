@@ -1,0 +1,25 @@
+---
+en:
+  teams:
+    conversations:
+      composer:
+        placeholder: Write a message...
+      conversation_message:
+        hidden_by_moderation: This message was hidden by moderation.
+      index:
+        empty: No conversations yet.
+        heading: Conversations
+        new_conversation: New Conversation
+      new:
+        back: Back to conversations
+        create: Start Conversation
+        heading: New Conversation
+        participants_label: Participants
+        subheading: Start a conversation with your team members.
+        title_label: Title
+        title_placeholder: Optional conversation title
+      participants:
+        show:
+          back: Back to conversation
+      show:
+        title: Conversation

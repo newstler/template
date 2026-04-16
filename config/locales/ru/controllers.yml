@@ -14,12 +14,13 @@ ru:
           verify: Слишком много попыток подтверждения.
         verify:
           alert: Недействительная или просроченная ссылка
-          notice: "С возвращением, администратор!"
+          notice: С возвращением, администратор!
     application:
       admin_required: Требуется доступ администратора
       authenticate_admin: Войдите как администратор
       authenticate_user: Пожалуйста, войдите в систему
       chats_disabled: Чаты сейчас недоступны
+      stripe_not_configured: Оплата для этого приложения не настроена
       subscription_required: Для доступа к этой функции необходима активная подписка
       team_not_found: Команда не найдена или у вас нет доступа
     articles:
@@ -46,9 +47,13 @@ ru:
       refreshes:
         create:
           notice: Модели обновлены
+    notifications:
+      preferences:
+        update:
+          notice: Настройки уведомлений обновлены
     onboardings:
       update:
-        notice: "Добро пожаловать, %{name}!"
+        notice: Добро пожаловать, %{name}!
     profiles:
       update:
         notice: Профиль обновлён
@@ -63,7 +68,7 @@ ru:
         verify: Слишком много попыток подтверждения.
       verify:
         alert: Недействительная или просроченная ссылка
-        notice: "С возвращением, %{name}!"
+        notice: С возвращением, %{name}!
     teams:
       create:
         notice: Команда создана
@@ -77,7 +82,7 @@ ru:
         already_member: Этот пользователь уже состоит в команде
         cannot_remove_last_owner: Нельзя удалить последнего владельца
         create:
-          notice: "Приглашение отправлено на %{email}"
+          notice: Приглашение отправлено на %{email}
         destroy:
           removed: "%{name} удалён из команды"
       settings:

@@ -1,10 +1,10 @@
 <% content_for :title, t(".title") %>
 
-<div class="max-w-4xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 py-8">
   <div class="flex items-center justify-between mb-8">
     <div>
-      <h1 class="text-2xl font-bold text-dark-50"><%= t(".heading") %></h1>
-      <p class="text-dark-400 mt-1"><%= t(".subheading") %></p>
+      <h1 class="text-3xl font-bold text-white"><%= t(".heading") %></h1>
+      <p class="text-dark-300 mt-1"><%= t(".subheading") %></p>
     </div>
     <%= link_to new_team_chat_path(current_team), class: "inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white px-4 py-2 rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all font-medium shadow-lg shadow-blue-500/25" do %>
       <%= inline_svg "icons/plus.svg", class: "w-5 h-5" %>

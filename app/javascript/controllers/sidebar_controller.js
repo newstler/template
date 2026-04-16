@@ -12,11 +12,29 @@ export default class extends Controller {
     this.loadCollapsedState()
     this.loadMinimizedState()
     this.checkMobileView()
+    this.restoreScrollPosition()
     window.addEventListener("resize", this.handleResize.bind(this))
+    document.addEventListener("turbo:before-visit", this.saveScrollPosition)
   }
 
   disconnect() {
     window.removeEventListener("resize", this.handleResize.bind(this))
+    document.removeEventListener("turbo:before-visit", this.saveScrollPosition)
+  }
+
+  saveScrollPosition = () => {
+    const nav = this.sidebarTarget?.querySelector("nav")
+    if (nav) {
+      sessionStorage.setItem("sidebar-scroll", nav.scrollTop)
+    }
+  }
+
+  restoreScrollPosition() {
+    const nav = this.sidebarTarget?.querySelector("nav")
+    const saved = sessionStorage.getItem("sidebar-scroll")
+    if (nav && saved) {
+      nav.scrollTop = parseInt(saved, 10)
+    }
   }
 
   toggle() {
@@ -152,8 +170,11 @@ export default class extends Controller {
       const saved = localStorage.getItem("sidebar-collapsed-groups")
       if (saved) {
         this.collapsedValue = JSON.parse(saved)
-        this.applyCollapsedState()
+      } else {
+        const allGroupIds = [...document.querySelectorAll("[data-group-id]")].map(el => el.dataset.groupId)
+        this.collapsedValue = allGroupIds
       }
+      this.applyCollapsedState()
     } catch (e) {
       console.warn("Could not load sidebar state:", e)
     }

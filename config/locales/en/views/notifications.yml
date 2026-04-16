@@ -1,0 +1,21 @@
+---
+en:
+  notifications:
+    index:
+      empty: No notifications yet.
+      mark_all_read: Mark all as read
+      preferences: Preferences
+      title: Notifications
+    mark_all_read:
+      marked_all_read: All notifications marked as read.
+    preferences:
+      edit:
+        cancel: Cancel
+        channels:
+          database: In app
+          email: Email
+        description: Choose which channels deliver which kinds of notifications.
+        empty: No notifier kinds are registered yet.
+        kind: Kind
+        save: Save preferences
+        title: Notification preferences

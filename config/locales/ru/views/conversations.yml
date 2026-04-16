@@ -1,0 +1,25 @@
+---
+ru:
+  teams:
+    conversations:
+      composer:
+        placeholder: Напишите сообщение...
+      conversation_message:
+        hidden_by_moderation: Это сообщение скрыто модерацией.
+      index:
+        empty: Переписок пока нет.
+        heading: Переписки
+        new_conversation: Новая переписка
+      new:
+        back: Назад к перепискам
+        create: Начать переписку
+        heading: Новая переписка
+        participants_label: Участники
+        subheading: Начните переписку с участниками команды.
+        title_label: Название
+        title_placeholder: Необязательное название переписки
+      participants:
+        show:
+          back: Назад к переписке
+      show:
+        title: Переписка

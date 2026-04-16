@@ -30,4 +30,10 @@ class PriceTest < ActiveSupport::TestCase
     price = Price.new(interval: "month", interval_count: 3)
     assert_equal "every 3 months", price.formatted_interval
   end
+
+  test "Price.all returns empty array when Stripe is not configured" do
+    Setting.instance.update!(stripe_secret_key: nil)
+    Price.clear_cache
+    assert_equal [], Price.all
+  end
 end

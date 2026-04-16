@@ -1,0 +1,56 @@
+class ConversationMessage < ApplicationRecord
+  include TranslatableMessage
+  include ModeratableMessage
+
+  belongs_to :conversation, touch: true
+  belongs_to :user
+
+  has_many_attached :attachments
+
+  scope :chronologically, -> { order(updated_at: :asc) }
+
+  validate :content_or_attachments_present
+
+  after_create_commit :broadcast_append_to_conversation
+  after_create_commit :mark_recipient_participants_pending
+
+  def body_for(recipient)
+    return content unless recipient&.locale.present?
+    body_translations[recipient.locale.to_s] || content
+  end
+
+  # Flagged messages are hidden from non-sender, non-admin recipients.
+  # Returns true if: message is not flagged, OR recipient is the sender,
+  # OR recipient is a team admin in ANY of the conversation's teams.
+  def visible_to?(recipient)
+    return true if flagged_at.blank?
+    return true if recipient == user
+    return false unless recipient.is_a?(User)
+    conversation.teams.any? { |team| recipient.admin_of?(team) }
+  end
+
+  private
+
+  def content_or_attachments_present
+    return if content.present? || attachments.attached?
+    errors.add(:base, :content_or_attachments_required)
+  end
+
+  def broadcast_append_to_conversation
+    broadcast_append_to conversation,
+                        target: "conversation_messages",
+                        partial: "teams/conversations/conversation_message",
+                        locals: { message: self }
+  end
+
+  # Mark every non-sender participant as pending a digest email. The
+  # ConversationDigestSweepJob sweeps these on a recurring schedule and
+  # flushes one email per participant per window.
+  def mark_recipient_participants_pending
+    conversation
+      .conversation_participants
+      .where.not(user_id: user_id)
+      .where(pending_notification_at: nil)
+      .update_all(pending_notification_at: Time.current, updated_at: Time.current)
+  end
+end

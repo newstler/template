@@ -14,6 +14,8 @@ class Price
 
   class << self
     def all
+      return [] unless Setting.stripe_configured?
+
       Rails.cache.fetch(CACHE_KEY, expires_in: CACHE_DURATION) do
         fetch_from_stripe
       end

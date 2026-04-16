@@ -1,0 +1,48 @@
+<%# Shared user profile card used by member show and conversation participant show.
+     Locals:
+       user        - User record (required)
+       memberships - array of Membership records to show (required)
+%>
+<div class="card-bg p-6">
+  <div class="flex items-center gap-4 mb-6 pb-6 border-b border-dark-700">
+    <% if user.avatar.attached? %>
+      <%= image_tag user.avatar, class: "w-16 h-16 rounded-full object-cover flex-shrink-0", alt: user.name %>
+    <% else %>
+      <div class="w-16 h-16 bg-gradient-to-br from-accent-600 to-accent-800 rounded-full flex items-center justify-center flex-shrink-0">
+        <span class="text-xl font-semibold text-white"><%= user.name&.split&.map(&:first)&.first(2)&.join&.upcase || "?" %></span>
+      </div>
+    <% end %>
+    <div>
+      <h1 class="text-3xl font-bold text-white"><%= user.name || user.email %></h1>
+      <p class="text-dark-400 text-sm mt-0.5"><%= user.email %></p>
+    </div>
+  </div>
+
+  <% if memberships.any? %>
+    <div class="space-y-3">
+      <% memberships.each do |membership| %>
+        <div class="flex items-center gap-3 p-3 rounded-lg bg-dark-700/50">
+          <% if membership.team.logo.attached? %>
+            <%= image_tag membership.team.logo, class: "w-10 h-10 rounded-lg object-cover", alt: membership.team.name %>
+          <% else %>
+            <div class="w-10 h-10 rounded-lg bg-dark-600 flex items-center justify-center">
+              <span class="text-sm font-semibold text-dark-300"><%= membership.team.name&.first&.upcase %></span>
+            </div>
+          <% end %>
+          <div class="flex-1 min-w-0">
+            <div class="text-sm font-medium text-white truncate"><%= membership.team.name %></div>
+            <div class="text-xs text-dark-400">
+              <span class="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-medium <%= membership.owner? ? 'bg-purple-500/20 text-purple-300' : membership.admin? ? 'bg-blue-500/20 text-blue-300' : 'bg-dark-600 text-dark-300' %>">
+                <%= membership.role.capitalize %>
+              </span>
+              <span class="ml-1 text-dark-500"><%= I18n.t("shared.user_profile_card.joined", date: I18n.l(membership.created_at.to_date, format: :long)) %></span>
+            </div>
+          </div>
+          <% if defined?(current_user) && current_user&.member_of?(membership.team) %>
+            <%= link_to I18n.t("shared.user_profile_card.view_team"), team_root_path(membership.team), class: "text-xs text-accent-400 hover:text-accent-300 transition-colors" %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</div>

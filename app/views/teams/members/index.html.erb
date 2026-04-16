@@ -1,8 +1,8 @@
 <% content_for :title, t(".heading") %>
 
-<div class="max-w-2xl mx-auto">
+<div class="max-w-7xl mx-auto px-4 py-8">
   <div class="flex items-center justify-between mb-8">
-    <h1 class="text-3xl font-bold text-dark-50"><%= t(".heading") %></h1>
+    <h1 class="text-3xl font-bold text-white"><%= t(".heading") %></h1>
     <% if current_membership&.admin? %>
       <%= link_to t(".invite_button"), new_team_member_path(current_team), class: "inline-flex items-center gap-2 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg transition-colors" %>
     <% end %>

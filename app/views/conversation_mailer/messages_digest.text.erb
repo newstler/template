@@ -1,0 +1,11 @@
+<%= t(".heading") %>
+
+<% @messages_by_conversation.each do |conversation, messages| %>
+<%= conversation.title %>
+<% messages.each do |m| -%>
+- <%= m.user.name.presence || m.user.email %>: <%= m.content %>
+<% end -%>
+
+<%= t(".cta") %>: <%= team_conversation_url(conversation.team_for(@recipient).slug, conversation) %>
+
+<% end %>

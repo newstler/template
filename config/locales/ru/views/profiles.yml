@@ -3,12 +3,16 @@ ru:
   profiles:
     edit:
       avatar_label: Аватар
+      currency_auto: Автоопределение
+      currency_help: По умолчанию используется валюта вашей команды
       heading: Редактировать профиль
       locale_auto: Автоопределение
       locale_help: Устанавливает язык интерфейса и исходный язык для переводов
       locale_label: Язык
       name_label: Имя
       name_placeholder: Введите ваше имя
+      preferred_currency: Предпочтительная валюта
+      residence_country: Страна проживания
       submit: Сохранить
     show:
       edit_button: Редактировать

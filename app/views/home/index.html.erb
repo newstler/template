@@ -1,74 +1,65 @@
-<% content_for :title, t(".title") %>
+<% content_for :title, current_team.name %>
 
-<div class="max-w-4xl mx-auto">
-  <div class="mb-8">
-    <h1 class="text-3xl font-bold text-dark-50"><%= t(".welcome", name: @user.name) %></h1>
-    <p class="text-dark-400 mt-1"><%= t(".signed_in") %></p>
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <header class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+    <div>
+      <h1 class="text-3xl font-bold text-white"><%= current_team.name %></h1>
+      <p class="text-dark-300 mt-1"><%= t(".subtitle") %></p>
+    </div>
+
+    <select data-controller="time-range"
+            data-action="change->time-range#update"
+            class="bg-dark-800 text-white text-sm px-3 py-2 rounded-lg border border-dark-700">
+      <option value="7d"  <%= "selected" if params[:range] == "7d" %>><%= t(".ranges.7d") %></option>
+      <option value="30d" <%= "selected" if params[:range].blank? || params[:range] == "30d" %>><%= t(".ranges.30d") %></option>
+      <option value="90d" <%= "selected" if params[:range] == "90d" %>><%= t(".ranges.90d") %></option>
+    </select>
+  </header>
+
+  <%= attention_items_strip(@attention_items) %>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <%= kpi_card label: t(".total_members"),
+                 value: number_with_delimiter(@total_users),
+                 icon: "users",
+                 href: team_members_path(current_team.slug) %>
+    <%= kpi_card label: t(".new_members"),
+                 value: number_with_delimiter(@recent_users) %>
+    <%= kpi_card label: t(".total_chats"),
+                 value: number_with_delimiter(@total_chats),
+                 icon: "chat",
+                 href: team_chats_path(current_team.slug) %>
+    <%= kpi_card label: t(".total_articles"),
+                 value: number_with_delimiter(@total_articles),
+                 icon: "file",
+                 href: team_articles_path(current_team.slug) %>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="card-bg p-6">
-      <div class="flex items-center mb-4">
-        <div class="w-10 h-10 bg-indigo-500/20 rounded-full flex items-center justify-center">
-          <%= inline_svg "icons/users.svg", class: "w-6 h-6 text-indigo-400" %>
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <%= render "shared/chart_card", title: t(".chats_over_time"), subtitle: t(".chats_over_time_subtitle") do %>
+      <%= line_chart @chats_timeline,
+            colors: [ "oklch(65% 0.19 260)" ],
+            library: { maintainAspectRatio: false },
+            height: "260px" %>
+    <% end %>
+
+    <div class="p-4 bg-dark-800 rounded-lg">
+      <h2 class="text-lg font-semibold text-white mb-4"><%= t(".welcome_heading", name: @user.name) %></h2>
+      <p class="text-sm text-dark-300 mb-4"><%= t(".welcome_body") %></p>
+      <dl class="space-y-2 text-sm">
+        <div class="flex justify-between border-b border-dark-700 pb-2">
+          <dt class="text-dark-400"><%= t(".email") %></dt>
+          <dd class="text-dark-100"><%= @user.email %></dd>
         </div>
-        <h2 class="text-xl font-semibold text-dark-50 ml-3"><%= t(".profile.heading") %></h2>
-      </div>
-      <dl class="space-y-3">
-        <div>
-          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.email") %></dt>
-          <dd class="text-sm text-dark-100"><%= @user.email %></dd>
+        <div class="flex justify-between border-b border-dark-700 pb-2">
+          <dt class="text-dark-400"><%= t(".member_since") %></dt>
+          <dd class="text-dark-100"><%= l(@user.created_at.to_date, format: :long) %></dd>
         </div>
-        <div>
-          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.name") %></dt>
-          <dd class="text-sm text-dark-100"><%= @user.name %></dd>
-        </div>
-        <div>
-          <dt class="text-sm font-medium text-dark-400"><%= t(".profile.member_since") %></dt>
-          <dd class="text-sm text-dark-100"><%= @user.created_at.strftime("%B %d, %Y") %></dd>
+        <div class="flex justify-between">
+          <dt class="text-dark-400"><%= t(".new_chats") %></dt>
+          <dd class="text-dark-100"><%= number_with_delimiter(@recent_chats) %></dd>
         </div>
       </dl>
-    </div>
-
-    <div class="card-bg p-6">
-      <div class="flex items-center mb-4">
-        <div class="w-10 h-10 bg-green-500/20 rounded-full flex items-center justify-center">
-          <%= inline_svg "icons/shield.svg", class: "w-6 h-6 text-green-400" %>
-        </div>
-        <h2 class="text-xl font-semibold text-dark-50 ml-3"><%= t(".authentication.heading") %></h2>
-      </div>
-      <div class="space-y-3">
-        <p class="text-sm text-dark-300">
-          <%= t(".authentication.description") %>
-        </p>
-        <div class="bg-green-500/10 rounded-lg p-3">
-          <div class="flex items-start">
-            <%= inline_svg "icons/shield.svg", class: "w-4 h-4 text-green-400 mt-0.5 mr-2 flex-shrink-0" %>
-            <div class="text-xs text-green-300">
-              <strong class="font-medium"><%= t(".authentication.secure_title") %></strong>
-              <p class="mt-1 text-green-400/80"><%= t(".authentication.secure_description") %></p>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <div class="mt-8 bg-blue-500/10 rounded-xl p-6 shadow-lg shadow-blue-500/5">
-    <div class="flex">
-      <%= inline_svg "icons/lightning.svg", class: "w-6 h-6 text-blue-400 mt-0.5 mr-3 flex-shrink-0" %>
-      <div class="flex-1">
-        <h3 class="text-sm font-medium text-blue-300 mb-2"><%= t(".getting_started.heading") %></h3>
-        <p class="text-sm text-blue-400/80 mb-3">
-          <%= t(".getting_started.description") %>
-        </p>
-        <ul class="text-sm text-blue-400/80 space-y-1 list-disc list-inside">
-          <li><%= t(".getting_started.tip_controllers") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/controllers/home_controller.rb</code></li>
-          <li><%= t(".getting_started.tip_views") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">app/views/home/index.html.erb</code></li>
-          <li><%= t(".getting_started.tip_models") %></li>
-          <li><%= t(".getting_started.tip_claude") %> <code class="bg-blue-500/20 px-1 rounded text-blue-300">CLAUDE.md</code> <%= t(".getting_started.tip_claude_suffix") %></li>
-        </ul>
-      </div>
     </div>
   </div>
 </div>

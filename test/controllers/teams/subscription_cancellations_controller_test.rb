@@ -36,6 +36,22 @@ class Teams::SubscriptionCancellationsControllerTest < ActionDispatch::Integrati
     assert_redirected_to team_root_path(teams(:two))
   end
 
+  test "create redirects to team root when Stripe is not configured" do
+    sign_in(@admin)
+    Setting.instance.update!(stripe_secret_key: nil)
+    post team_subscription_cancellation_path(@team)
+    assert_redirected_to team_root_path(@team)
+    assert_equal I18n.t("controllers.application.stripe_not_configured"), flash[:alert]
+  end
+
+  test "destroy redirects to team root when Stripe is not configured" do
+    sign_in(@admin)
+    Setting.instance.update!(stripe_secret_key: nil)
+    delete team_subscription_cancellation_path(@team)
+    assert_redirected_to team_root_path(@team)
+    assert_equal I18n.t("controllers.application.stripe_not_configured"), flash[:alert]
+  end
+
   test "destroy resumes subscription and redirects to billing" do
     @team.update!(stripe_subscription_id: "sub_test123", subscription_status: "active", cancel_at_period_end: true)
     sign_in(@admin)

@@ -25,6 +25,13 @@ class ProfilesController < ApplicationController
   private
 
   def profile_params
-    params.require(:user).permit(:name, :locale, :avatar, :remove_avatar)
+    params.require(:user).permit(
+      :name,
+      :locale,
+      :avatar,
+      :remove_avatar,
+      :preferred_currency,
+      :residence_country_code
+    )
   end
 end

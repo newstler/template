@@ -26,6 +26,7 @@ gem "jbuilder"
 # Use the database-backed adapters for Rails.cache, Active Job, and Action Cable
 gem "solid_cache"
 gem "solid_queue"
+gem "mission_control-jobs"
 gem "solid_cable"
 
 # Reduces boot times through caching; required in config/boot.rb
@@ -85,10 +86,23 @@ gem "geocoder"
 gem "maxminddb"
 
 gem "mobility", "~> 1.3"
+gem "rails-i18n"
 
 gem "friendly_id"
 gem "babosa"
 
+gem "money", "~> 6.19"
+gem "money-currencylayer-bank", "~> 0.7"
+gem "countries", "~> 7.1"
+
 gem "tidewave", "~> 0.4.1", group: :development
 
 gem "rails_error_dashboard"
+
+# Notifications framework — database, email, Turbo Stream, and more
+# See https://github.com/excid3/noticed
+gem "noticed", "~> 2.0"
+
+# Dashboards: charts + time-series grouping
+gem "chartkick", "~> 5.1"
+gem "groupdate", "~> 6.5"

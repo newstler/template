@@ -1,17 +1,29 @@
 ---
 en:
   shared:
+    country_select:
+      search_placeholder: Search countries...
     image_upload:
       drop_image: Drop image
       uploading: Uploading…
     sidebar:
       articles: Articles
       billing: Billing
-      chats: Chats
+      chats: AI Chats
       collapse: Collapse sidebar
+      conversations: Conversations
+      create_team: Create Team
       home: Home
       languages: Languages
+      load_more: Load more...
       members: Members
       new_chat: New Chat
+      new_conversation: New Conversation
+      notifications: Notifications
+      personal: Personal
       settings: Settings
+      switch_context: Switch
       user: User
+    user_profile_card:
+      joined: Joined %{date}
+      view_team: View team

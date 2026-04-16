@@ -1,6 +1,7 @@
 class Teams::CheckoutsController < ApplicationController
   before_action :authenticate_user!
   before_action :require_team_admin!
+  before_action :require_stripe!
 
   def create
     session = current_team.create_checkout_session(

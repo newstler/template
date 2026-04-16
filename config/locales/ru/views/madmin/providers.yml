@@ -3,11 +3,12 @@ ru:
   madmin:
     providers:
       index:
-        description: Настройте API-ключи для AI-провайдеров. Новые провайдеры появляются автоматически при поддержке RubyLLM.
+        description: Настройте API-ключи для AI-провайдеров. Новые провайдеры появляются
+          автоматически при поддержке RubyLLM.
         heading: AI-провайдеры
-        key_placeholder: "Введите ключ..."
+        key_placeholder: Введите ключ...
         placeholders:
-          api_base: "https://api.example.com"
+          api_base: https://api.example.com
           location: us-central1
           region: us-east-1
         providers:

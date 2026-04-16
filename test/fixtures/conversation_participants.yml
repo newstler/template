@@ -1,0 +1,13 @@
+one_one:
+  id: 01961a2a-c0de-7000-8000-c10000000001
+  conversation_id: 01961a2a-c0de-7000-8000-c00000000001
+  user_id: 01961a2a-c0de-7000-8000-000000000001
+  last_read_at: <%= 1.hour.ago %>
+  last_notified_at:
+
+one_two:
+  id: 01961a2a-c0de-7000-8000-c10000000002
+  conversation_id: 01961a2a-c0de-7000-8000-c00000000001
+  user_id: 01961a2a-c0de-7000-8000-000000000002
+  last_read_at:
+  last_notified_at:

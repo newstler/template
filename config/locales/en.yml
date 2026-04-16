@@ -2,19 +2,29 @@
 en:
   app_name: Template
   common:
+    ago: ago
     back: Back
     created: Created
     default: Default
     loading: Loading...
     sign_out: Sign Out
+    sign_out_confirm: Are you sure you want to sign out?
     untitled: Untitled
+  helpers:
+    currency:
+      auto: Auto
   language_name: English
   languages:
     de: German
     en: English
     es: Spanish
     fr: French
+    ky: Kyrgyz
     ru: Russian
+    sr: Serbian
+    tg: Tajik
+    tr: Turkish
+    uz: Uzbek
   messages:
     count: Messages
   native_name: English

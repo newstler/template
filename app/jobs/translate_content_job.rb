@@ -5,6 +5,10 @@ class TranslateContentJob < ApplicationJob
     record = model_class_name.constantize.find_by(id: record_id)
     return unless record
 
+    # Records with a `body_translations` JSON column (e.g. ConversationMessage)
+    # are translated in-place — they don't use Mobility.
+    return translate_into_json_column(record, source_locale, target_locale) if record.respond_to?(:body_translations)
+
     attributes = record.class.translatable_attributes
     return if attributes.empty?
 
@@ -36,6 +40,7 @@ class TranslateContentJob < ApplicationJob
     end
 
     response = RubyLLM.chat(model: model).ask(prompt)
+    record_cost(record, model, response)
     translated = parse_response(response.content, source_content.keys)
 
     return unless translated
@@ -53,6 +58,40 @@ class TranslateContentJob < ApplicationJob
   end
 
   private
+
+  def translate_into_json_column(record, source_locale, target_locale)
+    return if record.content.blank?
+    return if record.body_translations[target_locale.to_s].present?
+
+    model = Setting.translation_model
+    unless model
+      Rails.logger.warn("[TranslateContentJob] Skipped: no translation model configured. Set one at /madmin/ai_models")
+      return
+    end
+
+    target_language = Language.find_by(code: target_locale)&.name || target_locale
+    prompt = "Translate the following text from #{source_locale} to #{target_language}. Respond with only the translation, no other text.\n\n#{record.content}"
+
+    response = RubyLLM.chat(model: model).ask(prompt)
+    record_cost(record, model, response)
+    translation = response.content.to_s.strip
+    return if translation.blank?
+
+    translations = record.body_translations.merge(target_locale.to_s => translation)
+    record.update_columns(body_translations: translations)
+  end
+
+  def record_cost(record, model, response)
+    AiCost.record!(
+      cost_type: "translation",
+      model_id: model,
+      input_tokens: response.input_tokens.to_i,
+      output_tokens: response.output_tokens.to_i,
+      team: record.try(:team),
+      user: record.try(:user),
+      trackable: record,
+    )
+  end
 
   def translations_exist?(record, locale, attributes)
     conditions = { translatable_type: record.class.name, translatable_id: record.id, locale: locale.to_s, key: attributes.map(&:to_s) }

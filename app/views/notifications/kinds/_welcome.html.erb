@@ -1,0 +1,11 @@
+<div class="flex items-start gap-3">
+  <div class="flex-shrink-0 w-10 h-10 rounded-full bg-accent-500 flex items-center justify-center">
+    <%= inline_svg "icons/sparkle.svg", class: "w-5 h-5 text-white" %>
+  </div>
+  <div class="flex-1">
+    <p class="text-sm"><%= notification.message %></p>
+    <time class="text-xs text-dark-300">
+      <%= l(notification.created_at, format: :short) %>
+    </time>
+  </div>
+</div>

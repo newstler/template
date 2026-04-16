@@ -1,7 +1,7 @@
 module Madmin
   class MessagesController < Madmin::ResourceController
     def scoped_resources
-      resources = super.includes(:chat, :model, :tool_calls)
+      resources = super.includes(:model, :tool_calls, chat: :messages)
 
       # Role filter
       resources = resources.where(role: params[:role]) if params[:role].present?

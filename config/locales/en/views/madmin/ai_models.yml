@@ -2,35 +2,25 @@
 en:
   madmin:
     ai_models:
-      edit:
-        cancel: Cancel
-        chat_description: The model used for new chat conversations when no specific
-          model is selected.
-        chat_heading: Chat Model
-        default_model: Default Model
-        default_model_hint: The AI model used for new chat conversations.
-        heading: Edit AI Models
-        no_models: No models available
-        no_models_hint: Sync models from AI providers first.
-        save: Save Settings
-        sync_models: Go to Models
-        translation_description: The model used for automatic content translation
-          between languages.
-        translation_heading: Translation Model
-        translation_model: Translation Model
-        translation_model_hint: A fast, cost-effective model is recommended for translations.
       show:
         chat_description: The model used for new chat conversations when no specific
           model is selected.
         chat_heading: Chat Model
-        default_model: Default Model
-        edit_button: Edit Settings
+        embedding_description: Model and ranking knobs for vector similarity search
+          and RAG retrieval via sqlite-vec.
+        embedding_heading: Embeddings & RAG
         heading: AI Models
+        moderation_description: The model used to check conversation messages for
+          off-platform contact leaks.
+        moderation_heading: Moderation Model
         no_models: No models available
         no_models_hint: Configure AI providers and sync models first.
-        not_configured: Not configured — chats and translations are disabled
-        sync_models: Go to Models
+        rebuild_embeddings: Rebuild All Embeddings
+        rebuild_embeddings_confirm: This will recreate vector tables and re-embed
+          all records. Continue?
+        refresh_models: Refresh Models
+        tab_available: Available
+        tab_used: Used
         translation_description: The model used for automatic content translation
           between languages.
         translation_heading: Translation Model
-        translation_model: Translation Model

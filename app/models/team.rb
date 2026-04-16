@@ -1,5 +1,7 @@
 class Team < ApplicationRecord
   extend FriendlyId
+  include Countryable
+  include Notifiable
   include Subscribable
 
   friendly_id :name, use: :slugged
@@ -12,12 +14,20 @@ class Team < ApplicationRecord
   has_many :team_languages, dependent: :destroy
   has_many :languages, through: :team_languages
   has_many :articles, dependent: :destroy
+  has_many :conversation_teams, dependent: :destroy
+  has_many :conversations, through: :conversation_teams
+  has_many :ai_costs, dependent: :destroy
 
   attribute :remove_logo, :boolean, default: false
   after_save :purge_logo, if: :remove_logo
 
   validates :name, presence: true, uniqueness: true
   validates :slug, presence: true, uniqueness: true
+  validates :default_currency,
+            inclusion: { in: ->(_) { Setting.enabled_currencies } },
+            allow_nil: true
+
+  countryable :country_code
 
   before_create :generate_api_key
   before_create :start_trial

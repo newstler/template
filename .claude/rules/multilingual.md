@@ -36,7 +36,7 @@ No per-model migration needed. You specify the type explicitly via the `type:` k
 2. `after_commit` callback checks `previous_changes` for translatable attributes
 3. Gets team's `translation_target_codes(exclude: source_locale)`
 4. Bulk-enqueues `TranslateContentJob` via `perform_all_later`
-5. Job calls `RubyLLM.chat(model: "gpt-4.1-nano")` with JSON prompt
+5. Job calls `RubyLLM.chat(model: Setting.translation_model)` with JSON prompt
 6. Saves translations via `Mobility.with_locale(target_locale)` with callbacks skipped
 
 ### Reading Translations

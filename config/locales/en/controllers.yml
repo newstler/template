@@ -20,6 +20,7 @@ en:
       authenticate_admin: Please log in as admin
       authenticate_user: Please log in
       chats_disabled: Chats are not available at the moment
+      stripe_not_configured: Billing is not available for this app
       subscription_required: An active subscription is required to access this feature
       team_not_found: Team not found or you don't have access
     articles:
@@ -31,8 +32,14 @@ en:
         notice: Article updated
     madmin:
       ai_models:
+        rebuild_embeddings:
+          notice: Rebuilding all embeddings in the background. This may take a few
+            minutes.
         update:
           notice: AI model settings saved successfully
+      common:
+        rebuild_fts:
+          notice: FTS index rebuilt successfully
       mail:
         update:
           notice: Mail settings saved successfully
@@ -42,6 +49,9 @@ en:
       providers:
         update:
           notice: Provider credentials saved successfully
+      rag:
+        update:
+          notice: RAG settings saved successfully
       settings:
         update:
           notice: Settings saved successfully
@@ -49,6 +59,10 @@ en:
       refreshes:
         create:
           notice: Models refreshed successfully
+    notifications:
+      preferences:
+        update:
+          notice: Notification preferences updated
     onboardings:
       update:
         notice: Welcome, %{name}!

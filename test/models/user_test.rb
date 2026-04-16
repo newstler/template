@@ -51,4 +51,78 @@ class UserTest < ActiveSupport::TestCase
     assert_equal :en, user.effective_locale
     assert_equal :fr, user.effective_locale(fallback: :fr)
   end
+
+  test "notification_preferences defaults to an empty hash" do
+    user = User.create!(email: "prefs@example.com")
+    assert_equal({}, user.notification_preferences)
+  end
+
+  test "notification_preferences can store per-kind per-channel toggles" do
+    user = users(:one)
+    user.update!(notification_preferences: { "welcome" => { "email" => false } })
+    user.reload
+    assert_equal false, user.notification_preferences.dig("welcome", "email")
+  end
+
+  test "preferred_currency is nullable" do
+    user = users(:one)
+    assert_nil user.preferred_currency
+  end
+
+  test "preferred_currency must be a supported code if set" do
+    user = users(:one)
+    user.preferred_currency = "USD"
+    assert user.valid?
+    user.preferred_currency = "XXX"
+    assert_not user.valid?
+    assert user.errors[:preferred_currency].any?
+  end
+
+  test "residence_country_code is nullable" do
+    user = users(:one)
+    assert_nil user.residence_country_code
+    assert user.valid?
+  end
+
+  test "residence_country_code must be a valid ISO 3166 alpha-2 when set" do
+    user = users(:one)
+    user.residence_country_code = "US"
+    assert user.valid?
+    user.residence_country_code = "ZZ"
+    assert_not user.valid?
+    assert user.errors[:residence_country_code].any?
+  end
+
+  test "owner? is true when user owns at least one team" do
+    assert users(:one).owner?
+  end
+
+  test "owner? is false when user is only a member" do
+    assert_not users(:three).owner?
+  end
+
+  test "owner? is false when user has no memberships" do
+    user = User.create!(email: "loner@example.com")
+    assert_not user.owner?
+  end
+
+  test "visible_notifications includes own notifications" do
+    user = users(:one)
+    WelcomeNotifier.with(record: user).deliver(user)
+    assert user.visible_notifications.any?
+  end
+
+  test "visible_notifications includes team-recipient notifications when user admins the team" do
+    admin = users(:one)  # owner of team_one
+    team = teams(:one)
+    WelcomeNotifier.with(record: team).deliver(team)
+    assert_equal 1, admin.visible_notifications.where(recipient: team).count
+  end
+
+  test "visible_notifications excludes team-recipient notifications for non-admin members" do
+    member = users(:three)  # member of team_one, not admin
+    team = teams(:one)
+    WelcomeNotifier.with(record: team).deliver(team)
+    assert_equal 0, member.visible_notifications.where(recipient: team).count
+  end
 end
