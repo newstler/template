@@ -76,7 +76,7 @@
           </td>
           <td><%= record.chats.size %></td>
           <td class="<%= record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.total_cost || 0, precision: 4) %></td>
-          <td class="text-sm"><%= l(record.created_at, format: :short) %></td>
+          <td class="text-sm"><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
     </tbody>

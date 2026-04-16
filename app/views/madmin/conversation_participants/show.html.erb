@@ -32,7 +32,7 @@
     <div class="text-dark-500 text-sm mb-1"><%= t(".last_read") %></div>
     <% if @record.last_read_at %>
       <div class="text-lg font-bold text-dark-100"><%= t(".ago", time: time_ago_in_words(@record.last_read_at)) %></div>
-      <div class="text-xs text-dark-500 mt-1"><%= l(@record.last_read_at, format: :short) %></div>
+      <div class="text-xs text-dark-500 mt-1"><%= l(@record.last_read_at, format: :long) %></div>
     <% else %>
       <div class="text-lg font-bold text-dark-400"><%= t("madmin.common.never") %></div>
     <% end %>
@@ -41,7 +41,7 @@
     <div class="text-dark-500 text-sm mb-1"><%= t(".last_notified") %></div>
     <% if @record.last_notified_at %>
       <div class="text-lg font-bold text-dark-100"><%= t(".ago", time: time_ago_in_words(@record.last_notified_at)) %></div>
-      <div class="text-xs text-dark-500 mt-1"><%= l(@record.last_notified_at, format: :short) %></div>
+      <div class="text-xs text-dark-500 mt-1"><%= l(@record.last_notified_at, format: :long) %></div>
     <% else %>
       <div class="text-lg font-bold text-dark-400">-</div>
     <% end %>
@@ -143,7 +143,7 @@
                 <%= t("madmin.common.never") %>
               <% end %>
             </td>
-            <td class="text-sm text-dark-400"><%= l(cp.created_at, format: :short) %></td>
+            <td class="text-sm text-dark-400"><%= l(cp.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>

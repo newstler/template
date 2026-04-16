@@ -67,7 +67,7 @@
               <span class="text-sm"><%= record.user.name.presence || record.user.email %></span>
             <% end %>
           </td>
-          <td class="text-sm"><%= l(record.created_at, format: :short) %></td>
+          <td class="text-sm"><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
     </tbody>

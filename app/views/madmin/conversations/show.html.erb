@@ -41,7 +41,7 @@
   </div>
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1"><%= t(".last_activity_kpi") %></div>
-    <div class="text-lg font-bold text-dark-100"><%= l(@record.updated_at, format: :short) %></div>
+    <div class="text-lg font-bold text-dark-100"><%= l(@record.updated_at, format: :long) %></div>
   </div>
 </div>
 
@@ -72,14 +72,14 @@
             </td>
             <td class="text-sm">
               <% if cp.last_read_at %>
-                <%= l(cp.last_read_at, format: :short) %>
+                <%= l(cp.last_read_at, format: :long) %>
               <% else %>
                 <span class="text-dark-500"><%= t("madmin.common.never") %></span>
               <% end %>
             </td>
             <td class="text-sm">
               <% if cp.last_notified_at %>
-                <%= l(cp.last_notified_at, format: :short) %>
+                <%= l(cp.last_notified_at, format: :long) %>
               <% else %>
                 <span class="text-dark-500"><%= t("madmin.common.never") %></span>
               <% end %>
@@ -105,7 +105,7 @@
               <%= link_to "/madmin/users/#{message.user_id}", class: "font-medium text-dark-200 hover:text-dark-100 text-sm" do %>
                 <%= message.user.name.presence || message.user.email %>
               <% end %>
-              <span class="text-xs text-dark-500"><%= l(message.created_at, format: :short) %></span>
+              <span class="text-xs text-dark-500"><%= l(message.created_at, format: :long) %></span>
               <% if message.flagged_at.present? %>
                 <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/15 text-red-400"><%= t(".flagged") %></span>
               <% end %>
@@ -114,10 +114,26 @@
             <% if message.attachments.any? %>
               <div class="mt-2 flex flex-wrap gap-2">
                 <% message.attachments.each do |attachment| %>
-                  <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-dark-700 text-xs text-dark-300">
-                    <%= inline_svg "icons/paperclip.svg", class: "w-3 h-3" %>
-                    <%= attachment.filename %>
-                  </span>
+                  <% if attachment.content_type.start_with?("image/") && attachment.variable? %>
+                    <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.rails_blob_path(attachment, disposition: :inline) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                      <%= image_tag main_app.url_for(attachment.variant(resize_to_limit: [200, 200])), class: "rounded-lg max-w-[200px] max-h-[200px] cursor-pointer" %>
+                    </button>
+                  <% elsif attachment.content_type.start_with?("image/") %>
+                    <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.rails_blob_path(attachment, disposition: :inline) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                      <%= image_tag main_app.url_for(attachment), class: "rounded-lg max-w-[200px] max-h-[200px] cursor-pointer" %>
+                    </button>
+                  <% else %>
+                    <button type="button" class="flex items-center gap-2 bg-dark-700 hover:bg-dark-600 rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer"
+                            data-controller="lightbox"
+                            data-action="click->lightbox#open"
+                            data-lightbox-url-value="<%= main_app.rails_blob_path(attachment, disposition: :inline) %>"
+                            data-lightbox-filename-value="<%= attachment.filename %>"
+                            data-lightbox-type-value="document"
+                            data-lightbox-content-type-value="<%= attachment.content_type %>">
+                      <span><%= attachment.content_type == "application/pdf" ? "\u{1F4D5}" : "\u{1F4C4}" %></span>
+                      <span class="break-all text-dark-300"><%= attachment.filename %></span>
+                    </button>
+                  <% end %>
                 <% end %>
               </div>
             <% end %>

@@ -108,7 +108,7 @@
               </span>
             </td>
             <td><%= @record.chats.count { |c| c.team_id == membership.team_id } %></td>
-            <td class="text-sm"><%= l(membership.created_at, format: :short) %></td>
+            <td class="text-sm"><%= l(membership.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>
@@ -145,7 +145,7 @@
             <td><%= chat.model&.name || t(".default_model") %></td>
             <td><%= chat.messages_count %></td>
             <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(chat.total_cost || 0, precision: 4) %></td>
-            <td><%= l(chat.created_at, format: :short) %></td>
+            <td><%= l(chat.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>

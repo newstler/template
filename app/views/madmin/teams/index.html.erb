@@ -79,7 +79,7 @@
               <span class="text-xs text-dark-500 ml-1"><%= t(".days_left", count: record.trial_days_remaining) %></span>
             <% end %>
           </td>
-          <td class="text-sm"><%= l(record.created_at, format: :short) %></td>
+          <td class="text-sm"><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
     </tbody>

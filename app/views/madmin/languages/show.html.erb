@@ -52,7 +52,7 @@
   </div>
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1"><%= t(".kpi_created") %></div>
-    <div class="text-lg font-bold text-dark-100"><%= l(@record.created_at, format: :short) %></div>
+    <div class="text-lg font-bold text-dark-100"><%= l(@record.created_at, format: :long) %></div>
     <div class="text-xs text-dark-500 mt-1"><%= t(".ago", time: time_ago_in_words(@record.created_at)) %></div>
   </div>
 </div>
@@ -131,7 +131,7 @@
                 <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400"><%= t(".disabled") %></span>
               <% end %>
             </td>
-            <td class="text-sm text-dark-400"><%= l(tl.created_at, format: :short) %></td>
+            <td class="text-sm text-dark-400"><%= l(tl.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>
