@@ -25,21 +25,17 @@ class Article < ApplicationRecord
   def embedding_source_text
     parts = [ title.to_s, body.to_s ]
 
-    translation_locales.each do |locale|
+    locales = Mobility::Backends::ActiveRecord::KeyValue::TextTranslation
+      .where(translatable_type: self.class.name, translatable_id: id)
+      .distinct
+      .pluck(:locale)
+
+    locales.each do |locale|
       Mobility.with_locale(locale) do
         parts << title.to_s << body.to_s
       end
     end
 
     parts.reject(&:blank?).join("\n\n")
-  end
-
-  private
-
-  def translation_locales
-    Mobility::Backends::ActiveRecord::KeyValue::TextTranslation
-      .where(translatable_type: self.class.name, translatable_id: id)
-      .distinct
-      .pluck(:locale)
   end
 end

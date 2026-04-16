@@ -1,9 +1,6 @@
-<%#
-  Rendered from both the show action (has current_user) and after_create_commit
-  broadcast (no current_user). The partial must work in both contexts.
-%>
-<% visible = !defined?(current_user) || current_user.nil? ? true : message.visible_to?(current_user) %>
-<% is_mine = defined?(current_user) && current_user.present? && message.user_id == current_user.id %>
+<%# current_user is always available: from the controller or passed as a local by broadcast_to_other_participants %>
+<% visible = current_user ? message.visible_to?(current_user) : true %>
+<% is_mine = current_user&.id == message.user_id %>
 <% sender = message.user %>
 <%
   sender_team = nil

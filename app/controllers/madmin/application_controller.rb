@@ -1,5 +1,7 @@
 module Madmin
   class ApplicationController < Madmin::BaseController
+    include LocaleDetection
+
     before_action :authenticate_admin!
     before_action :set_admin_locale
     helper Madmin::ApplicationHelper
@@ -19,26 +21,11 @@ module Madmin
       end
 
       # 2. Accept-Language header
-      if request.headers["Accept-Language"]
-        accepted = parse_accept_language(request.headers["Accept-Language"])
-        enabled = Language.enabled_codes
-
-        accepted.each do |code|
-          return code.to_sym if enabled.include?(code)
-        end
-      end
+      detected = detect_browser_locale
+      return detected.to_sym if detected
 
       # 3. Platform default language
       Setting.default_language.to_sym
-    end
-
-    def parse_accept_language(header)
-      header.to_s.split(",").filter_map { |entry|
-        lang, quality = entry.strip.split(";")
-        code = lang&.strip&.split("-")&.first&.downcase
-        q = quality ? quality.strip.delete_prefix("q=").to_f : 1.0
-        [ code, q ] if code.present?
-      }.sort_by { |_, q| -q }.map(&:first).uniq
     end
 
     def authenticate_admin!

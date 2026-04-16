@@ -9,6 +9,10 @@ class EmbedRecordJob < ApplicationJob
     source = record.source_for_embedding
     return if source.blank?
 
+    # Skip if the stored embedding is already up-to-date (deduplicates
+    # concurrent enqueues from parallel TranslateContentJob workers).
+    return unless record.should_reembed?
+
     model = klass.embeddable_model_name
     return if model.blank?
 

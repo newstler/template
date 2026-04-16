@@ -48,19 +48,4 @@ class Admins::SessionsController < ApplicationController
     reset_session
     redirect_to root_path, notice: t("controllers.admins.sessions.destroy.notice")
   end
-
-  private
-
-  def detect_browser_locale
-    return nil unless request.headers["Accept-Language"]
-
-    accepted = parse_accept_language(request.headers["Accept-Language"])
-    enabled = Language.enabled_codes
-
-    accepted.each do |code|
-      return code if enabled.include?(code)
-    end
-
-    nil
-  end
 end

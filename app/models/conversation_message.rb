@@ -29,11 +29,16 @@ class ConversationMessage < ApplicationRecord
   # Broadcast to each non-sender participant on their personal stream,
   # so the partial renders with the correct current_user context.
   def broadcast_to_other_participants
-    conversation.conversation_participants.where.not(user_id: user_id).find_each do |participant|
-      broadcast_append_to [ participant.user, conversation ],
+    recipients = conversation.conversation_participants
+      .where.not(user_id: user_id)
+      .includes(:user)
+      .map(&:user)
+
+    recipients.each do |recipient|
+      broadcast_append_to [ recipient, conversation ],
                           target: "conversation_messages",
                           partial: "teams/conversations/conversation_message",
-                          locals: { message: self, current_user: participant.user }
+                          locals: { message: self, current_user: recipient }
     end
   end
 
