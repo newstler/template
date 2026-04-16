@@ -3,6 +3,7 @@ class AdminResource < Madmin::Resource
   attribute :id, form: false, index: false
   attribute :email, field: GravatarField, index: true, show: true, form: false
   attribute :email  # Regular field for editing
+  attribute :locale, index: false, show: false
   attribute :created_at, form: false
   attribute :updated_at, form: false
 
@@ -10,10 +11,10 @@ class AdminResource < Madmin::Resource
 
   # Member action for sending magic link
   member_action do |record|
-    button_to "Send Magic Link",
+    button_to I18n.t("madmin.admins.show.send_magic_link"),
       "/madmin/admins/#{record.id}/send_magic_link",
       method: :post,
-      data: { turbo_confirm: "Send magic link to #{record.email}?" },
+      data: { turbo_confirm: I18n.t("madmin.admins.show.send_magic_link_confirm", email: record.email) },
       class: "btn btn-primary"
   end
 

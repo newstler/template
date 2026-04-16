@@ -1,20 +1,20 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 </header>
 
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search attachments...", class: "form-input" %>
+      <%= f.label :q, t("madmin.common.search"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:q].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -24,10 +24,10 @@
   <table>
     <thead>
       <tr>
-        <th><%= sortable :blob_id, "Blob Filename" %></th>
-        <th><%= sortable :name, "Name" %></th>
-        <th><%= sortable :record_type, "Record" %></th>
-        <th><%= sortable :created_at, "Created" %></th>
+        <th><%= sortable :blob_id, t(".col_blob_filename") %></th>
+        <th><%= sortable :name, t(".col_name") %></th>
+        <th><%= sortable :record_type, t(".col_record") %></th>
+        <th><%= sortable :created_at, t(".col_created") %></th>
       </tr>
     </thead>
 
@@ -62,7 +62,7 @@
               <span class="text-dark-400"><%= record.record_type %> #<%= record.record_id.to_s[0..7] %></span>
             <% end %>
           </td>
-          <td><%= record.created_at.strftime("%-d %B %Y") %></td>
+          <td><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
     </tbody>

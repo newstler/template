@@ -1,0 +1,44 @@
+---
+ru:
+  madmin:
+    conversation_participants:
+      index:
+        all_statuses: Все
+        col_conversation: Переписка
+        col_joined: Вступление
+        col_last_notified: Последнее уведомление
+        col_last_read: Последнее чтение
+        col_status: Статус
+        col_team: Команда
+        col_user: Пользователь
+        has_read: Прочитано
+        heading: Участники переписок
+        never_read: Не прочитано
+        no_participants: Участников пока нет
+        no_participants_hint: Участники создаются при вступлении в переписку. Они
+          появятся здесь, когда команды начнут общаться.
+      show:
+        ago: "%{time} назад"
+        breadcrumb: Участники переписок
+        caught_up: Всё прочитано
+        col_joined: Вступление
+        col_last_read: Последнее чтение
+        col_user: Пользователь
+        conversation: Переписка
+        in_conversation_html: в %{conversation}
+        joined: Вступил(а) %{date}
+        joined_label: Вступление
+        last_notified: Последнее уведомление
+        last_read: Последнее чтение
+        other_participants: Другие участники (%{count})
+        started: Начато
+        subject: Тема
+        teams: Команды
+        title: Название
+        unread_messages:
+          few: непрочитанных сообщения
+          many: непрочитанных сообщений
+          one: непрочитанное сообщение
+          other: непрочитанных сообщения
+        unread_status: Статус прочтения
+        updated: Обновлено

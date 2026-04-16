@@ -1,0 +1,40 @@
+---
+ru:
+  madmin:
+    application:
+      sidebar:
+        accounts: Аккаунты
+        active_storage: Хранилище
+        admins: Администраторы
+        ai_chats: AI-чаты
+        ai_costs: Затраты AI
+        ai_models: AI-модели
+        api_keys: API-ключи
+        articles: Статьи
+        attachments: Вложения
+        blobs: Файлы
+        chats: Чаты
+        content: Контент
+        conv_messages: Сообщения
+        conv_participants: Участники
+        conversations: Переписки
+        conversations_group: Переписки
+        dashboard: Панель управления
+        error_dashboard: Ошибки
+        events: События
+        jobs_dashboard: Задачи
+        localization: Локализация
+        mail: Почта
+        messages: Сообщения
+        notification_deliveries: Уведомления
+        notifications: Уведомления
+        open_main_app: Открыть приложение
+        prices: Цены
+        search: Поиск
+        settings: Настройки
+        sign_out: Выйти
+        sign_out_confirm: Выйти из панели администратора?
+        teams: Команды
+        tool_calls: Вызовы инструментов
+        users: Пользователи
+        variants: Варианты

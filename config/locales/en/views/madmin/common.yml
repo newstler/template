@@ -1,0 +1,38 @@
+---
+en:
+  madmin:
+    common:
+      admin_title: "%{site_name} Admin"
+      ago: ago
+      all: All
+      all_items: All %{items}
+      cancel: Cancel
+      clear: Clear
+      delete: Delete
+      deleted: "(deleted)"
+      disable_all: Disable All
+      disabled: Disabled
+      edit: Edit
+      enable_all: Enable All
+      enabled: Enabled
+      filter: Filter
+      from: 'From:'
+      json_format_hint: Enter valid JSON format
+      json_placeholder: Enter valid JSON
+      never: Never
+      new: New %{resource}
+      no_content: "[No content]"
+      save: Save
+      search: Search
+      search_placeholder: Search %{resources}...
+      status_off: 'Off'
+      status_on: 'On'
+      subscription_status:
+        active: Active
+        canceled: Canceled
+        none: None
+        past_due: Past due
+        trialing: Trialing
+      to: 'To:'
+      unnamed: Unnamed
+      view: View

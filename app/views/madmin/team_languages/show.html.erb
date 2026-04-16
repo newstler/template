@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= resource.display_name(@record) %>
   </h1>
@@ -26,9 +26,9 @@
         <span><%= @record.language.native_name %></span>
         <span>&middot;</span>
         <% if @record.active? %>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Active</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400"><%= t(".active") %></span>
         <% else %>
-          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400"><%= t(".disabled") %></span>
         <% end %>
       </div>
     </div>
@@ -37,13 +37,13 @@
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">Team</th>
+          <th class="label"><%= t(".label_team") %></th>
           <td>
             <%= link_to "/madmin/teams/#{@record.team.slug}", class: "flex items-center gap-2 hover:underline" do %>
               <div class="w-6 h-6 rounded bg-dark-600 flex items-center justify-center text-[10px] font-bold text-dark-300">
@@ -54,7 +54,7 @@
           </td>
         </tr>
         <tr>
-          <th class="label">Language</th>
+          <th class="label"><%= t(".label_language") %></th>
           <td>
             <%= link_to "/madmin/languages/#{@record.language_id}", class: "inline-flex items-center gap-2 hover:underline" do %>
               <span class="inline-flex items-center justify-center w-8 h-5 rounded bg-dark-700 text-[10px] font-mono uppercase text-dark-300">
@@ -66,22 +66,22 @@
           </td>
         </tr>
         <tr>
-          <th class="label">Status</th>
+          <th class="label"><%= t(".label_status") %></th>
           <td>
             <% if @record.active? %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Active</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400"><%= t(".active") %></span>
             <% else %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400"><%= t(".disabled") %></span>
             <% end %>
           </td>
         </tr>
         <tr>
-          <th class="label">Added</th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %> <span class="text-dark-500 text-xs ml-1">(<%= time_ago_in_words(@record.created_at) %> ago)</span></td>
+          <th class="label"><%= t(".label_added") %></th>
+          <td><%= l(@record.created_at, format: :long) %> <span class="text-dark-500 text-xs ml-1">(<%= t(".ago", time: time_ago_in_words(@record.created_at)) %>)</span></td>
         </tr>
         <tr>
-          <th class="label">Last Updated</th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".label_last_updated") %></th>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -92,16 +92,16 @@
 <% if sibling_langs.any? %>
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Other Languages in <%= @record.team.name %></h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".other_languages_heading", team: @record.team.name) %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>Language</th>
-          <th>Code</th>
-          <th>Status</th>
-          <th>Added</th>
+          <th><%= t(".col_language") %></th>
+          <th><%= t(".col_code") %></th>
+          <th><%= t(".col_status") %></th>
+          <th><%= t(".col_added") %></th>
         </tr>
       </thead>
       <tbody>
@@ -115,12 +115,12 @@
             <td class="font-mono text-xs text-dark-400 uppercase"><%= tl.language.code %></td>
             <td>
               <% if tl.active? %>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Active</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400"><%= t(".active") %></span>
               <% else %>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400"><%= t(".disabled") %></span>
               <% end %>
             </td>
-            <td class="text-sm text-dark-400"><%= tl.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm text-dark-400"><%= l(tl.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>

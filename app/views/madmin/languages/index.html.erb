@@ -1,41 +1,58 @@
-<%= content_for :title, "Localization" %>
+<%= content_for :title, t(".heading") %>
 
 <% active_tab = params[:tab] == "currencies" ? 1 : 0 %>
 
 <div class="max-w-3xl mx-auto">
   <div class="mb-8">
-    <h1 class="text-3xl font-bold text-white">Localization</h1>
+    <h1 class="text-3xl font-bold text-white"><%= t(".heading") %></h1>
   </div>
 
   <div data-controller="tabs" data-tabs-active-class="border-accent-500 text-dark-100" data-tabs-inactive-class="border-transparent text-dark-400 hover:text-dark-200">
     <div class="flex gap-0 border-b border-dark-700 mb-6">
       <button data-tabs-target="tab" data-action="click->tabs#select" data-index="0"
               class="px-5 py-3 text-sm font-medium border-b-2 transition-colors -mb-px <%= active_tab == 0 ? 'border-accent-500 text-dark-100' : 'border-transparent text-dark-400 hover:text-dark-200' %>">
-        Languages
+        <%= t(".tab_languages") %>
       </button>
       <button data-tabs-target="tab" data-action="click->tabs#select" data-index="1"
               class="px-5 py-3 text-sm font-medium border-b-2 transition-colors -mb-px <%= active_tab == 1 ? 'border-accent-500 text-dark-100' : 'border-transparent text-dark-400 hover:text-dark-200' %>">
-        Currencies
+        <%= t(".tab_currencies") %>
       </button>
     </div>
 
     <%# Languages Tab %>
     <div data-tabs-target="panel" class="<%= 'hidden' if active_tab != 0 %>">
+      <%= form_with model: @setting, url: main_app.update_language_madmin_languages_path, method: :patch, data: { controller: "autosave" }, class: "mb-6" do |form| %>
+        <span data-autosave-target="status" class="hidden fixed top-4 right-4 z-50 px-3 py-1.5 bg-dark-700 text-dark-200 text-sm rounded-lg shadow-lg"></span>
+
+        <div class="card-bg p-6">
+          <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".default_language") %></h2>
+          <p class="text-sm text-dark-500 mb-4"><%= t(".default_language_hint") %></p>
+          <div>
+            <% language_options = Language.where(enabled: true).order(:name).map { |l| ["#{l.name} (#{l.native_name})", l.code] } %>
+            <%= form.select :default_language,
+              options_for_select([[t(".select_language"), ""]] + language_options, @setting.default_language),
+              {},
+              data: { action: "change->autosave#save" },
+              class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
+          </div>
+        </div>
+      <% end %>
+
       <div class="flex items-center justify-between mb-4">
         <div class="flex gap-2">
           <form class="search flex gap-2">
             <%= hidden_field_tag :page, params[:page], value: 1 %>
-            <%= search_field_tag :q, params[:q], placeholder: "Search languages...", class: "form-input" %>
+            <%= search_field_tag :q, params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
           </form>
           <% if params[:q].present? %>
-            <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+            <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
           <% end %>
         </div>
         <div class="flex gap-2">
-          <%= link_to "Enable All", main_app.bulk_toggle_madmin_languages_path(enable: true), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
-          <%= link_to "Disable All", main_app.bulk_toggle_madmin_languages_path(enable: false), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
+          <%= link_to t("madmin.common.enable_all"), main_app.bulk_toggle_madmin_languages_path(enable: true), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
+          <%= link_to t("madmin.common.disable_all"), main_app.bulk_toggle_madmin_languages_path(enable: false), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
           <%= button_to main_app.sync_madmin_languages_path, method: :post, class: "btn btn-primary" do %>
-            Sync Locale Files
+            <%= t(".sync_locale_files") %>
           <% end %>
         </div>
       </div>
@@ -44,10 +61,10 @@
         <table>
           <thead>
             <tr>
-              <th><%= sortable :name, "Name" %></th>
-              <th><%= sortable :native_name, "Native Name" %></th>
-              <th><%= sortable :code, "Code" %></th>
-              <th><%= sortable :enabled, "Enabled" %></th>
+              <th><%= sortable :name, t(".col_name") %></th>
+              <th><%= sortable :native_name, t(".col_native_name") %></th>
+              <th><%= sortable :code, t(".col_code") %></th>
+              <th><%= sortable :enabled, t(".col_enabled") %></th>
             </tr>
           </thead>
 
@@ -63,7 +80,7 @@
                   <%= turbo_frame_tag "language_toggle_#{language.id}" do %>
                     <%= button_to main_app.toggle_madmin_language_path(language), method: :patch, class: "inline-flex" do %>
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity <%= language.enabled? ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' %>">
-                        <%= language.enabled? ? "Enabled" : "Disabled" %>
+                        <%= language.enabled? ? t("madmin.common.enabled") : t("madmin.common.disabled") %>
                       </span>
                     <% end %>
                   <% end %>
@@ -93,8 +110,8 @@
         <span data-autosave-target="status" class="hidden fixed top-4 right-4 z-50 px-3 py-1.5 bg-dark-700 text-dark-200 text-sm rounded-lg shadow-lg"></span>
 
         <div class="card-bg p-6">
-          <h2 class="text-xl font-semibold text-dark-100 mb-2">Default Currency</h2>
-          <p class="text-sm text-dark-500 mb-4">Platform-wide default when no user or team preference is set.</p>
+          <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".default_currency") %></h2>
+          <p class="text-sm text-dark-500 mb-4"><%= t(".default_currency_hint") %></p>
           <div>
             <% currency_options = enabled_currencies.map { |c|
               sym = Money::Currency.find(c)&.symbol || c
@@ -102,7 +119,7 @@
               ["#{name} (#{sym})", c]
             }.sort_by(&:first) %>
             <%= form.select :default_currency,
-              options_for_select([["-- Select currency --", ""]] + currency_options, @setting.default_currency),
+              options_for_select([[t(".select_currency"), ""]] + currency_options, @setting.default_currency),
               {},
               data: { action: "change->autosave#save" },
               class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
@@ -111,18 +128,18 @@
       <% end %>
 
       <div class="flex justify-end gap-2 mb-4">
-        <%= link_to "Enable All", main_app.bulk_toggle_currency_madmin_languages_path(enable: true), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
-        <%= link_to "Disable All", main_app.bulk_toggle_currency_madmin_languages_path(enable: false), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.enable_all"), main_app.bulk_toggle_currency_madmin_languages_path(enable: true), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.disable_all"), main_app.bulk_toggle_currency_madmin_languages_path(enable: false), data: { turbo_method: :patch }, class: "btn btn-secondary" %>
       </div>
 
       <div class="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Symbol</th>
-              <th>Name</th>
-              <th>Code</th>
-              <th>Enabled</th>
+              <th><%= t(".col_symbol") %></th>
+              <th><%= t(".col_currency_name") %></th>
+              <th><%= t(".col_currency_code") %></th>
+              <th><%= t(".col_enabled") %></th>
             </tr>
           </thead>
           <tbody>
@@ -135,7 +152,7 @@
                   <%= turbo_frame_tag "currency_toggle_#{code}" do %>
                     <%= button_to main_app.toggle_currency_madmin_languages_path(code: code), method: :patch, class: "inline-flex" do %>
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity <%= enabled_currencies.include?(code) ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' %>">
-                        <%= enabled_currencies.include?(code) ? "Enabled" : "Disabled" %>
+                        <%= enabled_currencies.include?(code) ? t("madmin.common.enabled") : t("madmin.common.disabled") %>
                       </span>
                     <% end %>
                   <% end %>

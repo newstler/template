@@ -1,0 +1,27 @@
+---
+en:
+  madmin:
+    application:
+      edit:
+        breadcrumb: Edit
+        description: Update the %{resource} details below
+        heading: Edit %{resource}
+      form:
+        cancel: Cancel
+        error:
+          one: "%{count} error prevented this %{resource} from being saved:"
+          other: "%{count} errors prevented this %{resource} from being saved:"
+        view: View
+      index:
+        all: All
+        clear: Clear
+        new: New %{resource}
+      new:
+        breadcrumb: New
+        description: Create a new %{resource}
+        heading: New %{resource}
+      show:
+        delete: Delete
+        delete_confirm: Are you sure you want to delete this %{resource}?
+        details: "%{resource} details"
+        edit: Edit

@@ -33,6 +33,12 @@ class Admins::SessionsController < ApplicationController
     admin = Admin.find_signed!(params[:token], purpose: :magic_link)
     session[:admin_id] = admin.id
 
+    # Auto-detect locale from browser on first sign-in
+    if admin.locale.blank?
+      detected = detect_browser_locale
+      admin.update_column(:locale, detected) if detected
+    end
+
     redirect_to "/madmin", notice: t("controllers.admins.sessions.verify.notice")
   rescue ActiveSupport::MessageVerifier::InvalidSignature
     redirect_to new_admins_session_path, alert: t("controllers.admins.sessions.verify.alert")

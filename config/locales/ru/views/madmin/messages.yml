@@ -1,0 +1,24 @@
+---
+ru:
+  madmin:
+    messages:
+      index:
+        all_roles: Все роли
+        col_chat: Чат
+        col_cost: Стоимость
+        col_created: Создано
+        col_message: Сообщение
+        col_role: Роль
+        search_placeholder: Поиск сообщений...
+      show:
+        chat: 'Чат:'
+        cost: 'Стоимость:'
+        created: 'Создано:'
+        input_tokens: 'Вх: %{count}'
+        message_content: Содержимое сообщения
+        na: Н/Д
+        output_tokens: 'Вых: %{count}'
+        role: 'Роль:'
+        system_prompt: 'Системный промпт:'
+        tokens: 'Токены:'
+        tool_calls: Вызовы инструментов

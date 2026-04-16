@@ -11,9 +11,6 @@ class ConversationMessage < ApplicationRecord
 
   validate :content_or_attachments_present
 
-  after_create_commit :broadcast_append_to_conversation
-  after_create_commit :mark_recipient_participants_pending
-
   def body_for(recipient)
     return content unless recipient&.locale.present?
     body_translations[recipient.locale.to_s] || content
@@ -29,18 +26,20 @@ class ConversationMessage < ApplicationRecord
     conversation.teams.any? { |team| recipient.admin_of?(team) }
   end
 
-  private
+  # Broadcast to each non-sender participant on their personal stream,
+  # so the partial renders with the correct current_user context.
+  def broadcast_to_other_participants
+    recipients = conversation.conversation_participants
+      .where.not(user_id: user_id)
+      .includes(:user)
+      .map(&:user)
 
-  def content_or_attachments_present
-    return if content.present? || attachments.attached?
-    errors.add(:base, :content_or_attachments_required)
-  end
-
-  def broadcast_append_to_conversation
-    broadcast_append_to conversation,
-                        target: "conversation_messages",
-                        partial: "teams/conversations/conversation_message",
-                        locals: { message: self }
+    recipients.each do |recipient|
+      broadcast_append_to [ recipient, conversation ],
+                          target: "conversation_messages",
+                          partial: "teams/conversations/conversation_message",
+                          locals: { message: self, current_user: recipient }
+    end
   end
 
   # Mark every non-sender participant as pending a digest email. The
@@ -52,5 +51,12 @@ class ConversationMessage < ApplicationRecord
       .where.not(user_id: user_id)
       .where(pending_notification_at: nil)
       .update_all(pending_notification_at: Time.current, updated_at: Time.current)
+  end
+
+  private
+
+  def content_or_attachments_present
+    return if content.present? || attachments.attached?
+    errors.add(:base, :content_or_attachments_required)
   end
 end

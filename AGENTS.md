@@ -675,7 +675,7 @@ Both concerns are opt-in because they require configured models (`Setting.transl
 
 ### Live updates
 
-`<%= turbo_stream_from @conversation %>` in the view enables live updates. Every new `ConversationMessage` is appended to `#conversation_messages` automatically via `after_create_commit :broadcast_append_to_conversation`.
+`<%= turbo_stream_from current_user, @conversation %>` in the view subscribes to a per-user stream. After creating a message, call `message.broadcast_to_other_participants` and `message.mark_recipient_participants_pending` explicitly — the model has no `after_create_commit` callbacks for these. Broadcasting per-user ensures each participant's partial renders with the correct `current_user` context (for `is_mine`, `visible_to?`, `body_for`). The sender receives their message via the HTTP turbo_stream response.
 
 ### Read tracking
 

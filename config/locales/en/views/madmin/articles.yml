@@ -1,0 +1,23 @@
+---
+en:
+  madmin:
+    articles:
+      index:
+        all_teams: All teams
+        col_article: Article
+        col_author: Author
+        col_created: Created
+        col_team: Team
+        search_placeholder: Search articles...
+      show:
+        body: Body
+        by: by
+        details: Details
+        in: in
+        label_author: Author
+        label_created: Created
+        label_id: ID
+        label_team: Team
+        label_updated: Updated
+        no_translation: No translation available
+        title: Title

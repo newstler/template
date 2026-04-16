@@ -10,7 +10,7 @@ module Madmin
 
     def refresh_all
       Model.refresh!
-      redirect_to resource.index_path, notice: "Models refreshed! Total: #{Model.count}"
+      redirect_to resource.index_path, notice: t("controllers.madmin.models.refresh.notice", count: Model.count)
     end
   end
 end

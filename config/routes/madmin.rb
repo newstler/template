@@ -34,6 +34,7 @@ namespace :madmin do
     collection do
       post :sync
       patch :update_currency
+      patch :update_language
       patch :toggle_currency
       patch :bulk_toggle
       patch :bulk_toggle_currency
@@ -49,6 +50,7 @@ namespace :madmin do
   end
   resource :search, only: [ :show, :update ], controller: "rag" do
     post :rebuild_fts, on: :member
+    post :rebuild_embeddings, on: :member
   end
   resources :providers, only: [ :index ] do
     collection do

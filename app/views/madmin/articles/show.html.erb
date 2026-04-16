@@ -4,7 +4,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= Mobility.with_locale(:en) { @record.title }.truncate(50) %>
   </h1>
@@ -18,15 +18,15 @@
     <div class="flex-1 min-w-0">
       <h2 class="text-2xl font-bold text-dark-100"><%= Mobility.with_locale(:en) { @record.title } %></h2>
       <div class="flex items-center gap-4 mt-2 text-sm text-dark-400">
-        <span>by
+        <span><%= t(".by") %>
           <%= link_to @record.user.name.presence || @record.user.email, "/madmin/users/#{@record.user.id}", class: "text-dark-200 hover:underline" %>
         </span>
         <span>&middot;</span>
-        <span>in
+        <span><%= t(".in") %>
           <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "text-dark-200 hover:underline" %>
         </span>
         <span>&middot;</span>
-        <span><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></span>
+        <span><%= l(@record.created_at, format: :long) %></span>
       </div>
     </div>
   </div>
@@ -34,23 +34,23 @@
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">ID</th>
+          <th class="label"><%= t(".label_id") %></th>
           <td class="font-mono text-sm"><%= @record.id %></td>
         </tr>
         <tr>
-          <th class="label">Team</th>
+          <th class="label"><%= t(".label_team") %></th>
           <td>
             <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "hover:underline" %>
           </td>
         </tr>
         <tr>
-          <th class="label">Author</th>
+          <th class="label"><%= t(".label_author") %></th>
           <td>
             <%= link_to "/madmin/users/#{@record.user.id}", class: "flex items-center gap-2 hover:underline" do %>
               <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.user.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
@@ -59,12 +59,12 @@
           </td>
         </tr>
         <tr>
-          <th class="label">Created</th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".label_created") %></th>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".label_updated") %></th>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -73,7 +73,7 @@
 
 <div class="card-bg overflow-hidden mb-6" data-controller="tabs" data-tabs-active-class="border-accent-500 text-dark-100" data-tabs-inactive-class="border-transparent text-dark-400 hover:text-dark-200">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Title</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".title") %></h2>
   </div>
   <div class="flex gap-0 border-b border-dark-700 px-5">
     <% languages.each_with_index do |(locale, name), i| %>
@@ -89,7 +89,7 @@
       <% if translated_title.present? %>
         <p class="text-dark-200 text-lg"><%= translated_title %></p>
       <% else %>
-        <p class="text-dark-500 italic">No translation available</p>
+        <p class="text-dark-500 italic"><%= t(".no_translation") %></p>
       <% end %>
     </div>
   <% end %>
@@ -97,7 +97,7 @@
 
 <div class="card-bg overflow-hidden" data-controller="tabs" data-tabs-active-class="border-accent-500 text-dark-100" data-tabs-inactive-class="border-transparent text-dark-400 hover:text-dark-200">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Body</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".body") %></h2>
   </div>
   <div class="flex gap-0 border-b border-dark-700 px-5">
     <% languages.each_with_index do |(locale, name), i| %>
@@ -115,7 +115,7 @@
           <%= simple_format(translated_body) %>
         </div>
       <% else %>
-        <p class="text-dark-500 italic">No translation available</p>
+        <p class="text-dark-500 italic"><%= t(".no_translation") %></p>
       <% end %>
     </div>
   <% end %>

@@ -1,0 +1,36 @@
+---
+en:
+  madmin:
+    noticed_events:
+      index:
+        all_record_types: All record types
+        all_types: All types
+        col_created: Created
+        col_deliveries: Deliveries
+        col_event_type: Event Type
+        col_record: Record
+        heading: Notification Events
+      show:
+        breadcrumb: Notification Events
+        col_created: Created
+        col_read: Read
+        col_recipient: Recipient
+        col_seen: Seen
+        col_type: Type
+        deleted_user: Deleted user
+        deliveries: Deliveries
+        deliveries_heading: Deliveries (%{count})
+        details: Details
+        event_params: Event Params
+        event_type: Event Type
+        label_created: Created
+        label_id: ID
+        label_record: Record
+        label_type: Type
+        label_updated: Updated
+        no_deliveries: No deliveries yet
+        none: None
+        read: Read
+        record: Record
+        triggered_by: Triggered by
+        unread: Unread

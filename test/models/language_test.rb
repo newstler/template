@@ -2,18 +2,22 @@ require "test_helper"
 
 class LanguageTest < ActiveSupport::TestCase
   test "requires code, name, and native_name" do
-    lang = Language.new
-    assert_not lang.valid?
-    assert_includes lang.errors[:code], "can't be blank"
-    assert_includes lang.errors[:name], "can't be blank"
-    assert_includes lang.errors[:native_name], "can't be blank"
+    I18n.with_locale(:en) do
+      lang = Language.new
+      assert_not lang.valid?
+      assert_includes lang.errors[:code], "can't be blank"
+      assert_includes lang.errors[:name], "can't be blank"
+      assert_includes lang.errors[:native_name], "can't be blank"
+    end
   end
 
   test "validates uniqueness of code" do
-    existing = languages(:english)
-    lang = Language.new(code: existing.code, name: "Duplicate", native_name: "Dup")
-    assert_not lang.valid?
-    assert_includes lang.errors[:code], "has already been taken"
+    I18n.with_locale(:en) do
+      existing = languages(:english)
+      lang = Language.new(code: existing.code, name: "Duplicate", native_name: "Dup")
+      assert_not lang.valid?
+      assert_includes lang.errors[:code], "has already been taken"
+    end
   end
 
   test "english? and Language.english identify English" do

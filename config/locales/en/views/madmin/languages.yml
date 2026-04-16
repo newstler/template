@@ -1,0 +1,48 @@
+---
+en:
+  madmin:
+    languages:
+      index:
+        col_code: Code
+        col_currency_code: Code
+        col_currency_name: Name
+        col_enabled: Enabled
+        col_name: Name
+        col_native_name: Native Name
+        col_symbol: Symbol
+        default_currency: Default Currency
+        default_currency_hint: Platform-wide default when no user or team preference
+          is set.
+        default_language: Default Language
+        default_language_hint: Platform-wide default when no user preference or browser
+          language matches.
+        heading: Localization
+        search_placeholder: Search languages...
+        select_currency: "-- Select currency --"
+        select_language: "-- Select language --"
+        sync_locale_files: Sync Locale Files
+        tab_currencies: Currencies
+        tab_languages: Languages
+      show:
+        active: Active
+        ago: "%{time} ago"
+        col_added: Added
+        col_status: Status
+        col_team: Team
+        details: Details
+        disable: Disable
+        disabled: Disabled
+        disabled_badge: Disabled
+        enable: Enable
+        enabled_badge: Enabled
+        kpi_created: Created
+        kpi_currently_active: Currently Active
+        kpi_teams_using: Teams Using This Language
+        label_code: Code
+        label_created: Created
+        label_enabled: Enabled
+        label_english_name: English Name
+        label_native_name: Native Name
+        label_updated: Updated
+        required_badge: Required
+        teams_heading: Teams (%{count})

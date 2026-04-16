@@ -1,0 +1,53 @@
+---
+en:
+  madmin:
+    teams:
+      index:
+        col_chats: Chats
+        col_cost: Cost
+        col_created: Created
+        col_members: Members
+        col_owner: Owner
+        col_subscription: Subscription
+        col_team: Team
+        days_left:
+          one: "%{count} day left"
+          other: "%{count} days left"
+        no_owner: No owner
+        search_placeholder: Search teams...
+      show:
+        api_key: API Key
+        cancels_at_period_end: Cancels at period end
+        chats: Chats
+        col_chats: Chats
+        col_cost: Cost
+        col_created: Created
+        col_first_message: First Message
+        col_joined: Joined
+        col_messages: Messages
+        col_model: Model
+        col_role: Role
+        col_user: User
+        col_user_chat: User
+        created: Created
+        created_date: Created %{date}
+        days_left:
+          one: "%{count} day left"
+          other: "%{count} days left"
+        default_model: Default
+        details: Details
+        empty_chat: Empty chat
+        id: ID
+        members: Members
+        members_heading: Members (%{count})
+        name: Name
+        period_ends: Period Ends
+        recent_chats: Recent Chats
+        slug: Slug
+        stripe_customer: Stripe Customer
+        subscription: Subscription
+        total_cost: Total Cost
+        total_messages: Total Messages
+        unknown: Unknown
+        updated: Updated
+        view_all_chats: View all %{count} chats →

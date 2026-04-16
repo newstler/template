@@ -5,13 +5,13 @@ module Madmin
     def toggle_conversations
       setting = Setting.instance
       setting.update!(conversations_enabled: !setting.conversations_enabled?)
-      redirect_to main_app.madmin_conversations_path, notice: "Conversations #{setting.conversations_enabled? ? 'enabled' : 'disabled'}"
+      redirect_to main_app.madmin_conversations_path, notice: t("controllers.madmin.conversations.toggle_conversations.#{setting.conversations_enabled? ? 'enabled' : 'disabled'}")
     end
 
     def toggle_moderation
       setting = Setting.instance
       setting.update!(conversation_moderation_enabled: !setting.conversation_moderation_enabled?)
-      redirect_to main_app.madmin_conversations_path, notice: "Conversation moderation #{setting.conversation_moderation_enabled? ? 'enabled' : 'disabled'}"
+      redirect_to main_app.madmin_conversations_path, notice: t("controllers.madmin.conversations.toggle_moderation.#{setting.conversation_moderation_enabled? ? 'enabled' : 'disabled'}")
     end
 
     private

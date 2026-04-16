@@ -13,7 +13,8 @@ class ConversationDigestSweepJobTest < ActiveJob::TestCase
 
   test "creating multiple messages in one window produces one digest email per participant" do
     5.times do |i|
-      ConversationMessage.create!(conversation: @conversation, user: @sender, content: "Msg #{i}")
+      message = ConversationMessage.create!(conversation: @conversation, user: @sender, content: "Msg #{i}")
+      message.mark_recipient_participants_pending
     end
 
     # Advance past the digest window so the sweep picks the participant up.
@@ -43,7 +44,8 @@ class ConversationDigestSweepJobTest < ActiveJob::TestCase
   end
 
   test "a new message after a digest triggers a fresh cycle" do
-    ConversationMessage.create!(conversation: @conversation, user: @sender, content: "First")
+    message = ConversationMessage.create!(conversation: @conversation, user: @sender, content: "First")
+    message.mark_recipient_participants_pending
 
     travel 6.minutes
     perform_enqueued_jobs do
@@ -53,7 +55,8 @@ class ConversationDigestSweepJobTest < ActiveJob::TestCase
     assert_not_nil @participant.last_notified_at
 
     travel 10.minutes
-    ConversationMessage.create!(conversation: @conversation, user: @sender, content: "Second")
+    message = ConversationMessage.create!(conversation: @conversation, user: @sender, content: "Second")
+    message.mark_recipient_participants_pending
     assert_not_nil @participant.reload.pending_notification_at
 
     travel 6.minutes

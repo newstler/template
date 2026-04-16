@@ -1,0 +1,23 @@
+---
+ru:
+  madmin:
+    admins:
+      index:
+        col_created: Создан
+        col_email: Email
+        search_placeholder: Поиск администраторов...
+      show:
+        account: Аккаунт
+        admin_since: Администратор с %{date}
+        administrator: Администратор
+        auto_detect: Определять автоматически из браузера
+        created: Создан
+        details: Детали
+        email: Email
+        language: Язык
+        language_hint: Если задан, этот язык будет использоваться для панели администратора
+          вместо определения из браузера.
+        role: Роль
+        send_magic_link: Отправить magic link
+        send_magic_link_confirm: Отправить magic link на %{email}?
+        updated: Обновлён

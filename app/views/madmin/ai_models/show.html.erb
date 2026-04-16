@@ -28,7 +28,7 @@
         <%= form_with model: @setting, url: main_app.madmin_ai_models_path, method: :patch, data: { controller: "autosave" }, class: "space-y-6" do |form| %>
           <span data-autosave-target="status" class="hidden fixed top-4 right-4 z-50 px-3 py-1.5 bg-dark-700 text-dark-200 text-sm rounded-lg shadow-lg"></span>
 
-          <% model_options = [["— Select model —", ""]] + @available_models.map { |name, model_id| ["#{name} (#{model_id})", model_id] } %>
+          <% model_options = [[t(".select_model"), ""]] + @available_models.map { |name, model_id| ["#{name} (#{model_id})", model_id] } %>
 
           <%# Chat Model %>
           <div class="card-bg p-6">
@@ -70,7 +70,7 @@
           </div>
 
           <%# Embedding Model %>
-          <% embedding_options = [["— Select model —", ""]] + @embedding_models.map { |model_id| [model_id, model_id] } %>
+          <% embedding_options = [[t(".select_model"), ""]] + @embedding_models.map { |model_id| [model_id, model_id] } %>
           <div class="card-bg p-6">
             <div class="flex items-center justify-between mb-2">
               <h2 class="text-xl font-semibold text-dark-100"><%= t(".embedding_heading") %></h2>
@@ -96,18 +96,18 @@
           <%= form_with url: main_app.madmin_ai_models_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
             <%= f.hidden_field :tab, value: "available" %>
             <div>
-              <%= f.search_field :q, value: params[:q], placeholder: "Search models...", class: "form-input" %>
+              <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
             </div>
             <div>
               <%= f.select :provider,
-                options_for_select([["All providers", ""]] + @providers_list.map { |p| [p.titleize, p] }, params[:provider]),
+                options_for_select([[t(".all_providers"), ""]] + @providers_list.map { |p| [p.titleize, p] }, params[:provider]),
                 {},
                 class: "form-select" %>
             </div>
             <div class="flex gap-2">
-              <%= f.submit "Filter", class: "btn btn-primary" %>
+              <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
               <% if params[:q].present? || params[:provider].present? %>
-                <%= link_to "Clear", main_app.madmin_ai_models_path(tab: "available"), class: "btn btn-secondary" %>
+                <%= link_to t("madmin.common.clear"), main_app.madmin_ai_models_path(tab: "available"), class: "btn btn-secondary" %>
               <% end %>
             </div>
           <% end %>
@@ -116,18 +116,18 @@
             main_app.refresh_all_madmin_ai_models_path,
             method: :post,
             class: "btn btn-primary",
-            data: { turbo_confirm: "Refresh all models from RubyLLM?" } %>
+            data: { turbo_confirm: t(".refresh_confirm") } %>
       </div>
 
       <div class="table-scroll">
         <table>
           <thead>
             <tr>
-              <th>Provider</th>
-              <th>Family</th>
-              <th>Name</th>
-              <th>Chats</th>
-              <th>Total Cost</th>
+              <th><%= t(".col_provider") %></th>
+              <th><%= t(".col_family") %></th>
+              <th><%= t(".col_name") %></th>
+              <th><%= t(".col_chats") %></th>
+              <th><%= t(".col_total_cost") %></th>
             </tr>
           </thead>
           <tbody>
@@ -145,7 +145,7 @@
                   <% end %>
                 </td>
                 <td><%= model.chats_count %></td>
-                <td class="<%= (model.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= model.formatted_total_cost || "-" %></td>
+                <td class="<%= (model.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(model.total_cost || 0, precision: 4) %></td>
               </tr>
             <% end %>
           </tbody>

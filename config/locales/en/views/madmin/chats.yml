@@ -1,0 +1,24 @@
+---
+en:
+  madmin:
+    chats:
+      index:
+        col_cost: Cost
+        col_created: Created
+        col_first_message: First Message
+        col_messages: Messages
+        col_user: User
+        empty_chat: Empty chat
+        search_placeholder: Search by user email...
+      show:
+        conversation: Conversation
+        created: 'Created:'
+        default_model: Default
+        input_tokens: 'In: %{count}'
+        messages: 'Messages:'
+        model: 'Model:'
+        output_tokens: 'Out: %{count}'
+        system_label: 'System:'
+        tokens: 'Tokens:'
+        total_cost: 'Total Cost:'
+        user: 'User:'

@@ -1,0 +1,38 @@
+---
+ru:
+  madmin:
+    users:
+      index:
+        col_chats: Чаты
+        col_cost: Стоимость
+        col_joined: Регистрация
+        col_teams: Команды
+        col_user: Пользователь
+        no_teams: Нет команд
+        search_placeholder: Поиск пользователей...
+      show:
+        col_chats: Чаты
+        col_cost: Стоимость
+        col_created: Создан
+        col_first_message: Первое сообщение
+        col_joined: Вступление
+        col_messages: Сообщения
+        col_model: Модель
+        col_role: Роль
+        col_team: Команда
+        created: Создан
+        default_model: По умолчанию
+        details: Детали
+        email: Email
+        empty_chat: Пустой чат
+        id: ID
+        member_since: Участник с %{date}
+        name: Имя
+        recent_chats: Последние чаты
+        teams: Команды (%{count})
+        total_chats: Всего чатов
+        total_cost: Общая стоимость
+        total_messages: Всего сообщений
+        unnamed_user: Безымянный пользователь
+        updated: Обновлён
+        view_all_chats: Показать все %{count} чатов →

@@ -1,0 +1,74 @@
+---
+en:
+  activerecord:
+    attributes:
+      ai_cost:
+        cost: Cost
+        cost_type: Cost Type
+        created_at: Created
+        input_tokens: Input Tokens
+        model_id: Model
+        output_tokens: Output Tokens
+        team: Team
+        user: User
+    models:
+      active_storage/attachment:
+        one: Attachment
+        other: Attachments
+      active_storage/blob:
+        one: Blob
+        other: Blobs
+      active_storage/variant_record:
+        one: Variant Record
+        other: Variant Records
+      admin:
+        one: Admin
+        other: Admins
+      ai_cost:
+        one: AI Cost
+        other: AI Costs
+      article:
+        one: Article
+        other: Articles
+      chat:
+        one: AI Chat
+        other: AI Chats
+      conversation:
+        one: Conversation
+        other: Conversations
+      conversation_message:
+        one: Conversation Message
+        other: Conversation Messages
+      conversation_participant:
+        one: Conversation Participant
+        other: Conversation Participants
+      language:
+        one: Language
+        other: Languages
+      membership:
+        one: Membership
+        other: Memberships
+      message:
+        one: Message
+        other: Messages
+      model:
+        one: Model
+        other: Models
+      noticed/event:
+        one: Notification Event
+        other: Notification Events
+      noticed/notification:
+        one: Notification
+        other: Notifications
+      team:
+        one: Team
+        other: Teams
+      team_language:
+        one: Team Language
+        other: Team Languages
+      tool_call:
+        one: Tool Call
+        other: Tool Calls
+      user:
+        one: User
+        other: Users

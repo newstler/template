@@ -26,7 +26,8 @@ class ConversationsTest < ApplicationSystemTestCase
     other = users(:two)
     ConversationParticipant.find_or_create_by!(conversation: @conversation, user: other)
 
-    @conversation.conversation_messages.create!(user: other, content: "Live update")
+    message = @conversation.conversation_messages.create!(user: other, content: "Live update")
+    message.broadcast_to_other_participants
 
     assert_selector "div", text: "Live update", wait: 5
   end

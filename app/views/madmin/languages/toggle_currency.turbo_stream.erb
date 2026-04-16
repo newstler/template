@@ -2,7 +2,7 @@
   <%= turbo_frame_tag "currency_toggle_#{@code}" do %>
     <%= button_to main_app.toggle_currency_madmin_languages_path(code: @code), method: :patch, class: "inline-flex" do %>
       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium cursor-pointer hover:opacity-80 transition-opacity <%= @enabled ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-600' %>">
-        <%= @enabled ? "Enabled" : "Disabled" %>
+        <%= @enabled ? t("madmin.common.enabled") : t("madmin.common.disabled") %>
       </span>
     <% end %>
   <% end %>

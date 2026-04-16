@@ -1,0 +1,32 @@
+---
+ru:
+  madmin:
+    team_languages:
+      index:
+        active: Активен
+        all_languages: Все языки
+        all_statuses: Все
+        all_teams: Все команды
+        col_added: Добавлен
+        col_language: Язык
+        col_status: Статус
+        col_team: Команда
+        disabled_status: Отключён
+        no_team_languages: Языков команд пока нет
+        no_team_languages_hint: Команды выбирают языки на странице настроек. Когда
+          команда включит язык, он появится здесь.
+      show:
+        active: Активен
+        ago: "%{time} назад"
+        col_added: Добавлен
+        col_code: Код
+        col_language: Язык
+        col_status: Статус
+        details: Детали
+        disabled: Отключён
+        label_added: Добавлено
+        label_language: Язык
+        label_last_updated: Последнее обновление
+        label_status: Статус
+        label_team: Команда
+        other_languages_heading: Другие языки в %{team}

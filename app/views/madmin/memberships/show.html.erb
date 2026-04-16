@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= resource.display_name(@record) %>
   </h1>
@@ -24,27 +24,27 @@
         <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= role_class %>">
           <%= @record.role.titleize %>
         </span>
-        <span class="text-dark-500">in</span>
+        <span class="text-dark-500"><%= t(".in_team") %></span>
         <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "text-dark-200 hover:underline font-medium" %>
       </div>
-      <p class="text-dark-500 text-sm mt-2">Member since <%= @record.created_at.strftime("%-d %B %Y") %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t(".member_since", date: l(@record.created_at, format: :long)) %></p>
     </div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">ID</th>
+          <th class="label"><%= t(".label_id") %></th>
           <td class="font-mono text-sm"><%= @record.id %></td>
         </tr>
         <tr>
-          <th class="label">User</th>
+          <th class="label"><%= t(".label_user") %></th>
           <td>
             <%= link_to "/madmin/users/#{@record.user.id}", class: "flex items-center gap-2 hover:underline" do %>
               <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.user.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
@@ -53,17 +53,17 @@
           </td>
         </tr>
         <tr>
-          <th class="label">Email</th>
+          <th class="label"><%= t(".label_email") %></th>
           <td><%= @record.user.email %></td>
         </tr>
         <tr>
-          <th class="label">Team</th>
+          <th class="label"><%= t(".label_team") %></th>
           <td>
             <%= link_to @record.team.name, "/madmin/teams/#{@record.team.slug}", class: "hover:underline" %>
           </td>
         </tr>
         <tr>
-          <th class="label">Role</th>
+          <th class="label"><%= t(".label_role") %></th>
           <td>
             <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium <%= role_class %>">
               <%= @record.role.titleize %>
@@ -72,7 +72,7 @@
         </tr>
         <% if @record.invited_by %>
         <tr>
-          <th class="label">Invited By</th>
+          <th class="label"><%= t(".label_invited_by") %></th>
           <td>
             <%= link_to "/madmin/users/#{@record.invited_by.id}", class: "flex items-center gap-2 hover:underline" do %>
               <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.invited_by.email.downcase.strip) %>?s=24&d=mp" class="w-6 h-6 rounded-full" alt="">
@@ -82,12 +82,12 @@
         </tr>
         <% end %>
         <tr>
-          <th class="label">Joined</th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".label_joined") %></th>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".label_updated") %></th>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>

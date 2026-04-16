@@ -1,4 +1,4 @@
-<%= turbo_stream_from @conversation %>
+<%= turbo_stream_from current_user, @conversation %>
 
 <% conv_title = @conversation.title.presence || @conversation.participants.reject { |p| p.id == current_user.id }.map { |p| p.name.presence || p.email }.join(", ").presence || t(".title") %>
 <% content_for :title, conv_title %>
@@ -27,7 +27,7 @@
     <div class="sticky top-0 h-8 bg-gradient-to-b from-dark-800 to-transparent pointer-events-none z-10"></div>
 
     <div id="conversation_messages" class="max-w-4xl mx-auto px-4 pb-72"
-         data-controller="dedupe-messages chat-scroll"
+         data-controller="chat-scroll"
          data-chat-scroll-url-value="<%= team_conversation_path(current_team.slug, @conversation) %>"
          data-chat-scroll-oldest-id-value="<%= @messages.first&.id %>"
          data-chat-scroll-has-older-value="<%= @has_older %>">

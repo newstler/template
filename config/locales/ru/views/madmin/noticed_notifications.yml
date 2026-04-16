@@ -1,0 +1,35 @@
+---
+ru:
+  madmin:
+    noticed_notifications:
+      index:
+        all_statuses: Все
+        all_types: Все типы
+        col_created: Создано
+        col_event: Событие
+        col_notification: Уведомление
+        col_recipient: Получатель
+        col_status: Статус
+        deleted_user: Удалённый пользователь
+        heading: Уведомления
+        read: Прочитано
+        unread: Не прочитано
+      show:
+        breadcrumb: Уведомления
+        delivered_to: Доставлено
+        details: Детали
+        label_created: Создано
+        label_event: Событие
+        label_event_created: Событие создано
+        label_id: ID
+        label_params: Параметры
+        label_recipient: Получатель
+        label_record: Запись
+        label_type: Тип
+        read: Прочитано
+        read_at: Прочитано в
+        recipient: Получатель
+        seen_at: Просмотрено в
+        source_event: Исходное событие
+        status: Статус
+        unread: Не прочитано

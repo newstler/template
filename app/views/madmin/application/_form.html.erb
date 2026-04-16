@@ -5,7 +5,7 @@
         <%= inline_svg "icons/x-circle.svg", class: "w-5 h-5 text-red-400 mt-0.5 shrink-0" %>
         <div>
           <p class="font-medium text-red-400">
-            <%= pluralize form.object.errors.full_messages.count, "error" %> prevented this <%= resource.friendly_name.downcase %> from being saved:
+            <%= t(".error", count: form.object.errors.full_messages.count, resource: resource_name.downcase) %>
           </p>
           <ul class="mt-2 space-y-1 text-sm text-red-300">
             <% form.object.errors.full_messages.each do |message| %>
@@ -21,7 +21,7 @@
     <% resource.attributes.values.select{ _1.field.present? && _1.field.visible?(action_name) }.each do |attribute| %>
       <div class="form-field">
         <label class="block text-sm font-medium text-dark-300 mb-2">
-          <%= attribute.field.options.label || attribute.name.to_s.titleize %>
+          <%= attribute.field.options.label || resource.model.human_attribute_name(attribute.name) %>
           <% if attribute.field.required? %>
             <span class="text-red-400 ml-1">*</span>
           <% end %>
@@ -36,9 +36,9 @@
 
   <div class="flex items-center gap-3 pt-4 border-t border-dark-600">
     <%= form.submit class: "btn btn-primary cursor-pointer" %>
-    <%= link_to "Cancel", (record.persisted? ? resource.show_path(record) : resource.index_path), class: "btn btn-secondary" %>
+    <%= link_to t(".cancel"), (record.persisted? ? resource.show_path(record) : resource.index_path), class: "btn btn-secondary" %>
     <% if record.persisted? %>
-      <%= link_to "View", resource.show_path(record), class: "btn btn-secondary ml-auto" %>
+      <%= link_to t(".view"), resource.show_path(record), class: "btn btn-secondary ml-auto" %>
     <% end %>
   </div>
 <% end %>

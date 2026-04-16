@@ -1,0 +1,24 @@
+---
+ru:
+  madmin:
+    memberships:
+      index:
+        all_roles: Все роли
+        all_teams: Все команды
+        col_joined: Вступление
+        col_role: Роль
+        col_team: Команда
+        col_user: Пользователь
+        search_placeholder: Поиск по пользователю или команде...
+      show:
+        details: Детали
+        in_team: в
+        label_email: Email
+        label_id: ID
+        label_invited_by: Приглашён
+        label_joined: Вступление
+        label_role: Роль
+        label_team: Команда
+        label_updated: Обновлено
+        label_user: Пользователь
+        member_since: Участник с %{date}

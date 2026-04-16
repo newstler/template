@@ -1,0 +1,27 @@
+---
+ru:
+  madmin:
+    conversations:
+      index:
+        col_conversation: Переписка
+        col_created: Создана
+        col_last_activity: Последняя активность
+        col_messages: Сообщения
+        col_participants: Участники
+        col_subject: Тема
+        col_teams: Команды
+        search_placeholder: Поиск по названию...
+      show:
+        col_last_notified: Последнее уведомление
+        col_last_read: Последнее чтение
+        col_user: Пользователь
+        conversation_prefix: Переписка %{short_id}...
+        created: Создана %{date}
+        flagged: Помечено
+        in: в
+        last_activity_kpi: Последняя активность
+        messages_heading: Сообщения (%{count})
+        messages_kpi: Сообщения
+        participants_heading: Участники (%{count})
+        participants_kpi: Участники
+        re: 'тема:'

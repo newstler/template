@@ -2,13 +2,13 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.name %>
   </h1>
 
   <div class="actions">
-    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
+    <%= link_to t("madmin.common.edit"), resource.edit_path(@record), class: "btn btn-secondary" %>
   </div>
 </header>
 
@@ -25,33 +25,33 @@
           <span class="text-dark-500"><%= @record.family %></span>
         <% end %>
       </div>
-      <p class="text-dark-500 text-sm mt-2">Model ID: <span class="font-mono text-dark-400"><%= @record.model_id %></span></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t(".model_id") %>: <span class="font-mono text-dark-400"><%= @record.model_id %></span></p>
     </div>
   </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Context Window</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".context_window") %></div>
     <div class="text-2xl font-bold text-dark-100"><%= number_with_delimiter(@record.context_window) || "-" %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Max Output</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".max_output") %></div>
     <div class="text-2xl font-bold text-dark-100"><%= number_with_delimiter(@record.max_output_tokens) || "-" %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Total Chats</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".total_chats") %></div>
     <div class="text-2xl font-bold text-dark-100"><%= @record.chats_count %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Total Cost</div>
-    <div class="text-2xl font-bold <%= (@record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= @record.formatted_total_cost || "$0.00" %></div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".total_cost") %></div>
+    <div class="text-2xl font-bold <%= (@record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(@record.total_cost || 0, precision: 4) %></div>
   </div>
 </div>
 
 <% if @record.capabilities.present? && @record.capabilities.any? %>
 <div class="card-bg p-5 mb-6">
-  <div class="text-dark-500 text-sm mb-2">Capabilities</div>
+  <div class="text-dark-500 text-sm mb-2"><%= t(".capabilities") %></div>
   <div class="flex flex-wrap gap-2">
     <% @record.capabilities.each do |capability| %>
       <span class="px-2.5 py-1 text-xs font-medium rounded-full bg-emerald-500/20 text-emerald-300"><%= capability %></span>
@@ -62,42 +62,42 @@
 
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">Model ID</th>
+          <th class="label"><%= t(".model_id") %></th>
           <td class="font-mono text-sm"><%= @record.model_id %></td>
         </tr>
         <tr>
-          <th class="label">Name</th>
+          <th class="label"><%= t(".name") %></th>
           <td><%= @record.name %></td>
         </tr>
         <tr>
-          <th class="label">Provider</th>
+          <th class="label"><%= t(".provider") %></th>
           <td><%= @record.provider %></td>
         </tr>
         <tr>
-          <th class="label">Family</th>
+          <th class="label"><%= t(".family") %></th>
           <td><%= @record.family || "-" %></td>
         </tr>
         <tr>
-          <th class="label">Context Window</th>
+          <th class="label"><%= t(".context_window") %></th>
           <td><%= number_with_delimiter(@record.context_window) || "-" %></td>
         </tr>
         <tr>
-          <th class="label">Max Output Tokens</th>
+          <th class="label"><%= t(".max_output_tokens") %></th>
           <td><%= number_with_delimiter(@record.max_output_tokens) || "-" %></td>
         </tr>
         <tr>
-          <th class="label">Knowledge Cutoff</th>
-          <td><%= @record.knowledge_cutoff&.strftime("%-d %B %Y") || "-" %></td>
+          <th class="label"><%= t(".knowledge_cutoff") %></th>
+          <td><%= @record.knowledge_cutoff ? l(@record.knowledge_cutoff, format: :long) : "-" %></td>
         </tr>
         <tr>
-          <th class="label">Created</th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".created") %></th>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -107,7 +107,7 @@
 <% if @record.modalities.present? %>
 <div class="card-bg mt-6 overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Modalities</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".modalities") %></h2>
   </div>
   <div class="p-5">
     <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.modalities) rescue @record.modalities %></pre>
@@ -118,7 +118,7 @@
 <% if @record.pricing.present? && @record.pricing.any? %>
 <div class="card-bg mt-6 overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Pricing</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".pricing") %></h2>
   </div>
   <div class="p-5">
     <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.pricing) rescue @record.pricing %></pre>
@@ -129,7 +129,7 @@
 <% if @record.metadata.present? && @record.metadata.any? %>
 <div class="card-bg mt-6 overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Metadata</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".metadata") %></h2>
   </div>
   <div class="p-5">
     <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-4 overflow-x-auto"><%= JSON.pretty_generate(@record.metadata) rescue @record.metadata %></pre>

@@ -1,17 +1,17 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 
   <div class="actions">
-    <%= button_to "Refresh Models from RubyLLM",
+    <%= button_to t(".refresh_models"),
         "/madmin/models/refresh_all",
         method: :post,
         class: "btn btn-primary",
-        data: { turbo_confirm: "Refresh all models from RubyLLM?" } %>
+        data: { turbo_confirm: t(".refresh_confirm") } %>
 
     <%= link_to resource.new_path, class: "btn btn-secondary" do %>
-      New <%= tag.span resource.friendly_name, class: "hidden md:inline-block" %>
+      New <%= tag.span resource_name, class: "hidden md:inline-block" %>
     <% end %>
   </div>
 </header>
@@ -19,23 +19,23 @@
 <div class="filters mb-4 p-4 card-bg">
   <%= form_with url: resource.index_path, method: :get, class: "flex gap-3 items-end flex-wrap" do |f| %>
     <div>
-      <%= f.label :q, "Search", class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <%= f.search_field :q, value: params[:q], placeholder: "Search models...", class: "form-input" %>
+      <%= f.label :q, t("madmin.common.search"), class: "block text-sm font-medium text-dark-300 mb-1" %>
+      <%= f.search_field :q, value: params[:q], placeholder: t(".search_placeholder"), class: "form-input" %>
     </div>
 
     <div>
       <%= f.label :provider, class: "block text-sm font-medium text-dark-300 mb-1" %>
       <% providers = Model.distinct.order(:provider).pluck(:provider) %>
       <%= f.select :provider,
-          options_for_select([["All providers", ""]] + providers.map { |p| [p.titleize, p] }, params[:provider]),
+          options_for_select([[t(".all_providers"), ""]] + providers.map { |p| [p.titleize, p] }, params[:provider]),
           {},
           class: "form-select" %>
     </div>
 
     <div class="flex gap-2">
-      <%= f.submit "Filter", class: "btn btn-primary" %>
+      <%= f.submit t("madmin.common.filter"), class: "btn btn-primary" %>
       <% if params[:q].present? || params[:provider].present? %>
-        <%= link_to "Clear", resource.index_path, class: "btn btn-secondary" %>
+        <%= link_to t("madmin.common.clear"), resource.index_path, class: "btn btn-secondary" %>
       <% end %>
     </div>
   <% end %>
@@ -45,11 +45,11 @@
   <table>
     <thead>
       <tr>
-        <th><%= sortable :provider, "Provider" %></th>
-        <th><%= sortable :family, "Family" %></th>
-        <th><%= sortable :name, "Name" %></th>
-        <th><%= sortable :chats_count, "Chats" %></th>
-        <th><%= sortable :total_cost, "Total Cost" %></th>
+        <th><%= sortable :provider, t(".col_provider") %></th>
+        <th><%= sortable :family, t(".col_family") %></th>
+        <th><%= sortable :name, t(".col_name") %></th>
+        <th><%= sortable :chats_count, t(".col_chats") %></th>
+        <th><%= sortable :total_cost, t(".col_total_cost") %></th>
       </tr>
     </thead>
 
@@ -68,7 +68,7 @@
             <% end %>
           </td>
           <td><%= record.chats_count %></td>
-          <td class="<%= (record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_total_cost || "-" %></td>
+          <td class="<%= (record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.total_cost || 0, precision: 4) %></td>
         </tr>
       <% end %>
     </tbody>

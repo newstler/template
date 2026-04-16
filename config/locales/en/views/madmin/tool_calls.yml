@@ -1,0 +1,22 @@
+---
+en:
+  madmin:
+    tool_calls:
+      index:
+        col_created: Created
+        col_message: Message
+        col_name: Name
+        col_tool_call_id: Tool Call ID
+        search_placeholder: Search tool calls...
+      show:
+        arguments: Arguments
+        chat_label: 'Chat #%{id}'
+        details: Details
+        in_message: in
+        label_chat: Chat
+        label_created: Created
+        label_message: Message
+        label_tool: Tool
+        label_tool_call_id: Tool Call ID
+        message_label: 'Message #%{id}'
+        result: Result

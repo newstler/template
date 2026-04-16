@@ -2,14 +2,16 @@ require "test_helper"
 
 class TeamTest < ActiveSupport::TestCase
   test "requires a unique name" do
-    existing = teams(:one)
-    blank = Team.new(slug: "test")
-    assert_not blank.valid?
-    assert_includes blank.errors[:name], "can't be blank"
+    I18n.with_locale(:en) do
+      existing = teams(:one)
+      blank = Team.new(slug: "test")
+      assert_not blank.valid?
+      assert_includes blank.errors[:name], "can't be blank"
 
-    duplicate = Team.new(name: existing.name)
-    assert_not duplicate.valid?
-    assert_includes duplicate.errors[:name], "has already been taken"
+      duplicate = Team.new(name: existing.name)
+      assert_not duplicate.valid?
+      assert_includes duplicate.errors[:name], "has already been taken"
+    end
   end
 
   test "generates slug from name on create" do
@@ -57,17 +59,19 @@ class TeamTest < ActiveSupport::TestCase
   end
 
   test "default_currency must be a supported code, or nil" do
-    team = teams(:one)
+    I18n.with_locale(:en) do
+      team = teams(:one)
 
-    team.default_currency = "XYZ"
-    assert_not team.valid?
-    assert_includes team.errors[:default_currency], "is not included in the list"
+      team.default_currency = "XYZ"
+      assert_not team.valid?
+      assert_includes team.errors[:default_currency], "is not included in the list"
 
-    team.default_currency = "EUR"
-    assert team.valid?
+      team.default_currency = "EUR"
+      assert team.valid?
 
-    team.default_currency = nil
-    assert team.valid?
+      team.default_currency = nil
+      assert team.valid?
+    end
   end
 
   test "default_currency defaults to USD on create" do

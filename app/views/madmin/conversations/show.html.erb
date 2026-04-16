@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= resource.display_name(@record) %>
   </h1>
@@ -17,45 +17,45 @@
       <%= inline_svg "icons/chat.svg", class: "w-8 h-8 text-dark-300" %>
     </div>
     <div class="flex-1">
-      <h2 class="text-2xl font-bold text-dark-100"><%= @record.title.presence || "Conversation #{@record.id[0, 8]}..." %></h2>
+      <h2 class="text-2xl font-bold text-dark-100"><%= @record.title.presence || t(".conversation_prefix", short_id: @record.id[0, 8]) %></h2>
       <p class="text-dark-500 text-sm mt-1">
-        in
-        <%= @record.teams.map { |t| link_to(t.name, "/madmin/teams/#{t.slug}", class: "text-accent-400 hover:text-accent-300") }.join(" · ").html_safe %>
+        <%= t(".in") %>
+        <%= @record.teams.map { |t_record| link_to(t_record.name, "/madmin/teams/#{t_record.slug}", class: "text-accent-400 hover:text-accent-300") }.join(" · ").html_safe %>
         <% if @record.subject_type.present? %>
-          &middot; re: <span class="text-dark-300"><%= @record.subject_type %> #<%= @record.subject_id.to_s[0, 8] %></span>
+          &middot; <%= t(".re") %> <span class="text-dark-300"><%= @record.subject_type %> #<%= @record.subject_id.to_s[0, 8] %></span>
         <% end %>
       </p>
-      <p class="text-dark-500 text-sm mt-1">Created <%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></p>
+      <p class="text-dark-500 text-sm mt-1"><%= t(".created", date: l(@record.created_at, format: :long)) %></p>
     </div>
   </div>
 </div>
 
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Participants</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".participants_kpi") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= participants.size %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Messages</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".messages_kpi") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= messages.size %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Last Activity</div>
-    <div class="text-lg font-bold text-dark-100"><%= @record.updated_at.strftime("%-d %b %Y %H:%M") %></div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".last_activity_kpi") %></div>
+    <div class="text-lg font-bold text-dark-100"><%= l(@record.updated_at, format: :long) %></div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Participants (<%= participants.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".participants_heading", count: participants.size) %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>User</th>
-          <th>Last Read</th>
-          <th>Last Notified</th>
+          <th><%= t(".col_user") %></th>
+          <th><%= t(".col_last_read") %></th>
+          <th><%= t(".col_last_notified") %></th>
         </tr>
       </thead>
       <tbody>
@@ -65,23 +65,23 @@
               <%= link_to "/madmin/users/#{cp.user_id}", class: "flex items-center gap-3" do %>
                 <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(cp.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
                 <div>
-                  <div class="font-medium"><%= cp.user.name.presence || "Unnamed" %></div>
+                  <div class="font-medium"><%= cp.user.name.presence || t("madmin.common.unnamed") %></div>
                   <div class="text-xs text-dark-500"><%= cp.user.email %></div>
                 </div>
               <% end %>
             </td>
             <td class="text-sm">
               <% if cp.last_read_at %>
-                <%= cp.last_read_at.strftime("%-d %b %Y %H:%M") %>
+                <%= l(cp.last_read_at, format: :long) %>
               <% else %>
-                <span class="text-dark-500">Never</span>
+                <span class="text-dark-500"><%= t("madmin.common.never") %></span>
               <% end %>
             </td>
             <td class="text-sm">
               <% if cp.last_notified_at %>
-                <%= cp.last_notified_at.strftime("%-d %b %Y %H:%M") %>
+                <%= l(cp.last_notified_at, format: :long) %>
               <% else %>
-                <span class="text-dark-500">Never</span>
+                <span class="text-dark-500"><%= t("madmin.common.never") %></span>
               <% end %>
             </td>
           </tr>
@@ -93,7 +93,7 @@
 
 <div class="card-bg">
   <div class="p-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Messages (<%= messages.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".messages_heading", count: messages.size) %></h2>
   </div>
   <div class="p-6 max-h-[600px] overflow-y-auto">
     <div class="max-w-3xl mx-auto space-y-4">
@@ -105,19 +105,35 @@
               <%= link_to "/madmin/users/#{message.user_id}", class: "font-medium text-dark-200 hover:text-dark-100 text-sm" do %>
                 <%= message.user.name.presence || message.user.email %>
               <% end %>
-              <span class="text-xs text-dark-500"><%= message.created_at.strftime("%-d %b %Y %H:%M") %></span>
+              <span class="text-xs text-dark-500"><%= l(message.created_at, format: :long) %></span>
               <% if message.flagged_at.present? %>
-                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/15 text-red-400">Flagged</span>
+                <span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-medium bg-red-500/15 text-red-400"><%= t(".flagged") %></span>
               <% end %>
             </div>
             <div class="mt-1 text-dark-300 text-sm whitespace-pre-wrap"><%= message.content %></div>
             <% if message.attachments.any? %>
               <div class="mt-2 flex flex-wrap gap-2">
                 <% message.attachments.each do |attachment| %>
-                  <span class="inline-flex items-center gap-1 px-2 py-1 rounded bg-dark-700 text-xs text-dark-300">
-                    <%= inline_svg "icons/paperclip.svg", class: "w-3 h-3" %>
-                    <%= attachment.filename %>
-                  </span>
+                  <% if attachment.content_type.start_with?("image/") && attachment.variable? %>
+                    <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.rails_blob_path(attachment, disposition: :inline) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                      <%= image_tag main_app.url_for(attachment.variant(resize_to_limit: [200, 200])), class: "rounded-lg max-w-[200px] max-h-[200px] cursor-pointer" %>
+                    </button>
+                  <% elsif attachment.content_type.start_with?("image/") %>
+                    <button type="button" class="block cursor-pointer" data-controller="lightbox" data-action="click->lightbox#open" data-lightbox-url-value="<%= main_app.rails_blob_path(attachment, disposition: :inline) %>" data-lightbox-filename-value="<%= attachment.filename %>" data-lightbox-type-value="image">
+                      <%= image_tag main_app.url_for(attachment), class: "rounded-lg max-w-[200px] max-h-[200px] cursor-pointer" %>
+                    </button>
+                  <% else %>
+                    <button type="button" class="flex items-center gap-2 bg-dark-700 hover:bg-dark-600 rounded-lg px-3 py-2 text-sm transition-colors cursor-pointer"
+                            data-controller="lightbox"
+                            data-action="click->lightbox#open"
+                            data-lightbox-url-value="<%= main_app.rails_blob_path(attachment, disposition: :inline) %>"
+                            data-lightbox-filename-value="<%= attachment.filename %>"
+                            data-lightbox-type-value="document"
+                            data-lightbox-content-type-value="<%= attachment.content_type %>">
+                      <span><%= attachment.content_type == "application/pdf" ? "\u{1F4D5}" : "\u{1F4C4}" %></span>
+                      <span class="break-all text-dark-300"><%= attachment.filename %></span>
+                    </button>
+                  <% end %>
                 <% end %>
               </div>
             <% end %>

@@ -1,0 +1,24 @@
+---
+en:
+  madmin:
+    memberships:
+      index:
+        all_roles: All roles
+        all_teams: All teams
+        col_joined: Joined
+        col_role: Role
+        col_team: Team
+        col_user: User
+        search_placeholder: Search by user or team...
+      show:
+        details: Details
+        in_team: in
+        label_email: Email
+        label_id: ID
+        label_invited_by: Invited By
+        label_joined: Joined
+        label_role: Role
+        label_team: Team
+        label_updated: Updated
+        label_user: User
+        member_since: Member since %{date}

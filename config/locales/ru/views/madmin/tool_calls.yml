@@ -1,0 +1,22 @@
+---
+ru:
+  madmin:
+    tool_calls:
+      index:
+        col_created: Создано
+        col_message: Сообщение
+        col_name: Название
+        col_tool_call_id: ID вызова
+        search_placeholder: Поиск вызовов инструментов...
+      show:
+        arguments: Аргументы
+        chat_label: 'Чат #%{id}'
+        details: Детали
+        in_message: в
+        label_chat: Чат
+        label_created: Создано
+        label_message: Сообщение
+        label_tool: Инструмент
+        label_tool_call_id: ID вызова
+        message_label: 'Сообщение #%{id}'
+        result: Результат

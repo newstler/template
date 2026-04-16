@@ -27,6 +27,11 @@ module Madmin
       redirect_to main_app.madmin_search_path, notice: t("controllers.madmin.common.rebuild_fts.notice")
     end
 
+    def rebuild_embeddings
+      RebuildAllEmbeddingsJob.perform_later
+      redirect_to main_app.madmin_search_path, notice: t("controllers.madmin.ai_models.rebuild_embeddings.notice")
+    end
+
     private
 
     def rag_params

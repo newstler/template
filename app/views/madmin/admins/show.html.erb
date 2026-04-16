@@ -1,67 +1,91 @@
 <%= content_for :title, @record.email %>
 
-<header class="header">
-  <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
-    /
-    <%= @record.email %>
-  </h1>
-
-  <div class="actions">
-    <% resource.member_actions.each do |action| %>
-      <%= instance_exec(@record, &action) %>
-    <% end %>
-    <%= link_to "Edit", resource.edit_path(@record), class: "btn btn-secondary" %>
+<div class="max-w-3xl mx-auto">
+  <div class="mb-8">
+    <h1 class="text-3xl font-bold text-white"><%= @record.email %></h1>
   </div>
-</header>
 
-<div class="card-bg p-6 mb-6">
-  <div class="flex items-start gap-6">
-    <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(@record.email.downcase.strip) %>?s=120&d=mp" class="w-24 h-24 rounded-full" alt="">
-    <div class="flex-1">
-      <h2 class="text-2xl font-bold text-dark-100"><%= @record.email %></h2>
-      <p class="text-dark-500 text-sm mt-2">
-        Admin since <%= @record.created_at.strftime("%-d %B %Y") %>
-        <span class="text-dark-600">(<%= time_ago_in_words(@record.created_at) %> ago)</span>
-      </p>
-    </div>
-    <div>
-      <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-500/15 text-purple-400">
-        <%= inline_svg "icons/shield.svg", class: "w-4 h-4 mr-1.5" %>
-        Administrator
-      </span>
+  <%# Profile card %>
+  <div class="card-bg p-6 mb-6">
+    <div class="flex items-start gap-5">
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-3">
+          <h2 class="text-xl font-semibold text-dark-100 truncate"><%= @record.email %></h2>
+          <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-purple-500/15 text-purple-400 shrink-0">
+            <%= inline_svg "icons/shield.svg", class: "w-3.5 h-3.5 mr-1" %>
+            <%= t(".administrator") %>
+          </span>
+        </div>
+        <p class="text-dark-500 text-sm mt-1">
+          <%= t(".admin_since", date: l(@record.created_at, format: :long)) %>
+        </p>
+      </div>
+      <div class="shrink-0">
+        <% resource.member_actions.each do |action| %>
+          <%= instance_exec(@record, &action) %>
+        <% end %>
+      </div>
     </div>
   </div>
-</div>
 
-<div class="card-bg overflow-hidden">
-  <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
-  </div>
-  <div class="table-scroll">
-    <table>
-      <tbody>
-        <tr>
-          <th class="label">Email</th>
-          <td><%= @record.email %></td>
-        </tr>
-        <tr>
-          <th class="label">Role</th>
-          <td>
-            <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/15 text-purple-400">
-              Administrator
-            </span>
-          </td>
-        </tr>
-        <tr>
-          <th class="label">Created</th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
-        </tr>
-        <tr>
-          <th class="label">Updated</th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
-        </tr>
-      </tbody>
-    </table>
+  <%# Editable settings — autosave form %>
+  <%= form_with model: @record, url: resource.show_path(@record), method: :patch, data: { controller: "autosave" }, class: "space-y-6" do |form| %>
+    <span data-autosave-target="status" class="hidden fixed top-4 right-4 z-50 px-3 py-1.5 bg-dark-700 text-dark-200 text-sm rounded-lg shadow-lg"></span>
+
+    <%# Account %>
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-4"><%= t(".account") %></h2>
+      <div class="space-y-4">
+        <div>
+          <%= form.label :email, t(".email"), class: "block text-sm font-medium text-dark-200 mb-2" %>
+          <%= form.email_field :email,
+            data: { action: "change->autosave#save" },
+            class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
+        </div>
+      </div>
+    </div>
+
+    <%# Language %>
+    <div class="card-bg p-6">
+      <h2 class="text-xl font-semibold text-dark-100 mb-2"><%= t(".language") %></h2>
+      <p class="text-sm text-dark-500 mb-4"><%= t(".language_hint") %></p>
+      <div>
+        <% language_options = Language.where(enabled: true).order(:name).map { |l| ["#{l.name} (#{l.native_name})", l.code] } %>
+        <%= form.select :locale,
+          options_for_select([[t(".auto_detect"), ""]] + language_options, @record.locale),
+          {},
+          data: { action: "change->autosave#save" },
+          class: "w-full px-4 py-3 border border-dark-600 bg-dark-800 text-dark-100 rounded-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 focus:outline-none transition-all text-sm" %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Details (read-only) %>
+  <div class="card-bg overflow-hidden mt-6">
+    <div class="px-6 py-4 border-b border-dark-700">
+      <h2 class="text-xl font-semibold text-dark-100"><%= t(".details") %></h2>
+    </div>
+    <dl>
+      <div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 px-6 py-4 border-b border-dark-600 last:border-b-0">
+        <dt class="text-sm font-medium text-dark-400 sm:w-40 sm:shrink-0"><%= t(".role") %></dt>
+        <dd class="text-dark-100">
+          <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-500/15 text-purple-400">
+            <%= t(".administrator") %>
+          </span>
+        </dd>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 px-6 py-4 border-b border-dark-600 last:border-b-0">
+        <dt class="text-sm font-medium text-dark-400 sm:w-40 sm:shrink-0">ID</dt>
+        <dd class="text-dark-100 font-mono text-sm break-all"><%= @record.id %></dd>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 px-6 py-4 border-b border-dark-600 last:border-b-0">
+        <dt class="text-sm font-medium text-dark-400 sm:w-40 sm:shrink-0"><%= t(".created") %></dt>
+        <dd class="text-dark-100"><%= l(@record.created_at, format: :long) %></dd>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-start gap-1 sm:gap-4 px-6 py-4 border-b border-dark-600 last:border-b-0">
+        <dt class="text-sm font-medium text-dark-400 sm:w-40 sm:shrink-0"><%= t(".updated") %></dt>
+        <dd class="text-dark-100"><%= l(@record.updated_at, format: :long) %></dd>
+      </div>
+    </dl>
   </div>
 </div>

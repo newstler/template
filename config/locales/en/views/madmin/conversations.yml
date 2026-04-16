@@ -1,0 +1,27 @@
+---
+en:
+  madmin:
+    conversations:
+      index:
+        col_conversation: Conversation
+        col_created: Created
+        col_last_activity: Last Activity
+        col_messages: Messages
+        col_participants: Participants
+        col_subject: Subject
+        col_teams: Teams
+        search_placeholder: Search by title...
+      show:
+        col_last_notified: Last Notified
+        col_last_read: Last Read
+        col_user: User
+        conversation_prefix: Conversation %{short_id}...
+        created: Created %{date}
+        flagged: Flagged
+        in: in
+        last_activity_kpi: Last Activity
+        messages_heading: Messages (%{count})
+        messages_kpi: Messages
+        participants_heading: Participants (%{count})
+        participants_kpi: Participants
+        re: 're:'

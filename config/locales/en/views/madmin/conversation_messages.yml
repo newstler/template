@@ -1,0 +1,38 @@
+---
+en:
+  madmin:
+    conversation_messages:
+      index:
+        all_filter: All
+        attachment_only: "[Attachment only]"
+        col_author: Author
+        col_conversation: Conversation
+        col_created: Created
+        col_message: Message
+        col_status: Status
+        col_team: Team
+        flagged: Flagged
+        heading: Conversation Messages
+        not_flagged: Not flagged
+        search_placeholder: Search message content...
+      show:
+        attachments_heading: Attachments (%{count})
+        attachments_label: Attachments
+        author: Author
+        breadcrumb: Conversation Messages
+        content: Content
+        conversation: Conversation
+        created: Created
+        details: Details
+        flagged_at: Flagged At
+        flagged_badge: Flagged
+        id: ID
+        in_conversation_html: in %{conversation}
+        locale: Locale
+        moderation_flag: Moderation Flag
+        no_reason: No reason provided
+        no_text_content: No text content (attachment-only message)
+        reason: Reason
+        translation: Translation
+        translations: Translations
+        updated: Updated

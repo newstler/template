@@ -31,15 +31,69 @@ ru:
       update:
         notice: Статья обновлена
     madmin:
+      admins:
+        send_magic_link:
+          notice: Magic link отправлен на %{email}!
+        update:
+          notice: Настройки администратора сохранены
+      ai_models:
+        rebuild_embeddings:
+          notice: Пересоздание эмбеддингов запущено в фоне. Это может занять несколько
+            минут.
+        refresh:
+          notice: 'Модели обновлены! Всего: %{count}'
+        update:
+          notice: Настройки AI-моделей сохранены
+      application:
+        authenticate_admin: Войдите как администратор
+      articles:
+        toggle_articles:
+          disabled: Статьи отключены
+          enabled: Статьи включены
+      chats:
+        toggle_ai_chats:
+          disabled: AI-чаты отключены
+          enabled: AI-чаты включены
+      common:
+        rebuild_fts:
+          notice: Индекс FTS успешно перестроен
+      conversations:
+        toggle_conversations:
+          disabled: Переписки отключены
+          enabled: Переписки включены
+        toggle_moderation:
+          disabled: Модерация переписок отключена
+          enabled: Модерация переписок включена
+      languages:
+        bulk_toggle:
+          disabled: Все языки отключены
+          enabled: Все языки включены
+        bulk_toggle_currency:
+          disabled: Все валюты отключены
+          enabled: Все валюты включены
+        sync:
+          added: Добавлены %{languages}
+          already_synced: Все файлы локалей уже синхронизированы
+          removed: Удалены %{languages}
+        update_currency:
+          notice: Настройки валюты обновлены
+        update_language:
+          notice: Язык по умолчанию обновлён
       mail:
         update:
           notice: Настройки почты сохранены
+      models:
+        refresh:
+          notice: 'Модели обновлены! Всего: %{count}'
       prices:
         sync:
           notice: Цены синхронизированы из Stripe
       providers:
         update:
-          notice: Учётные данные провайдера сохранены
+          notice: Данные провайдеров сохранены
+      rag:
+        update:
+          notice: Настройки RAG сохранены
       settings:
         update:
           notice: Настройки сохранены

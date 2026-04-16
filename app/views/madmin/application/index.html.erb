@@ -1,23 +1,23 @@
-<%= content_for :title, resource.friendly_name.pluralize %>
+<%= content_for :title, resource_name_plural %>
 
 <header class="header">
-  <h1><%= resource.friendly_name.pluralize %></h1>
+  <h1><%= resource_name_plural %></h1>
 
   <div class="actions">
     <form class="search">
       <%= hidden_field_tag :page, params[:page], value: 1 %>
-      <%= search_field_tag :q, params[:q], placeholder: "Search #{resource.friendly_name.pluralize.downcase}...", class: "form-input" %>
+      <%= search_field_tag :q, params[:q], placeholder: t("madmin.common.search_placeholder", resources: resource_name_plural.downcase), class: "form-input" %>
     </form>
 
     <% if params[:q].present? %>
       <%= link_to resource.index_path, class: "btn btn-secondary" do %>
-        Clear
+        <%= t(".clear") %>
       <% end %>
     <% end %>
 
     <% if resource.actions.include?(:new) %>
       <%= link_to resource.new_path, class: "btn btn-primary" do %>
-        New <%= resource.friendly_name %>
+        <%= t(".new", resource: resource_name) %>
       <% end %>
     <% end %>
   </div>
@@ -25,7 +25,7 @@
 
 <% if resource.scopes.any? %>
   <nav class="scopes">
-    <%= link_to "All", resource.index_path, class: class_names("btn btn-secondary", {"active" => params[:scope].blank?}) %>
+    <%= link_to t(".all"), resource.index_path, class: class_names("btn btn-secondary", {"active" => params[:scope].blank?}) %>
     <% resource.scopes.each do |scope| %>
       <%= link_to scope.to_s.humanize, resource.index_path(scope: scope, q: params[:q], sort: params[:sort], direction: params[:direction]), class: class_names("btn btn-secondary", {"active" => params[:scope] == scope.to_s}) %>
     <% end %>
@@ -42,7 +42,7 @@
     <thead>
       <tr>
         <% visible_attributes.each do |attribute| %>
-          <th><%= sortable attribute.name, attribute.name.to_s.titleize %></th>
+          <th><%= sortable attribute.name, resource.model.human_attribute_name(attribute.name) %></th>
         <% end %>
       </tr>
     </thead>

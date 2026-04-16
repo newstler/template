@@ -9,7 +9,7 @@
       <% if content_for? :title %>
         <%= yield(:title) %> -
       <% end %>
-      <%= Madmin.site_name %> Admin
+      <%= t("madmin.common.admin_title", site_name: Madmin.site_name) %>
     </title>
     <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
@@ -32,7 +32,7 @@
               class="p-2 -ml-2 text-dark-400 hover:text-dark-100 hover:bg-dark-800 rounded-lg transition-colors">
         <%= inline_svg "icons/menu.svg", class: "w-6 h-6" %>
       </button>
-      <span class="ml-3 font-semibold text-white"><%= Madmin.site_name %> Admin</span>
+      <span class="ml-3 font-semibold text-white"><%= t("madmin.common.admin_title", site_name: Madmin.site_name) %></span>
     </header>
 
     <%# Main content area %>

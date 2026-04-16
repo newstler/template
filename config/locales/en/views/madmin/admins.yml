@@ -1,0 +1,23 @@
+---
+en:
+  madmin:
+    admins:
+      index:
+        col_created: Created
+        col_email: Email
+        search_placeholder: Search admins...
+      show:
+        account: Account
+        admin_since: Admin since %{date}
+        administrator: Administrator
+        auto_detect: Auto-detect from browser
+        created: Created
+        details: Details
+        email: Email
+        language: Language
+        language_hint: When set, this language will be used for the admin panel instead
+          of browser detection.
+        role: Role
+        send_magic_link: Send Magic Link
+        send_magic_link_confirm: Send magic link to %{email}?
+        updated: Updated

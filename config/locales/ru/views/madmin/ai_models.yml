@@ -1,0 +1,34 @@
+---
+ru:
+  madmin:
+    ai_models:
+      show:
+        all_providers: Все провайдеры
+        chat_description: Модель для новых чатов, когда не выбрана конкретная модель.
+        chat_heading: Модель чата
+        col_chats: Чаты
+        col_family: Семейство
+        col_name: Название
+        col_provider: Провайдер
+        col_total_cost: Общая стоимость
+        embedding_description: Модель и параметры ранжирования для векторного поиска
+          и RAG-извлечения через sqlite-vec.
+        embedding_heading: Эмбеддинги и RAG
+        heading: AI-модели
+        moderation_description: Модель для проверки сообщений переписок на утечку
+          контактов.
+        moderation_heading: Модель модерации
+        no_models: Модели недоступны
+        no_models_hint: Настройте AI-провайдеры и синхронизируйте модели.
+        rebuild_embeddings: Пересоздать эмбеддинги
+        rebuild_embeddings_confirm: Это пересоздаст векторные таблицы и повторно встроит
+          все записи. Продолжить?
+        refresh_confirm: Обновить все модели из RubyLLM?
+        refresh_models: Обновить модели
+        search_placeholder: Поиск моделей...
+        select_model: "— Выберите модель —"
+        tab_available: Доступные
+        tab_used: Используемые
+        translation_description: Модель для автоматического перевода контента между
+          языками.
+        translation_heading: Модель перевода

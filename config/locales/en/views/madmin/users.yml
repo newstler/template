@@ -1,0 +1,38 @@
+---
+en:
+  madmin:
+    users:
+      index:
+        col_chats: Chats
+        col_cost: Cost
+        col_joined: Joined
+        col_teams: Teams
+        col_user: User
+        no_teams: No teams
+        search_placeholder: Search users...
+      show:
+        col_chats: Chats
+        col_cost: Cost
+        col_created: Created
+        col_first_message: First Message
+        col_joined: Joined
+        col_messages: Messages
+        col_model: Model
+        col_role: Role
+        col_team: Team
+        created: Created
+        default_model: Default
+        details: Details
+        email: Email
+        empty_chat: Empty chat
+        id: ID
+        member_since: Member since %{date}
+        name: Name
+        recent_chats: Recent Chats
+        teams: Teams (%{count})
+        total_chats: Total Chats
+        total_cost: Total Cost
+        total_messages: Total Messages
+        unnamed_user: Unnamed User
+        updated: Updated
+        view_all_chats: View all %{count} chats →

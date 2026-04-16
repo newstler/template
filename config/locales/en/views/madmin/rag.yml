@@ -22,6 +22,9 @@ en:
         max_similarity_distance_hint: Results with cosine distance above this value
           are filtered out. Lower = stricter matching.
         permissive: permissive
+        rebuild_embeddings: Rebuild All Embeddings
+        rebuild_embeddings_confirm: This will recreate vector tables and re-embed
+          all records. Continue?
         rebuild_fts: Rebuild FTS Index
         rebuild_fts_confirm: This will rebuild the full-text search index for all
           searchable models. Continue?
@@ -35,4 +38,9 @@ en:
         similarity_heading: Similarity Search
         strict: strict
         subtitle: Full-text search, vector similarity, and chunking parameters
+        tokenizer_porter: Porter only (English stemming)
+        tokenizer_porter_unicode: Porter + Unicode (recommended)
+        tokenizer_simple: Simple (whitespace split)
+        tokenizer_trigram: Trigram (substring matching)
+        tokenizer_unicode: Unicode only (no stemming)
         words: words

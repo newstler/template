@@ -90,6 +90,9 @@ ru:
         many: "%{count} лет"
         one: "%{count} год"
         other: "%{count} лет"
+  errors:
+    embedding_dimension_mismatch: Несоответствие размерности эмбеддингов для %{model}.
+      Пересоздайте эмбеддинги после смены модели в /madmin/ai_models.
   language_name: Russian
   languages:
     de: Немецкий

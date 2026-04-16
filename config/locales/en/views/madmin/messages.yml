@@ -1,0 +1,24 @@
+---
+en:
+  madmin:
+    messages:
+      index:
+        all_roles: All roles
+        col_chat: Chat
+        col_cost: Cost
+        col_created: Created
+        col_message: Message
+        col_role: Role
+        search_placeholder: Search messages...
+      show:
+        chat: 'Chat:'
+        cost: 'Cost:'
+        created: 'Created:'
+        input_tokens: 'In: %{count}'
+        message_content: Message Content
+        na: N/A
+        output_tokens: 'Out: %{count}'
+        role: 'Role:'
+        system_prompt: 'System Prompt:'
+        tokens: 'Tokens:'
+        tool_calls: Tool Calls

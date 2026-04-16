@@ -1,0 +1,62 @@
+---
+en:
+  madmin:
+    active_storage:
+      attachments:
+        index:
+          col_blob_filename: Blob Filename
+          col_created: Created
+          col_name: Name
+          col_record: Record
+          search_placeholder: Search attachments...
+        show:
+          attached_to: Attached to %{record_type}
+          attachment_name: Attachment Name
+          blob: Blob
+          click_to_preview: Click to preview
+          created: Created %{date}
+          delete: Delete
+          delete_confirm: Are you sure?
+          details: Details
+          download: Download
+          file_size: File Size
+          name: Name
+          preview: Preview
+          record_id: Record ID
+          record_type: Record Type
+      blobs:
+        index:
+          col_content_type: Content Type
+          col_created: Created
+          col_filename: Filename
+          col_size: Size
+          search_placeholder: Search by filename...
+        show:
+          bytes: bytes
+          checksum: Checksum
+          click_to_preview: Click to preview
+          content_type: Content Type
+          created: Created
+          delete_confirm: Are you sure?
+          details: Details
+          download: Download
+          file_size: File Size
+          filename: Filename
+          key: Key
+          metadata: Metadata
+          preview: Preview
+          service: Service
+          size: Size
+          uploaded: Uploaded %{date}
+      variant_records:
+        show:
+          blob: Blob
+          blob_filename: Blob Filename
+          blob_size: Blob Size
+          delete: Delete
+          delete_confirm: Are you sure?
+          details: Details
+          id: ID
+          original_preview: Original Blob Preview
+          variant_of_blob: Variant of blob
+          variation_digest: Variation Digest

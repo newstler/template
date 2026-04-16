@@ -1,0 +1,35 @@
+---
+en:
+  madmin:
+    noticed_notifications:
+      index:
+        all_statuses: All
+        all_types: All types
+        col_created: Created
+        col_event: Event
+        col_notification: Notification
+        col_recipient: Recipient
+        col_status: Status
+        deleted_user: Deleted user
+        heading: Notifications
+        read: Read
+        unread: Unread
+      show:
+        breadcrumb: Notifications
+        delivered_to: Delivered to
+        details: Details
+        label_created: Created
+        label_event: Event
+        label_event_created: Event Created
+        label_id: ID
+        label_params: Params
+        label_recipient: Recipient
+        label_record: Record
+        label_type: Type
+        read: Read
+        read_at: Read At
+        recipient: Recipient
+        seen_at: Seen At
+        source_event: Source Event
+        status: Status
+        unread: Unread

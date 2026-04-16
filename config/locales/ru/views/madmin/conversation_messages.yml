@@ -1,0 +1,38 @@
+---
+ru:
+  madmin:
+    conversation_messages:
+      index:
+        all_filter: Все
+        attachment_only: "[Только вложение]"
+        col_author: Автор
+        col_conversation: Переписка
+        col_created: Создано
+        col_message: Сообщение
+        col_status: Статус
+        col_team: Команда
+        flagged: С флагом
+        heading: Сообщения в переписках
+        not_flagged: Без флага
+        search_placeholder: Поиск по содержимому...
+      show:
+        attachments_heading: Вложения (%{count})
+        attachments_label: Вложения
+        author: Автор
+        breadcrumb: Сообщения в переписках
+        content: Содержимое
+        conversation: Переписка
+        created: Создано
+        details: Детали
+        flagged_at: Отмечено
+        flagged_badge: С флагом
+        id: ID
+        in_conversation_html: в %{conversation}
+        locale: Локаль
+        moderation_flag: Флаг модерации
+        no_reason: Причина не указана
+        no_text_content: Нет текстового содержимого (сообщение только с вложением)
+        reason: Причина
+        translation: Перевод
+        translations: Переводы
+        updated: Обновлено

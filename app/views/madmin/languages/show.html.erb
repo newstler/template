@@ -2,13 +2,13 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.name %>
   </h1>
   <div class="actions">
     <%= button_to main_app.toggle_madmin_language_path(@record), method: :patch, class: "btn btn-secondary" do %>
-      <%= @record.enabled? ? "Disable" : "Enable" %>
+      <%= @record.enabled? ? t(".disable") : t(".enable") %>
     <% end %>
   </div>
 </header>
@@ -24,15 +24,15 @@
       <div class="flex items-center gap-2 mt-3">
         <% if @record.enabled? %>
           <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">
-            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5"></span>Enabled
+            <span class="w-1.5 h-1.5 bg-emerald-400 rounded-full mr-1.5"></span><%= t(".enabled_badge") %>
           </span>
         <% else %>
           <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-dark-700 text-dark-400">
-            <span class="w-1.5 h-1.5 bg-dark-500 rounded-full mr-1.5"></span>Disabled
+            <span class="w-1.5 h-1.5 bg-dark-500 rounded-full mr-1.5"></span><%= t(".disabled_badge") %>
           </span>
         <% end %>
         <% if @record.english? %>
-          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-500/15 text-blue-400">Required</span>
+          <span class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-blue-500/15 text-blue-400"><%= t(".required_badge") %></span>
         <% end %>
       </div>
     </div>
@@ -43,56 +43,56 @@
 <% active_count = team_langs.count(&:active?) %>
 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Teams Using This Language</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".kpi_teams_using") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= team_langs.size %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Currently Active</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".kpi_currently_active") %></div>
     <div class="text-3xl font-bold text-emerald-400"><%= active_count %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Created</div>
-    <div class="text-lg font-bold text-dark-100"><%= @record.created_at.strftime("%-d %b %Y") %></div>
-    <div class="text-xs text-dark-500 mt-1"><%= time_ago_in_words(@record.created_at) %> ago</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".kpi_created") %></div>
+    <div class="text-lg font-bold text-dark-100"><%= l(@record.created_at, format: :long) %></div>
+    <div class="text-xs text-dark-500 mt-1"><%= t(".ago", time: time_ago_in_words(@record.created_at)) %></div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">Code</th>
+          <th class="label"><%= t(".label_code") %></th>
           <td class="font-mono text-sm uppercase"><%= @record.code %></td>
         </tr>
         <tr>
-          <th class="label">English Name</th>
+          <th class="label"><%= t(".label_english_name") %></th>
           <td><%= @record.name %></td>
         </tr>
         <tr>
-          <th class="label">Native Name</th>
+          <th class="label"><%= t(".label_native_name") %></th>
           <td><%= @record.native_name %></td>
         </tr>
         <tr>
-          <th class="label">Enabled</th>
+          <th class="label"><%= t(".label_enabled") %></th>
           <td>
             <% if @record.enabled? %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Enabled</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400"><%= t(".enabled_badge") %></span>
             <% else %>
-              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+              <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400"><%= t(".disabled_badge") %></span>
             <% end %>
           </td>
         </tr>
         <tr>
-          <th class="label">Created</th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".label_created") %></th>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".label_updated") %></th>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -102,15 +102,15 @@
 <% if team_langs.any? %>
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Teams (<%= team_langs.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".teams_heading", count: team_langs.size) %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>Team</th>
-          <th>Status</th>
-          <th>Added</th>
+          <th><%= t(".col_team") %></th>
+          <th><%= t(".col_status") %></th>
+          <th><%= t(".col_added") %></th>
         </tr>
       </thead>
       <tbody>
@@ -126,12 +126,12 @@
             </td>
             <td>
               <% if tl.active? %>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">Active</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400"><%= t(".active") %></span>
               <% else %>
-                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400">Disabled</span>
+                <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-dark-700 text-dark-400"><%= t(".disabled") %></span>
               <% end %>
             </td>
-            <td class="text-sm text-dark-400"><%= tl.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm text-dark-400"><%= l(tl.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>

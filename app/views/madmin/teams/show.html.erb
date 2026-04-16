@@ -2,7 +2,7 @@
 
 <header class="header">
   <h1>
-    <%= link_to resource.friendly_name.pluralize, resource.index_path %>
+    <%= link_to resource_name_plural, resource.index_path %>
     /
     <%= @record.name %>
   </h1>
@@ -16,7 +16,7 @@
     <div class="flex-1">
       <h2 class="text-2xl font-bold text-dark-100"><%= @record.name %></h2>
       <p class="text-dark-400 mt-1 font-mono text-sm"><%= @record.slug %></p>
-      <p class="text-dark-500 text-sm mt-2">Created <%= @record.created_at.strftime("%-d %B %Y") %></p>
+      <p class="text-dark-500 text-sm mt-2"><%= t(".created_date", date: l(@record.created_at, format: :long)) %></p>
     </div>
     <div>
       <% status = @record.subscription_status || "none" %>
@@ -28,10 +28,10 @@
         else "bg-dark-700 text-dark-400"
       end %>
       <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium <%= badge_class %>">
-        <%= status.titleize %>
+        <%= t("madmin.common.subscription_status.#{status}") %>
       </span>
       <% if @record.trialing? && @record.trial_days_remaining > 0 %>
-        <div class="text-xs text-dark-500 mt-1 text-center"><%= @record.trial_days_remaining %>d left</div>
+        <div class="text-xs text-dark-500 mt-1 text-center"><%= t(".days_left", count: @record.trial_days_remaining) %></div>
       <% end %>
     </div>
   </div>
@@ -42,76 +42,76 @@
 <% total_cost = chats.sum(&:total_cost) %>
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Members</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".members") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= members.size %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Chats</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".chats") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= chats.size %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Total Messages</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".total_messages") %></div>
     <div class="text-3xl font-bold text-dark-100"><%= chats.sum(&:messages_count) %></div>
   </div>
   <div class="card-bg p-5">
-    <div class="text-dark-500 text-sm mb-1">Total Cost</div>
+    <div class="text-dark-500 text-sm mb-1"><%= t(".total_cost") %></div>
     <div class="text-3xl font-bold <%= total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>">
-      <% if total_cost.zero? %>$0.00<% elsif total_cost < 0.0001 %>&lt;$0.0001<% else %>$<%= '%.4f' % total_cost %><% end %>
+      <%= format_cost(total_cost, precision: 4) %>
     </div>
   </div>
 </div>
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Details</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".details") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <tbody>
         <tr>
-          <th class="label">ID</th>
+          <th class="label"><%= t(".id") %></th>
           <td class="font-mono text-sm"><%= @record.id %></td>
         </tr>
         <tr>
-          <th class="label">Name</th>
+          <th class="label"><%= t(".name") %></th>
           <td><%= @record.name %></td>
         </tr>
         <tr>
-          <th class="label">Slug</th>
+          <th class="label"><%= t(".slug") %></th>
           <td class="font-mono text-sm"><%= @record.slug %></td>
         </tr>
         <tr>
-          <th class="label">API Key</th>
+          <th class="label"><%= t(".api_key") %></th>
           <td class="font-mono text-sm"><%= @record.api_key.first(8) %>...<%= @record.api_key.last(4) %></td>
         </tr>
         <tr>
-          <th class="label">Stripe Customer</th>
+          <th class="label"><%= t(".stripe_customer") %></th>
           <td class="font-mono text-sm"><%= @record.stripe_customer_id || "-" %></td>
         </tr>
         <tr>
-          <th class="label">Subscription</th>
+          <th class="label"><%= t(".subscription") %></th>
           <td>
             <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium <%= badge_class %>">
-              <%= status.titleize %>
+              <%= t("madmin.common.subscription_status.#{status}") %>
             </span>
             <% if @record.cancellation_pending? %>
-              <span class="text-xs text-amber-400 ml-2">Cancels at period end</span>
+              <span class="text-xs text-amber-400 ml-2"><%= t(".cancels_at_period_end") %></span>
             <% end %>
           </td>
         </tr>
         <% if @record.current_period_ends_at.present? %>
         <tr>
-          <th class="label">Period Ends</th>
-          <td><%= @record.current_period_ends_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".period_ends") %></th>
+          <td><%= l(@record.current_period_ends_at, format: :long) %></td>
         </tr>
         <% end %>
         <tr>
-          <th class="label">Created</th>
-          <td><%= @record.created_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".created") %></th>
+          <td><%= l(@record.created_at, format: :long) %></td>
         </tr>
         <tr>
-          <th class="label">Updated</th>
-          <td><%= @record.updated_at.strftime("%-d %B %Y at %H:%M") %></td>
+          <th class="label"><%= t(".updated") %></th>
+          <td><%= l(@record.updated_at, format: :long) %></td>
         </tr>
       </tbody>
     </table>
@@ -120,16 +120,16 @@
 
 <div class="card-bg overflow-hidden mb-6">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Members (<%= members.size %>)</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".members_heading", count: members.size) %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>User</th>
-          <th>Role</th>
-          <th>Chats</th>
-          <th>Joined</th>
+          <th><%= t(".col_user") %></th>
+          <th><%= t(".col_role") %></th>
+          <th><%= t(".col_chats") %></th>
+          <th><%= t(".col_joined") %></th>
         </tr>
       </thead>
       <tbody>
@@ -139,7 +139,7 @@
               <%= link_to "/madmin/users/#{membership.user.id}", class: "flex items-center gap-3" do %>
                 <img src="https://www.gravatar.com/avatar/<%= Digest::MD5.hexdigest(membership.user.email.downcase.strip) %>?s=32&d=mp" class="w-8 h-8 rounded-full" alt="">
                 <div>
-                  <div class="font-medium"><%= membership.user.name.presence || "Unnamed" %></div>
+                  <div class="font-medium"><%= membership.user.name.presence || t("madmin.common.unnamed") %></div>
                   <div class="text-xs text-dark-500"><%= membership.user.email %></div>
                 </div>
               <% end %>
@@ -155,7 +155,7 @@
               </span>
             </td>
             <td><%= chats.count { |c| c.user_id == membership.user_id } %></td>
-            <td class="text-sm"><%= membership.created_at.strftime("%-d %b %Y") %></td>
+            <td class="text-sm"><%= l(membership.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>
@@ -167,18 +167,18 @@
 <% recent_chats = chats.sort_by(&:created_at).reverse.first(10) %>
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
-    <h2 class="text-lg font-semibold text-dark-100">Recent Chats</h2>
+    <h2 class="text-lg font-semibold text-dark-100"><%= t(".recent_chats") %></h2>
   </div>
   <div class="table-scroll">
     <table>
       <thead>
         <tr>
-          <th>First Message</th>
-          <th>User</th>
-          <th>Model</th>
-          <th>Messages</th>
-          <th>Cost</th>
-          <th>Created</th>
+          <th><%= t(".col_first_message") %></th>
+          <th><%= t(".col_user_chat") %></th>
+          <th><%= t(".col_model") %></th>
+          <th><%= t(".col_messages") %></th>
+          <th><%= t(".col_cost") %></th>
+          <th><%= t(".col_created") %></th>
         </tr>
       </thead>
       <tbody>
@@ -186,7 +186,7 @@
           <tr>
             <td class="max-w-xs">
               <%= link_to "/madmin/chats/#{chat.id}" do %>
-                <div class="font-medium truncate"><%= chat.messages.min_by(&:created_at)&.content&.truncate(60) || "Empty chat" %></div>
+                <div class="font-medium truncate"><%= chat.messages.min_by(&:created_at)&.content&.truncate(60) || t(".empty_chat") %></div>
               <% end %>
             </td>
             <td>
@@ -197,15 +197,15 @@
                   <span class="text-sm"><%= chat_user.name.presence || chat_user.email %></span>
                 <% end %>
               <% else %>
-                <span class="text-xs text-dark-500">Unknown</span>
+                <span class="text-xs text-dark-500"><%= t(".unknown") %></span>
               <% end %>
             </td>
-            <td><%= chat.model&.name || "Default" %></td>
+            <td><%= chat.model&.name || t(".default_model") %></td>
             <td><%= chat.messages_count %></td>
             <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>">
-              <% if chat.total_cost.zero? %>-<% elsif chat.total_cost < 0.0001 %>&lt;$0.0001<% else %>$<%= '%.4f' % chat.total_cost %><% end %>
+              <%= format_cost(chat.total_cost || 0, precision: 4) %>
             </td>
-            <td><%= chat.created_at.strftime("%-d %b %Y") %></td>
+            <td><%= l(chat.created_at, format: :long) %></td>
           </tr>
         <% end %>
       </tbody>
@@ -213,7 +213,7 @@
   </div>
   <% if chats.size > 10 %>
     <div class="px-5 py-3 border-t border-dark-700">
-      <%= link_to "View all #{chats.size} chats →", "/madmin/chats?q=#{@record.slug}", class: "text-sm text-accent-400 hover:text-accent-300" %>
+      <%= link_to t(".view_all_chats", count: chats.size), "/madmin/chats?q=#{@record.slug}", class: "text-sm text-accent-400 hover:text-accent-300" %>
     </div>
   <% end %>
 </div>
