@@ -4,6 +4,7 @@ ru:
     conversation_participants:
       index:
         all_statuses: Все
+        col_status: Статус
         col_conversation: Переписка
         col_joined: Вступление
         col_last_notified: Последнее уведомление

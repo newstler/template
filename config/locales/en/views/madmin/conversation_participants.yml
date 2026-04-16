@@ -4,6 +4,7 @@ en:
     conversation_participants:
       index:
         all_statuses: All
+        col_status: Status
         col_conversation: Conversation
         col_joined: Joined
         col_last_notified: Last Notified
