@@ -75,7 +75,7 @@
             </div>
           </td>
           <td><%= record.chats.size %></td>
-          <td class="<%= record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_total_cost || "-" %></td>
+          <td class="<%= record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= (record.total_cost || 0).zero? ? "-" : format_cost(record.total_cost, precision: 4) %></td>
           <td class="text-sm"><%= record.created_at.strftime("%-d %b %Y") %></td>
         </tr>
       <% end %>

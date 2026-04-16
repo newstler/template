@@ -36,7 +36,7 @@
   </div>
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1"><%= t(".total_cost") %></div>
-    <div class="text-3xl font-bold <%= @record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= @record.formatted_total_cost || "$0.00" %></div>
+    <div class="text-3xl font-bold <%= @record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(@record.total_cost || 0, precision: 4) %></div>
   </div>
 </div>
 
@@ -144,7 +144,7 @@
             </td>
             <td><%= chat.model&.name || t(".default_model") %></td>
             <td><%= chat.messages_count %></td>
-            <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= chat.formatted_total_cost || "-" %></td>
+            <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= (chat.total_cost || 0).zero? ? "-" : format_cost(chat.total_cost, precision: 4) %></td>
             <td><%= chat.created_at.strftime("%-d %b %Y") %></td>
           </tr>
         <% end %>

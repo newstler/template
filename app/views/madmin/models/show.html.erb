@@ -45,7 +45,7 @@
   </div>
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1"><%= t(".total_cost") %></div>
-    <div class="text-2xl font-bold <%= (@record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= @record.formatted_total_cost || "$0.00" %></div>
+    <div class="text-2xl font-bold <%= (@record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(@record.total_cost || 0, precision: 4) %></div>
   </div>
 </div>
 

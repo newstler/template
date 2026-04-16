@@ -69,7 +69,7 @@
               <%= record.role %>
             </span>
           </td>
-          <td class="<%= (record.cost || 0) >= 0.01 ? 'text-red-400' : 'text-emerald-400' %>"><%= record.formatted_cost || "-" %></td>
+          <td class="<%= (record.cost || 0) >= 0.01 ? 'text-red-400' : 'text-emerald-400' %>"><%= (record.cost || 0).zero? ? "-" : format_cost(record.cost, precision: 4) %></td>
           <td><%= record.created_at.strftime("%-d %B %Y") %></td>
         </tr>
       <% end %>
