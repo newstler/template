@@ -2,9 +2,11 @@ require "test_helper"
 
 class ArticleTest < ActiveSupport::TestCase
   test "requires a title" do
-    article = Article.new(team: teams(:one), user: users(:one))
-    assert_not article.valid?
-    assert_includes article.errors[:title], "can't be blank"
+    I18n.with_locale(:en) do
+      article = Article.new(team: teams(:one), user: users(:one))
+      assert_not article.valid?
+      assert_includes article.errors[:title], "can't be blank"
+    end
   end
 
   test "embedding_source_text includes translations" do
