@@ -94,4 +94,27 @@ class SessionsControllerTest < ActionDispatch::IntegrationTest
       post session_path, params: { session: { email: existing.email } }
     end
   end
+
+  test "invitation link works even when a stale not-onboarded session cookie is present" do
+    stale_user = users(:not_onboarded)
+    post session_path, params: { session: { email: stale_user.email } }
+    stale_token = stale_user.generate_magic_link_token
+    get verify_magic_link_path(token: stale_token)
+    assert_equal stale_user.id, session[:user_id]
+
+    invitee  = User.create!(email: "fresh-invitee@example.com")
+    inviter  = users(:two)
+    team     = teams(:two)
+    token    = invitee.signed_id(purpose: :magic_link, expires_in: 7.days)
+
+    get verify_magic_link_path(
+      token: token,
+      team: team.slug,
+      invited_by: inviter.id
+    )
+
+    assert_redirected_to onboarding_path
+    assert_equal invitee.id, session[:user_id]
+    assert invitee.reload.member_of?(team)
+  end
 end
