@@ -32,12 +32,13 @@ class HybridSearchableTest < ActiveSupport::TestCase
   end
 
   test "raises if included without Searchable and Embeddable" do
-    assert_raises(RuntimeError, /requires Searchable/) do
+    error = assert_raises(RuntimeError) do
       Class.new(ApplicationRecord) do
         self.table_name = "searchable_things"
         include HybridSearchable
       end
     end
+    assert_match(/requires Searchable/, error.message)
   end
 
   test "fuses FTS and vector results into a single ranked relation" do
