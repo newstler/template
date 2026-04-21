@@ -104,7 +104,10 @@ class ApplicationController < ActionController::Base
   end
 
   def team_scoped_request?
-    params[:team_slug].present?
+    # Only route params count. A query-string team_slug must not hijack the
+    # filter chain — e.g. on /auth/:token invitation links that a
+    # default_url_options override may decorate with team context.
+    request.path_parameters[:team_slug].present?
   end
 
   def personal_context?

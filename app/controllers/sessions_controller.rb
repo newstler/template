@@ -1,4 +1,10 @@
 class SessionsController < ApplicationController
+  # Sessions routes must always be reachable. A stale session cookie for a
+  # not-onboarded user would otherwise trigger require_onboarding! and
+  # redirect to /onboarding before #verify can consume the token — silently
+  # dropping invitations and magic-link re-verification.
+  skip_before_action :require_onboarding!
+
   # Short-term: prevent rapid-fire attempts
   rate_limit to: 5, within: 1.minute, name: "sessions/short", only: :create,
     with: -> { redirect_to new_session_path, alert: t("controllers.sessions.rate_limit.short") }
