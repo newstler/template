@@ -401,7 +401,7 @@ GEM
     rails-i18n (8.1.0)
       i18n (>= 0.7, < 2)
       railties (>= 8.0.0, < 9)
-    rails_error_dashboard (0.6.1)
+    rails_error_dashboard (0.6.4)
       concurrent-ruby (~> 1.3.0, < 1.3.7)
       groupdate (~> 6.0)
       pagy (~> 43.0)
@@ -739,7 +739,7 @@ CHECKSUMS
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.7.0) sha256=28b145cceaf9cc214a9874feaa183c3acba036c9592b19886e0e45efc62b1e89
   rails-i18n (8.1.0) sha256=52d5fd6c0abef28d84223cc05647f6ae0fd552637a1ede92deee9545755b6cf3
-  rails_error_dashboard (0.6.1) sha256=91e68815d056967d3c17a0e22b79cd02453326f126856855326e62b98883fcb7
+  rails_error_dashboard (0.6.4) sha256=696de8e4893913a52dd6f1712c6b9ddebb9dc5bf433ccc5305cd47d59354455a
   railties (8.2.0.alpha)
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
