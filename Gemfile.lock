@@ -108,7 +108,7 @@ GEM
     addressable (2.9.0)
       public_suffix (>= 2.0.2, < 8.0)
     ast (2.4.3)
-    babosa (2.0.0)
+    babosa (2.1.0)
     base64 (0.3.0)
     bcrypt_pbkdf (1.1.2)
     bigdecimal (4.1.2)
@@ -624,7 +624,7 @@ CHECKSUMS
   activesupport (8.2.0.alpha)
   addressable (2.9.0) sha256=7fdf6ac3660f7f4e867a0838be3f6cf722ace541dd97767fa42bc6cfa980c7af
   ast (2.4.3) sha256=954615157c1d6a382bc27d690d973195e79db7f55e9765ac7c481c60bdb4d383
-  babosa (2.0.0) sha256=a6218db8a4dc8fd99260dde8bc3d5fa1a0c52178196e236ebb31e41fbdcdb8a6
+  babosa (2.1.0) sha256=36bdf8d7d0e90180ee03386e7f81cd70ad5e9cc53c4cbca79641fa6624de12b4
   base64 (0.3.0) sha256=27337aeabad6ffae05c265c450490628ef3ebd4b67be58257393227588f5a97b
   bcrypt_pbkdf (1.1.2) sha256=c2414c23ce66869b3eb9f643d6a3374d8322dfb5078125c82792304c10b94cf6
   bigdecimal (4.1.2) sha256=53d217666027eab4280346fba98e7d5b66baaae1b9c3c1c0ffe89d48188a3fbd
