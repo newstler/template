@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 127183d8fc44a9fb52542f7650c1ccc2eaa97f29
+  revision: d18739b5e173fb00e8c5fd2e10defbb920723792
   branch: main
   specs:
     actioncable (8.2.0.alpha)
@@ -295,7 +295,7 @@ GEM
       net-imap
       net-pop
       net-smtp
-    marcel (1.1.0)
+    marcel (1.1.1)
     matrix (0.4.3)
     maxminddb (0.1.22)
     mime-types (3.7.0)
@@ -550,7 +550,7 @@ GEM
     xpath (3.2.0)
       nokogiri (~> 1.8)
     yaml (0.4.0)
-    zeitwerk (2.8.0)
+    zeitwerk (2.8.1)
 
 PLATFORMS
   aarch64-linux
@@ -690,7 +690,7 @@ CHECKSUMS
   loofah (2.25.1) sha256=d436c73dbd0c1147b16c4a41db097942d217303e1f7728704b37e4df9f6d2e04
   madmin (2.3.2) sha256=6961cbaeed82634240c7c9888a49b181834bf9b85a9282caebf0ee7f368df73c
   mail (2.9.0) sha256=6fa6673ecd71c60c2d996260f9ee3dd387d4673b8169b502134659ece6d34941
-  marcel (1.1.0) sha256=fdcfcfa33cc52e93c4308d40e4090a5d4ea279e160a7f6af988260fa970e0bee
+  marcel (1.1.1) sha256=16eb578814fc914a43a48887189568f9eb9a2de8274313050c2b00f0018614f7
   matrix (0.4.3) sha256=a0d5ab7ddcc1973ff690ab361b67f359acbb16958d1dc072b8b956a286564c5b
   maxminddb (0.1.22) sha256=50933be438fbed9dceabef4163eab41884bd8830d171fdb8f739bee769c4907e
   mime-types (3.7.0) sha256=dcebf61c246f08e15a4de34e386ebe8233791e868564a470c3fe77c00eed5e56
@@ -804,7 +804,7 @@ CHECKSUMS
   websocket-extensions (0.1.5) sha256=1c6ba63092cda343eb53fc657110c71c754c56484aad42578495227d717a8241
   xpath (3.2.0) sha256=6dfda79d91bb3b949b947ecc5919f042ef2f399b904013eb3ef6d20dd3a4082e
   yaml (0.4.0) sha256=240e69d1e6ce3584d6085978719a0faa6218ae426e034d8f9b02fb54d3471942
-  zeitwerk (2.8.0) sha256=474d0a1d2429f635af7c4574f5ddbce0d0cfc286067c7515858b93a26b4f3e3d
+  zeitwerk (2.8.1) sha256=1c85e0f28954d68cd16e575da37f26846f609b68d80b5942ccfd31030c2449d5
 
 BUNDLED WITH
   4.0.5
