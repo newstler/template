@@ -69,7 +69,7 @@ group :test do
   gem "selenium-webdriver"
 end
 
-gem "madmin", "~> 2.1"
+gem "madmin", "~> 2.3"
 
 gem "ruby_llm", "~> 1.15"
 
