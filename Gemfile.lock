@@ -521,7 +521,7 @@ GEM
     thruster (0.1.21-aarch64-linux)
     thruster (0.1.21-arm64-darwin)
     thruster (0.1.21-x86_64-linux)
-    tidewave (0.5.0)
+    tidewave (0.5.1)
       rack (>= 2.0)
     timeout (0.6.1)
     tsort (0.2.0)
@@ -603,7 +603,7 @@ DEPENDENCIES
   stripe
   tailwindcss-rails (~> 4.0)
   thruster
-  tidewave (~> 0.5.0)
+  tidewave (~> 0.5.1)
   turbo-rails
   web-console
 
@@ -786,7 +786,7 @@ CHECKSUMS
   thruster (0.1.21-aarch64-linux) sha256=f5aff78fb7a6431ed3d6ab4bde03a89c461e9a73981dbc97d6990d85c3db235c
   thruster (0.1.21-arm64-darwin) sha256=bd8db9f57fae2cbb3fe08ebab49cb47fe49608122dac23daf0ce709adfb9bfc8
   thruster (0.1.21-x86_64-linux) sha256=6e2fbcf826540a72d3710ae4db072c2333287ac2ee57e7e52f35bc10900d74a7
-  tidewave (0.5.0) sha256=1ffbef2c430addd7c39b1742587c1a0e2870ec4c2089ddbf791fd7dbbd22c7cc
+  tidewave (0.5.1) sha256=0827c329ddd27eef36abaff5539810d39f0b0a65ffe0d607d61bea526a84bc1c
   timeout (0.6.1) sha256=78f57368a7e7bbadec56971f78a3f5ecbcfb59b7fcbb0a3ed6ddc08a5094accb
   tsort (0.2.0) sha256=9650a793f6859a43b6641671278f79cfead60ac714148aabe4e3f0060480089f
   turbo-rails (2.0.23) sha256=ee0d90733aafff056cf51ff11e803d65e43cae258cc55f6492020ec1f9f9315f

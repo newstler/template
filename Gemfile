@@ -95,7 +95,7 @@ gem "money", "~> 6.19"
 gem "money-currencylayer-bank", "~> 0.7"
 gem "countries", "~> 8.1"
 
-gem "tidewave", "~> 0.5.0", group: :development
+gem "tidewave", "~> 0.5.1", group: :development
 
 gem "rails_error_dashboard"
 
