@@ -199,7 +199,7 @@ GEM
     ffi (1.17.4-x86_64-linux-musl)
     friendly_id (5.7.0)
       activerecord (>= 4.0.0)
-    fugit (1.12.1)
+    fugit (1.13.0)
       et-orbi (~> 1.4)
       raabro (~> 1.4)
     geocoder (1.8.6)
@@ -382,7 +382,7 @@ GEM
     public_suffix (7.0.5)
     puma (8.0.2)
       nio4r (~> 2.0)
-    raabro (1.4.0)
+    raabro (1.5.0)
     racc (1.8.1)
     rack (3.2.6)
     rack-session (2.1.2)
@@ -487,7 +487,7 @@ GEM
       activejob (>= 7.2)
       activerecord (>= 7.2)
       railties (>= 7.2)
-    solid_queue (1.4.0)
+    solid_queue (1.5.0)
       activejob (>= 7.1)
       activerecord (>= 7.1)
       concurrent-ruby (>= 1.3.1)
@@ -671,7 +671,7 @@ CHECKSUMS
   ffi (1.17.4-x86_64-linux-gnu) sha256=9d3db14c2eae074b382fa9c083fe95aec6e0a1451da249eab096c34002bc752d
   ffi (1.17.4-x86_64-linux-musl) sha256=3fdf9888483de005f8ef8d1cf2d3b20d86626af206cbf780f6a6a12439a9c49e
   friendly_id (5.7.0) sha256=b8994416ebaceebc7c60bc556e84ef32a3a663e2e582eb04c429216cc98de4c4
-  fugit (1.12.1) sha256=5898f478ede9b415f0804e42b8f3fd53f814bd85eebffceebdbc34e1107aaf68
+  fugit (1.13.0) sha256=a4f093fce740da52f216740a5041e2a594ea763cdb89e8b2754ca4399634ab18
   geocoder (1.8.6) sha256=e0ca1554b499f466de9b003f7dff70f89a5888761c2ca68ed9f86b6e5e24e74c
   globalid (1.4.0) sha256=037f12fbf1d9d7a014d501c2d5c77356fd4ddd96d7a7991d6700bba96706f427
   groupdate (6.8.0) sha256=16f90ea18ca981c38e41e592416480b28353aa5e5cc3e7cb13a68b8fb5d40510
@@ -735,7 +735,7 @@ CHECKSUMS
   psych (5.4.0) sha256=14f72d69a611af663d7d70e4a7b67d9eb1f3ae9f8d916b478961d5a0075ba5b7
   public_suffix (7.0.5) sha256=1a8bb08f1bbea19228d3bed6e5ed908d1cb4f7c2726d18bd9cadf60bc676f623
   puma (8.0.2) sha256=c8ed871dfbbe66448ea9ffd46692342d9804d4071522b52b5331b7b6e7b686fb
-  raabro (1.4.0) sha256=d4fa9ff5172391edb92b242eed8be802d1934b1464061ae5e70d80962c5da882
+  raabro (1.5.0) sha256=3f998a7bc84f9c84df3ab580634d2e0a5bda4f0841168d56035f529c9877440a
   racc (1.8.1) sha256=4a7f6929691dbec8b5209a0b373bc2614882b55fc5d2e447a21aaa691303d62f
   rack (3.2.6) sha256=5ed78e1f73b2e25679bec7d45ee2d4483cc4146eb1be0264fc4d94cb5ef212c2
   rack-session (2.1.2) sha256=595434f8c0c3473ae7d7ac56ecda6cc6dfd9d37c0b2b5255330aa1576967ffe8
@@ -772,7 +772,7 @@ CHECKSUMS
   selenium-webdriver (4.46.0) sha256=cb6cfa6f79eac041749df0b14cdcb0e9fe5df3715a64c77bfaa56b345b99f957
   solid_cable (3.0.12) sha256=a168a54731a455d5627af48d8441ea3b554b8c1f6e6cd6074109de493e6b0460
   solid_cache (1.0.10) sha256=bc05a2fb3ac78a6f43cbb5946679cf9db67dd30d22939ededc385cb93e120d41
-  solid_queue (1.4.0) sha256=e6a18d196f0b27cb6e3c77c5b31258b05fb634f8ed64fb1866ed164047216c2a
+  solid_queue (1.5.0) sha256=329f29caab9cc68eefe489013eb5a38ea4a66708ed2bee301384dbed91890f7f
   sqlean (0.3.0-aarch64-linux-gnu) sha256=2b88dcefd7c9a92a9287c1bf8d650f286275d2645c95d5836c2efe8a0255a078
   sqlean (0.3.0-arm64-darwin) sha256=32ffa1e5a908a52c028fb06fa2dbe61f600a865c95960d7ec4f3fbc82f28bf78
   sqlean (0.3.0-x86_64-linux-gnu) sha256=51e7e0a66ceebf26c4a4509001412bea2214fb748752fde96a228db9cb2e85ce
