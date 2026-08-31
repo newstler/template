@@ -516,7 +516,7 @@ GEM
     stimulus-rails (1.3.4)
       railties (>= 6.0.0)
     stringio (3.2.0)
-    stripe (19.5.0)
+    stripe (19.6.0)
       bigdecimal
       logger
     tailwindcss-rails (4.6.0)
@@ -792,7 +792,7 @@ CHECKSUMS
   sshkit (1.25.0) sha256=c8c6543cdb60f91f1d277306d585dd11b6a064cb44eab0972827e4311ff96744
   stimulus-rails (1.3.4) sha256=765676ffa1f33af64ce026d26b48e8ffb2e0b94e0f50e9119e11d6107d67cb06
   stringio (3.2.0) sha256=c37cb2e58b4ffbd33fe5cd948c05934af997b36e0b6ca6fdf43afa234cf222e1
-  stripe (19.5.0) sha256=04d7bf83c65e5021cfc94bac92f2dd95d3843dcd70cac1cb8362757398bf5aaf
+  stripe (19.6.0) sha256=bbd4668cd3cddc05a292ac5d9a99ca55f1925b2002cfa4f3b3c94a599f548ebf
   tailwindcss-rails (4.6.0) sha256=d99512867173d55c5ef8890427682299d8539f550cec1408b3d8667a538bd365
   tailwindcss-ruby (4.3.1-aarch64-linux-gnu) sha256=b42af5fdb7ade3f3f70cda217c288986cc6b773601437b8deb80ea229a96680c
   tailwindcss-ruby (4.3.1-arm64-darwin) sha256=477ef19dde7fa4db32a0f916c02398e5fcc6af7f18d5e773012d93d6b96ecfa3
