@@ -1,5 +1,9 @@
 class Message < ApplicationRecord
   acts_as_message tool_calls_foreign_key: :message_id
+
+  # ruby_llm 1.15+ defines #cost from tokens; keep the stored column until the 2.0 schema lands.
+  def cost = self[:cost]
+
   has_many_attached :attachments
   broadcasts_to ->(message) { "chat_#{message.chat_id}" }, inserts_by: :append, target: "messages"
 

@@ -75,4 +75,9 @@ class MessageTest < ActiveSupport::TestCase
     # total = 0.06
     assert_in_delta 0.06, message.cost, 0.0001
   end
+
+  test "cost reads the stored decimal column" do
+    assert_kind_of BigDecimal, messages(:assistant_message).cost
+    assert_in_delta 0.0012, messages(:assistant_message).cost
+  end
 end

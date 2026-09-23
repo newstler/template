@@ -56,4 +56,7 @@ Rails.application.configure do
 
   # Raise error when a before_action's only/except options reference missing actions.
   config.action_controller.raise_on_missing_callback_actions = true
+
+  # Surface RubyLLM calls that 2.0 removes.
+  config.after_initialize { RubyLLM.configure { |c| c.deprecation_behavior = :raise } }
 end
