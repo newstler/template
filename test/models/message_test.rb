@@ -12,12 +12,12 @@ class MessageTest < ActiveSupport::TestCase
   end
 
   test "formats cost for display" do
-    @assistant_message.update!(cost: 0.0012)
+    @assistant_message.update!(total_cost: 0.0012)
     assert_equal "$0.0012", @assistant_message.formatted_cost
   end
 
   test "formatted cost uses <$0.0001 for tiny costs" do
-    @assistant_message.update!(cost: 0.00001)
+    @assistant_message.update!(total_cost: 0.00001)
     assert_equal "<$0.0001", @assistant_message.formatted_cost
   end
 
@@ -26,7 +26,7 @@ class MessageTest < ActiveSupport::TestCase
       chat: chats(:one),
       role: "user",
       content: "Test",
-      cost: 0
+      total_cost: 0
     )
     assert_nil message.formatted_cost
   end

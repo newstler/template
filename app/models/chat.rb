@@ -13,7 +13,7 @@ class Chat < ApplicationRecord
 
   # Recalculate total cost from messages
   def recalculate_total_cost!
-    update_column(:total_cost, messages.sum(:cost))
+    update_column(:total_cost, messages.sum(:total_cost))
   end
 
   private

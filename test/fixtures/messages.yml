@@ -14,9 +14,10 @@ user_message:
 assistant_message:
   id: 01961a2a-c0de-7000-8000-000000000402
   chat_id: 01961a2a-c0de-7000-8000-000000000301
-  model_id: 01961a2a-c0de-7000-8000-000000000201
+  model_id: gpt-4
+  provider: openai
   role: assistant
   content: "I'm doing well, thank you for asking!"
   input_tokens: 10
   output_tokens: 15
-  cost: 0.0012
+  total_cost: 0.0012

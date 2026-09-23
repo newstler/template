@@ -8,7 +8,7 @@ namespace :counter_cache do
     Chat.find_each do |chat|
       chat.update_columns(
         messages_count: chat.messages.count,
-        total_cost: chat.messages.sum(:cost)
+        total_cost: chat.messages.sum(:total_cost)
       )
     end
 

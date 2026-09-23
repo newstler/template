@@ -2,7 +2,7 @@ class Message < ApplicationRecord
   acts_as_message tool_calls_foreign_key: :message_id
 
   # ruby_llm 1.15+ defines #cost from tokens; keep the stored column until the 2.0 schema lands.
-  def cost = self[:cost]
+  def cost = self[:total_cost]
 
   has_many_attached :attachments
   broadcasts_to ->(message) { "chat_#{message.chat_id}" }, inserts_by: :append, target: "messages"
@@ -14,7 +14,7 @@ class Message < ApplicationRecord
   after_create :increment_counters
   after_create_commit :update_chat_preview_if_first_user_message
   after_destroy :decrement_counters
-  after_update :update_cost_caches, if: :saved_change_to_cost?
+  after_update :update_cost_caches, if: :saved_change_to_total_cost?
 
   def broadcast_append_chunk(content)
     broadcast_append_to "chat_#{chat_id}",
@@ -40,7 +40,7 @@ class Message < ApplicationRecord
     output_cost = (output_tokens.to_i / 1_000_000.0) * output_rate
     cached_cost = (cached_tokens.to_i / 1_000_000.0) * cached_rate
 
-    self.cost = input_cost + output_cost + cached_cost
+    self.total_cost = input_cost + output_cost + cached_cost
   end
 
   # Format cost for display (e.g., "$0.0012" or "<$0.0001")

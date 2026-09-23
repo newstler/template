@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_04_16_130000) do
+ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -177,7 +177,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_16_130000) do
     t.string "chat_id", null: false
     t.text "content"
     t.json "content_raw"
-    t.decimal "cost", precision: 10, scale: 6, default: "0.0"
+    t.decimal "total_cost", precision: 10, scale: 6, default: "0.0"
     t.datetime "created_at", null: false
     t.integer "input_tokens"
     t.string "model_id"
@@ -188,8 +188,8 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_16_130000) do
     t.integer "thinking_tokens"
     t.string "tool_call_id"
     t.datetime "updated_at", null: false
+    t.string "provider"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
-    t.index ["model_id"], name: "index_messages_on_model_id"
     t.index ["role"], name: "index_messages_on_role"
     t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
   end
@@ -570,7 +570,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_04_16_130000) do
   add_foreign_key "memberships", "users"
   add_foreign_key "memberships", "users", column: "invited_by_id"
   add_foreign_key "messages", "chats"
-  add_foreign_key "messages", "models"
   add_foreign_key "noticed_notifications", "noticed_events", column: "event_id"
   add_foreign_key "rails_error_dashboard_cascade_patterns", "rails_error_dashboard_error_logs", column: "child_error_id"
   add_foreign_key "rails_error_dashboard_cascade_patterns", "rails_error_dashboard_error_logs", column: "parent_error_id"

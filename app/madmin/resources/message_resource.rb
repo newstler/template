@@ -14,7 +14,7 @@ class MessageResource < Madmin::Resource
   attribute :output_tokens
   attribute :cached_tokens
   attribute :cache_creation_tokens
-  attribute :cost
+  attribute :total_cost
   attribute :content_raw, field: JsonField
   attribute :tool_calls
   attribute :created_at
