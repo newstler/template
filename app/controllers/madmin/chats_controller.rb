@@ -17,7 +17,7 @@ module Madmin
     def scoped_resources
       resources = resource.model.send(valid_scope)
       resources = Madmin::Search.new(resources, resource, search_term).run
-      resources = resources.includes(:user, :model).with_usage_cost
+      resources = resources.includes(:user, :model, :messages).with_usage_cost
 
       if params[:created_at_from].present? && params[:created_at_to].present?
         resources = resources.where(created_at: params[:created_at_from]..params[:created_at_to])

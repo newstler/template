@@ -51,6 +51,16 @@ class RubyLlmUpgradeCheck
     rule(/\b(?:chat|user|team|model|record)\.total_cost\b|\bcost&\.(?:to_f|positive\?)|\bcost\.to_f\b/, "cost caches dropped: chat.cost / message.cost (RubyLLM::Cost#total) or .with_usage_cost", :review),
     rule(/counter_cache: :chats_count/, "models.chats_count dropped: count via RubyLLM::ActiveRecord::Model.with_usage_cost"),
     rule(/\bmessage\.model_id\b/, "message.model (String, from its usage)", :review),
+    rule(/\b(?:chats|messages)\.sum\((?::total_cost|:cost)\)|\bsum\(&:(?:total_cost|cost)\)/, "cost columns dropped: sum ruby_llm_usages.total_cost, or .with_usage_cost", :review),
+    rule(/SUM\((?:chats|users|models)\.total_cost\)|COALESCE\((?:input|output|cached|cache_creation)_tokens\b/, "SQL on dropped columns: aggregate ruby_llm_usages instead", :review),
+    rule(/\bsortable :(?:total_cost|cost)\b/, "sort by usage_cost (with_usage_cost) instead of the dropped column", :review),
+    rule(/\b(?:record|message|msg)\.cost\b(?![.&(])/, "message.cost is now a RubyLLM::Cost: use .total (or with_usage_cost for chats)", :review),
+    rule(/\battribute :(?:cost|input_tokens|output_tokens|cached_tokens|cache_creation_tokens|tool_calls)\b/, "Madmin: these message columns moved; use :ruby_llm_usages / :ruby_llm_tool_calls",
+      :review, only_in_files_matching: /class (?:Message|Chat)Resource\b/),
+
+    # Tool calls moved to the gem's table
+    rule(/\b(?:includes|preload|eager_load)\([^)]*(?<![\w])(?::|\b)tool_calls\b/, "association is now :ruby_llm_tool_calls"),
+    rule(/\btool_calls\.each do \|/, "message.tool_calls is a Hash: tool_calls.each_value do |tool_call|"),
 
     # Tool DSL (only in RubyLLM::Tool subclasses; rake tasks use `desc` too)
     rule(/^\s*(desc|param|params_schema|provider_params)\b/, "Tool DSL: description / parameter / parameters_schema / provider_options", only_in_files_matching: TOOL_FILE),
@@ -72,6 +82,8 @@ class RubyLlmUpgradeCheck
     return [] unless table?(:models) && column?(:chats, :model_id)
 
     [
+      empty_registry_finding,
+      model_less_chats_finding,
       count_finding(:chats, "chats.model_id pointing at a missing model",
         "SELECT COUNT(*) FROM chats WHERE model_id IS NOT NULL AND model_id NOT IN (SELECT id FROM models)"),
       (count_finding(:tool_calls, "tool_calls without tool_call_id",
@@ -129,6 +141,24 @@ class RubyLlmUpgradeCheck
     return if count.zero?
 
     Finding.new(path: table.to_s, line: nil, code: "#{count} #{label}", fix: "repair before db:migrate", severity: :blocker)
+  end
+
+  # PrepareRubyLlmV2Data refuses to run without a registry row to attribute messages to.
+  def empty_registry_finding
+    return unless @connection.select_value("SELECT COUNT(*) FROM models").to_i.zero?
+
+    Finding.new(path: "models", line: nil, code: "empty model registry",
+      fix: "run `bin/rails ruby_llm:load_models` on the 1.x release before db:migrate", severity: :blocker)
+  end
+
+  # Informational: PrepareRubyLlmV2Data gives these chats Setting.default_model (or the most-used model).
+  def model_less_chats_finding
+    count = @connection.select_value("SELECT COUNT(*) FROM chats WHERE model_id IS NULL").to_i
+    return if count.zero?
+
+    Finding.new(path: "chats", line: nil, code: "#{count} chats without a model",
+      fix: "db:migrate assigns Setting.default_model, falling back to the most-used model; set a default first to choose",
+      severity: :review)
   end
 
   def table?(name) = @connection.table_exists?(name)

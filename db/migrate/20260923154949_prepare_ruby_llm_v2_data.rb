@@ -4,6 +4,11 @@ class PrepareRubyLlmV2Data < ActiveRecord::Migration[8.1]
   def up
     return unless table_exists?(:models) && column_exists?(:messages, :model_id)
 
+    # Fail before touching anything: without a registry row the 2.0 upgrade can't attribute messages.
+    if select_value("SELECT COUNT(*) FROM models").to_i.zero? && select_value("SELECT COUNT(*) FROM messages").to_i.positive?
+      raise "The models table is empty. Run `bin/rails ruby_llm:load_models` on the 1.x release, then migrate again."
+    end
+
     # The 2.0 backfill carries historical cost from messages.total_cost only.
     rename_column :messages, :cost, :total_cost if column_exists?(:messages, :cost)
     add_column :messages, :provider, :string unless column_exists?(:messages, :provider)
@@ -42,8 +47,15 @@ class PrepareRubyLlmV2Data < ActiveRecord::Migration[8.1]
 
   private
 
+  # Setting.default_model if it names a registry row, else the chats' most-used model, else any model.
   def default_model_row_id
-    return unless column_exists?(:settings, :default_model)
+    configured_default_row_id ||
+      select_value("SELECT model_id FROM chats WHERE model_id IS NOT NULL GROUP BY model_id ORDER BY COUNT(*) DESC, model_id LIMIT 1") ||
+      select_value("SELECT id FROM models ORDER BY provider, model_id LIMIT 1")
+  end
+
+  def configured_default_row_id
+    return unless table_exists?(:settings) && column_exists?(:settings, :default_model)
 
     name = select_value("SELECT default_model FROM settings WHERE default_model IS NOT NULL LIMIT 1")
     select_value("SELECT id FROM models WHERE model_id = #{quote(name)} ORDER BY provider LIMIT 1") if name.present?

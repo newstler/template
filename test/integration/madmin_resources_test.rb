@@ -70,6 +70,26 @@ class MadminResourcesTest < ActionDispatch::IntegrationTest
     assert_includes response.body, "search"
   end
 
+  test "chat show survives an unpriced usage attempt" do
+    chats(:one).ruby_llm_usages.create!(operation: "chat", provider: "openai", model: "gpt-4", status: "failed")
+    get madmin_chat_path(chats(:one))
+    assert_response :success
+    assert_includes response.body, "$0.0012"
+  end
+
+  test "chats index orders rows by usage cost" do
+    chats(:two).ruby_llm_usages.create!(operation: "chat", provider: "anthropic", model: "claude-3-opus-20240229", status: "succeeded", total_cost: 5)
+    get madmin_chats_path, params: { sort: "usage_cost", direction: "desc" }
+    assert_response :success
+    assert_operator response.body.index("$5.0000"), :<, response.body.index("$0.0012")
+  end
+
+  test "chats index loads messages in one query regardless of rows" do
+    3.times { Chat.create!(user: users(:one), team: teams(:one), model: "gpt-4").messages.create!(role: "user", content: "hi") }
+
+    assert_equal 1, count_queries(/SELECT "messages"\.\* FROM "messages"/) { get madmin_chats_path }
+  end
+
   test "chat show renders tokens and cost from usages" do
     get madmin_chat_path(chats(:one))
     assert_response :success
@@ -179,6 +199,13 @@ class MadminResourcesTest < ActionDispatch::IntegrationTest
   end
 
   private
+
+  def count_queries(matching, &block)
+    count = 0
+    counter = ->(*, payload) { count += 1 if payload[:sql].match?(matching) && !payload[:cached] }
+    ActiveSupport::Notifications.subscribed(counter, "sql.active_record", &block)
+    count
+  end
 
   def sign_in_admin(admin)
     post admins_session_path, params: { session: { email: admin.email } }

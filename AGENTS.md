@@ -492,6 +492,7 @@ Responses via `ChatResponseJob` (Solid Queue).
 
 - **Chat spend** lives in `ruby_llm_usages` (one row per provider attempt). Read it with `chat.cost` / `message.cost` (`RubyLLM::Cost#total`, nil if any attempt is unpriced) or, for lists and sorting, the `with_usage_cost` scope on `Chat`, `User`, `Team` (adds a `usage_cost` attribute via `COALESCE(SUM(...))`).
 - **Standalone calls** (translation, embedding, moderation) aren't tied to a chat, so they're recorded with `AiCost.record_response!(cost_type:, model_id:, response:)`, which stores RubyLLM's own `response.cost.total`.
+- Deleting a chat (or its user) destroys its usage rows (`acts_as_chat` declares `dependent: :destroy`), so its spend drops out of dashboards. Keep chats around, or soft-delete them, if you need lifetime spend totals.
 
 ## Multilingual Content
 
