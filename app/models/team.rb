@@ -17,6 +17,12 @@ class Team < ApplicationRecord
   has_many :conversation_teams, dependent: :destroy
   has_many :conversations, through: :conversation_teams
   has_many :ai_costs, dependent: :destroy
+  has_many :ruby_llm_usages, through: :chats
+
+  scope :with_usage_cost, -> {
+    select("teams.*", "(SELECT COALESCE(SUM(u.total_cost), 0) FROM ruby_llm_usages u " \
+                      "JOIN chats c ON u.chat_type = 'Chat' AND u.chat_id = c.id WHERE c.team_id = teams.id) AS usage_cost")
+  }
 
   attribute :remove_logo, :boolean, default: false
   after_save :purge_logo, if: :remove_logo
@@ -34,7 +40,7 @@ class Team < ApplicationRecord
   after_create :setup_default_language
 
   def total_chat_cost
-    chats.sum(:total_cost)
+    ruby_llm_usages.sum(:total_cost)
   end
 
   def regenerate_api_key!

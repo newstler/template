@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
+ActiveRecord::Schema[8.2].define(version: 2026_09_23_155554) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -83,7 +83,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
     t.integer "messages_count", default: 0, null: false
     t.string "ruby_llm_model_id"
     t.string "team_id"
-    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.string "user_id", null: false
     t.boolean "cancelled", default: false, null: false
@@ -173,23 +172,13 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
   end
 
   create_table "messages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
-    t.integer "cache_creation_tokens"
-    t.integer "cached_tokens"
     t.string "chat_id", null: false
     t.text "content"
-    t.json "content_raw"
-    t.decimal "total_cost", precision: 10, scale: 6, default: "0.0"
     t.datetime "created_at", null: false
-    t.integer "input_tokens"
-    t.string "model_id"
-    t.integer "output_tokens"
     t.string "role", null: false
     t.text "thinking_signature"
     t.text "thinking_text"
-    t.integer "thinking_tokens"
-    t.string "tool_call_id"
     t.datetime "updated_at", null: false
-    t.string "provider"
     t.boolean "cache_until_here", default: false, null: false
     t.string "finish_reason"
     t.json "citations"
@@ -197,8 +186,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
     t.json "raw_content"
     t.json "raw_reasoning"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
-    t.index ["role"], name: "index_messages_on_role"
-    t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
   end
 
   create_table "mobility_string_translations", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -454,7 +441,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
 
   create_table "ruby_llm_models", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.json "capabilities", default: []
-    t.integer "chats_count", default: 0, null: false
     t.integer "context_window"
     t.datetime "created_at", null: false
     t.string "family"
@@ -467,7 +453,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
     t.string "name", null: false
     t.json "pricing", default: {}
     t.string "provider", null: false
-    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.datetime "unlisted_at"
     t.index ["family"], name: "index_ruby_llm_models_on_family"
@@ -521,13 +506,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
     t.index ["status"], name: "index_ruby_llm_usages_on_status"
     t.check_constraint "operation IN ('chat', 'embedding', 'moderation', 'image', 'speech', 'transcription', 'ocr', 'rerank')"
     t.check_constraint "status IN ('pending', 'succeeded', 'failed', 'cancelled')"
-  end
-
-  create_table "ruby_llm_v2_backfills", id: false, force: :cascade do |t|
-    t.string "task", null: false
-    t.string "last_id"
-    t.boolean "completed", default: false, null: false
-    t.index ["task"], name: "index_ruby_llm_v2_backfills_on_task", unique: true
   end
 
   create_table "searchable_things", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -613,7 +591,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
     t.json "notification_preferences", default: {}, null: false
     t.string "preferred_currency"
     t.string "residence_country_code"
-    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
   end

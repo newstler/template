@@ -1,5 +1,4 @@
 class User < ApplicationRecord
-  include Costable
   include Countryable
   include Notifiable
 
@@ -7,10 +6,16 @@ class User < ApplicationRecord
 
   has_many :chats, dependent: :destroy
   has_many :ai_costs, dependent: :destroy
+  has_many :ruby_llm_usages, through: :chats
   has_many :memberships, dependent: :destroy
   has_many :teams, through: :memberships
   has_many :conversation_participants, dependent: :destroy
   has_many :conversations, through: :conversation_participants
+
+  scope :with_usage_cost, -> {
+    select("users.*", "(SELECT COALESCE(SUM(u.total_cost), 0) FROM ruby_llm_usages u " \
+                      "JOIN chats c ON u.chat_type = 'Chat' AND u.chat_id = c.id WHERE c.user_id = users.id) AS usage_cost")
+  }
 
   attribute :remove_avatar, :boolean, default: false
   after_save :purge_avatar, if: :remove_avatar
@@ -34,10 +39,6 @@ class User < ApplicationRecord
     signed_id(purpose: :magic_link, expires_in: 15.minutes)
   end
 
-  # Recalculate total cost from all chats
-  def recalculate_total_cost!
-    update_column(:total_cost, chats.sum(:total_cost))
-  end
 
   def conversations_in(team)
     conversations.joins(:conversation_teams).where(conversation_teams: { team_id: team.id })

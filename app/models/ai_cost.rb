@@ -1,5 +1,5 @@
 class AiCost < ApplicationRecord
-  COST_TYPES = %w[chat embedding translation moderation].freeze
+  COST_TYPES = %w[embedding translation moderation].freeze
 
   belongs_to :team, optional: true
   belongs_to :user, optional: true
