@@ -29,6 +29,10 @@ class ProviderCredential < ApplicationRecord
     where(provider: provider, key: "api_key").where.not(value: [ nil, "" ]).exists?
   end
 
+  def self.configured_providers
+    where(key: "api_key").where.not(value: [ nil, "" ]).distinct.pluck(:provider)
+  end
+
   def self.configure_ruby_llm!
     RubyLLM.configure do |config|
       all.each do |cred|

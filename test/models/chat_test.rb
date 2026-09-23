@@ -1,17 +1,12 @@
 require "test_helper"
 
 class ChatTest < ActiveSupport::TestCase
-  setup do
-    @chat = chats(:one)
+  test "belongs to a RubyLLM registry model" do
+    assert_instance_of RubyLLM::ActiveRecord::Model, chats(:one).model
+    assert_equal "gpt-4", chats(:one).model_id
   end
 
-  test "formats non-zero total cost as currency" do
-    @chat.update_column(:total_cost, 0.0012)
-    assert_match(/\$\d+\.\d+/, @chat.formatted_total_cost)
-  end
-
-  test "formatted_total_cost returns nil when chat has no cost" do
-    chat = Chat.create!(user: users(:two), model: models(:claude))
-    assert_nil chat.formatted_total_cost
+  test "cost comes from recorded usages" do
+    assert_in_delta 0.0012, chats(:one).cost.total
   end
 end

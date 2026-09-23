@@ -8,6 +8,10 @@ class PrepareRubyLlmV2Data < ActiveRecord::Migration[8.1]
     rename_column :messages, :cost, :total_cost if column_exists?(:messages, :cost)
     add_column :messages, :provider, :string unless column_exists?(:messages, :provider)
 
+    # messages.cost defaulted to 0.0; the backfill treats any non-NULL cost as a billed attempt, so a
+    # zero on a user/tool message would become an empty usage row.
+    execute "UPDATE messages SET total_cost = NULL WHERE total_cost = 0 AND role <> 'assistant'"
+
     remove_foreign_key :messages, :models if foreign_key_exists?(:messages, :models)
     remove_index :messages, :model_id if index_exists?(:messages, :model_id)
 

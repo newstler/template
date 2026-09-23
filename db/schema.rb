@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
+ActiveRecord::Schema[8.2].define(version: 2026_09_23_155220) do
   create_table "active_storage_attachments", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "blob_id", null: false
     t.datetime "created_at", null: false
@@ -81,12 +81,13 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
     t.datetime "created_at", null: false
     t.string "first_user_message_preview"
     t.integer "messages_count", default: 0, null: false
-    t.string "model_id"
+    t.string "ruby_llm_model_id"
     t.string "team_id"
     t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.string "user_id", null: false
-    t.index ["model_id"], name: "index_chats_on_model_id"
+    t.boolean "cancelled", default: false, null: false
+    t.index ["ruby_llm_model_id"], name: "index_chats_on_ruby_llm_model_id"
     t.index ["team_id"], name: "index_chats_on_team_id"
     t.index ["user_id"], name: "index_chats_on_user_id"
   end
@@ -189,6 +190,12 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
     t.string "tool_call_id"
     t.datetime "updated_at", null: false
     t.string "provider"
+    t.boolean "cache_until_here", default: false, null: false
+    t.string "finish_reason"
+    t.json "citations"
+    t.json "server_tool_calls"
+    t.json "raw_content"
+    t.json "raw_reasoning"
     t.index ["chat_id"], name: "index_messages_on_chat_id"
     t.index ["role"], name: "index_messages_on_role"
     t.index ["tool_call_id"], name: "index_messages_on_tool_call_id"
@@ -217,28 +224,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
     t.text "value"
     t.index ["translatable_id", "translatable_type", "key"], name: "index_mobility_text_translations_on_translatable_attribute"
     t.index ["translatable_id", "translatable_type", "locale", "key"], name: "index_mobility_text_translations_on_keys", unique: true
-  end
-
-  create_table "models", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
-    t.json "capabilities", default: []
-    t.integer "chats_count", default: 0, null: false
-    t.integer "context_window"
-    t.datetime "created_at", null: false
-    t.string "family"
-    t.date "knowledge_cutoff"
-    t.integer "max_output_tokens"
-    t.json "metadata", default: {}
-    t.json "modalities", default: {}
-    t.datetime "model_created_at"
-    t.string "model_id", null: false
-    t.string "name", null: false
-    t.json "pricing", default: {}
-    t.string "provider", null: false
-    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
-    t.datetime "updated_at", null: false
-    t.index ["family"], name: "index_models_on_family"
-    t.index ["provider", "model_id"], name: "index_models_on_provider_and_model_id", unique: true
-    t.index ["provider"], name: "index_models_on_provider"
   end
 
   create_table "noticed_events", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
@@ -450,6 +435,101 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
     t.index ["period_hour"], name: "index_swallowed_exceptions_on_period_hour"
   end
 
+  create_table "ruby_llm_batches", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "provider_batch_id", null: false
+    t.string "provider", null: false
+    t.string "status", null: false
+    t.string "raw_status"
+    t.boolean "completed", default: false, null: false
+    t.string "chat_type"
+    t.string "batch_protocol"
+    t.json "chat_ids", default: []
+    t.json "request_counts"
+    t.json "reported_cost"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["provider", "provider_batch_id"], name: "index_ruby_llm_batches_on_provider_and_provider_batch_id", unique: true
+    t.index ["status"], name: "index_ruby_llm_batches_on_status"
+  end
+
+  create_table "ruby_llm_models", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.json "capabilities", default: []
+    t.integer "chats_count", default: 0, null: false
+    t.integer "context_window"
+    t.datetime "created_at", null: false
+    t.string "family"
+    t.date "knowledge_cutoff"
+    t.integer "max_output_tokens"
+    t.json "metadata", default: {}
+    t.json "modalities", default: {}
+    t.datetime "model_created_at"
+    t.string "model_id", null: false
+    t.string "name", null: false
+    t.json "pricing", default: {}
+    t.string "provider", null: false
+    t.decimal "total_cost", precision: 12, scale: 6, default: "0.0", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "unlisted_at"
+    t.index ["family"], name: "index_ruby_llm_models_on_family"
+    t.index ["provider", "model_id"], name: "index_ruby_llm_models_on_provider_and_model_id", unique: true
+    t.index ["provider"], name: "index_ruby_llm_models_on_provider"
+  end
+
+  create_table "ruby_llm_tool_calls", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.json "arguments", default: {}
+    t.datetime "created_at", null: false
+    t.string "message_id", null: false
+    t.string "name", null: false
+    t.text "thought_signature"
+    t.string "tool_call_id", null: false
+    t.datetime "updated_at", null: false
+    t.string "message_type", null: false
+    t.string "result_type"
+    t.string "result_id"
+    t.string "approval"
+    t.boolean "remote", default: false, null: false
+    t.index ["message_type", "message_id"], name: "index_ruby_llm_tool_calls_on_message_type_and_message_id"
+    t.index ["name"], name: "index_ruby_llm_tool_calls_on_name"
+    t.index ["result_type", "result_id"], name: "index_ruby_llm_tool_calls_on_result_type_and_result_id"
+    t.index ["tool_call_id"], name: "index_ruby_llm_tool_calls_on_tool_call_id", unique: true
+  end
+
+  create_table "ruby_llm_usages", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
+    t.string "chat_type", null: false
+    t.string "chat_id", null: false
+    t.string "message_type"
+    t.string "message_id"
+    t.string "operation", null: false
+    t.string "provider", null: false
+    t.string "model", null: false
+    t.string "status", null: false
+    t.integer "input_tokens"
+    t.integer "output_tokens"
+    t.integer "cache_read_tokens"
+    t.integer "cache_write_tokens"
+    t.integer "thinking_tokens"
+    t.decimal "input_cost", precision: 16, scale: 10
+    t.decimal "output_cost", precision: 16, scale: 10
+    t.decimal "cache_read_cost", precision: 16, scale: 10
+    t.decimal "cache_write_cost", precision: 16, scale: 10
+    t.decimal "thinking_cost", precision: 16, scale: 10
+    t.decimal "total_cost", precision: 16, scale: 10
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["chat_type", "chat_id"], name: "index_ruby_llm_usages_on_chat_type_and_chat_id"
+    t.index ["message_type", "message_id"], name: "index_ruby_llm_usages_on_message_type_and_message_id"
+    t.index ["status"], name: "index_ruby_llm_usages_on_status"
+    t.check_constraint "operation IN ('chat', 'embedding', 'moderation', 'image', 'speech', 'transcription', 'ocr', 'rerank')"
+    t.check_constraint "status IN ('pending', 'succeeded', 'failed', 'cancelled')"
+  end
+
+  create_table "ruby_llm_v2_backfills", id: false, force: :cascade do |t|
+    t.string "task", null: false
+    t.string "last_id"
+    t.boolean "completed", default: false, null: false
+    t.index ["task"], name: "index_ruby_llm_v2_backfills_on_task", unique: true
+  end
+
   create_table "searchable_things", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.string "chunks_source_digest"
     t.datetime "created_at", null: false
@@ -525,19 +605,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
     t.index ["stripe_subscription_id"], name: "index_teams_on_stripe_subscription_id", unique: true
   end
 
-  create_table "tool_calls", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
-    t.json "arguments", default: {}
-    t.datetime "created_at", null: false
-    t.string "message_id", null: false
-    t.string "name", null: false
-    t.string "thought_signature"
-    t.string "tool_call_id", null: false
-    t.datetime "updated_at", null: false
-    t.index ["message_id"], name: "index_tool_calls_on_message_id"
-    t.index ["name"], name: "index_tool_calls_on_name"
-    t.index ["tool_call_id"], name: "index_tool_calls_on_tool_call_id", unique: true
-  end
-
   create_table "users", id: :string, default: -> { "uuid7()" }, force: :cascade do |t|
     t.datetime "created_at", null: false
     t.string "email"
@@ -557,7 +624,7 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
   add_foreign_key "ai_costs", "users"
   add_foreign_key "articles", "teams"
   add_foreign_key "articles", "users"
-  add_foreign_key "chats", "models"
+  add_foreign_key "chats", "ruby_llm_models"
   add_foreign_key "chats", "teams"
   add_foreign_key "chats", "users"
   add_foreign_key "conversation_messages", "conversations"
@@ -579,7 +646,6 @@ ActiveRecord::Schema[8.2].define(version: 2026_09_23_154949) do
   add_foreign_key "rails_error_dashboard_error_occurrences", "rails_error_dashboard_error_logs", column: "error_log_id"
   add_foreign_key "team_languages", "languages"
   add_foreign_key "team_languages", "teams"
-  add_foreign_key "tool_calls", "messages"
 
   # Virtual tables defined in this database.
   # Note that virtual tables may not work with other database engines. Be careful if changing database.
