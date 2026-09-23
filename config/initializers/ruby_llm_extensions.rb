@@ -1,3 +1,5 @@
 Rails.application.config.to_prepare do
-  RubyLLM::ActiveRecord::Model.include(Enableable) unless RubyLLM::ActiveRecord::Model < Enableable
+  [ Enableable, Metered ].each do |concern|
+    RubyLLM::ActiveRecord::Model.include(concern) unless RubyLLM::ActiveRecord::Model < concern
+  end
 end

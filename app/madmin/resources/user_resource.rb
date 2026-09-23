@@ -17,7 +17,7 @@ class UserResource < Madmin::Resource
   attribute :chats
 
   def self.sortable_columns
-    super + %w[teams_count chats_count]
+    super + %w[teams_count chats_count usage_cost]
   end
 
   def self.searchable_attributes

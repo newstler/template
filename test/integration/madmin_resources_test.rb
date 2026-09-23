@@ -64,12 +64,34 @@ class MadminResourcesTest < ActionDispatch::IntegrationTest
     assert_response :success
     get madmin_message_path(messages(:user_message))
     assert_response :success
+    get madmin_message_path(messages(:assistant_message))
+    assert_response :success
+    assert_includes response.body, "$0.0012"
+    assert_includes response.body, "search"
+  end
+
+  test "chat show renders tokens and cost from usages" do
+    get madmin_chat_path(chats(:one))
+    assert_response :success
+    assert_includes response.body, "$0.0012"
+  end
+
+  %w[chats users teams models].each do |resource|
+    test "#{resource} index sorts by usage cost" do
+      get "/madmin/#{resource}", params: { sort: "usage_cost", direction: "desc" }
+      assert_response :success
+    end
+  end
+
+  test "models index sorts by chats count" do
+    get "/madmin/models", params: { sort: "chats_count", direction: "desc" }
+    assert_response :success
   end
 
   test "tool_calls index and show" do
     get madmin_tool_calls_path
     assert_response :success
-    get madmin_tool_call_path(tool_calls(:search_call))
+    get madmin_tool_call_path(ruby_llm_tool_calls(:search_call))
     assert_response :success
   end
 
@@ -99,7 +121,7 @@ class MadminResourcesTest < ActionDispatch::IntegrationTest
   test "models index and show" do
     get madmin_models_path
     assert_response :success
-    get madmin_model_path(models(:gpt4)) if Model.exists?(models(:gpt4).id)
+    get madmin_model_path(ruby_llm_models(:gpt4))
     assert_response :success
   end
 

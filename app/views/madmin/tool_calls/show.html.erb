@@ -89,13 +89,13 @@
 </div>
 <% end %>
 
-<% if @record.respond_to?(:result) && @record.result.present? %>
+<% if @record.result.present? %>
 <div class="card-bg overflow-hidden">
   <div class="px-5 py-4 border-b border-dark-700">
     <h2 class="text-lg font-semibold text-dark-100"><%= t(".result") %></h2>
   </div>
   <div class="p-5">
-    <pre class="text-sm text-dark-200 bg-dark-950 rounded-lg p-4 overflow-x-auto max-h-96"><%= JSON.pretty_generate(@record.result) rescue @record.result.to_s %></pre>
+    <pre class="text-sm text-dark-200 bg-dark-950 rounded-lg p-4 overflow-x-auto max-h-96"><%= @record.result.content %></pre>
   </div>
 </div>
 <% end %>

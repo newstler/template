@@ -6,12 +6,13 @@ module Madmin
       @record = resource.model
         .includes(memberships: :user, chats: [ :model, :messages ])
         .find_by!(slug: params[:id])
+      @chat_costs = Chat.where(team: @record).joins(:ruby_llm_usages).group(:id).sum("ruby_llm_usages.total_cost")
     end
 
     def scoped_resources
       resources = resource.model.send(valid_scope)
       resources = Madmin::Search.new(resources, resource, search_term).run
-      resources = resources.includes(memberships: :user, chats: [])
+      resources = resources.includes(memberships: :user, chats: []).with_usage_cost
 
       dir = sort_direction == "asc" ? "ASC" : "DESC"
 
@@ -32,11 +33,8 @@ module Madmin
           .left_joins(:chats)
           .group("teams.id")
           .reorder(Arel.sql("COUNT(chats.id) #{dir}"))
-      when "total_cost"
-        resources
-          .left_joins(:chats)
-          .group("teams.id")
-          .reorder(Arel.sql("COALESCE(SUM(chats.total_cost), 0) #{dir}"))
+      when "usage_cost"
+        resources.reorder(Arel.sql("usage_cost #{dir}"))
       else
         resources.reorder(sort_column => sort_direction)
       end

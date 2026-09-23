@@ -9,14 +9,10 @@ class MessageResource < Madmin::Resource
   attribute :role
   attribute :content, :text
   attribute :chat
-  attribute :model
-  attribute :input_tokens
-  attribute :output_tokens
-  attribute :cached_tokens
-  attribute :cache_creation_tokens
-  attribute :total_cost
-  attribute :content_raw, field: JsonField
-  attribute :tool_calls
+  attribute :finish_reason
+  attribute :raw_content, field: JsonField
+  attribute :ruby_llm_tool_calls
+  attribute :ruby_llm_usages
   attribute :created_at
   attribute :updated_at
 

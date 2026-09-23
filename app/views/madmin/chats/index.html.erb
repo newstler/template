@@ -42,7 +42,7 @@
         <th><%= sortable :id, t(".col_first_message") %></th>
         <th><%= sortable :user_id, t(".col_user") %></th>
         <th><%= sortable :messages_count, t(".col_messages") %></th>
-        <th><%= sortable :total_cost, t(".col_cost") %></th>
+        <th><%= sortable :usage_cost, t(".col_cost") %></th>
         <th><%= sortable :created_at, t(".col_created") %></th>
       </tr>
     </thead>
@@ -61,7 +61,7 @@
             <% end %>
           </td>
           <td><%= record.messages_count %></td>
-          <td class="<%= (record.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.total_cost || 0, precision: 4) %></td>
+          <td class="<%= record.usage_cost.to_d >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.usage_cost.to_d, precision: 4) %></td>
           <td><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
