@@ -23,7 +23,7 @@ class ChatResponseJobTest < ActiveJob::TestCase
 
     assert_equal [
       [ "message_#{placeholders[0].id}_content", "Let me check" ],
-      [ "message_#{placeholders[1].id}_content", "It is sunny" ],
+      [ "message_#{placeholders[1].id}_content", "It is sunny" ]
     ], targets
   end
 

@@ -207,8 +207,8 @@ Dashboards fetch and compute aggregate data that's accessed on every team or adm
 3. **Wrap expensive aggregations in `cached_dashboard`.** The helper's cache key includes `team_id` and the `@range` beginning date, so invalidation on range change is automatic.
    ```ruby
    @top_users = cached_dashboard(:top_users, expires_in: 10.minutes) do
-     current_team.users.joins(:chats).group("users.id")
-                 .order(Arel.sql("SUM(chats.total_cost) DESC")).limit(10).to_a
+     current_team.users.with_usage_cost
+                 .order(Arel.sql("usage_cost DESC")).limit(10).to_a
    end
    ```
 4. **Always `includes`** associations the dashboard view will touch (`Chat.includes(:user, :model, :messages)`).

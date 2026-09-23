@@ -278,14 +278,14 @@ class PrepareRubyLlmV2Upgrade < ActiveRecord::Migration[8.2]
   def normalize_tool_call_indexes
     table = :ruby_llm_tool_calls
     indexes = []
-    indexes << [%i[message_type message_id], {}] unless valid_index_exists?(table, %i[message_type message_id])
-    indexes << [%i[result_type result_id], {}] unless valid_index_exists?(table, %i[result_type result_id])
+    indexes << [ %i[message_type message_id], {} ] unless valid_index_exists?(table, %i[message_type message_id])
+    indexes << [ %i[result_type result_id], {} ] unless valid_index_exists?(table, %i[result_type result_id])
     unless valid_index_exists?(table, :tool_call_id, unique: true)
       deduplicate_tool_call_ids
       remove_matching_indexes(table, :tool_call_id)
-      indexes << [:tool_call_id, { unique: true }]
+      indexes << [ :tool_call_id, { unique: true } ]
     end
-    indexes << [:name, {}] unless valid_index_exists?(table, :name)
+    indexes << [ :name, {} ] unless valid_index_exists?(table, :name)
     add_upgrade_indexes(table, indexes)
   end
 
@@ -346,9 +346,9 @@ class PrepareRubyLlmV2Upgrade < ActiveRecord::Migration[8.2]
     end
     model_column = connection.columns(:ruby_llm_usages).find { |column| column.name == 'model' }
     with_upgrade_safety { change_column_null :ruby_llm_usages, :model, false } if model_column.null
-    indexes = [%i[chat_type chat_id], %i[message_type message_id], :status]
+    indexes = [ %i[chat_type chat_id], %i[message_type message_id], :status ]
     missing = indexes.reject { |columns| valid_index_exists?(:ruby_llm_usages, columns) }
-                     .map { |columns| [columns, {}] }
+                     .map { |columns| [ columns, {} ] }
     add_upgrade_indexes(:ruby_llm_usages, missing)
   end
 
@@ -406,7 +406,7 @@ class PrepareRubyLlmV2Upgrade < ActiveRecord::Migration[8.2]
       model_ids << "legacy_chat_models.#{quote_column(:model_id)}"
     end
 
-    [joins.join("\n"), coalesce_sql(providers), coalesce_sql(model_ids)]
+    [ joins.join("\n"), coalesce_sql(providers), coalesce_sql(model_ids) ]
   end
 
   def legacy_usage_conditions

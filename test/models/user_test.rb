@@ -129,5 +129,4 @@ class UserTest < ActiveSupport::TestCase
   test "with_usage_cost exposes a sortable usage_cost" do
     assert_in_delta 0.0012, User.with_usage_cost.find(users(:one).id).usage_cost
   end
-
 end

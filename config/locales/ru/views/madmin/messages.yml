@@ -5,7 +5,6 @@ ru:
       index:
         all_roles: Все роли
         col_chat: Чат
-        col_cost: Стоимость
         col_created: Создано
         col_message: Сообщение
         col_role: Роль

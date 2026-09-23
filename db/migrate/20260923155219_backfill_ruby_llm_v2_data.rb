@@ -38,9 +38,9 @@ class BackfillRubyLlmV2Data < ActiveRecord::Migration[8.2]
 
   def backfill_required_defaults
     {
-      chats: {cancelled: false},
-      messages: {cache_until_here: false},
-      ruby_llm_tool_calls: {message_type: 'Message'}
+      chats: { cancelled: false },
+      messages: { cache_until_here: false },
+      ruby_llm_tool_calls: { message_type: 'Message' }
     }.each do |table, attributes|
       column, value = attributes.first
       migration_record(table).where(column => nil).in_batches(of: BATCH_SIZE) do |batch|
@@ -224,7 +224,7 @@ class BackfillRubyLlmV2Data < ActiveRecord::Migration[8.2]
       models << "legacy_chat_models.#{quote_column(:model_id)}"
     end
 
-    [joins.join("\n"), coalesce_sql(providers), coalesce_sql(models)]
+    [ joins.join("\n"), coalesce_sql(providers), coalesce_sql(models) ]
   end
 
   def legacy_usage_conditions
@@ -354,14 +354,14 @@ class BackfillRubyLlmV2Data < ActiveRecord::Migration[8.2]
     row = progress_records.where(task: task)
     return row.update_all(last_id: last_id, completed: false) if row.exists?
 
-    progress_records.insert_all!([{ task: task, last_id: last_id, completed: false }], returning: false)
+    progress_records.insert_all!([ { task: task, last_id: last_id, completed: false } ], returning: false)
   end
 
   def mark_completed(task)
     row = progress_records.where(task: task)
     return row.update_all(completed: true) if row.exists?
 
-    progress_records.insert_all!([{ task: task, completed: true }], returning: false)
+    progress_records.insert_all!([ { task: task, completed: true } ], returning: false)
   end
 
   def coalesce_sql(values)

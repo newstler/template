@@ -51,24 +51,24 @@ en:
       message:
         one: Message
         other: Messages
-      model:
-        one: Model
-        other: Models
       noticed/event:
         one: Notification Event
         other: Notification Events
       noticed/notification:
         one: Notification
         other: Notifications
+      rubyllm/active_record/model:
+        one: Model
+        other: Models
+      rubyllm/active_record/tool_call:
+        one: Tool Call
+        other: Tool Calls
       team:
         one: Team
         other: Teams
       team_language:
         one: Team Language
         other: Team Languages
-      tool_call:
-        one: Tool Call
-        other: Tool Calls
       user:
         one: User
         other: Users

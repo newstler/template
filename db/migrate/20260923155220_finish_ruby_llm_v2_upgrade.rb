@@ -35,14 +35,14 @@ class FinishRubyLlmV2Upgrade < ActiveRecord::Migration[8.2]
     progress = migration_record(PROGRESS_TABLE)
     return if progress.where(task: 'finished', completed: true).exists?
 
-    progress.insert_all!([{ task: 'finished', completed: true }], returning: false)
+    progress.insert_all!([ { task: 'finished', completed: true } ], returning: false)
   end
 
   def enforce_required_defaults
     {
-      chats: {cancelled: false},
-      messages: {cache_until_here: false},
-      ruby_llm_tool_calls: {message_type: 'Message'}
+      chats: { cancelled: false },
+      messages: { cache_until_here: false },
+      ruby_llm_tool_calls: { message_type: 'Message' }
     }.each do |table, attributes|
       migration_record(table).where(attributes.transform_values { nil }).in_batches(of: 10_000) do |batch|
         batch.update_all(attributes)

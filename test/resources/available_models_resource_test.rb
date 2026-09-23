@@ -14,7 +14,6 @@ class AvailableModelsResourceTest < McpResourceTestCase
   end
 
   test "includes model details when models exist" do
-
     result = parse_resource(call_resource(Mcp::AvailableModelsResource))
 
     model = result[:models].first
