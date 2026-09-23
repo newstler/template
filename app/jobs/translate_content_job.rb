@@ -96,11 +96,10 @@ class TranslateContentJob < ApplicationJob
   end
 
   def record_cost(record, model, response)
-    AiCost.record!(
+    AiCost.record_response!(
       cost_type: "translation",
       model_id: model,
-      input_tokens: response.input_tokens.to_i,
-      output_tokens: response.output_tokens.to_i,
+      response: response,
       team: record.try(:team),
       user: record.try(:user),
       trackable: record,

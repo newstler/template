@@ -2,10 +2,10 @@ class ModelsController < ApplicationController
   before_action :authenticate_user!
 
   def index
-    @models = Model.all
+    @models = RubyLLM::ActiveRecord::Model.enabled.order(:provider, :name)
   end
 
   def show
-    @model = Model.find(params[:id])
+    @model = RubyLLM::ActiveRecord::Model.enabled.find(params[:id])
   end
 end

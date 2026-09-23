@@ -4,8 +4,7 @@ class RebuildAllEmbeddingsJob < ApplicationJob
   EMBEDDABLE_MODELS = %w[Article SearchableThing Chunk].freeze
 
   def perform
-    model_record = Model.find_by(model_id: Setting.embedding_model)
-    dimensions = model_record&.max_output_tokens
+    dimensions = RubyLLM::ActiveRecord::Model.find_by(model_id: Setting.embedding_model)&.max_output_tokens
     return Rails.logger.error("[RebuildAllEmbeddingsJob] Cannot determine dimensions for #{Setting.embedding_model}") unless dimensions
 
     EMBEDDABLE_MODELS.each do |class_name|
