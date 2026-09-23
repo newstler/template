@@ -8,11 +8,11 @@ module Mcp
     mime_type "application/json"
 
     def content
-      models = Model.enabled.order(:provider, :name)
+      models = RubyLLM::ActiveRecord::Model.enabled.order(:provider, :name)
 
       to_json({
         models_count: models.count,
-        providers: Model.configured_providers,
+        providers: ProviderCredential.configured_providers,
         models: models.map { |model| serialize_model(model) }
       })
     end

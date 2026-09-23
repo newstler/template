@@ -14,7 +14,6 @@ class AvailableModelsResourceTest < McpResourceTestCase
   end
 
   test "includes model details when models exist" do
-    skip "No models configured in test environment" if Model.enabled.none?
 
     result = parse_resource(call_resource(Mcp::AvailableModelsResource))
 

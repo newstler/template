@@ -27,5 +27,12 @@ module Models
       assert result[:success]
       assert result[:data].size >= 2 # At least our fixtures
     end
+    test "hides models the provider no longer lists" do
+      ruby_llm_models(:gpt4).update!(unlisted_at: Time.current)
+
+      result = call_tool(Models::ListModelsTool, enabled_only: false)
+
+      assert_not_includes result[:data].map { _1[:model_id] }, "gpt-4"
+    end
   end
 end

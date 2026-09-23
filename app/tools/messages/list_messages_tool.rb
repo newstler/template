@@ -22,7 +22,7 @@ module Messages
       chat = current_user.chats.where(team: current_team).find_by(id: chat_id)
       return error_response("Chat not found", code: "not_found") unless chat
 
-      messages = chat.messages.order(:created_at)
+      messages = chat.messages.includes(:ruby_llm_usages)
 
       if after_id.present?
         after_message = messages.find_by(id: after_id)
@@ -46,10 +46,10 @@ module Messages
         id: message.id,
         role: message.role,
         content: message.content,
-        model_id: message.model_id,
-        input_tokens: message.input_tokens,
-        output_tokens: message.output_tokens,
-        cost: message.cost&.to_f,
+        model_id: message.model,
+        input_tokens: message.tokens.input,
+        output_tokens: message.tokens.output,
+        cost: message.cost.total&.to_f,
         created_at: format_timestamp(message.created_at)
       }
     end

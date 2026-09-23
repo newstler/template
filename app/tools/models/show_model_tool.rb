@@ -15,7 +15,7 @@ module Models
     end
 
     def call(model_id:)
-      model = Model.find_by(id: model_id) || Model.find_by(model_id: model_id)
+      model = RubyLLM::ActiveRecord::Model.find_by(id: model_id) || RubyLLM::ActiveRecord::Model.find_by(model_id: model_id)
       return error_response("Model not found", code: "not_found") unless model
 
       success_response(serialize_model(model))
@@ -37,8 +37,7 @@ module Models
         modalities: model.modalities,
         pricing: model.pricing,
         metadata: model.metadata,
-        chats_count: model.chats_count,
-        total_cost: model.total_cost.to_f,
+        unlisted: model.unlisted?,
         created_at: format_timestamp(model.created_at),
         updated_at: format_timestamp(model.updated_at)
       }

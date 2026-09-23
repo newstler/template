@@ -12,7 +12,7 @@ module Chats
 
     arguments do
       required(:id).filled(:string).description("The chat ID")
-      required(:model_id).filled(:string).description("The new model ID to use")
+      required(:model_id).filled(:string).description("Model name (list_models model_id, e.g. gpt-4.1) or registry id")
     end
 
     def call(id:, model_id:)
@@ -21,11 +21,11 @@ module Chats
       chat = current_user.chats.where(team: current_team).find_by(id: id)
       return error_response("Chat not found", code: "not_found") unless chat
 
-      model = Model.enabled.find_by(id: model_id)
+      model = find_enabled_model(model_id)
       return error_response("Model not found or not enabled", code: "invalid_model") unless model
 
       with_current_user do
-        chat.with_model(model.model_id)
+        chat.with_model(model.model_id, provider: model.provider)
       end
 
       success_response(
