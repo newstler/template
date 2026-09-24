@@ -39,7 +39,7 @@
 
 <% members = @record.memberships %>
 <% chats = @record.chats %>
-<% total_cost = chats.sum(&:total_cost) %>
+<% total_cost = @chat_costs.values.sum.to_d %>
 <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
   <div class="card-bg p-5">
     <div class="text-dark-500 text-sm mb-1"><%= t(".members") %></div>
@@ -202,8 +202,8 @@
             </td>
             <td><%= chat.model&.name || t(".default_model") %></td>
             <td><%= chat.messages_count %></td>
-            <td class="<%= (chat.total_cost || 0) >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>">
-              <%= format_cost(chat.total_cost || 0, precision: 4) %>
+            <td class="<%= @chat_costs.fetch(chat.id, 0).to_d >= 0.10 ? 'text-red-400' : 'text-emerald-400' %>">
+              <%= format_cost(@chat_costs.fetch(chat.id, 0).to_d, precision: 4) %>
             </td>
             <td><%= l(chat.created_at, format: :long) %></td>
           </tr>

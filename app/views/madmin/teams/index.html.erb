@@ -28,7 +28,7 @@
         <th><%= sortable :owner_name, t(".col_owner") %></th>
         <th><%= sortable :members_count, t(".col_members") %></th>
         <th><%= sortable :chats_count, t(".col_chats") %></th>
-        <th><%= sortable :total_cost, t(".col_cost") %></th>
+        <th><%= sortable :usage_cost, t(".col_cost") %></th>
         <th><%= sortable :subscription_status, t(".col_subscription") %></th>
         <th><%= sortable :created_at, t(".col_created") %></th>
       </tr>
@@ -59,7 +59,7 @@
           </td>
           <td><%= record.memberships.size %></td>
           <td><%= record.chats.size %></td>
-          <% cost = record.chats.sum(&:total_cost) %>
+          <% cost = record.usage_cost.to_d %>
           <td class="<%= cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>">
             <%= format_cost(cost, precision: 4) %>
           </td>

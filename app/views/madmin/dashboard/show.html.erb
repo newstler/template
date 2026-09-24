@@ -120,8 +120,8 @@
             <%= link_to "/madmin/teams/#{team.slug}", class: "block p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors" do %>
               <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-dark-100 truncate"><%= team.name %></span>
-                <span class="text-sm font-medium <%= team.ai_total_cost.to_f >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
-                  <%= format_cost(team.ai_total_cost || 0, precision: 4) %>
+                <span class="text-sm font-medium <%= team.usage_cost.to_f >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
+                  <%= format_cost(team.usage_cost || 0, precision: 4) %>
                 </span>
               </div>
               <div class="flex items-center gap-2 text-xs text-dark-500">
@@ -148,8 +148,8 @@
             <%= link_to "/madmin/users/#{user.id}", class: "block p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors" do %>
               <div class="flex items-center justify-between mb-1">
                 <span class="font-medium text-dark-100 truncate"><%= user.name.presence || t(".unnamed") %></span>
-                <span class="text-sm font-medium <%= user.ai_total_cost.to_f >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
-                  <%= format_cost(user.ai_total_cost || 0, precision: 4) %>
+                <span class="text-sm font-medium <%= user.usage_cost.to_f >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
+                  <%= format_cost(user.usage_cost || 0, precision: 4) %>
                 </span>
               </div>
               <div class="flex items-center gap-2 text-xs text-dark-500">
@@ -176,8 +176,8 @@
             <%= link_to "/madmin/chats/#{chat.id}", class: "block p-3 bg-dark-800/50 rounded-lg hover:bg-dark-800 transition-colors" do %>
               <div class="flex items-center justify-between mb-1">
                 <span class="text-sm font-medium text-dark-200 truncate"><%= chat.user&.name || chat.user&.email || t(".unknown") %></span>
-                <span class="text-sm font-medium shrink-0 ml-2 <%= (chat.total_cost || 0) >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
-                  <%= format_cost(chat.total_cost || 0) %>
+                <span class="text-sm font-medium shrink-0 ml-2 <%= chat.usage_cost.to_d >= 0.10 ? "text-red-400" : "text-emerald-400" %>">
+                  <%= format_cost(chat.usage_cost.to_d) %>
                 </span>
               </div>
               <div class="text-sm text-dark-400 truncate mb-1"><%= chat.messages.min_by(&:created_at)&.content&.truncate(70) || t(".empty_chat") %></div>

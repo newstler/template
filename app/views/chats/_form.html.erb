@@ -11,10 +11,9 @@
 
   <% model_selector = capture do %>
     <div class="relative flex items-center">
-      <% default_model = Model.find_by(model_id: RubyLLM.config.default_model) %>
-      <% default_label = default_model ? t("chats.form.default_model", name: default_model.name) : t("chats.form.default_model_not_set") %>
+      <% default_label = @default_model ? t("chats.form.default_model", name: @default_model.name) : t("chats.form.default_model_not_set") %>
       <%= form.select :model,
-          options_for_select([[default_label, ""]] + Model.enabled.order(:name).map { |m| [m.name, m.model_id] }, @selected_model),
+          options_for_select([[default_label, ""]] + @model_options, @selected_model),
           {},
           class: "text-sm text-dark-400 select-transparent ring-0 outline-none focus:ring-0 focus:outline-none cursor-pointer pr-5 appearance-none",
           data: { controller: "auto-width-select", action: "change->auto-width-select#resize" } %>

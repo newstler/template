@@ -1,8 +1,10 @@
 require "test_helper"
 
 class TranslateContentJobTest < ActiveSupport::TestCase
-  MockResponse = Data.define(:content, :input_tokens, :output_tokens) do
-    def initialize(content:, input_tokens: 0, output_tokens: 0) = super
+  MockResponse = Data.define(:content, :tokens, :cost) do
+    def initialize(content:, tokens: RubyLLM::Tokens.new(input: 0, output: 0), cost: nil)
+      super(content:, tokens:, cost: cost || RubyLLM::Cost.from_h({ total: 0 }, tokens:))
+    end
   end
   include ActiveJob::TestHelper
 

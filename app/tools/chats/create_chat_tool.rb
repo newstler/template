@@ -11,19 +11,19 @@ module Chats
     )
 
     arguments do
-      required(:model_id).filled(:string).description("The ID of the model to use for this chat")
+      required(:model_id).filled(:string).description("Model name (list_models model_id, e.g. gpt-4.1) or registry id")
       optional(:initial_message).filled(:string).description("Optional initial message to send")
     end
 
     def call(model_id:, initial_message: nil)
       require_user!
 
-      model = Model.enabled.find_by(id: model_id)
+      model = find_enabled_model(model_id)
       return error_response("Model not found or not enabled", code: "invalid_model") unless model
 
       chat = nil
       with_current_user do
-        chat = current_user.chats.create!(model: model, team: current_team)
+        chat = current_user.chats.create!(model: model.model_id, provider: model.provider, team: current_team)
 
         if initial_message.present?
           chat.ask(initial_message)

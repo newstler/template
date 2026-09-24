@@ -16,7 +16,7 @@ module Models
     end
 
     def call(provider: nil, enabled_only: true)
-      models = enabled_only ? Model.enabled : Model.all
+      models = enabled_only ? RubyLLM::ActiveRecord::Model.enabled : RubyLLM::ActiveRecord::Model.listed
       models = models.where(provider: provider) if provider.present?
       models = models.order(:provider, :name)
 
@@ -38,9 +38,7 @@ module Models
         context_window: model.context_window,
         max_output_tokens: model.max_output_tokens,
         capabilities: model.capabilities,
-        pricing: model.pricing,
-        chats_count: model.chats_count,
-        total_cost: model.total_cost.to_f
+        pricing: model.pricing
       }
     end
   end

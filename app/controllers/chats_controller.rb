@@ -15,6 +15,8 @@ class ChatsController < ApplicationController
   def new
     @chat = current_user.chats.build(team: current_team)
     @selected_model = params[:model]
+    @default_model = RubyLLM::ActiveRecord::Model.find_by(model_id: RubyLLM.config.default_model)
+    @model_options = RubyLLM::ActiveRecord::Model.enabled.order(:name).pluck(:name, :model_id)
   end
 
   def create
@@ -34,7 +36,7 @@ class ChatsController < ApplicationController
   private
 
   def set_chat
-    @chat = current_user.chats.where(team: current_team).includes(messages: [ :tool_calls, { attachments_attachments: :blob } ]).find(params[:id])
+    @chat = current_user.chats.where(team: current_team).includes(messages: [ :ruby_llm_tool_calls, { attachments_attachments: :blob } ]).find(params[:id])
   end
 
   def model

@@ -11,26 +11,6 @@ class MessageTest < ActiveSupport::TestCase
     assert_not @user_message.assistant?
   end
 
-  test "formats cost for display" do
-    @assistant_message.update!(cost: 0.0012)
-    assert_equal "$0.0012", @assistant_message.formatted_cost
-  end
-
-  test "formatted cost uses <$0.0001 for tiny costs" do
-    @assistant_message.update!(cost: 0.00001)
-    assert_equal "<$0.0001", @assistant_message.formatted_cost
-  end
-
-  test "formatted cost returns nil when zero" do
-    message = Message.create!(
-      chat: chats(:one),
-      role: "user",
-      content: "Test",
-      cost: 0
-    )
-    assert_nil message.formatted_cost
-  end
-
   test "first user message sets the chat's first_user_message_preview" do
     chat = chats(:one)
     chat.messages.destroy_all
@@ -59,20 +39,13 @@ class MessageTest < ActiveSupport::TestCase
     assert_nil chat.reload.first_user_message_preview
   end
 
-  test "calculates cost from model pricing and token usage" do
-    message = Message.create!(
-      chat: chats(:one),
-      role: "assistant",
-      content: "Test",
-      input_tokens: 1000,
-      output_tokens: 500,
-      model: models(:gpt4)
-    )
+  test "exposes tokens and cost from its usage" do
+    assert_equal 10, @assistant_message.tokens.input
+    assert_equal 15, @assistant_message.tokens.output
+    assert_in_delta 0.0012, @assistant_message.cost.total
+  end
 
-    # GPT-4 fixture pricing: $30/M input, $60/M output
-    # 1000 input → 30 * (1000/1000) * 0.001 = 0.03 (confirmed by implementation)
-    # 500 output → 60 * (500/1000) * 0.001 = 0.03
-    # total = 0.06
-    assert_in_delta 0.06, message.cost, 0.0001
+  test "exposes tool calls from the gem table" do
+    assert_equal "search", @assistant_message.tool_calls.values.first.name
   end
 end

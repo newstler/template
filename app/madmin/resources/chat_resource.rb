@@ -18,6 +18,10 @@ class ChatResource < Madmin::Resource
     []  # Custom search in controller
   end
 
+  def self.sortable_columns
+    super + %w[usage_cost]
+  end
+
   def self.display_name(record)
     "Chat with #{record.user.email}" if record.user
   end

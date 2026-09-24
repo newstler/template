@@ -21,7 +21,7 @@ module Chats
 
       chats = current_user.chats.where(team: current_team)
       chats = order == "oldest" ? chats.chronologically : chats.recent
-      chats = chats.includes(:model).offset(offset).limit(limit)
+      chats = chats.includes(:model).with_usage_cost.offset(offset).limit(limit)
 
       success_response(
         chats.map { |chat| serialize_chat(chat) },
@@ -37,7 +37,7 @@ module Chats
         model_id: chat.model_id,
         model_name: chat.model&.name,
         messages_count: chat.messages_count,
-        total_cost: chat.total_cost.to_f,
+        total_cost: chat.usage_cost.to_f,
         created_at: format_timestamp(chat.created_at),
         updated_at: format_timestamp(chat.updated_at)
       }

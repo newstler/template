@@ -36,8 +36,8 @@
     <div>
       <span class="text-dark-500"><%= t(".tokens") %></span>
       <span class="font-medium text-dark-200">
-        <% if @record.input_tokens.present? || @record.output_tokens.present? %>
-          <%= t(".input_tokens", count: @record.input_tokens || 0) %> / <%= t(".output_tokens", count: @record.output_tokens || 0) %>
+        <% if @record.tokens.input || @record.tokens.output %>
+          <%= t(".input_tokens", count: @record.tokens.input.to_i) %> / <%= t(".output_tokens", count: @record.tokens.output.to_i) %>
         <% else %>
           <%= t(".na") %>
         <% end %>
@@ -45,7 +45,7 @@
     </div>
     <div>
       <span class="text-dark-500"><%= t(".cost") %></span>
-      <span class="font-medium text-emerald-400"><%= format_cost(@record.cost || 0, precision: 4) %></span>
+      <span class="font-medium text-emerald-400"><%= format_cost(@record.cost.total || 0, precision: 4) %></span>
     </div>
   </div>
 </div>
@@ -98,7 +98,7 @@
       <h2 class="text-lg font-semibold text-dark-100"><%= t(".tool_calls") %></h2>
     </div>
     <div class="p-5 pt-0">
-      <% @record.tool_calls.each do |tool_call| %>
+      <% @record.tool_calls.each_value do |tool_call| %>
         <div class="bg-dark-800/50 rounded-lg p-4 mb-4 last:mb-0">
           <div class="font-medium text-dark-100 mb-2"><%= tool_call.name %></div>
           <pre class="text-sm bg-dark-950 text-dark-200 rounded-lg p-3 overflow-x-auto"><%= JSON.pretty_generate(tool_call.arguments) rescue tool_call.arguments %></pre>

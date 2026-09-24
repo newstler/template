@@ -98,4 +98,10 @@ class ApplicationTool < ActionTool::Base
   def format_timestamp(time)
     time&.iso8601
   end
+
+  # Accepts a registry model name ("gpt-4.1") or a ruby_llm_models id; only models whose provider has credentials.
+  def find_enabled_model(model_id)
+    models = RubyLLM::ActiveRecord::Model.enabled
+    models.find_by(model_id: model_id) || models.find_by(id: model_id)
+  end
 end

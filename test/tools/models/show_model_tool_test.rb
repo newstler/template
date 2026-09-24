@@ -6,7 +6,7 @@ require "tools/mcp_test_helper"
 module Models
   class ShowModelToolTest < McpToolTestCase
     setup do
-      @model = models(:gpt4)
+      @model = ruby_llm_models(:gpt4)
     end
 
     test "returns model by ID" do

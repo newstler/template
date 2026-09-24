@@ -2,8 +2,8 @@ module Madmin
   class AiModelsController < Madmin::ApplicationController
     def show
       @setting = Setting.instance
-      @available_models = Model.enabled.order(:provider, :name).pluck(:name, :model_id)
-      @embedding_models = Model.enabled.embedding.order(:provider, :name).pluck(:model_id)
+      @available_models = RubyLLM::ActiveRecord::Model.enabled.order(:provider, :name).pluck(:name, :model_id)
+      @embedding_models = RubyLLM::ActiveRecord::Model.enabled.embedding.order(:provider, :name).pluck(:model_id)
       load_models_table
     end
 
@@ -19,8 +19,8 @@ module Madmin
         respond_to do |format|
           format.json { head :unprocessable_entity }
           format.html do
-            @available_models = Model.enabled.order(:provider, :name).pluck(:name, :model_id)
-            @embedding_models = Model.enabled.embedding.order(:provider, :name).pluck(:model_id)
+            @available_models = RubyLLM::ActiveRecord::Model.enabled.order(:provider, :name).pluck(:name, :model_id)
+            @embedding_models = RubyLLM::ActiveRecord::Model.enabled.embedding.order(:provider, :name).pluck(:model_id)
             render :edit, status: :unprocessable_entity
           end
         end
@@ -28,8 +28,8 @@ module Madmin
     end
 
     def refresh_all
-      Model.refresh!
-      redirect_to main_app.madmin_ai_models_path(tab: "available"), notice: t("controllers.madmin.ai_models.refresh.notice", count: Model.count)
+      RubyLLM.models.refresh
+      redirect_to main_app.madmin_ai_models_path(tab: "available"), notice: t("controllers.madmin.ai_models.refresh.notice", count: RubyLLM::ActiveRecord::Model.listed.count)
     end
 
     def rebuild_embeddings
@@ -40,13 +40,13 @@ module Madmin
     private
 
     def load_models_table
-      models = Model.enabled.order(:provider, :name)
+      models = RubyLLM::ActiveRecord::Model.enabled.order(:provider, :name)
       models = models.where(provider: params[:provider]) if params[:provider].present?
       if params[:q].present?
         models = models.where("name LIKE ? OR model_id LIKE ?", "%#{params[:q]}%", "%#{params[:q]}%")
       end
-      @pagy, @models = pagy(models, limit: 25)
-      @providers_list = Model.enabled.distinct.order(:provider).pluck(:provider)
+      @pagy, @models = pagy(models.with_usage_cost, limit: 25)
+      @providers_list = RubyLLM::ActiveRecord::Model.enabled.distinct.order(:provider).pluck(:provider)
     end
 
     def ai_model_params

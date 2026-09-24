@@ -256,6 +256,7 @@ rails console              # Console
 rails test                 # Run tests
 bundle exec rubocop -A     # Fix style
 bin/ci                     # All quality checks
+bin/rails ruby_llm:upgrade_check  # RubyLLM 2.0 upgrade readiness (forks)
 ```
 
 ## Quality Gates (REQUIRED)
@@ -479,12 +480,19 @@ Working chat interface at `/chats` with OpenAI and Anthropic.
 
 ```
 User → has_many :chats
-Chat → belongs_to :user, belongs_to :model, acts_as_chat
-Message → belongs_to :chat (role, content, tokens)
-Model → model_id, provider, capabilities
+Chat → belongs_to :user, :team; acts_as_chat (chat.model → RubyLLM::ActiveRecord::Model via ruby_llm_model_id)
+Message → acts_as_message (message.tokens / message.cost / message.tool_calls read ruby_llm_usages + ruby_llm_tool_calls)
 ```
 
+RubyLLM 2.0 owns `ruby_llm_models`, `ruby_llm_tool_calls`, `ruby_llm_usages` and `ruby_llm_batches` — there are no app `Model`/`ToolCall` classes. App scopes are mixed into the registry class by `config/initializers/ruby_llm_extensions.rb`: `RubyLLM::ActiveRecord::Model.enabled` (listed + provider has credentials), `.embedding`, `.with_usage_cost`. Refresh the registry with `RubyLLM.models.refresh`.
+
 Responses via `ChatResponseJob` (Solid Queue).
+
+### Costs
+
+- **Chat spend** lives in `ruby_llm_usages` (one row per provider attempt). Read it with `chat.cost` / `message.cost` (`RubyLLM::Cost#total`, nil if any attempt is unpriced) or, for lists and sorting, the `with_usage_cost` scope on `Chat`, `User`, `Team` (adds a `usage_cost` attribute via `COALESCE(SUM(...))`).
+- **Standalone calls** (translation, embedding, moderation) aren't tied to a chat, so they're recorded with `AiCost.record_response!(cost_type:, model_id:, response:)`, which stores RubyLLM's own `response.cost.total`.
+- Deleting a chat (or its user) destroys its usage rows (`acts_as_chat` declares `dependent: :destroy`), so its spend drops out of dashboards. Keep chats around, or soft-delete them, if you need lifetime spend totals.
 
 ## Multilingual Content
 
@@ -926,8 +934,8 @@ In the controller: `@range = time_range_from(params[:range])` → use `@range` i
 
 ```ruby
 @top_users = cached_dashboard(:top_users, expires_in: 10.minutes) do
-  current_team.users.joins(:chats).group("users.id")
-              .order(Arel.sql("SUM(chats.total_cost) DESC")).limit(10).to_a
+  current_team.users.with_usage_cost
+              .order(Arel.sql("usage_cost DESC")).limit(10).to_a
 end
 ```
 

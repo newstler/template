@@ -125,4 +125,8 @@ class UserTest < ActiveSupport::TestCase
     WelcomeNotifier.with(record: team).deliver(team)
     assert_equal 0, member.visible_notifications.where(recipient: team).count
   end
+
+  test "with_usage_cost exposes a sortable usage_cost" do
+    assert_in_delta 0.0012, User.with_usage_cost.find(users(:one).id).usage_cost
+  end
 end

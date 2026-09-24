@@ -42,7 +42,10 @@ gem "thruster", require: false
 gem "litestream"
 
 # Use Active Storage variants [https://guides.rubyonrails.org/active_storage_overview.html#transforming-images]
-gem "image_processing", "~> 1.2"
+gem "image_processing", "~> 2.1"
+# image_processing 2.x no longer bundles a processor; Rails variants default to vips.
+# require: false — image_processing loads it on first use, so boot (and bin/importmap in CI) needs no libvips.
+gem "ruby-vips", "~> 2.3", require: false
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
@@ -71,7 +74,7 @@ end
 
 gem "madmin", "~> 2.6"
 
-gem "ruby_llm", "~> 1.16"
+gem "ruby_llm", "~> 2.0"
 
 gem "inline_svg"
 

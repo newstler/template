@@ -121,7 +121,7 @@ class Setting < ApplicationRecord
   end
 
   def self.ai_chats_enabled?
-    default_model.present? && get(:ai_chats_enabled) != false && Model.configured_providers.any?
+    default_model.present? && get(:ai_chats_enabled) != false && ProviderCredential.configured_providers.any?
   end
 
   def self.conversations_enabled?

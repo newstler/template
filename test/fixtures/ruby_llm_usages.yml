@@ -1,0 +1,20 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+#
+# One provider attempt per row; chat cost and tokens are aggregated from here.
+
+_fixture:
+  model_class: RubyLLM::ActiveRecord::Usage
+
+assistant_reply:
+  id: 01961a2a-c0de-7000-8000-000000000601
+  chat_type: Chat
+  chat_id: 01961a2a-c0de-7000-8000-000000000301
+  message_type: Message
+  message_id: 01961a2a-c0de-7000-8000-000000000402
+  operation: chat
+  provider: openai
+  model: gpt-4
+  status: succeeded
+  input_tokens: 10
+  output_tokens: 15
+  total_cost: 0.0012

@@ -10,13 +10,12 @@ module Madmin
         total_chats: Chat.count,
         total_messages: Message.count,
         total_tokens: calculate_total_tokens,
-        total_cost: AiCost.sum(:cost),
-        total_tool_calls: ToolCall.count,
+        total_cost: AiCost.sum(:cost) + Chat.joins(:ruby_llm_usages).sum("ruby_llm_usages.total_cost"),
         recent_chats: Chat.where("created_at >= ?", 7.days.ago).count,
         recent_messages: Message.where("created_at >= ?", 7.days.ago).count,
         recent_users: User.where("created_at >= ?", 7.days.ago).count,
         recent_teams: Team.where("created_at >= ?", 7.days.ago).count,
-        total_models: Model.enabled.count
+        total_models: RubyLLM::ActiveRecord::Model.enabled.count
       }
 
       @subscription_stats = {
@@ -29,20 +28,20 @@ module Madmin
 
       @subscription_revenue = calculate_subscription_revenue
 
-      @recent_chats = Chat.includes(:user, :model, :messages).order(created_at: :desc).limit(5)
+      @recent_chats = Chat.includes(:user, :model, :messages).with_usage_cost.order(created_at: :desc).limit(5)
       @recent_users = User.includes(:memberships).order(created_at: :desc).limit(5)
       @recent_teams = Team.includes(:memberships, :chats).order(created_at: :desc).limit(5)
 
-      @top_teams = Team.joins(:chats)
-        .select("teams.*, COUNT(DISTINCT chats.id) AS ai_chats_count, SUM(chats.messages_count) AS ai_messages_count, SUM(chats.total_cost) AS ai_total_cost")
+      @top_teams = Team.joins(:chats).with_usage_cost
+        .select("COUNT(DISTINCT chats.id) AS ai_chats_count, SUM(chats.messages_count) AS ai_messages_count")
         .group("teams.id")
-        .order(Arel.sql("SUM(chats.total_cost) DESC"))
+        .order(Arel.sql("usage_cost DESC"))
         .limit(5)
 
-      @top_users = User.joins(:chats)
-        .select("users.*, COUNT(DISTINCT chats.id) AS ai_chats_count, SUM(chats.messages_count) AS ai_messages_count, SUM(chats.total_cost) AS ai_total_cost")
+      @top_users = User.joins(:chats).with_usage_cost
+        .select("COUNT(DISTINCT chats.id) AS ai_chats_count, SUM(chats.messages_count) AS ai_messages_count")
         .group("users.id")
-        .order(Arel.sql("SUM(chats.total_cost) DESC"))
+        .order(Arel.sql("usage_cost DESC"))
         .limit(5)
 
       @cost_timeline = AiCost::COST_TYPES.map do |type|
@@ -53,6 +52,12 @@ module Madmin
                   .sum(:cost)
         }
       end
+      @cost_timeline.unshift(
+        name: "Chat",
+        data: Chat.joins(:ruby_llm_usages).where(ruby_llm_usages: { created_at: @range })
+                .group_by_day("ruby_llm_usages.created_at", range: @range)
+                .sum("ruby_llm_usages.total_cost")
+      )
 
       @signup_timeline = User.where(created_at: @range)
         .group_by_day(:created_at, range: @range)
@@ -70,7 +75,8 @@ module Madmin
     end
 
     def calculate_total_tokens
-      Message.sum("COALESCE(input_tokens, 0) + COALESCE(output_tokens, 0) + COALESCE(cached_tokens, 0) + COALESCE(cache_creation_tokens, 0)")
+      Chat.joins(:ruby_llm_usages).sum("COALESCE(ruby_llm_usages.input_tokens, 0) + COALESCE(ruby_llm_usages.output_tokens, 0) + " \
+                                       "COALESCE(ruby_llm_usages.cache_read_tokens, 0) + COALESCE(ruby_llm_usages.cache_write_tokens, 0)")
     end
 
     def calculate_subscription_revenue

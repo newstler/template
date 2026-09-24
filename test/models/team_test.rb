@@ -97,4 +97,12 @@ class TeamTest < ActiveSupport::TestCase
     assert_not_equal original, team.api_key
     assert_equal 64, team.api_key.length
   end
+
+  test "total chat cost sums usage costs across the team's chats" do
+    assert_in_delta 0.0012, teams(:one).total_chat_cost
+  end
+
+  test "with_usage_cost exposes a sortable usage_cost" do
+    assert_in_delta 0.0012, Team.with_usage_cost.find(teams(:one).id).usage_cost
+  end
 end

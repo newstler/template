@@ -29,7 +29,7 @@ module Users
         name: user.name,
         locale: user.locale,
         chats_count: user.chats.count,
-        total_cost: user.total_cost.to_f,
+        total_cost: user.ruby_llm_usages.sum(:total_cost).to_f,
         created_at: format_timestamp(user.created_at),
         updated_at: format_timestamp(user.updated_at)
       }

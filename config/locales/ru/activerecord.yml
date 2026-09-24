@@ -77,11 +77,6 @@ ru:
         many: Сообщений
         one: Сообщение
         other: Сообщения
-      model:
-        few: Модели
-        many: Моделей
-        one: Модель
-        other: Модели
       noticed/event:
         few: События уведомлений
         many: Событий уведомлений
@@ -92,6 +87,16 @@ ru:
         many: Уведомлений
         one: Уведомление
         other: Уведомления
+      rubyllm/active_record/model:
+        few: Модели
+        many: Моделей
+        one: Модель
+        other: Модели
+      rubyllm/active_record/tool_call:
+        few: Вызова инструмента
+        many: Вызовов инструментов
+        one: Вызов инструмента
+        other: Вызовы инструментов
       team:
         few: Команды
         many: Команд
@@ -102,11 +107,6 @@ ru:
         many: Языков команды
         one: Язык команды
         other: Языки команд
-      tool_call:
-        few: Вызова инструмента
-        many: Вызовов инструментов
-        one: Вызов инструмента
-        other: Вызовы инструментов
       user:
         few: Пользователя
         many: Пользователей

@@ -36,11 +36,10 @@ class ModerateMessageJob < ApplicationJob
   private
 
   def record_cost(message, model, response)
-    AiCost.record!(
+    AiCost.record_response!(
       cost_type: "moderation",
       model_id: model,
-      input_tokens: response.input_tokens.to_i,
-      output_tokens: response.output_tokens.to_i,
+      response: response,
       team: message.conversation&.teams&.first,
       user: message.user,
       trackable: message,

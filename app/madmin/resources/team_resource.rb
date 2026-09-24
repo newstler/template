@@ -27,7 +27,7 @@ class TeamResource < Madmin::Resource
   end
 
   def self.sortable_columns
-    super + %w[owner_name members_count chats_count total_cost]
+    super + %w[owner_name members_count chats_count usage_cost]
   end
 
   def self.searchable_attributes

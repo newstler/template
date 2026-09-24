@@ -25,7 +25,7 @@
 
     <div>
       <%= f.label :provider, class: "block text-sm font-medium text-dark-300 mb-1" %>
-      <% providers = Model.distinct.order(:provider).pluck(:provider) %>
+      <% providers = @providers %>
       <%= f.select :provider,
           options_for_select([[t(".all_providers"), ""]] + providers.map { |p| [p.titleize, p] }, params[:provider]),
           {},
@@ -49,7 +49,7 @@
         <th><%= sortable :family, t(".col_family") %></th>
         <th><%= sortable :name, t(".col_name") %></th>
         <th><%= sortable :chats_count, t(".col_chats") %></th>
-        <th><%= sortable :total_cost, t(".col_total_cost") %></th>
+        <th><%= sortable :usage_cost, t(".col_total_cost") %></th>
       </tr>
     </thead>
 
@@ -68,7 +68,7 @@
             <% end %>
           </td>
           <td><%= record.chats_count %></td>
-          <td class="<%= (record.total_cost || 0) >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.total_cost || 0, precision: 4) %></td>
+          <td class="<%= record.usage_cost.to_d >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.usage_cost.to_d, precision: 4) %></td>
         </tr>
       <% end %>
     </tbody>

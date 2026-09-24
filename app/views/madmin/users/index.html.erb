@@ -37,7 +37,7 @@
         <th><%= sortable :name, t(".col_user") %></th>
         <th><%= sortable :teams_count, t(".col_teams") %></th>
         <th><%= sortable :chats_count, t(".col_chats") %></th>
-        <th><%= sortable :total_cost, t(".col_cost") %></th>
+        <th><%= sortable :usage_cost, t(".col_cost") %></th>
         <th><%= sortable :created_at, t(".col_joined") %></th>
       </tr>
     </thead>
@@ -75,7 +75,7 @@
             </div>
           </td>
           <td><%= record.chats.size %></td>
-          <td class="<%= record.total_cost >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.total_cost || 0, precision: 4) %></td>
+          <td class="<%= record.usage_cost.to_d >= 1.0 ? 'text-red-400' : 'text-emerald-400' %>"><%= format_cost(record.usage_cost.to_d, precision: 4) %></td>
           <td class="text-sm"><%= l(record.created_at, format: :long) %></td>
         </tr>
       <% end %>
