@@ -260,21 +260,21 @@ GEM
       zeitwerk (>= 2.6.18, < 3.0)
     language_server-protocol (3.17.0.5)
     lint_roller (1.1.0)
-    litestream (0.14.0-aarch64-linux)
+    litestream (0.16.1-aarch64-linux)
       actionpack (>= 7.0)
       actionview (>= 7.0)
       activejob (>= 7.0)
       activesupport (>= 7.0)
       railties (>= 7.0)
       sqlite3
-    litestream (0.14.0-arm64-darwin)
+    litestream (0.16.1-arm64-darwin)
       actionpack (>= 7.0)
       actionview (>= 7.0)
       activejob (>= 7.0)
       activesupport (>= 7.0)
       railties (>= 7.0)
       sqlite3
-    litestream (0.14.0-x86_64-linux)
+    litestream (0.16.1-x86_64-linux)
       actionpack (>= 7.0)
       actionview (>= 7.0)
       activejob (>= 7.0)
@@ -691,9 +691,9 @@ CHECKSUMS
   kamal (2.12.0) sha256=c51d1ab085e515470f98d0c0f043637122b5ebf76e8b610cb1fbbed0b7f9b8fa
   language_server-protocol (3.17.0.5) sha256=fd1e39a51a28bf3eec959379985a72e296e9f9acfce46f6a79d31ca8760803cc
   lint_roller (1.1.0) sha256=2c0c845b632a7d172cb849cc90c1bce937a28c5c8ccccb50dfd46a485003cc87
-  litestream (0.14.0-aarch64-linux) sha256=bcf9199a665e673e27f929a0941011e50fb8ebf441d9754247686b514fba60d5
-  litestream (0.14.0-arm64-darwin) sha256=507bbb7ee99b3398304c5ef4a9bae835761359ffc72850f25708477805313d07
-  litestream (0.14.0-x86_64-linux) sha256=2844734b6d8e5c6009baf8d138d6f18367f770e9e4390fb70763433db587bed6
+  litestream (0.16.1-aarch64-linux) sha256=83dc16c214dbacf7d190aad729b9c3a25d4053259ddf65b7920a94e9224aefc1
+  litestream (0.16.1-arm64-darwin) sha256=46195f88b192e3a95215e6db61e254cbaeac42cb4126498e4bc7b4506a2ddb60
+  litestream (0.16.1-x86_64-linux) sha256=3ae0da983d8eecc0f60045fcb2d61a0296655640422a7265afcb6273b5d780e2
   logger (1.7.0) sha256=196edec7cc44b66cfb40f9755ce11b392f21f7967696af15d274dde7edff0203
   loofah (2.25.2) sha256=2007f746959ac65552456e04b433e83deb22759ab38c838b4445c70e43425918
   madmin (2.6.0) sha256=3d4f39182f4a572f3539bcda44fdbd9a78055f85b8ebc8f2d6450d567bcd85d8
