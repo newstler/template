@@ -349,13 +349,13 @@ GEM
       net-protocol
     net-ssh (7.3.2)
     nio4r (2.7.5)
-    nokogiri (1.19.6-aarch64-linux-gnu)
+    nokogiri (1.19.7-aarch64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.6-arm64-darwin)
+    nokogiri (1.19.7-arm64-darwin)
       racc (~> 1.4)
-    nokogiri (1.19.6-x86_64-linux-gnu)
+    nokogiri (1.19.7-x86_64-linux-gnu)
       racc (~> 1.4)
-    nokogiri (1.19.6-x86_64-linux-musl)
+    nokogiri (1.19.7-x86_64-linux-musl)
       racc (~> 1.4)
     noticed (3.1.0)
       rails (>= 7.1.0)
@@ -403,7 +403,7 @@ GEM
     rails-i18n (8.1.0)
       i18n (>= 0.7, < 2)
       railties (>= 8.0.0, < 9)
-    rails_error_dashboard (0.17.0)
+    rails_error_dashboard (0.18.0)
       concurrent-ruby (~> 1.3, >= 1.3.7)
       groupdate (~> 6.0)
       pagy (~> 43.0)
@@ -721,10 +721,10 @@ CHECKSUMS
   net-smtp (0.5.2) sha256=35103cc04d6b2d94632f9928ede07483c24b70b9c0db1f231fea43909b678f3c
   net-ssh (7.3.2) sha256=65029e213c380e20e5fd92ece663934ab0a0fe888e0cd7cc6a5b664074362dd4
   nio4r (2.7.5) sha256=6c90168e48fb5f8e768419c93abb94ba2b892a1d0602cb06eef16d8b7df1dca1
-  nokogiri (1.19.6-aarch64-linux-gnu) sha256=746fca23be3cd3f121cabab65cb44c52049e4cf9f0d36e7e8c3c0eb6cc298c57
-  nokogiri (1.19.6-arm64-darwin) sha256=0a89005ba8cf40c7bd580f4c0873f5f11e5866a99e364764fb59ac6516f560d0
-  nokogiri (1.19.6-x86_64-linux-gnu) sha256=ad1e228c3bc873e4f4fc4f845d7e37b4d3648af537acd7b5e8463cce5693065b
-  nokogiri (1.19.6-x86_64-linux-musl) sha256=c92b29e897f4ddc19bea67188695aab667f695e74592a5c8741642ecb25d34d9
+  nokogiri (1.19.7-aarch64-linux-gnu) sha256=8f5e15d299602456406e1f03a9f3456cceb33a0722811e818d2ee2214eb4c84a
+  nokogiri (1.19.7-arm64-darwin) sha256=f27d7f25f4873fbc3aa35a2cc2fb680c98555fec1925348da439d0869d541142
+  nokogiri (1.19.7-x86_64-linux-gnu) sha256=25865ccb462f714e712fdf8906fde07849cb6704a808e3d629d75baa5af5dd3b
+  nokogiri (1.19.7-x86_64-linux-musl) sha256=464d1f3dfb0d53cf54c0c6a7e23e8e91cf68ec3cafc2b27dc4a7682f2d9bf546
   noticed (3.1.0) sha256=59ab222dc4b589a7da1d5583bb8f2022e905372e9ded211ddf889811c9693f2e
   ostruct (0.6.3) sha256=95a2ed4a4bd1d190784e666b47b2d3f078e4a9efda2fccf18f84ddc6538ed912
   pagy (43.8.1) sha256=8f136a4bded93b04c87bc385e8be24c8b5adbaab1c0fac1c4c0c63eddae9c2ff
@@ -748,7 +748,7 @@ CHECKSUMS
   rails-dom-testing (2.3.0) sha256=8acc7953a7b911ca44588bf08737bc16719f431a1cc3091a292bca7317925c1d
   rails-html-sanitizer (1.7.2) sha256=a21ef45b7a6639fc8e2282473c547514cb86ae271616162a946bf89148fa2424
   rails-i18n (8.1.0) sha256=52d5fd6c0abef28d84223cc05647f6ae0fd552637a1ede92deee9545755b6cf3
-  rails_error_dashboard (0.17.0) sha256=8e6399f5f5534a619eb374cd045d44fd612690e0fb9e6638a63217f4031eb6dd
+  rails_error_dashboard (0.18.0) sha256=bcb67823dec49f38f6a0e035ec13d55eb31b0c8f5875aedece5a5e3bb4a51236
   railties (8.2.0.alpha)
   rainbow (3.1.1) sha256=039491aa3a89f42efa1d6dec2fc4e62ede96eb6acd95e52f1ad581182b79bc6a
   rake (13.4.2) sha256=cb825b2bd5f1f8e91ca37bddb4b9aaf345551b4731da62949be002fa89283701
