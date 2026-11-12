@@ -58,7 +58,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 
   # i18n tasks for managing translations [https://github.com/glebm/i18n-tasks]
-  gem "i18n-tasks", "~> 1.0"
+  gem "i18n-tasks", "~> 1.2"
 end
 
 group :development do
